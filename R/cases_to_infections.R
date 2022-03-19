@@ -11,10 +11,10 @@
 #' @examples man/examples/cases_to_infections_example
 #' cases_to_infections()
 
-cases_to_infections <- function(case_time,case_data,infection_to_onset,onset_to_report,pre_window=20){
+cases_to_infections <- function(case_times,case_data,infection_to_onset,onset_to_report,pre_window=20){
 
   pwin <- pre_window
-  case_length <- length(case_time)
+  case_length <- length(case_times)
   estimate_times <- (1-pre_window):case_length
   
   # Store outputs
@@ -30,8 +30,6 @@ cases_to_infections <- function(case_time,case_data,infection_to_onset,onset_to_
     # PDF truncated to match time series
     pdf_o2s <- onset_to_report(estimate_times[1:(ii+pwin)]+pwin)
     
-    #print(c(ii,sum( rev(pdf_o2s*cases_ii)))) DEBUG
- 
     # Collate onsets
     onset_vector[1:(ii+pwin)] <- onset_vector[1:(ii+pwin)] + rev(pdf_o2s*cases_ii)
 
@@ -51,6 +49,6 @@ cases_to_infections <- function(case_time,case_data,infection_to_onset,onset_to_
 
   }
   
-  return(list(infection_times=estimate_times, infection_estimate=infection_vector))
+  data.frame(infection_times=estimate_times, infection_estimate=infection_vector)
   
 }

@@ -4,8 +4,8 @@
 
 
 # Simulate case data
-case_time <- c(1:365)
-case_data <- 100*(1+0.5*sin(4*pi*case_days/365))
+case_times <- c(1:365)
+case_data <- 100*(1+0.5*sin(4*pi*case_times/365))
 
 # Parameter conversion:
 ms_to_logms <- function(mean,sd){c(logmean=log(mean^2/sqrt(sd^2 + mean^2)),logsd=sqrt(log(1 + (sd^2/mean^2))))}
@@ -24,8 +24,8 @@ onset_to_report <- function(x){plnorm(x,meanlog=rep_val[["logmean"]],sdlog=rep_v
 infection_est <- cases_to_infections(case_time,case_data,infection_to_onset,onset_to_report)
 
 # Plot estimates vs simple naive shift
-plot(case_time,case_data,ylim=c(0,max(case_data)))
+plot(case_times,case_data,ylim=c(0,max(case_data)))
 lines(infection_est$infection_times,infection_est$infection_estimate,col="blue")
-lines(case_time-(i2o_mean+o2r_mean),case_data,col="red")
+lines(case_times-(i2o_mean+o2r_mean),case_data,col="red")
 
 
