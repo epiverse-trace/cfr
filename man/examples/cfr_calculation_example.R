@@ -1,9 +1,6 @@
-# Example code:
+# Example CFR estimation with simulated data ----------------------------------
 
-# Example estimation with simulated data ----------------------------------
-
-
-# Simulate case an death data
+# Simulate case and death data
 case_times <- c(1:365)
 case_data <- 100*(1+0.5*sin(4*pi*case_times/365))
 cfr_vals <- (1-0.8*(1:length(death_data))/365)*0.05

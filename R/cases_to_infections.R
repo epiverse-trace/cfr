@@ -3,8 +3,8 @@
 #' Function to estimate infection incidence from case data.
 #' @param case_times Time values corresponding to case incidence
 #' @param case_data Time series of case incidence data
-#' @param infection_to_onset PDF infection-to-onset 
-#' @param onset_to_report PDF onset-to-report 
+#' @param infection_to_onset Probability mass function for infection-to-onset 
+#' @param onset_to_report Probability mass function for onset-to-report 
 #' @param pre_window Period to reconstruct before first case data point
 #' @keywords cases
 #' @export

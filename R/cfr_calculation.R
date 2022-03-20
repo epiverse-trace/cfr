@@ -1,16 +1,16 @@
 #' Case fatality risk calculation
 #'
-#' Function to estimate infection incidence from case data.
+#' Function to estimate CFR from case and death data.
 #' @param case_times Time values corresponding to case incidence
 #' @param case_data Time series of case incidence data
 #' @param death_data Time series of death incidence data, with same time scale as cases
-#' @param onset_to_death PDF onset-to-death 
+#' @param onset_to_death Probability mass function for onset-to-death 
 #' @keywords cases
 #' @export
 #' @examples man/examples/cfr_calculation_example
 #' cfr_calculation()
 
-cfr_calculationn <- function(case_times,case_data,death_data,onset_to_death){
+cfr_calculation <- function(case_times,case_data,death_data,onset_to_death){
 
   case_length <- length(case_times)
 

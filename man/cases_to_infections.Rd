@@ -4,19 +4,30 @@
 \alias{cases_to_infections}
 \title{Cases to infections}
 \usage{
-cases_to_infections(case_data, infection_to_onset, onset_to_report)
+cases_to_infections(
+  case_times,
+  case_data,
+  infection_to_onset,
+  onset_to_report,
+  pre_window = 20
+)
 }
 \arguments{
+\item{case_times}{Time values corresponding to case incidence}
+
 \item{case_data}{Time series of case incidence data}
 
-\item{infection_to_onset}{PDF infection-to-onset}
+\item{infection_to_onset}{Probability mass function for infection-to-onset}
 
-\item{onset_to_report}{PDF onset-to-report}
+\item{onset_to_report}{Probability mass function for onset-to-report}
+
+\item{pre_window}{Period to reconstruct before first case data point}
 }
 \description{
-This function allows you to express your love of cats.
+Function to estimate infection incidence from case data.
 }
 \examples{
+man/examples/cases_to_infections_example
 cases_to_infections()
 }
 \keyword{cases}

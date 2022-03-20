@@ -1,6 +1,4 @@
-# Example code:
-
-# Example estimation with simulated data ----------------------------------
+# Example infection estimation with simulated case data ----------------------------------
 
 
 # Simulate case data
