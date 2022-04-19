@@ -9,7 +9,7 @@ The easiest way to install the development version of `datadelay` is to use the 
 ```
 # install.packages("devtools")
 library(devtools)
-install_github("epiverse-tools/datadelay")
+install_github("epiverse-trace/datadelay")
 library(datadelay)
 
 ```
