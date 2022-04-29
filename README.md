@@ -1,6 +1,6 @@
 # datadelay
 
-`R` package to transform surveillance data based on epidemiological delay distributions.
+`R` package to transform surveillance data based on epidemiological delay distributions. This initial version outlines functions that will be refined/superceded as pipelines develop.
 
 ## Installation
 
