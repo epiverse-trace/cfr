@@ -1,6 +1,6 @@
 Package: datadelay
 Title: Delay Functions for Epidemic Data
-Version: 0.0.0.9000
+Version: 0.1
 Authors@R: 
     person("Adam", "Kucharski", , "adam.kucharski@lshtm.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-8814-9421"))
