@@ -13,6 +13,10 @@
 
 cases_to_infections <- function(case_times,case_data,infection_to_onset,onset_to_report,pre_window=20){
 
+  # DEBUG
+  # case_times= case_time;infection_to_onset = incubation_covid; onset_to_report = onset_delay; pre_window=20
+  
+  # Define window for analysis
   pwin <- pre_window
   case_length <- length(case_times)
   estimate_times <- (1-pre_window):case_length

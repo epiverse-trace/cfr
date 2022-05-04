@@ -9,7 +9,7 @@ case_data <- 100*(1+0.5*sin(4*pi*case_times/365))
 ms_to_logms <- function(mean,sd){c(logmean=log(mean^2/sqrt(sd^2 + mean^2)),logsd=sqrt(log(1 + (sd^2/mean^2))))}
 
 # Define delay distributions
-i2o_mean <- 10; i2o_sd <- 5
+i2o_mean <- 20.2; i2o_sd <- 11.6
 onset_val <- ms_to_logms(i2o_mean,i2o_sd)
 infection_to_onset <- function(x){plnorm(x,meanlog=onset_val[["logmean"]],sdlog=onset_val[["logsd"]]) - 
     plnorm(x-1,meanlog=onset_val[["logmean"]],sdlog=onset_val[["logsd"]])}
