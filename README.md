@@ -47,7 +47,7 @@ infection_est <- cases_to_infections(case_time,case_data,infection_to_onset = in
 plot(case_time,case_data,ylim=c(0,max(case_data)),type="l")
 lines(infection_est$infection_times,infection_est$infection_estimate,col="blue")
 
-# Calculate case fatality risk - - -
+# Calculate case fatality risk - - - - - - - - 
 
 # Extract probability mass function for onset-to-death
 onset2death_covid <- prob_f(pathogen="SARS_CoV_2",type="onset_to_death")
