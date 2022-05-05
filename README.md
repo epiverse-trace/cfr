@@ -41,8 +41,8 @@ case_time <- covid_data_us$date - min(covid_data_us$date)
 
 # Calculate infection incidence
 infection_est <- cases_to_infections(case_time,covid_data_us$cases_new,
-									 infection_to_onset = incubation_covid,
-									 onset_to_report = onset_delay)
+				infection_to_onset = incubation_covid,
+				onset_to_report = onset_delay)
 
 # Plot case incidence vs estimated infection incidence
 plot(case_time,covid_data_us$cases_new,type="l")
