@@ -16,7 +16,7 @@ library(datadelay)
 
 ## Quick start
 
-The example below loads COVID-19 case and death data from the United States using the `covidregionaldata` package, then estimates infection incidence and case fatality risk using parameters from the `epiparameter` package.
+The example below loads COVID-19 case and death data from the United States using the `covidregionaldata` package, then estimates case fatality risk using parameters from the `epiparameter` package.
 
 ```r
 # Load dependencies
@@ -30,23 +30,14 @@ library(epiparameter)
 library(datadelay)
 
 
-# Calculate incidence - - - - - - - - 
+# Format incidence - - - - - - - - 
 # Extract probability mass function for incubation period
 incubation_covid <- prob_f(pathogen="SARS_CoV_2",type="incubation")
 onset_delay <- function(x){ifelse(x==1,1,0)} # One day delay
 
-# Convert case data into incidence
+# Example with US case data
 covid_data_us <- get_national_data("united states",source="who")
 case_time <- covid_data_us$date - min(covid_data_us$date)
-
-# Calculate infection incidence
-infection_est <- cases_to_infections(case_time,covid_data_us$cases_new,
-					infection_to_onset = incubation_covid,
-					onset_to_report = onset_delay)
-
-# Plot case incidence vs estimated infection incidence
-plot(case_time,covid_data_us$cases_new,type="l")
-lines(infection_est$infection_times,infection_est$infection_estimate,col="blue")
 
 # Calculate case fatality risk - - - - - - - - 
 
