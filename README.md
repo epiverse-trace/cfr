@@ -70,7 +70,7 @@ dt_ebola_long <- melt(dt_ebola_cfr[, c("date", "cases", "deaths",
 # plotting the data and estimates
 p_ebola <- plot_cfr_and_data(dt_ebola_long)
 
-![plot](plots/ebola_1976.png)
+![plot]("plots/ebola_1976.png")
 
 ```
 
