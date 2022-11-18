@@ -47,3 +47,8 @@ p_ebola <- plot_cfr_and_data(dt_ebola_long)
 #        p_ebola,
 #        width = 10,
 #        heigh = 6)
+
+ggsave("plots/ebola_1976.png",
+       p_ebola,
+       width = 10,
+       heigh = 6)
