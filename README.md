@@ -26,14 +26,17 @@ The example below loads COVID-19 case and death data from the United States usin
 # install_github("epiverse-trace/epiparameter")
 # install_github("epiverse-trace/datadelay")
 library(data.table)
+library(lubridate)
+library(patchwork)
 library(epiparameter)
-library(datadelay)
+library(ggplot2)
 
 # reading in the data
 dt_ebola <- fread("data/ebola_1976.csv")
 
 # sourcing the functions to perform the calculations and plots
 source("R/functions.R")
+source("R/plot.R")
 
 # munging the data so all variables are of the right class
 dt_ebola[, cases := as.numeric(cases)]
@@ -42,7 +45,7 @@ dt_ebola[, date := ymd(date)]
 dt_ebola[, date_num := .GRP, by = "date"]
 
 # using the package epiparameter to access the probability mass function
-onset_to_death_ebola <- epiparameter::epidist("ebola","onset_to_death")$pmf
+onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
 
 # calculating both the naive and corrected (for delays) CFRs, 
 # following the methods of Nishura
@@ -65,7 +68,9 @@ dt_ebola_long <- melt(dt_ebola_cfr[, c("date", "cases", "deaths",
                       id.vars = "date")
 
 # plotting the data and estimates
-plot_cfr_and_data(dt_ebola_long)
+p_ebola <- plot_cfr_and_data(dt_ebola_long)
+
+p_ebola
 
 ```
 
