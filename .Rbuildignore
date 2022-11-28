@@ -1,2 +1,4 @@
 ^datadelay\.Rproj$
 ^\.Rproj\.user$
+^\.lintr$
+^\.github$
