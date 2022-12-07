@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot_data_and_cfr}
 \alias{plot_data_and_cfr}
-\title{Plot case and death data with CFR estimates}
+\title{Plot rolling case and death data with CFR estimates}
 \usage{
 plot_data_and_cfr(df_ncfr, df_ccfr)
 }
@@ -20,8 +20,8 @@ corrected CFR estimates in another panel (bottom panel)
 }
 \description{
 Plots the case and death time series used to calculate the CFR
-estimates in one panel and the resulting naive and corrected CFR estimates
-in another panel
+estimates in one panel and the resulting rolling naive and corrected CFR
+estimates in another panel.
 }
 \examples{
 # Read in onset to death distribution for Ebola

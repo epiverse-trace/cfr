@@ -1,5 +1,5 @@
 #' Ebola 1976 outbreak case data
-#' 
+#'
 #' An example epidemic outbreak dataset for use with the `datadelay` package.
 #'
 #' @format ## `ebola1976`

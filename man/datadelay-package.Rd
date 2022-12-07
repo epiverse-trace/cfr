@@ -8,6 +8,14 @@
 \description{
 Delay functions for routine surveillance data.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/epiverse-trace/datadelay}
+  \item Report bugs at \url{https://github.com/epiverse-trace/datadelay/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Adam Kucharski \email{adam.kucharski@lshtm.ac.uk} (\href{https://orcid.org/0000-0001-8814-9421}{ORCID})
 

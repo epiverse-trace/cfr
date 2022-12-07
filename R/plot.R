@@ -1,8 +1,8 @@
-#' Plot case and death data with CFR estimates
+#' Plot rolling case and death data with CFR estimates
 #'
 #' @description Plots the case and death time series used to calculate the CFR
-#' estimates in one panel and the resulting naive and corrected CFR estimates
-#' in another panel
+#' estimates in one panel and the resulting rolling naive and corrected CFR
+#' estimates in another panel.
 #'
 #' @param df_ncfr A data.frame containing the rolling naive CFR estimates, of
 #' the form returned by rolling_cfr.R
@@ -33,11 +33,9 @@ plot_data_and_cfr <- function(df_ncfr, df_ccfr) {
 
   # Some basic input checking
   stopifnot(
-    "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths", "date") %in% colnames(df_ncfr)))
-  )
-  stopifnot(
-    "Case data must contain columns `cases` and `deaths`" =
+    "Naive rolling CFR estimates must have columns `cases` and `deaths`" =
+      (all(c("cases", "deaths", "date") %in% colnames(df_ncfr))),
+    "Corrected rolling CFR estimates must have columns `cases` and `deaths`" =
       (all(c("cases", "deaths", "date") %in% colnames(df_ccfr)))
   )
 
