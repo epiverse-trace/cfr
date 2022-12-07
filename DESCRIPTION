@@ -2,25 +2,36 @@ Package: datadelay
 Title: Delay Functions for Epidemic Data
 Version: 0.1
 Authors@R: c(
-    person(given = "Adam",
-           family = "Kucharski",
-           email = "adam.kucharski@lshtm.ac.uk", 
-           role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-8814-9421")),
-    person(given = "Tim",
-           family = "Russell",
-           email = "timothy.russell@lshtm.ac.uk", 
-           role = c("aut"),
-           comment = c(ORCID = "0000-0001-5610-6080"))
-           )
+    person(
+        given = "Adam",
+        family = "Kucharski",
+        email = "adam.kucharski@lshtm.ac.uk", 
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0001-8814-9421")
+        ),
+    person(
+        given = "Tim",
+        family = "Russell",
+        email = "timothy.russell@lshtm.ac.uk", 
+        role = c("aut"),
+        comment = c(ORCID = "0000-0001-5610-6080")
+        )
+    )
 Description: Delay functions for routine surveillance data.
 License: MIT + file LICENSE
+URL: https://github.com/epiverse-trace/datadelay
+BugReports: https://github.com/epiverse-trace/datadelay/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
 Imports:
-    epiparameter
-Suggests: 
+    data.table,
     ggplot2,
-    lubridate,
     patchwork
+Suggests: 
+    testthat (>= 3.0.0),
+    epiparameter
+Config/testthat/edition: 3
+Depends: 
+    R (>= 2.10)
+LazyData: true
