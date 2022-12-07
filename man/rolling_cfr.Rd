@@ -2,11 +2,7 @@
 % Please edit documentation in R/rolling_cfr.R
 \name{rolling_cfr}
 \alias{rolling_cfr}
-\title{Calculates the CFR at each time point in the case and death time
-series supplied, using an expanding window of time. I.e. the static CFR is
-calculated for each time point, using the time series from the start to each
-time point increasing the number of time points included by one each
-iteration}
+\title{Rolling case fatality rate}
 \usage{
 rolling_cfr(df_in, correct_for_delays = TRUE, delay_pmf)
 }
@@ -33,26 +29,22 @@ as extra columns
 }
 \description{
 Calculates the CFR at each time point in the case and death time
-series supplied, using an expanding window of time. I.e. the static CFR is
+series supplied, using an expanding window of time. The static CFR is
 calculated for each time point, using the time series from the start to each
 time point increasing the number of time points included by one each
 iteration
 }
 \examples{
-library(lubridate)
-library(epiparameter)
+# Get onset to death distribution from epiparameter
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
 
-# read in the dataset in question. 
-# dataset needs 
-df_ebola <- read.csv("data/ebola_1976.csv")
+# Calculate rolling naive CFR
+df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 
-df_ebola$date <- ymd(df_ebola$date)
-
-# read in onset to death distribution
-onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
-
-# calculate rolling naive and corrected CFRs
-df_ncfr <- calcalate_rolling_cfr(df_ebola, correct_for_delays = FALSE)
-df_ccfr <- calcalate_rolling_cfr(df_ebola, correct_for_delays = TRUE, 
-                                 onset_to_death_ebola)
+# Calculate rolling corrected CFR
+df_ccfr <- rolling_cfr(
+  df_in = ebola1976,
+  correct_for_delays = TRUE,
+  onset_to_death_ebola
+)
 }

@@ -2,11 +2,14 @@
 % Please edit documentation in R/static_cfr.R
 \name{static_cfr}
 \alias{static_cfr}
-\title{Calculates the CFR at a single point in time using in the case and death time
-series supplied. Uses all of the time points supplied by the user and returns
-an estimate for a single point in time}
+\title{Static case fatality rate}
 \usage{
-static_cfr(df_in, correct_for_delays = TRUE, delay_pmf)
+static_cfr(
+  df_in,
+  correct_for_delays = TRUE,
+  delay_pmf,
+  poisson_threshold = 200
+)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
@@ -23,35 +26,33 @@ mass function parameterised by time. I.e. f(t) which gives the probability a
 case has a known outcomes (i.e. death) at time t, parameterised with
 disease-specific parameters before it is supplied here. A typical example
 would be a symptom onset to death delay distribution}
+
+\item{poisson_threshold}{The case count above which to use Poisson
+approximation. Set to 200 by default.}
 }
 \value{
-A data.frame containing the MLE and 95\% confidence interval of the
-CFR estimates
+A named vector with the MLE and 95\% confidence interval of the
+CFR estimates, named "cfr_me", "cfr_low", and "cfr_high".
 }
 \description{
-Calculates the CFR at a single point in time using in the case and death time
-series supplied. Uses all of the time points supplied by the user and returns
-an estimate for a single point in time
+Calculates the CFR at a single point in time using in the case
+and death time series supplied. Uses all of the time points supplied by the
+user and returns an estimate for a single point in time.
 }
 \examples{
-library(lubridate)
-library(epiparameter)
+# Get onset to death distribution from epiparameter
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
 
-# read in the dataset in question. 
-# dataset needs 
-df_ebola <- read.csv("data/ebola_1976.csv")
+# load stored ebola case data from 1976 outbreak
+data("ebola1976")
 
-df_ebola$date <- ymd(df_ebola$date)
+# Calculate static naive CFR using saved
+static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 
-# read in onset to death distribution
-onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
-
-calculate static naive and corrected CFRs
-ncfr <- calcalate_static_cfr(df_ebola, correct_for_delays = FALSE)
-ccfr <- calcalate_static_cfr(df_ebola, correct_for_delays = TRUE, onset_to_death_ebola)
-
-# just a function that formats the output of the CFR data.frames 
-# nicely and prints to the terminal
-format_cfr_output_neatly(ncfr)
-format_cfr_output_neatly(ccfr)
+# Calculate static corrected CFRs
+static_cfr(
+  df_in = ebola1976,
+  correct_for_delays = TRUE,
+  delay_pmf = onset_to_death_ebola
+)
 }

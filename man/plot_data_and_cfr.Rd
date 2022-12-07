@@ -2,9 +2,7 @@
 % Please edit documentation in R/plot.R
 \name{plot_data_and_cfr}
 \alias{plot_data_and_cfr}
-\title{Plots the case and death time series used to calculate the CFR estimates
-in one panel (top panel) and the resulting naive and corrected CFR estimates
-in another panel (bottom panel)}
+\title{Plot case and death data with CFR estimates}
 \usage{
 plot_data_and_cfr(df_ncfr, df_ccfr)
 }
@@ -21,38 +19,22 @@ the CFR estimates in one panel (top panel) and the resulting naive and
 corrected CFR estimates in another panel (bottom panel)
 }
 \description{
-Plots the case and death time series used to calculate the CFR estimates
-in one panel (top panel) and the resulting naive and corrected CFR estimates
-in another panel (bottom panel)
+Plots the case and death time series used to calculate the CFR
+estimates in one panel and the resulting naive and corrected CFR estimates
+in another panel
 }
 \examples{
-library(lubridate)
-library(epiparameter)
+# Read in onset to death distribution for Ebola
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
 
-# read in the dataset in question. 
-# dataset needs 
-df_ebola <- read.csv("data/ebola_1976.csv")
+# Calculate rolling naive and corrected CFRs
+df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
+df_ccfr <- rolling_cfr(ebola1976,
+  correct_for_delays = TRUE,
+  onset_to_death_ebola
+)
 
-df_ebola$date <- ymd(df_ebola$date)
-
-# read in onset to death distribution
-onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
-
-# calculate static naive and corrected CFRs
-ncfr <- calcalate_static_cfr(df_ebola, correct_for_delays = FALSE)
-ccfr <- calcalate_static_cfr(df_ebola, correct_for_delays = TRUE, onset_to_death_ebola)
-
-# just a function that formats the output of the CFR data.frames 
-# nicely and prints to the terminal
-format_cfr_output_neatly(ncfr)
-format_cfr_output_neatly(ccfr)
-
-# calculate rolling naive and corrected CFRs
-df_ncfr <- calcalate_rolling_cfr(df_ebola, correct_for_delays = FALSE)
-df_ccfr <- calcalate_rolling_cfr(df_ebola, correct_for_delays = TRUE, 
-                                 onset_to_death_ebola)
-
-
-# plotting rolling estimates
+# Plotting rolling estimates
 plot_data_and_cfr(df_ncfr, df_ccfr)
+
 }

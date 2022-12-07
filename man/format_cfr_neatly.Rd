@@ -2,23 +2,41 @@
 % Please edit documentation in R/format_cfr_neatly.R
 \name{format_cfr_neatly}
 \alias{format_cfr_neatly}
-\title{Function to format the CFR MLE and 95\% range estimates neatly, giving the
-estimates to 3 significant figures and presenting the MLE and 95\% interval
-on a single line}
+\title{Neatly format CFR estimates}
 \usage{
-format_cfr_neatly(df_in)
+format_cfr_neatly(cfr_in)
 }
 \arguments{
-\item{df_in}{A data.frame of the format outputted by ccfr_uncertainty.R}
+\item{cfr_in}{A named vector of the format outputted by \code{\link[=ccfr_uncertainty]{ccfr_uncertainty()}}
+or \code{\link[=static_cfr]{static_cfr()}}}
 }
 \value{
-Prints the output of ccfr_uncertainty.R neatly to the R terminal
+Prints the output of \code{\link[=ccfr_uncertainty]{ccfr_uncertainty()}} or \code{\link[=static_cfr]{static_cfr()}} neatly to
+the R terminal
 }
 \description{
-Function to format the CFR MLE and 95\% range estimates neatly, giving the
+Format the CFR MLE and 95\% range estimates neatly, giving the
 estimates to 3 significant figures and presenting the MLE and 95\% interval
 on a single line
 }
 \examples{
-format_cfr_neatly(data.frame(cfr_me = 0.5, cfr_lo = 0.2, cfr_hi = 0.7))
+# Get onset to death distribution from epiparameter
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+
+# load Ebola 1976 outbreak data
+data("ebola1976")
+# Calculate static naive CFR
+ncfr <- static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
+
+# Calculate static corrected CFRs
+ccfr <- static_cfr(
+  df_in = ebola1976,
+  correct_for_delays = TRUE,
+  delay_pmf = onset_to_death_ebola
+)
+
+# Formats the output of the CFR data.frames nicely
+# and prints to the terminal
+format_cfr_neatly(ncfr)
+format_cfr_neatly(ccfr)
 }

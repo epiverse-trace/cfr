@@ -2,12 +2,7 @@
 % Please edit documentation in R/known_outcomes.R
 \name{known_outcomes}
 \alias{known_outcomes}
-\title{Calculates the number of individuals with known outcomes from a case and
-death time series of data of an outbreak, up to the time point supplied. Can
-either calculate the daily new number of known outcomes or the cumulative
-number. Uses the probability mass function representing the delay between
-case detection and death, typically approximated by a symptom onset to death
-distribution from literature for the disease in question}
+\title{Known outcomes from case and death timeseries data}
 \usage{
 known_outcomes(df_in, delay_pmf, cumulative = TRUE)
 }
@@ -16,35 +11,35 @@ known_outcomes(df_in, delay_pmf, cumulative = TRUE)
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point}
 
+\item{delay_pmf}{The delay distribution used, in the form of a probability
+mass function parameterised by time; i.e. \eqn{f(t)} which gives the
+probability a case has a known outcomes (i.e. death) at time \eqn{t},
+parameterised with disease-specific parameters before it is supplied here.
+A typical example would be a symptom onset to death delay distribution.}
+
 \item{cumulative}{A boolean flag to indicate whether the user wants the daily
 or total number of known outcomes}
-
-\item{delay_dist}{The delay distribution used, in the form of a probability
-mass function parameterised by time. I.e. f(t) which gives the probability a
-case has a known outcomes (i.e. death) at time t, parameterised with
-disease-specific parameters before it is supplied here. A typical example
-would be a symptom onset to death delay distribution}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
 of the corrected CFR
 }
 \description{
-Calculates the number of individuals with known outcomes from a case and
-death time series of data of an outbreak, up to the time point supplied. Can
-either calculate the daily new number of known outcomes or the cumulative
-number. Uses the probability mass function representing the delay between
+Calculates the number of individuals with known outcomes from a
+case and death time series of data of an outbreak, up to the time point
+supplied.
+Can either calculate the daily new number of known outcomes or the cumulative
+number.
+Uses the probability mass function representing the delay between
 case detection and death, typically approximated by a symptom onset to death
-distribution from literature for the disease in question
+distribution from the literature for the disease in question.
 }
 \examples{
-read in some data
-df_ebola <- read.csv("data/ebola_1976.csv")
+# Load Ebola 1976 outbreak data
+data("ebola1976")
 
-df_ebola$date <- ymd(df_ebola$date)
+# Access a relevant symptom onset to death distribution
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
 
-access a relevant symptom onset to death distribution
-onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
-
-df_known_outcomes <- known_outcomes(df_ebola, onset_to_death_ebola)
+df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
 }
