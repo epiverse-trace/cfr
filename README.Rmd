@@ -1,0 +1,73 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# _datadelay_: Calculate robust epidemic case fatality rates
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+The goal of datadelay is to provide robust estimates of the case fatality rate of an epidemic.
+
+## Installation
+
+You can install the development version of datadelay from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("epiverse-trace/datadelay")
+```
+
+## Quick start
+
+This example of basic usage shows how to use _datadelay_ to estimate case fatality ratios from the 1976 Ebola outbreak.
+
+```{r}
+# Load package
+library(datadelay)
+
+# Load epiparameter for delay distributions
+library(epiparameter)
+
+# Load the Ebola 1976 data provided with the package
+data("ebola1976")
+
+# Get the onset to death distribution for ebola virus disease
+onset_to_death_ebola <- epidist(
+  pathogen = "ebola",
+  delay_dist = "onset_to_death"
+)
+# Access the probability mass function
+delay_pmf <- onset_to_death_ebola$pmf
+
+# Calculate the static naive and corrected CFRs
+ncfr <- static_cfr(ebola1976, correct_for_delays = FALSE)
+ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, onset_to_death_ebola)
+
+# Print nicely formatted case fatality rate estimates
+format_cfr_neatly(ncfr)
+format_cfr_neatly(ccfr)
+
+# Calculate rolling naive and corrected CFRs
+df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
+df_ccfr <- rolling_cfr(
+  ebola1976,
+  correct_for_delays = TRUE,
+  onset_to_death_ebola
+)
+
+# Plotting case and death data along with CFRs
+plot_data_and_cfr(df_ncfr, df_ccfr)
+```
