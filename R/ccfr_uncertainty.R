@@ -33,7 +33,7 @@ ccfr_uncertainty <- function(total_cases,
                              poisson_threshold = 200) {
   stopifnot(
     "`total_cases` must be equal to or more than `total_deaths`" =
-      (total_cases > total_deaths)
+      (total_cases >= total_deaths)
   )
 
   # MLE estimation for corrected CFR
