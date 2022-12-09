@@ -31,7 +31,8 @@ Imports:
 Suggests: 
     testthat (>= 3.0.0),
     epiparameter,
-    usethis
+    usethis,
+    covidregionaldata
 Remotes:
     epiverse-trace/epiparameter
 Config/testthat/edition: 3
