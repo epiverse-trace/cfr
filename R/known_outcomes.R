@@ -42,6 +42,12 @@ known_outcomes <- function(df_in,
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(df_in)))
   )
+  if (!missing(delay_pmf)) {
+    stopifnot(
+      "`delay_pmf` must be a function`" =
+        (is.function(delay_pmf))
+    )
+  }
   # extracting the case time series and removing first element
   # so the weights and cases match - see Nishiura et al. for definition of
   # correction term used

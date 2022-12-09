@@ -51,6 +51,12 @@ rolling_cfr <- function(df_in,
        please specify an onset-to-death (or similar) probability mass function"
     )
   }
+  if (!missing(delay_pmf)) {
+    stopifnot(
+      "`delay_pmf` must be a function`" =
+        (is.function(delay_pmf))
+    )
+  }
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(df_in)))
