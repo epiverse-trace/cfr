@@ -7,10 +7,10 @@ onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
 # Load ebola 1976 outbreak data
 data("ebola1976")
 
-# Calculate static naive CFR
+# Calculate rolling naive CFR
 rcfr_naive <- rolling_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 
-# Calculate static corrected CFRs
+# Calculate rolling corrected CFRs
 rcfr_corrected <- rolling_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
@@ -18,7 +18,7 @@ rcfr_corrected <- rolling_cfr(
 )
 
 # Basic expectations
-test_that("Basic expectations of static_cfr", {
+test_that("Basic expectations of rolling_cfr", {
   # expect named vectors
   expect_identical(
     colnames(rcfr_naive),
@@ -38,7 +38,7 @@ test_that("Basic expectations of static_cfr", {
 
   # expect error when corrected CFR requested without delay PMF
   expect_error(
-    static_cfr(
+    rolling_cfr(
       df_in = ebola1976,
       correct_for_delays = TRUE
     ),
@@ -60,14 +60,14 @@ test_that("Basic expectations of static_cfr", {
 
   # expect error when columns are missing
   expect_error(
-    static_cfr(
+    rolling_cfr(
       df_in = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
     ),
     regexp = "Case data must contain columns `cases` and `deaths`"
   )
   expect_error(
-    static_cfr(
+    rolling_cfr(
       df_in = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
     ),

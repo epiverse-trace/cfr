@@ -1,4 +1,4 @@
-# Basic expectations of static_cfr
+# Basic expectations of rolling_cfr
 
     Code
       tail(rcfr_naive)
