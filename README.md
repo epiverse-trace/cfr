@@ -5,7 +5,13 @@
 
 <!-- badges: start -->
 
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
 The goal of datadelay is to provide robust estimates of the case
@@ -71,7 +77,7 @@ df_ccfr <- rolling_cfr(
 plot_data_and_cfr(df_ncfr, df_ccfr)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
 
 ### Covid-19
 
@@ -127,4 +133,4 @@ plot_data_and_cfr(
 )
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-example-covid-plot-1.png" width="100%" />
