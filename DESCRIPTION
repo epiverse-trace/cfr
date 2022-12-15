@@ -10,11 +10,18 @@ Authors@R: c(
         comment = c(ORCID = "0000-0001-8814-9421")
         ),
     person(
-        given = "Tim",
-        family = "Russell",
-        email = "timothy.russell@lshtm.ac.uk", 
-        role = c("aut"),
-        comment = c(ORCID = "0000-0001-5610-6080")
+          given = "Tim",
+          family = "Russell",
+          email = "timothy.russell@lshtm.ac.uk", 
+          role = c("aut"),
+          comment = c(ORCID = "0000-0001-5610-6080")
+        ),
+    person(
+          given = "Pratik",
+          family = "Gupte",
+          role = c("aut"),
+          email = "pratik.gupte@lshtm.ac.uk",
+          comment = c(ORCID = "0000-0001-5294-7819")
         )
     )
 Description: Delay functions for routine surveillance data.
@@ -27,11 +34,11 @@ RoxygenNote: 7.2.2
 Imports:
     data.table,
     ggplot2,
-    patchwork
+    patchwork,
+    rlang
 Suggests: 
     testthat (>= 3.0.0),
     epiparameter,
-    usethis,
     covidregionaldata
 Remotes:
     epiverse-trace/epiparameter,
