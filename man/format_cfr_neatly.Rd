@@ -7,11 +7,11 @@
 format_cfr_neatly(cfr_in)
 }
 \arguments{
-\item{cfr_in}{A named vector of the format outputted by \code{\link[=ccfr_uncertainty]{ccfr_uncertainty()}}
+\item{cfr_in}{A named vector of the format outputted by \code{\link[=estimate_ccfr]{estimate_ccfr()}}
 or \code{\link[=static_cfr]{static_cfr()}}}
 }
 \value{
-Prints the output of \code{\link[=ccfr_uncertainty]{ccfr_uncertainty()}} or \code{\link[=static_cfr]{static_cfr()}} neatly to
+Prints the output of \code{\link[=estimate_ccfr]{estimate_ccfr()}} or \code{\link[=static_cfr]{static_cfr()}} neatly to
 the R terminal
 }
 \description{

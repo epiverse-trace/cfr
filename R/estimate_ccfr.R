@@ -1,6 +1,6 @@
-#' Corrected case fatality rate
+#' Estimate the corrected case fatality rate
 #'
-#' @description Calculates the maximum likelihood estimate and 95% confidence
+#' @description Estimate the maximum likelihood estimate and 95% confidence
 #' interval of a corrected CFR, using the total cases and total cases with known
 #' outcomes, where the latter replaces the total number of deaths in the
 #' standard (naive) CFR definition. We use a binomial likelihood, approximated
@@ -18,16 +18,15 @@
 #' point of an outbreak of interest. Used to correct the total number of deaths
 #' for delays between case detection and outcome. Given that its a proportion,
 #' it must be between 0.0 and 1.0.
-#' @param poisson_threshold The case count above which to use Poisson
-#' approximation. Set to 200 by default.
+#' @inheritParams static_cfr
 #'
 #' @return A named vector with the MLE and 95% confidence interval of the
 #' corrected CFR estimates, named "cfr_me", "cfr_low", and "cfr_high".
 #' @export
 #'
 #' @examples
-#' ccfr_uncertainty(total_cases = 1000, total_deaths = 900, u_t = 0.2)
-ccfr_uncertainty <- function(total_cases,
+#' estimate_ccfr(total_cases = 1000, total_deaths = 900, u_t = 0.2)
+estimate_ccfr <- function(total_cases,
                              total_deaths,
                              u_t,
                              poisson_threshold = 200) {
@@ -39,21 +38,21 @@ ccfr_uncertainty <- function(total_cases,
   # MLE estimation for corrected CFR
   pprange <- seq(from = 1e-3, to = 1.0, by = 1e-3)
 
-  lik <- numeric(length = length(pprange))
-
-  for (i in seq_along(pprange)) {
-    p_t <- pprange[i]
-
-    # Calculate likelihood - use binomial for small samples and Poisson
-    # approximation for larger numbers
-    if (total_cases < poisson_threshold) {
-      lik[i] <- log(choose(total_cases, total_deaths)) +
+  fn_likelihood <- if (total_cases < poisson_threshold) {
+    function(p_t) {
+      log(choose(total_cases, total_deaths)) +
         (total_deaths * log(p_t)) +
         ((total_cases - total_deaths) * log(1 - p_t))
-    } else {
-      lik[i] <- stats::dpois(total_deaths, p_t * u_t * total_cases, log = TRUE)
+    }
+  } else {
+    function(p_t) {
+      stats::dpois(total_deaths, p_t * u_t * total_cases, log = TRUE)
     }
   }
+
+  # Calculate likelihood - use binomial for small samples and Poisson
+  # approximation for larger numbers
+  lik <- vapply(X = pprange, FUN = fn_likelihood, FUN.VALUE = numeric(1L))
 
   # MLE estimate
   cfr_me <- pprange[which.max(lik)]

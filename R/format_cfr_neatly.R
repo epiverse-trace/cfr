@@ -4,10 +4,10 @@
 #' estimates to 3 significant figures and presenting the MLE and 95% interval
 #' on a single line
 #'
-#' @param cfr_in A named vector of the format outputted by [ccfr_uncertainty()]
+#' @param cfr_in A named vector of the format outputted by [estimate_ccfr()]
 #' or [static_cfr()]
 #'
-#' @return Prints the output of [ccfr_uncertainty()] or [static_cfr()] neatly to
+#' @return Prints the output of [estimate_ccfr()] or [static_cfr()] neatly to
 #' the R terminal
 #' @export
 #'
