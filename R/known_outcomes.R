@@ -31,9 +31,10 @@
 #' data("ebola1976")
 #'
 #' # Access a relevant symptom onset to death distribution
-#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
+#' delay_pmf <- onset_to_death_ebola$pmf
 #'
-#' df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
+#' df_known_outcomes <- known_outcomes(df_in = ebola1976, delay_pmf)
 known_outcomes <- function(df_in,
                            delay_pmf,
                            cumulative = TRUE) {

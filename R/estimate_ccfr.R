@@ -37,14 +37,14 @@ estimate_ccfr <- function(total_cases,
 
   # MLE estimation for corrected CFR
   pprange <- seq(from = 1e-3, to = 1.0, by = 1e-3)
-  
+
   # Calculate likelihood - use binomial for small samples and Poisson
   # approximation for larger numbers
   lik <- numeric()
   if (total_cases < poisson_threshold) {
     lik <- log(choose(total_cases, total_deaths)) +
-        (total_deaths * log(pprange)) +
-        ((total_cases - total_deaths) * log(1 - pprange))
+      (total_deaths * log(pprange)) +
+      ((total_cases - total_deaths) * log(1 - pprange))
   } else {
     lik <- stats::dpois(total_deaths, pprange * u_t * total_cases, log = TRUE)
   }

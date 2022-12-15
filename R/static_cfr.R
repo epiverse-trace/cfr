@@ -27,7 +27,8 @@
 #'
 #' @examples
 #' # Get onset to death distribution from epiparameter
-#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
+#' delay_pmf <- onset_to_death_ebola$pmf
 #'
 #' # load stored ebola case data from 1976 outbreak
 #' data("ebola1976")
