@@ -65,6 +65,7 @@ rolling_cfr <- function(df_in,
   # calculating the number of days in the time series to be looped over
   n_days <- seq_len(nrow(df_in))
 
+  df_cfr <- data.frame()
   # calculating the corrected CFR rolling over all days
   if (correct_for_delays) {
     df_cfr <- lapply(n_days, function(i) {

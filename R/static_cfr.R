@@ -66,27 +66,9 @@ static_cfr <- function(df_in,
   )
 
   # calculating the naive CFR: (total deaths) / (total cases)
+  cfr_estimate <- numeric()
   # with the standard binomial
-  if (!correct_for_delays) {
-
-    # calculating the total number of cases (without correecting) and deaths
-    total_cases <- sum(df_in$cases)
-    total_deaths <- sum(df_in$deaths)
-
-    # calculating the central estimate
-    cfr_me <- total_deaths / total_cases
-
-    # calculating the lower and upper 95% confidence interval using the exact
-    # binomial test
-    cfr_conf <- stats::binom.test(round(total_deaths), total_cases, p = 1)
-
-    # extracting the lower and upper intervals respectively
-    cfr_lims <- cfr_conf$conf.int
-
-    # putting together the estimates
-    cfr_estimate <- c(cfr_me, cfr_lims)
-    names(cfr_estimate) <- c("cfr_me", "cfr_low", "cfr_high")
-  } else {
+  if (correct_for_delays) {
     # calculating the corrected cfr, corrected for delay between case detection
     # and outcome
     # calculating the number of cases with known outcome, used as a replacement
@@ -108,10 +90,28 @@ static_cfr <- function(df_in,
 
     # calculating the maximum likelihood estimate and 95% confidence interval
     # using the binomial likelihood function from Nishiura
-    cfr_estimate <- ccfr_uncertainty(
+    cfr_estimate <- estimate_ccfr(
       total_cases = total_cases, total_deaths = total_deaths, u_t = u_t,
       poisson_threshold = poisson_threshold
-    )
+    )    
+  } else {
+    # calculating the total number of cases (without correcting) and deaths
+    total_cases <- sum(df_in$cases)
+    total_deaths <- sum(df_in$deaths)
+
+    # calculating the central estimate
+    cfr_me <- total_deaths / total_cases
+
+    # calculating the lower and upper 95% confidence interval using the exact
+    # binomial test
+    cfr_conf <- stats::binom.test(round(total_deaths), total_cases, p = 1)
+
+    # extracting the lower and upper intervals respectively
+    cfr_lims <- cfr_conf$conf.int
+
+    # putting together the estimates
+    cfr_estimate <- c(cfr_me, cfr_lims)
+    names(cfr_estimate) <- c("cfr_me", "cfr_low", "cfr_high")
   }
 
   cfr_estimate
