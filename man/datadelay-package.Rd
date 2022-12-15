@@ -22,6 +22,7 @@ Useful links:
 Authors:
 \itemize{
   \item Tim Russell \email{timothy.russell@lshtm.ac.uk} (\href{https://orcid.org/0000-0001-5610-6080}{ORCID})
+  \item Pratik Gupte \email{pratik.gupte@lshtm.ac.uk} (\href{https://orcid.org/0000-0001-5294-7819}{ORCID})
 }
 
 }

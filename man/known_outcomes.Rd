@@ -2,7 +2,7 @@
 % Please edit documentation in R/known_outcomes.R
 \name{known_outcomes}
 \alias{known_outcomes}
-\title{Known outcomes from case and death timeseries data}
+\title{Estimate known outcomes from case and death time-series data}
 \usage{
 known_outcomes(df_in, delay_pmf, cumulative = TRUE)
 }
@@ -25,9 +25,9 @@ A data.frame containing the MLE estimate and 95\% confidence interval
 of the corrected CFR
 }
 \description{
-Calculates the number of individuals with known outcomes from a
-case and death time series of data of an outbreak, up to the time point
-supplied.
+Estimates the expected number of individuals with known outcomes
+from a case and death time series of data of an outbreak, up to the time
+point supplied.
 Can either calculate the daily new number of known outcomes or the cumulative
 number.
 Uses the probability mass function representing the delay between
