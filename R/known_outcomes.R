@@ -1,8 +1,8 @@
-#' Known outcomes from case and death timeseries data
+#' Estimate known outcomes from case and death time-series data
 #'
-#' @description Calculates the number of individuals with known outcomes from a
-#' case and death time series of data of an outbreak, up to the time point
-#' supplied.
+#' @description Estimates the expected number of individuals with known outcomes
+#' from a case and death time series of data of an outbreak, up to the time
+#' point supplied.
 #' Can either calculate the daily new number of known outcomes or the cumulative
 #' number.
 #' Uses the probability mass function representing the delay between
@@ -39,8 +39,12 @@ known_outcomes <- function(df_in,
                            cumulative = TRUE) {
   # some input checking
   stopifnot(
+    "Case data must be a data.frame" =
+    (is.data.frame(df_in)),
     "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(df_in)))
+      (all(c("cases", "deaths") %in% colnames(df_in))),
+    "Option `cumulative` must be `TRUE` or `FALSE`" =
+    (is.logical(cumulative))
   )
   if (!missing(delay_pmf)) {
     stopifnot(
@@ -61,7 +65,9 @@ known_outcomes <- function(df_in,
   # case time series. Use the reverse of the case time series to match the
   # formal definition of a convolution (see convolution() documentation for
   # further explanation, using ?convolution() command)
-  df_in$known_outcomes <- stats::convolve(onset_wts, rev(cases), type = "c")
+  df_in$known_outcomes <- stats::convolve(
+    onset_wts, rev(cases), type = "circular"
+  )
 
   # performing the cumulative sum as per the function argument. TRUE by default.
   if (cumulative) {
