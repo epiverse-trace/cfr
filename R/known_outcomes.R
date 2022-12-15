@@ -40,11 +40,11 @@ known_outcomes <- function(df_in,
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =
-    (is.data.frame(df_in)),
+      (is.data.frame(df_in)),
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(df_in))),
     "Option `cumulative` must be `TRUE` or `FALSE`" =
-    (is.logical(cumulative))
+      (is.logical(cumulative))
   )
   if (!missing(delay_pmf)) {
     stopifnot(
@@ -66,7 +66,8 @@ known_outcomes <- function(df_in,
   # formal definition of a convolution (see convolution() documentation for
   # further explanation, using ?convolution() command)
   df_in$known_outcomes <- stats::convolve(
-    onset_wts, rev(cases), type = "circular"
+    onset_wts, rev(cases),
+    type = "circular"
   )
 
   # performing the cumulative sum as per the function argument. TRUE by default.

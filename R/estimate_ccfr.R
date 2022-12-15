@@ -27,9 +27,9 @@
 #' @examples
 #' estimate_ccfr(total_cases = 1000, total_deaths = 900, u_t = 0.2)
 estimate_ccfr <- function(total_cases,
-                             total_deaths,
-                             u_t,
-                             poisson_threshold = 200) {
+                          total_deaths,
+                          u_t,
+                          poisson_threshold = 200) {
   stopifnot(
     "`total_cases` must be equal to or more than `total_deaths`" =
       (total_cases >= total_deaths)

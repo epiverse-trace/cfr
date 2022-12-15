@@ -93,7 +93,7 @@ static_cfr <- function(df_in,
     cfr_estimate <- estimate_ccfr(
       total_cases = total_cases, total_deaths = total_deaths, u_t = u_t,
       poisson_threshold = poisson_threshold
-    )    
+    )
   } else {
     # calculating the total number of cases (without correcting) and deaths
     total_cases <- sum(df_in$cases)
