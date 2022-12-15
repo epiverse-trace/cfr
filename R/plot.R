@@ -39,14 +39,6 @@ plot_data_and_cfr <- function(df_ncfr, df_ccfr) {
       (all(c("cases", "deaths", "date") %in% colnames(df_ccfr)))
   )
 
-  # set variables to NULL
-  value <- NULL
-  variable <- NULL
-  cfr_low <- NULL
-  cfr_high <- NULL
-  cfr_me <- NULL
-  type <- NULL
-
   # putting together the data for just the first plot, to be melted
   # into long format (for ggplot)
   df_data_plot <- df_ncfr[, c("date", "cases", "deaths")]
@@ -59,9 +51,9 @@ plot_data_and_cfr <- function(df_ncfr, df_ccfr) {
   p_1 <- ggplot2::ggplot(
     data = df_data_plot_long,
     ggplot2::aes(
-      x = date, y = value,
-      colour = variable,
-      shape = variable
+      x = .data$date, y = .data$value,
+      colour = .data$variable,
+      shape = .data$variable
     )
   ) +
     ggplot2::geom_line() +
@@ -106,18 +98,18 @@ plot_data_and_cfr <- function(df_ncfr, df_ccfr) {
   p_2 <- ggplot2::ggplot(data = df_cfr_plot) +
     ggplot2::geom_ribbon(
       ggplot2::aes(
-        x = date,
-        ymin = cfr_low,
-        ymax = cfr_high,
-        fill = type
+        x = .data$date,
+        ymin = .data$cfr_low,
+        ymax = .data$cfr_high,
+        fill = .data$type
       ),
       alpha = 0.2
     ) +
     ggplot2::geom_line(
       ggplot2::aes(
-        x = date,
-        y = cfr_me,
-        colour = type
+        x = .data$date,
+        y = .data$cfr_me,
+        colour = .data$type
       ),
       linetype = "dashed"
     ) +
