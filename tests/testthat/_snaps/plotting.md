@@ -22,13 +22,13 @@
       this_plot$layers
     Output
       [[1]]
-      mapping: x = ~date, ymin = ~cfr_low, ymax = ~cfr_high, fill = ~type 
+      mapping: x = ~.data$date, ymin = ~.data$cfr_low, ymax = ~.data$cfr_high, fill = ~.data$type 
       geom_ribbon: na.rm = FALSE, orientation = NA, outline.type = both
       stat_identity: na.rm = FALSE
       position_identity 
       
       [[2]]
-      mapping: x = ~date, y = ~cfr_me, colour = ~type 
+      mapping: x = ~.data$date, y = ~.data$cfr_me, colour = ~.data$type 
       geom_line: na.rm = FALSE, orientation = NA
       stat_identity: na.rm = FALSE
       position_identity 
