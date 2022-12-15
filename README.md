@@ -1,74 +1,130 @@
-# datadelay
 
-`R` package to transform surveillance data based on epidemiological delay distributions. This initial version outlines functions that will be refined/superceded as pipelines develop.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# *datadelay*: Calculate robust epidemic case fatality rates
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+The goal of datadelay is to provide robust estimates of the case
+fatality rate of an epidemic.
 
 ## Installation
 
-The easiest way to install the development version of `datadelay` is to use the `devtools` package:
+You can install the development version of datadelay from
+[GitHub](https://github.com/) with:
 
-```
+``` r
 # install.packages("devtools")
-library(devtools)
-install_github("epiverse-trace/datadelay")
-library(datadelay)
+devtools::install_github("epiverse-trace/datadelay")
 ```
 
 ## Quick start
 
-The example below loads COVID-19 case and death data from the United States using the `covidregionaldata` package, then estimates case fatality risk using parameters from the `epiparameter` package.
+### Ebola 1976
 
-```r
-# Load dependencies
-# install.packages("devtools")
-# install.packages("data.table")
-# install.packages("ggplot2")
-# library(devtools)
-# install_github("epiverse-trace/epiparameter")
-# install_github("epiverse-trace/datadelay")
-library(data.table)
-library(lubridate)
-library(patchwork)
-library(epiparameter)
-library(ggplot2)
+This example of basic usage shows how to use *datadelay* to estimate
+case fatality ratios from the 1976 Ebola outbreak.
 
-# reading in the data
-dt_ebola <- fread("data/ebola_1976.csv")
+``` r
+# Load package
+library(datadelay)
 
-# sourcing the functions to perform the calculations and plots
-source("R/functions.R")
-source("R/plot.R")
+# Load the Ebola 1976 data provided with the package
+data("ebola1976")
 
-# munging the data so all variables are of the right class
-dt_ebola[, cases := as.numeric(cases)]
-dt_ebola[, deaths := as.numeric(deaths)]
-dt_ebola[, date := ymd(date)]
-dt_ebola[, date_num := .GRP, by = "date"]
+# Get the onset to death distribution for ebola virus disease
+# from the {epiparameter} package
+onset_to_death_ebola <- epiparameter::epidist(
+  pathogen = "ebola",
+  delay_dist = "onset_to_death"
+)
 
-# using the package epiparameter to access the probability mass function
-onset_to_death_ebola <- epidist("ebola","onset_to_death")$pmf
+# Access the probability mass function
+delay_pmf <- onset_to_death_ebola$pmf
 
-# calculating both the naive and corrected (for delays) CFRs, 
-# following the methods of Nishura
-# with a simple binomial likelihood for the confidence intervals
-dt_ebola_cfr <- calculate_rolling_cfrs(dt_ebola, 
-                                       smooth_incidence = TRUE, 
-                                       rolling_window = 7)
+# Calculate the static naive and corrected CFRs
+ncfr <- static_cfr(ebola1976, correct_for_delays = FALSE)
+ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, delay_pmf)
 
-# putting the data in a slightly easier form to plot
-dt_ebola_ncfr <- dt_ebola_cfr[, c("date", "ncfr_me", "ncfr_lo", "ncfr_hi")][, type := "ncfr"]
-dt_ebola_ccfr <- dt_ebola_cfr[, c("date", "ccfr_me", "ccfr_lo", "ccfr_hi")][, type := "ccfr"]
-             
-setnames(dt_ebola_ncfr, c("ncfr_me", "ncfr_lo", "ncfr_hi"), c("me", "lo", "hi"))
-setnames(dt_ebola_ccfr, c("ccfr_me", "ccfr_lo", "ccfr_hi"), c("me", "lo", "hi"))
-
-dt_ebola_cfrs <- rbind(dt_ebola_ncfr, dt_ebola_ccfr)
-
-dt_ebola_long <- melt(dt_ebola_cfr[, c("date", "cases", "deaths", 
-                                       "cases_smooth", "deaths_smooth")],
-                      id.vars = "date")
-
-# plotting the data and estimates
-p_ebola <- plot_cfr_and_data(dt_ebola_long)
-
+# Print nicely formatted case fatality rate estimates
+format_cfr_neatly(ncfr)
+#> [1] "CFR: 0.955% (95% Ci: 0.921% -- 0.977%)"
+format_cfr_neatly(ccfr)
+#> [1] "CFR: 0.970% (95% Ci: 0.851% -- 1.000%)"
 ```
 
+Calculate and plot the rolling CFR.
+
+``` r
+# Calculate rolling naive and corrected CFRs
+df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
+df_ccfr <- rolling_cfr(
+  ebola1976,
+  correct_for_delays = TRUE,
+  delay_pmf
+)
+
+# Plotting case and death data along with CFRs
+plot_data_and_cfr(df_ncfr, df_ccfr)
+```
+
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+
+### Covid-19
+
+``` r
+# Load packages for Covid case data
+# install.packages("covidregionaldata") # some issue here
+library(covidregionaldata)
+```
+
+Access and prepare case data.
+
+``` r
+# Example with US case data
+# access the data
+covid_data_us <- covidregionaldata::get_national_data(
+  countries = "united states", source = "who"
+)
+
+# prepare the data
+covid_data_us <- covid_data_us[, c("date", "cases_new", "deaths_new")]
+colnames(covid_data_us) <- c("date", "cases", "deaths")
+
+# remove rows where cases are 0, causes errors for uncorrected CFR
+covid_data_us <- covid_data_us[covid_data_us$cases > 0, ]
+```
+
+Calculate rolling CFR.
+
+``` r
+# Extract probability mass function for onset-to-death
+onset_death_covid <- epiparameter::epidist(
+  pathogen = "SARS_CoV_2",
+  delay_dist = "onset_to_death"
+)
+onset_death_covid_pmf <- onset_death_covid$pmf
+
+covid_us_cfr_naive <- rolling_cfr(
+  df_in = covid_data_us,
+  correct_for_delays = FALSE
+)
+
+covid_us_cfr_corrected <- rolling_cfr(
+  df_in = covid_data_us,
+  correct_for_delays = TRUE,
+  delay_pmf = onset_death_covid_pmf
+)
+```
+
+``` r
+plot_data_and_cfr(
+  df_ncfr = covid_us_cfr_naive,
+  df_ccfr = covid_us_cfr_corrected
+)
+```
+
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
