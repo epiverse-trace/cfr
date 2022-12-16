@@ -47,7 +47,7 @@ format_cfr_neatly <- function(cfr_in) {
   # combining the MLE estimate and the 95% interval neatly and
   # giving each to only 3 significant figures
   sprintf(
-    "CFR: %.3f%% (95%% Ci: %.3f%% -- %.3f%%)",
+    "CFR: %.2f%% (95%% CI: %.2f%% - %.2f%%)",
     cfr_in["cfr_me"], cfr_in["cfr_low"], cfr_in["cfr_high"]
   )
 }
