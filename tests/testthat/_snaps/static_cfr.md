@@ -19,12 +19,12 @@
     Code
       format_cfr_neatly(scfr_naive)
     Output
-      [1] "CFR: 0.955% (95% Ci: 0.921% -- 0.977%)"
+      [1] "CFR: 0.96% (95% CI: 0.92% - 0.98%)"
 
 ---
 
     Code
       format_cfr_neatly(scfr_corrected)
     Output
-      [1] "CFR: 0.957% (95% Ci: 0.840% -- 1.000%)"
+      [1] "CFR: 0.96% (95% CI: 0.84% - 1.00%)"
 
