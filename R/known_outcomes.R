@@ -53,27 +53,25 @@ known_outcomes <- function(df_in,
         (is.function(delay_pmf))
     )
   }
-  # extracting the case time series and removing first element
-  # so the weights and cases match - see Nishiura et al. for definition of
-  # correction term used
-  cases <- df_in$cases
 
-  # numerically evaluate the onset to death distribution over the same
-  # number of time points as the length of the case time series
-  onset_wts <- delay_pmf(seq_len(length(cases)))
-
-  # convolve the onset to death distribution with the reverse of the
-  # case time series. Use the reverse of the case time series to match the
-  # formal definition of a convolution (see convolution() documentation for
-  # further explanation, using ?convolution() command)
-  df_in$known_outcomes <- stats::convolve(
-    onset_wts, rev(cases),
-    type = "circular"
+  # nolint start
+  # Code following https://github.com/adamkucharski/ebola-cfr/
+  # blob/e2683eee62fb6fef8140b4b1d9dc13d542c5eacb/R/cfr_function.R#L12-L22
+  # nolint end
+  pmf_vals <- delay_pmf(seq(from = 0, to = nrow(df_in) - 1L))
+  expected_outcomes <- vapply(
+    X = seq_along(df_in$cases),
+    FUN = function(i) {
+      sum(rev(df_in$cases[seq_len(i)]) * pmf_vals[seq_len(i)])
+    },
+    FUN.VALUE = numeric(1L)
   )
 
   # performing the cumulative sum as per the function argument. TRUE by default.
   if (cumulative) {
-    df_in$known_outcomes <- cumsum(df_in$known_outcomes)
+    df_in$known_outcomes <- cumsum(expected_outcomes)
+  } else {
+    df_in$known_outcomes <- expected_outcomes
   }
 
   df_in
