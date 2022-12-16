@@ -16,7 +16,7 @@
 #'
 #' @param u_t The proportion of cases to cases with known outcomes up to the
 #' point of an outbreak of interest. Used to correct the total number of deaths
-#' for delays between case detection and outcome. Given that its a proportion,
+#' for delays between case detection and outcome. Given that it is a proportion,
 #' it must be between 0.0 and 1.0.
 #' @inheritParams static_cfr
 #'
@@ -42,9 +42,9 @@ estimate_ccfr <- function(total_cases,
   # approximation for larger numbers
   lik <- numeric()
   if (total_cases < poisson_threshold) {
-    lik <- log(choose(total_cases, total_deaths)) +
+    lik <- log(choose(round(u_t * total_cases), total_deaths)) +
       (total_deaths * log(pprange)) +
-      ((total_cases - total_deaths) * log(1 - pprange))
+      (((u_t * total_cases) - total_deaths) * log(1.0 - pprange))
   } else {
     lik <- stats::dpois(total_deaths, pprange * u_t * total_cases, log = TRUE)
   }
