@@ -10,7 +10,7 @@ ccfr <- estimate_ccfr(
   total_cases = sum(ebola1976$cases),
   total_deaths = sum(ebola1976$deaths),
   u_t = 0.8, # modelled value
-  poisson_threshold = 300
+  poisson_threshold = 100
 )
 
 # Check type and snapshot

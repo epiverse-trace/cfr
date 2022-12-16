@@ -4,7 +4,12 @@
 \alias{rolling_cfr}
 \title{Rolling case fatality rate}
 \usage{
-rolling_cfr(df_in, correct_for_delays = TRUE, delay_pmf)
+rolling_cfr(
+  df_in,
+  correct_for_delays = TRUE,
+  delay_pmf,
+  poisson_threshold = 200
+)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
@@ -21,6 +26,9 @@ mass function parameterised by time. I.e. f(t) which gives the probability a
 case has a known outcomes (i.e. death) at time t, parameterised with
 disease-specific parameters before it is supplied here. A typical example
 would be a symptom onset to death delay distribution}
+
+\item{poisson_threshold}{The case count above which to use Poisson
+approximation. Set to 200 by default.}
 }
 \value{
 A data.frame containing the same case and death time series supplied
@@ -36,7 +44,8 @@ iteration
 }
 \examples{
 # Get onset to death distribution from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
+delay_pmf <- onset_to_death_ebola$pmf
 
 # Calculate rolling naive CFR
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
@@ -45,6 +54,6 @@ df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  onset_to_death_ebola
+  delay_pmf
 )
 }

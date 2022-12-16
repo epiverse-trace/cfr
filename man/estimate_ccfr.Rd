@@ -17,7 +17,7 @@ to the total number of cases}
 
 \item{u_t}{The proportion of cases to cases with known outcomes up to the
 point of an outbreak of interest. Used to correct the total number of deaths
-for delays between case detection and outcome. Given that its a proportion,
+for delays between case detection and outcome. Given that it is a proportion,
 it must be between 0.0 and 1.0.}
 
 \item{poisson_threshold}{The case count above which to use Poisson

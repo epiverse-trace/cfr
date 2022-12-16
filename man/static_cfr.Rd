@@ -41,7 +41,8 @@ user and returns an estimate for a single point in time.
 }
 \examples{
 # Get onset to death distribution from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
+delay_pmf <- onset_to_death_ebola$pmf
 
 # load stored ebola case data from 1976 outbreak
 data("ebola1976")
@@ -53,6 +54,6 @@ static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 static_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf = onset_to_death_ebola
+  delay_pmf = delay_pmf
 )
 }

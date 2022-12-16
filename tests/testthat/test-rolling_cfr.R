@@ -2,7 +2,8 @@
 # prepare data and common testing elements
 
 # Get onset to death distribution for ebola from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
+delay_pmf <- onset_to_death_ebola$pmf
 
 # Load ebola 1976 outbreak data
 data("ebola1976")
@@ -14,7 +15,7 @@ rcfr_naive <- rolling_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 rcfr_corrected <- rolling_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf = onset_to_death_ebola
+  delay_pmf = delay_pmf
 )
 
 # Basic expectations

@@ -40,7 +40,7 @@
 #' static_cfr(
 #'   df_in = ebola1976,
 #'   correct_for_delays = TRUE,
-#'   delay_pmf = onset_to_death_ebola
+#'   delay_pmf = delay_pmf
 #' )
 static_cfr <- function(df_in,
                        correct_for_delays = TRUE,
