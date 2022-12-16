@@ -10,5 +10,5 @@
     Code
       format_cfr_neatly(ccfr)
     Output
-      [1] "CFR: 0.955% (95% Ci: 0.925% -- 0.976%)"
+      [1] "CFR: 1.000% (95% Ci: 0.956% -- 1.000%)"
 
