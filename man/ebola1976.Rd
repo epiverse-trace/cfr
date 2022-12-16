@@ -16,12 +16,13 @@ A data frame with 73 rows and 60 columns:
 }
 }
 \source{
-WIP UNKNOWN
+\doi{10.1016/j.epidem.2014.09.003}
 }
 \usage{
 ebola1976
 }
 \description{
 An example epidemic outbreak dataset for use with the \code{datadelay} package.
+This dataset comes from the first Ebola outbreak in Zaire in 1976.
 }
 \keyword{datasets}
