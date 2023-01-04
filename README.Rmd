@@ -65,10 +65,10 @@ format_cfr_neatly(ncfr)
 format_cfr_neatly(ccfr)
 ```
 
-Calculate and plot the rolling CFR.
+Calculate and plot real-time CFR estimates up to a given point in time
 
 ```{r example-ebola-plot}
-# Calculate rolling naive and corrected CFRs
+# Calculate naive and corrected static CFRs up to a given point in time
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
   ebola1976,
@@ -105,7 +105,7 @@ colnames(covid_data_us) <- c("date", "cases", "deaths")
 covid_data_us <- covid_data_us[covid_data_us$cases > 0, ]
 ```
 
-Calculate rolling CFR.
+Calculate static CFR up to a given point in time
 
 ```{r example-covid-calc}
 # Extract probability mass function for onset-to-death
