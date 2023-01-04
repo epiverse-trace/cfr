@@ -57,15 +57,15 @@ ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, delay_pmf)
 
 # Print nicely formatted case fatality rate estimates
 format_cfr_neatly(ncfr)
-#> [1] "CFR: 0.955% (95% Ci: 0.921% -- 0.977%)"
+#> [1] "CFR: 0.96% (95% CI: 0.92% - 0.98%)"
 format_cfr_neatly(ccfr)
-#> [1] "CFR: 0.970% (95% Ci: 0.851% -- 1.000%)"
+#> [1] "CFR: 0.96% (95% CI: 0.84% - 1.00%)"
 ```
 
-Calculate and plot the rolling CFR.
+Calculate and plot real-time CFR estimates up to a given point in time
 
 ``` r
-# Calculate rolling naive and corrected CFRs
+# Calculate naive and corrected static CFRs up to a given point in time
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
   ebola1976,
@@ -104,7 +104,7 @@ colnames(covid_data_us) <- c("date", "cases", "deaths")
 covid_data_us <- covid_data_us[covid_data_us$cases > 0, ]
 ```
 
-Calculate rolling CFR.
+Calculate static CFR up to a given point in time
 
 ``` r
 # Extract probability mass function for onset-to-death
