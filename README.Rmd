@@ -1,26 +1,32 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# *datadelay*: Calculate robust epidemic case fatality rates
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# _datadelay_: Calculate robust epidemic case fatality rates
 
 <!-- badges: start -->
-
-[![License:
-MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
+[![Codecov test coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main)
+[![CRAN status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-The goal of datadelay is to provide robust estimates of the case
-fatality rate of an epidemic.
+The goal of datadelay is to provide robust estimates of the case fatality rate of an epidemic.
 
 ## Installation
 
-You can install the development version of datadelay from
-[GitHub](https://github.com/) with:
+You can install the development version of datadelay from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -31,10 +37,9 @@ devtools::install_github("epiverse-trace/datadelay")
 
 ### Ebola 1976
 
-This example of basic usage shows how to use *datadelay* to estimate
-case fatality ratios from the 1976 Ebola outbreak.
+This example of basic usage shows how to use _datadelay_ to estimate case fatality ratios from the 1976 Ebola outbreak.
 
-``` r
+```{r example-ebola-calc}
 # Load package
 library(datadelay)
 
@@ -57,14 +62,12 @@ ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, delay_pmf)
 
 # Print nicely formatted case fatality rate estimates
 format_cfr_neatly(ncfr)
-#> [1] "CFR: 0.96% (95% CI: 0.92% - 0.98%)"
 format_cfr_neatly(ccfr)
-#> [1] "CFR: 0.96% (95% CI: 0.84% - 1.00%)"
 ```
 
 Calculate and plot real-time CFR estimates up to a given point in time
 
-``` r
+```{r example-ebola-plot}
 # Calculate naive and corrected static CFRs up to a given point in time
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
@@ -77,11 +80,9 @@ df_ccfr <- rolling_cfr(
 plot_data_and_cfr(df_ncfr, df_ccfr)
 ```
 
-<img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
-
 ### Covid-19
 
-``` r
+```{r example-get-covidregionaldata}
 # Load packages for Covid case data
 # install.packages("covidregionaldata") # some issue here
 library(covidregionaldata)
@@ -89,7 +90,7 @@ library(covidregionaldata)
 
 Access and prepare case data.
 
-``` r
+```{r message=FALSE, example-covid-prep}
 # Example with US case data
 # access the data
 covid_data_us <- covidregionaldata::get_national_data(
@@ -106,7 +107,7 @@ covid_data_us <- covid_data_us[covid_data_us$cases > 0, ]
 
 Calculate static CFR up to a given point in time
 
-``` r
+```{r example-covid-calc}
 # Extract probability mass function for onset-to-death
 onset_death_covid <- epiparameter::epidist(
   pathogen = "SARS_CoV_2",
@@ -126,11 +127,9 @@ covid_us_cfr_corrected <- rolling_cfr(
 )
 ```
 
-``` r
+```{r example-covid-plot}
 plot_data_and_cfr(
   df_ncfr = covid_us_cfr_naive,
   df_ccfr = covid_us_cfr_corrected
 )
 ```
-
-<img src="man/figures/README-example-covid-plot-1.png" width="100%" />

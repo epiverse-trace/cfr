@@ -1,2 +1,8 @@
-^datadelay\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^LICENSE\.md$
+^\.github$
+^codecov\.yml$
+^README\.Rmd$
+^\.lintr$
+^data-raw$
