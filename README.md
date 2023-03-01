@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# *datadelay*: Calculate robust epidemic case fatality rates
+# *datadelay*: Estimating disease severity and under-reporting
 
 <!-- badges: start -->
 
@@ -14,8 +14,7 @@ coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge
 status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-The goal of datadelay is to provide robust estimates of the case
-fatality rate of an epidemic.
+The goal of datadelay is to provide simple, fast methods for estimation of disease severity and under-reporting in real-time, accounting for delays in epidemic timeseries.
 
 ## Installation
 
@@ -25,6 +24,9 @@ You can install the development version of datadelay from
 ``` r
 # install.packages("devtools")
 devtools::install_github("epiverse-trace/datadelay")
+
+# Also install epiparameter for epidemiological parameter values
+devtools::install_github("epiverse-trace/epiparameter")
 ```
 
 ## Quick start
@@ -79,58 +81,9 @@ plot_data_and_cfr(df_ncfr, df_ccfr)
 
 <img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
 
-### Covid-19
+## Development
 
-``` r
-# Load packages for Covid case data
-# install.packages("covidregionaldata") # some issue here
-library(covidregionaldata)
-```
-
-Access and prepare case data.
-
-``` r
-# Example with US case data
-# access the data
-covid_data_us <- covidregionaldata::get_national_data(
-  countries = "united states", source = "who"
-)
-
-# prepare the data
-covid_data_us <- covid_data_us[, c("date", "cases_new", "deaths_new")]
-colnames(covid_data_us) <- c("date", "cases", "deaths")
-
-# remove rows where cases are 0, causes errors for uncorrected CFR
-covid_data_us <- covid_data_us[covid_data_us$cases > 0, ]
-```
-
-Calculate static CFR up to a given point in time
-
-``` r
-# Extract probability mass function for onset-to-death
-onset_death_covid <- epiparameter::epidist(
-  pathogen = "SARS_CoV_2",
-  delay_dist = "onset_to_death"
-)
-onset_death_covid_pmf <- onset_death_covid$pmf
-
-covid_us_cfr_naive <- rolling_cfr(
-  df_in = covid_data_us,
-  correct_for_delays = FALSE
-)
-
-covid_us_cfr_corrected <- rolling_cfr(
-  df_in = covid_data_us,
-  correct_for_delays = TRUE,
-  delay_pmf = onset_death_covid_pmf
-)
-```
-
-``` r
-plot_data_and_cfr(
-  df_ncfr = covid_us_cfr_naive,
-  df_ccfr = covid_us_cfr_corrected
-)
-```
-
-<img src="man/figures/README-example-covid-plot-1.png" width="100%" />
+This package is currently a *concept*, as defined by the [RECON software
+lifecycle](https://www.reconverse.org/lifecycle.html). This means that
+essential features and mechanisms are still being developed, and the
+package is not ready for use outside of the development team.
