@@ -14,7 +14,9 @@ coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge
 status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-The goal of datadelay is to provide simple, fast methods for estimation of disease severity and under-reporting in real-time, accounting for delays in epidemic timeseries.
+The goal of datadelay is to provide simple, fast methods for estimation
+of disease severity and under-reporting in real-time, accounting for
+delays in epidemic timeseries.
 
 ## Installation
 
@@ -80,8 +82,6 @@ plot_data_and_cfr(df_ncfr, df_ccfr)
 ```
 
 <img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
-
-## Development
 
 This package is currently a *concept*, as defined by the [RECON software
 lifecycle](https://www.reconverse.org/lifecycle.html). This means that
