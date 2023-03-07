@@ -13,7 +13,8 @@
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 #' the numbers of new cases and new deaths at each time point
 #'
-#' @param delay_pmf The delay distribution used, in the form of a probability
+#' @param epi_dist The delay distribution used, in the form of an
+#' [epiparameter::epidist()] object. This is used to obtain a probability
 #' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 #' probability a case has a known outcomes (i.e. death) at time \eqn{t},
 #' parameterised with disease-specific parameters before it is supplied here.
@@ -30,13 +31,21 @@
 #' # Load Ebola 1976 outbreak data
 #' data("ebola1976")
 #'
-#' # Access a relevant symptom onset to death distribution
-#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
-#' delay_pmf <- onset_to_death_ebola$pmf
+#' # Create an `epidist` for EVD onset to death distribution
+#' # taken from parameters in 10.1016/S0140-6736(18)31387-4
+#' onset_to_death_ebola <- epiparameter::epidist(
+#'   disease = "Ebola virus disease",
+#'   pathogen = "Ebolavirus",
+#'   epi_dist = "onset_to_death",
+#'   prob_distribution = "gamma",
+#'   prob_distribution_params = c(
+#'     shape = 2.4, scale = 3.333
+#'   )
+#' )
 #'
-#' df_known_outcomes <- known_outcomes(df_in = ebola1976, delay_pmf)
+#' df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
 known_outcomes <- function(df_in,
-                           delay_pmf,
+                           epi_dist,
                            cumulative = TRUE) {
   # some input checking
   stopifnot(
@@ -47,10 +56,10 @@ known_outcomes <- function(df_in,
     "Option `cumulative` must be `TRUE` or `FALSE`" =
       (is.logical(cumulative))
   )
-  if (!missing(delay_pmf)) {
+  if (!missing(epi_dist)) {
     stopifnot(
-      "`delay_pmf` must be a function`" =
-        (is.function(delay_pmf))
+      "`epi_dist` must be an `epidist` object" =
+        (epiparameter::is_epidist(epi_dist))
     )
   }
 
@@ -58,7 +67,10 @@ known_outcomes <- function(df_in,
   # Code following https://github.com/adamkucharski/ebola-cfr/
   # blob/e2683eee62fb6fef8140b4b1d9dc13d542c5eacb/R/cfr_function.R#L12-L22
   # nolint end
-  pmf_vals <- delay_pmf(seq(from = 0, to = nrow(df_in) - 1L))
+  pmf_vals <- stats::density(
+    epi_dist,
+    at = seq(from = 0, to = nrow(df_in) - 1L)
+  )
   expected_outcomes <- vapply(
     X = seq_along(df_in$cases),
     FUN = function(i) {

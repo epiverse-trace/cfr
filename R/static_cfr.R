@@ -13,11 +13,13 @@
 #' to a naive CFR being calculated, TRUE corresponds to the user calculating a
 #' corrected CFR
 #'
-#' @param delay_pmf The delay distribution used, in the form of a probability
-#' mass function parameterised by time. I.e. f(t) which gives the probability a
-#' case has a known outcomes (i.e. death) at time t, parameterised with
-#' disease-specific parameters before it is supplied here. A typical example
-#' would be a symptom onset to death delay distribution
+#' @param epi_dist The delay distribution used, in the form of an
+#' [epiparameter::epidist()] object. This is used to obtain a probability
+#' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
+#' probability a case has a known outcomes (i.e. death) at time \eqn{t},
+#' parameterised with disease-specific parameters before it is supplied here.
+#' A typical example would be a symptom onset to death delay distribution.
+#'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 200 by default.
 #'
@@ -26,9 +28,17 @@
 #' @export
 #'
 #' @examples
-#' # Get onset to death distribution from epiparameter
-#' onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
-#' delay_pmf <- onset_to_death_ebola$pmf
+#' # Create an `epidist` for EVD onset to death distribution
+#' # taken from parameters in 10.1016/S0140-6736(18)31387-4
+#' onset_to_death_ebola <- epiparameter::epidist(
+#'   disease = "Ebola virus disease",
+#'   pathogen = "Ebolavirus",
+#'   epi_dist = "onset_to_death",
+#'   prob_distribution = "gamma",
+#'   prob_distribution_params = c(
+#'     shape = 2.4, scale = 3.333
+#'   )
+#' )
 #'
 #' # load stored ebola case data from 1976 outbreak
 #' data("ebola1976")
@@ -40,25 +50,25 @@
 #' static_cfr(
 #'   df_in = ebola1976,
 #'   correct_for_delays = TRUE,
-#'   delay_pmf = delay_pmf
+#'   onset_to_death_ebola
 #' )
 static_cfr <- function(df_in,
                        correct_for_delays = TRUE,
-                       delay_pmf,
+                       epi_dist,
                        poisson_threshold = 200) {
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
-  if (missing(delay_pmf) && (correct_for_delays)) {
+  if (missing(epi_dist) && (correct_for_delays)) {
     stop(
       "To correct for the delay between case detection and death,\
-       please specify an onset-to-death (or similar) probability mass function"
+       please provide an onset-to-death (or similar) `epidist` object"
     )
   }
-  if (!missing(delay_pmf)) {
+  if (!missing(epi_dist)) {
     stopifnot(
-      "`delay_pmf` must be a function`" =
-        (is.function(delay_pmf))
+      "`epi_dist` must be an `epidist` object" =
+        (epiparameter::is_epidist(epi_dist))
     )
   }
   stopifnot(
@@ -76,7 +86,7 @@ static_cfr <- function(df_in,
     # for total deaths in the original cfr formula
     df_corrected <- known_outcomes(
       df_in = df_in,
-      delay_pmf = delay_pmf,
+      epi_dist = epi_dist,
       cumulative = FALSE
     )
 
