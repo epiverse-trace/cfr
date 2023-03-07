@@ -22,11 +22,22 @@ test_that("`format_cfr_neatly` basic functionality", {
   expect_snapshot(format_cfr_neatly(ccfr))
 })
 
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+# create an epidist for EVD onset to death distribution
+# taken from parameters in 10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist(
+  disease = "Ebola virus disease",
+  pathogen = "Ebolavirus",
+  epi_dist = "onset_to_death",
+  prob_distribution = "gamma",
+  prob_distribution_params = c(
+    shape = 2.4, scale = 3.333
+  )
+)
+
 rolling_cfr_ebola <- rolling_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  onset_to_death_ebola
+  epi_dist = onset_to_death_ebola
 )
 
 # Check failure when a dataframe is passed
