@@ -20,8 +20,17 @@ estimates to 3 significant figures and presenting the MLE and 95\% interval
 on a single line
 }
 \examples{
-# Get onset to death distribution from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+# Create an `epidist` for EVD onset to death distribution
+# taken from parameters in 10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist(
+  disease = "Ebola virus disease",
+  pathogen = "Ebolavirus",
+  epi_dist = "onset_to_death",
+  prob_distribution = "gamma",
+  prob_distribution_params = c(
+    shape = 2.4, scale = 3.333
+  )
+)
 
 # load Ebola 1976 outbreak data
 data("ebola1976")
@@ -32,7 +41,7 @@ ncfr <- static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 ccfr <- static_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf = onset_to_death_ebola
+  epi_dist = onset_to_death_ebola
 )
 
 # Formats the output of the CFR data.frames nicely

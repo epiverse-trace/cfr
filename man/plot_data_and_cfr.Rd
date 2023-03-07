@@ -24,8 +24,17 @@ estimates in one panel and the resulting rolling naive and corrected CFR
 estimates in another panel.
 }
 \examples{
-# Read in onset to death distribution for Ebola
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+# Create an `epidist` for EVD onset to death distribution
+# taken from parameters in 10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist(
+  disease = "Ebola virus disease",
+  pathogen = "Ebolavirus",
+  epi_dist = "onset_to_death",
+  prob_distribution = "gamma",
+  prob_distribution_params = c(
+    shape = 2.4, scale = 3.333
+  )
+)
 
 # Calculate rolling naive and corrected CFRs
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)

@@ -4,14 +4,15 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(df_in, delay_pmf, cumulative = TRUE)
+known_outcomes(df_in, epi_dist, cumulative = TRUE)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point}
 
-\item{delay_pmf}{The delay distribution used, in the form of a probability
+\item{epi_dist}{The delay distribution used, in the form of an
+\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
@@ -38,9 +39,17 @@ distribution from the literature for the disease in question.
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-# Access a relevant symptom onset to death distribution
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
-delay_pmf <- onset_to_death_ebola$pmf
+# Create an `epidist` for EVD onset to death distribution
+# taken from parameters in 10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist(
+  disease = "Ebola virus disease",
+  pathogen = "Ebolavirus",
+  epi_dist = "onset_to_death",
+  prob_distribution = "gamma",
+  prob_distribution_params = c(
+    shape = 2.4, scale = 3.333
+  )
+)
 
-df_known_outcomes <- known_outcomes(df_in = ebola1976, delay_pmf)
+df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
 }
