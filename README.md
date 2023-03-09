@@ -45,18 +45,13 @@ library(datadelay)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
-# create an epidist for EVD onset to death distribution
-# taken from parameters in 10.1016/S0140-6736(18)31387-4
-onset_to_death_ebola <- epiparameter::epidist(
-  disease = "Ebola virus disease",
-  pathogen = "Ebolavirus",
+# read epidist for EVD onset to death from {epiparameter}
+# accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  prob_distribution = "gamma",
-  prob_distribution_params = c(
-    shape = 2.4, scale = 3.333
-  )
+  author = "Barry_etal"
 )
-#> Citation cannot be created as either author, year or DOI is missing
 
 # Calculate the static naive and corrected CFRs
 ncfr <- static_cfr(ebola1976, correct_for_delays = FALSE)
