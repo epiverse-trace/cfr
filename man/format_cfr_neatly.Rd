@@ -20,16 +20,11 @@ estimates to 3 significant figures and presenting the MLE and 95\% interval
 on a single line
 }
 \examples{
-# Create an `epidist` for EVD onset to death distribution
-# taken from parameters in 10.1016/S0140-6736(18)31387-4
-onset_to_death_ebola <- epiparameter::epidist(
-  disease = "Ebola virus disease",
-  pathogen = "Ebolavirus",
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  prob_distribution = "gamma",
-  prob_distribution_params = c(
-    shape = 2.4, scale = 3.333
-  )
+  author = "Barry_etal"
 )
 
 # load Ebola 1976 outbreak data
