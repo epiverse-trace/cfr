@@ -1,8 +1,12 @@
 #### Tests for the static CFR function ####
 # prepare data and common testing elements
 
-# Get onset to death distribution for ebola from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 # Load ebola 1976 outbreak data
 data("ebola1976")
@@ -14,7 +18,7 @@ scfr_naive <- static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 scfr_corrected <- static_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf = onset_to_death_ebola
+  epi_dist = onset_to_death_ebola
 )
 
 # Basic expectations
@@ -46,8 +50,8 @@ test_that("Basic expectations of static_cfr", {
       correct_for_delays = TRUE
     ),
     regexp = paste0(
-      "(correct)*(delay case detection and death)*(specify)*",
-      "(probability mass function)"
+      "(correct)*(delay case detection and death)*(provide)*",
+      "(onset-to-death)*(`epidist`)"
     )
   )
 

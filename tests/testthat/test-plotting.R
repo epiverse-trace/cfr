@@ -1,7 +1,11 @@
 #### Check that plotting function works ####
-# prepare data
-# read in onset to death distribution for Ebola
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 # load Ebola data
 data("ebola1976")

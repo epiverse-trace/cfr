@@ -3,15 +3,19 @@
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-# Access a relevant symptom onset to death distribution
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")$pmf
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 df_known_outcomes_raw <- known_outcomes(
-  df_in = ebola1976, onset_to_death_ebola,
+  df_in = ebola1976, epi_dist = onset_to_death_ebola,
   cumulative = FALSE
 )
 df_known_outcomes_cumulative <- known_outcomes(
-  df_in = ebola1976, onset_to_death_ebola
+  df_in = ebola1976, epi_dist = onset_to_death_ebola
 )
 
 test_that("`known_outcomes` basic functionality", {

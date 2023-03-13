@@ -7,7 +7,7 @@
 rolling_cfr(
   df_in,
   correct_for_delays = TRUE,
-  delay_pmf,
+  epi_dist,
   poisson_threshold = 200
 )
 }
@@ -21,11 +21,12 @@ to correct for the delay between case detection and death. FALSE corresponds
 to a naive CFR being calculated, TRUE corresponds to the user calculating a
 corrected CFR}
 
-\item{delay_pmf}{The delay distribution used, in the form of a probability
-mass function parameterised by time. I.e. f(t) which gives the probability a
-case has a known outcomes (i.e. death) at time t, parameterised with
-disease-specific parameters before it is supplied here. A typical example
-would be a symptom onset to death delay distribution}
+\item{epi_dist}{The delay distribution used, in the form of an
+\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
+mass function parameterised by time; i.e. \eqn{f(t)} which gives the
+probability a case has a known outcomes (i.e. death) at time \eqn{t},
+parameterised with disease-specific parameters before it is supplied here.
+A typical example would be a symptom onset to death delay distribution.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
@@ -43,9 +44,12 @@ time point increasing the number of time points included by one each
 iteration
 }
 \examples{
-# Get onset to death distribution from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
-delay_pmf <- onset_to_death_ebola$pmf
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 # Calculate rolling naive CFR
 df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
@@ -54,6 +58,6 @@ df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf
+  onset_to_death_ebola
 )
 }

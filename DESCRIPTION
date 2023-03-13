@@ -33,12 +33,13 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.2
 Imports:
     data.table,
+    epiparameter,
     ggplot2,
     patchwork,
-    rlang
+    rlang,
+    stats
 Suggests: 
     testthat (>= 3.0.0),
-    epiparameter,
     covidregionaldata,
     usethis
 Remotes:

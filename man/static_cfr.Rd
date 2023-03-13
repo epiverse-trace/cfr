@@ -4,12 +4,7 @@
 \alias{static_cfr}
 \title{Static case fatality rate}
 \usage{
-static_cfr(
-  df_in,
-  correct_for_delays = TRUE,
-  delay_pmf,
-  poisson_threshold = 200
-)
+static_cfr(df_in, correct_for_delays = TRUE, epi_dist, poisson_threshold = 200)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
@@ -21,11 +16,12 @@ to correct for the delay between case detection and death. FALSE corresponds
 to a naive CFR being calculated, TRUE corresponds to the user calculating a
 corrected CFR}
 
-\item{delay_pmf}{The delay distribution used, in the form of a probability
-mass function parameterised by time. I.e. f(t) which gives the probability a
-case has a known outcomes (i.e. death) at time t, parameterised with
-disease-specific parameters before it is supplied here. A typical example
-would be a symptom onset to death delay distribution}
+\item{epi_dist}{The delay distribution used, in the form of an
+\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
+mass function parameterised by time; i.e. \eqn{f(t)} which gives the
+probability a case has a known outcomes (i.e. death) at time \eqn{t},
+parameterised with disease-specific parameters before it is supplied here.
+A typical example would be a symptom onset to death delay distribution.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
@@ -40,9 +36,12 @@ and death time series supplied. Uses all of the time points supplied by the
 user and returns an estimate for a single point in time.
 }
 \examples{
-# Get onset to death distribution from epiparameter
-onset_to_death_ebola <- epiparameter::epidist("ebola", "onset_to_death")
-delay_pmf <- onset_to_death_ebola$pmf
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 # load stored ebola case data from 1976 outbreak
 data("ebola1976")
@@ -54,6 +53,6 @@ static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 static_cfr(
   df_in = ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf = delay_pmf
+  onset_to_death_ebola
 )
 }

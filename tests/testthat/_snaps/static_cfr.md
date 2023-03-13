@@ -12,7 +12,7 @@
       scfr_corrected
     Output
         cfr_me  cfr_low cfr_high 
-         0.957    0.840    1.000 
+         0.959    0.842    1.000 
 
 ---
 

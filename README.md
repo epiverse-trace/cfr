@@ -45,19 +45,17 @@ library(datadelay)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
-# Get the onset to death distribution for ebola virus disease
-# from the {epiparameter} package
-onset_to_death_ebola <- epiparameter::epidist(
-  pathogen = "ebola",
-  delay_dist = "onset_to_death"
+# read epidist for EVD onset to death from {epiparameter}
+# accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
 )
-
-# Access the probability mass function
-delay_pmf <- onset_to_death_ebola$pmf
 
 # Calculate the static naive and corrected CFRs
 ncfr <- static_cfr(ebola1976, correct_for_delays = FALSE)
-ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, delay_pmf)
+ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, onset_to_death_ebola)
 
 # Print nicely formatted case fatality rate estimates
 format_cfr_neatly(ncfr)
@@ -74,11 +72,12 @@ df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
 df_ccfr <- rolling_cfr(
   ebola1976,
   correct_for_delays = TRUE,
-  delay_pmf
+  onset_to_death_ebola
 )
 
 # Plotting case and death data along with CFRs
 plot_data_and_cfr(df_ncfr, df_ccfr)
+#> Warning: Removed 1 row containing missing values (`geom_line()`).
 ```
 
 <img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
