@@ -4,7 +4,7 @@
 \alias{format_cfr_neatly}
 \title{Neatly format CFR estimates}
 \usage{
-format_cfr_neatly(cfr_in)
+format_cfr_neatly(cfr_in, type)
 }
 \arguments{
 \item{cfr_in}{A named vector of the format outputted by \code{\link[=estimate_ccfr]{estimate_ccfr()}}
