@@ -4,7 +4,7 @@
 \alias{static_cfr}
 \title{Static case fatality rate}
 \usage{
-static_cfr(df_in, correct_for_delays = TRUE, epi_dist, poisson_threshold = 200)
+static_cfr(df_in, correct_for_delays = TRUE, epi_dist, poisson_threshold = 100)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series

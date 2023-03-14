@@ -50,7 +50,7 @@
 static_cfr <- function(df_in,
                        correct_for_delays = TRUE,
                        epi_dist,
-                       poisson_threshold = 200) {
+                       poisson_threshold = 100) {
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
@@ -97,7 +97,9 @@ static_cfr <- function(df_in,
     # calculating the maximum likelihood estimate and 95% confidence interval
     # using the binomial likelihood function from Nishiura
     cfr_estimate <- estimate_ccfr(
-      total_cases = total_cases, total_deaths = total_deaths, u_t = u_t,
+      total_cases = total_cases,
+      total_deaths = total_deaths,
+      u_t = u_t,
       poisson_threshold = poisson_threshold
     )
   } else {
