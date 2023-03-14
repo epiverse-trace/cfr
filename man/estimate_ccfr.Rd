@@ -4,7 +4,7 @@
 \alias{estimate_ccfr}
 \title{Estimate the corrected case fatality rate}
 \usage{
-estimate_ccfr(total_cases, total_deaths, u_t, poisson_threshold = 200)
+estimate_ccfr(total_cases, total_deaths, u_t, poisson_threshold = 100)
 }
 \arguments{
 \item{total_cases}{The total number of cases observed over the period of an
