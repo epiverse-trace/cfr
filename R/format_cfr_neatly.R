@@ -35,23 +35,15 @@
 #' # and prints to the terminal
 #' format_cfr_neatly(ncfr)
 #' format_cfr_neatly(ccfr)
-format_cfr_neatly <- function(cfr_in) {
-  if (is.data.frame(cfr_in)) {
-    stop("`cfr_in` only works with static estimates - you may have provided a
-    rolling CFR estimate")
-  }
-  stopifnot(
-    "`cfr_in` must be numeric vector with the names `cfr_me`, \
-    `cfr_low`, `cfr_high`" =
-      (is.numeric(cfr_in) &
-        all(utils::hasName(cfr_in, c("cfr_me", "cfr_low", "cfr_high")))
-      )
-  )
-
-  # combining the MLE estimate and the 95% interval neatly and
-  # giving each to only 3 significant figures
-  sprintf(
-    "CFR: %.2f%% (95%% CI: %.2f%% - %.2f%%)",
-    cfr_in["cfr_me"], cfr_in["cfr_low"], cfr_in["cfr_high"]
-  )
+format_cfr_neatly <- function(cfr_in, type) {
+  
+  df_out <- data.frame(
+    "CFR_estimate" = 
+      sprintf("%.2f%% (95%% CI: %.2f%% - %.2f%%)", 
+              cfr_in[[1]]*100, 
+              cfr_in[[2]]*100, 
+              cfr_in[[3]]*100), 
+    "Type" = type)
+  
+  return(df_out)
 }
