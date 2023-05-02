@@ -33,7 +33,7 @@ This vignette demonstrates how to implement the core functions within `datadelay
 2. Generate estimates over time for the number of cases that so far have a known outcome
 symptom onset
 3. Define an unbiased estimator to estimate the CFR or HFR from Nishiura et al (2009)^[@nishiura2009early]^
-4. Numerically implement the unbiased estimator numerically using maximum likelihood estimation to arrive at central estimates of the CFR or 
+4. Numerically implement the unbiased estimator using maximum likelihood estimation to arrive at point estimates of the CFR or 
 HFR, along with a confidence interval.
 
 # Setup: installation and requirements
