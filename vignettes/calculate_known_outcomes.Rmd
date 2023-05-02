@@ -268,7 +268,7 @@ plot_known_outcomes(df_known_outcomes_covid, together = FALSE)
 
 ## Estimating the naive and corrected CFR
 
-Using the same functions as the Ebola example, we calculate the naive and corrected CFRs for the COVID-19 epidemic in the U.K:
+Using the same functions as the Ebola example, we calculate the naive and corrected CFRs for the COVID-19 epidemic in late 2020 the U.K:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
