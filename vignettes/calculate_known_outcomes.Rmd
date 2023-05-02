@@ -47,8 +47,8 @@ if(!require("devtools")) install.packages("devtools")
 devtools::install_github("epiverse-trace/datadelay")
 ```
 
-Additionally, there are two more packages required for this analysis. The `epiparameter` package is the source of the delay distributions used 
-and the `covidregionaldata` package is the source of the case and death time-series used in the second example in this vignette. We install
+Additionally, there are two more packages required for the examples in this vignette. The `epiparameter` package is the source of the delay distributions used 
+and the `covidregionaldata` package is the source of the COVID-19 case and death time-series used in the second example in this vignette. We install
 `epiparameter` using the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
@@ -67,7 +67,7 @@ We install `covidregionaldata` using the following command:
 install.packages("covidregionaldata", repos = "https://epiforecasts.r-universe.dev")
 ```
 
-Now we load the three packages we need using the following commands:
+Now we load these three packages using the following commands:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(datadelay)
@@ -78,7 +78,7 @@ library(covidregionaldata)
 # Motivation
 
 Key epidemiological quantities estimated in real-time often suffer from biases. In particular, dividing deaths-to-date by cases-to-date 
-or hospitalisations-to-date leads to biased estimates of the CFR or HFR (respectively). This is because this calculation does not account 
+or hospitalisations-to-date by cases-to-date leads to downward biased estimates of the CFR or HFR (respectively). This is because this calculation does not account 
 for delays from confirmation of a case or hospitalisation to death. 
 
 If we had perfectly synchronised case and death incidence data, the basic versions of the CFR and HFR — defined as either the ratio of the 
@@ -90,22 +90,21 @@ For example, suppose 10 people start showing symptoms of a specific disease on a
 that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5. However, suppose that by day 5, 
 all infected individuals remain alive. The naive estimate of the CFR would be zero calculated at the end of the first 5 days would be zero,
 because there would have been zero deaths in total. Even after deaths begin to occur, this lag between the ascertainment of a case or 
-hospitalisation and outcome leads to a consistently biased estimate. Hence, adjusting for such delays using an appropriate delay distribution 
+hospitalisation and outcome leads to a consistently downward biased estimate. Hence, adjusting for such delays using an appropriate delay distribution 
 is essential for accurate estimates of severity.
 
 # Data required
 
-This method require three sets of data:
+Calculating a CFR, adjusting for onset-to-death, require three sets of data:
 
 * A time-series of cases;
 * A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ days after they were initially exposed. Such distributions come from the literature, where studies have typically fit distributions to data describing the process. 
+* A delay distribution, describing the probability an individual will die $t$ days after their initial onset of symnptoms. Estimates of such distributions for specific pathogens can obtained from the literature, based on data from previous outbreaks.
 
-In practice, the time-series of cases and deaths will already be together, given that they usually originate from sources that will have typically collated them into a single data file.
 
 # Example with data from the 1976 Ebola outbreak in the Democratic Republic of the Congo
 
-We use data from the 1976 Ebola outbreak. First of all, we plot the data from the entire outbreak. Then we subset 
+We use data from the 1976 Ebola outbreak in Yambuku to illustrate the methods. First of all, we plot the data from the entire outbreak. Then we subset 
 the data isolating about half of it, to emulate estimating severity during an ongoing outbreak.
 
 ## Plotting the raw data
@@ -122,11 +121,11 @@ single figure, rather than two separate figures. This is useful if the raw value
 effectively share a scale. Otherwise, using the `together = TRUE` plot them on separate figures. The default 
 argument is `together = TRUE`.
 
-We will focus on the roughly the first half of this dataset. We do so by subsetting the data so that we only include
-days before the 30th September 1976, using the following command:
+We will focus on the roughly the first half of this dataset to illustrate a real-time analysis question. We do so by subsetting the data so that we only include
+days before the 18th September 1976, using the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_ebola_subset <- subset(ebola1976, date <= "1976-09-30")
+df_ebola_subset <- subset(ebola1976, date <= "1976-09-18")
 ```
 
 After subsetting, the dataset we focus on for the rest of this example looks like this:
@@ -137,7 +136,7 @@ plot_raw_data(df_ebola_subset, together = TRUE)
 
 ## The delay distribution
 
-For this example, given that we are using case data and detection of a case is well-approximated by symptom onset, we use the distribution 
+For this example, given that we are using Ebola case data and detection of a case is reasonably approximated by symptom onset, we use the distribution 
 describing the delay between onset-to-death. As such, we retrieve such a distribution from the literature 
 (reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)), using the `epidist_db()` function from the `epiparameter` package with 
 the following command:
@@ -158,7 +157,7 @@ plot_epiparameter_distribution(onset_to_death_ebola, by = 0.1)
 ## Estimating the number and proportion of cases or hostpitalisations which have a known outcome over time
 
 The function `calculate_known_outcomes()` from the `datadelay` package estimates the number of cases which have a known outcome over time. 
-The method used within this function follows Nishiura et al.^[@nishiura2009early]^. The function calculates a quantity $u_t$ for each day within 
+As noted, the method used within this function follows Nishiura et al.^[@nishiura2009early]^. The function calculates a quantity $u_t$ for each day within 
 the input data, which represents the proportion of cases with a known outcome, on day $t$. Following Nishiura et al., $u_t$ is calculated 
 in the following way:
 
@@ -166,7 +165,7 @@ in the following way:
   u_t = \frac{\sum_{i = 0}^t \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}
 \end{equation}
 
-It requires a `data.frame` of input data --- typically case and death time series data --- and a delay distribution. The delay distribution we use here comes from the ```epiparameter``` package, as described in the previous subsection.
+It requires a `data.frame` of input data of new cases and new outcomes over time --- such as case and death incidence time series data --- and a delay distribution. The delay distribution we use here comes from the [epiparameter](https://www.github.com/epiverse-trace/epiparameter) package, as described in the previous subsection.
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:known_outcomes_ebola} **Figure 3:** The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included."}
 df_known_outcomes_ebola <- known_outcomes(
@@ -179,7 +178,7 @@ plot_known_outcomes(df_known_outcomes_ebola)
 ## Estimating the naive and corrected CFR
 
 Once we calculate the proportion of cases with known outcomes, we apply the proportion to the number of cases to correct for the delay 
-between onset-to-death. We do so by using the function `static_cfr()` from the `datadelay` package. This function estimates the proportion of
+between onset-to-death. We do so by using the function `static_cfr()` from the `datadelay` package. This function estimates the proportion of cases with
 known outcomes over time, and uses the estimate to correct the naive CFR estimate, if the argument `correct_for_delays = TRUE` is set. Otherwise, 
 it calculates the naive CFR. We run this function using the following commands:
 
