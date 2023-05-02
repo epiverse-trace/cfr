@@ -218,7 +218,7 @@ describe the steps without methodological explanations throughout this example.
 
 ## Plotting the raw data
 
-First of all, we subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K. We do so, 
+First of all, we subset the data so that we focus on early period of the second wave of COVID-19 in the U.K. We choose this illustrative period
 as the CFR changed dramatically as a result of the vaccine campaign. The static severity calculations we are performing 
 in this vignette are not able to deal with changes in severity over time. We download the data --- using
 the `covidregionaldata` package ---  and subset it with the following commands:
