@@ -220,7 +220,7 @@ describe the steps without methodological explanations throughout this example.
 
 First of all, we subset the data so that we focus on early period of the second wave of COVID-19 in the U.K. We choose this illustrative period
 as the CFR changed dramatically as a result of the vaccine campaign. The static severity calculations we are performing 
-in this vignette are not able to deal with changes in severity over time. We download the data --- using
+in this vignette do not account for changes in severity over time, which means there are best suited for short epidemic periods in which severity can be assumed to remain reasonably constant. We download the data --- using
 the `covidregionaldata` package ---  and subset it with the following commands:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
