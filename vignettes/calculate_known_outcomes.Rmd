@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 # Overview
 This vignette outlines how to use `datadelay` to calculate disease severity during an ongoing outbreak. For example, we may wish to estimate values such as the
 *case fatality risk (CFR)* or *hospitalisation fatality risk (HFR)*. We can do using a method that jointly analyses a time series of cases and disease outcomes with a
-delay distribution. The methods used here originate from Nishiura et al. (2009)^[@nishiura2009early]^.
+delay distribution. The methods used here are based on those in Nishiura et al. (2009)^[@nishiura2009early]^.
 
 This vignette demonstrates how to implement the core functions within `datadelay`. Specifically, we will cover
 
