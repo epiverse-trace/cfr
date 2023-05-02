@@ -228,7 +228,7 @@ df_covid_uk <- covidregionaldata::get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE) |>
   dplyr::rename(cases = cases_new, deaths = deaths_new)
 
-df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
+df_covid_uk_subset <- subset(df_covid_uk, date > "2020-07-01" & date <= "2020-11-01")
 ```
 
 Then, we plot the subsetted data with following command:
