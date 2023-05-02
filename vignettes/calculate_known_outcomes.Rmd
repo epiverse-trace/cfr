@@ -29,7 +29,7 @@ delay distribution. The methods used here are based on those in Nishiura et al. 
 
 This vignette demonstrates how to implement the core functions within `datadelay`. Specifically, we will cover
 
-1. Why naive estimates of CFR or HFR generated during an ongoing outbreak require adjusting, given out of sync time series are often being compared.
+1. Why 'naive' estimates of CFR or HFR generated during an ongoing outbreak (i.e. ratio of total cases to date and total outcomes to date) require adjusting for delays from onset-to-outcome.
 2. Arrive at estimates over time for the number of symptomatic individuals that will likely be known to have had an outcome $t$ days after
 symptom onset
 3. Define an unbiased estimator to estimate the CFR or HFR from Nishiura et al (2009)^[@nishiura2009early]^
