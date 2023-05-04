@@ -10,36 +10,28 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   author = "Barry_etal"
 )
 
-df_known_outcomes_raw <- known_outcomes(
-  df_in = ebola1976, epi_dist = onset_to_death_ebola,
-  cumulative = FALSE
-)
-df_known_outcomes_cumulative <- known_outcomes(
+df_known_outcomes <- known_outcomes(
   df_in = ebola1976, epi_dist = onset_to_death_ebola
 )
 
 test_that("`known_outcomes` basic functionality", {
   expect_s3_class(
-    df_known_outcomes_raw,
+    df_known_outcomes,
     "data.frame"
   )
   expect_identical(
-    colnames(df_known_outcomes_raw),
-    c("date", "cases", "deaths", "known_outcomes")
+    colnames(df_known_outcomes),
+    c("date", "cases", "deaths", "known_outcomes", "u_t")
   )
 
-  # expect that cumulative sum column is always increasing for cumulative option
-  expect_true(
-    all(diff(df_known_outcomes_cumulative$known_outcomes) > 0)
-  )
   # expect that known_outcome column is not always increasing
   expect_false(
-    all(diff(df_known_outcomes_raw$known_outcomes) > 0)
+    all(diff(df_known_outcomes$known_outcomes) > 0)
   )
   expect_snapshot(
-    head(df_known_outcomes_raw)
+    head(df_known_outcomes)
   )
   expect_snapshot(
-    head(df_known_outcomes_raw)
+    head(df_known_outcomes)
   )
 })

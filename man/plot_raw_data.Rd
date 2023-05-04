@@ -10,6 +10,10 @@ plot_raw_data(df_in, together = TRUE)
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point}
+
+\item{together}{A boolean flag which determines whether both the
+cases/known outcomes are plotted in the same panel as the deaths. If
+the two are on significantly different scales, plot them separately.}
 }
 \value{
 A plot of the two time-series on the same plot, with a legend
@@ -22,5 +26,5 @@ time-series data
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-plot_raw_data(ebola_1976)
+plot_raw_data(ebola1976)
 }

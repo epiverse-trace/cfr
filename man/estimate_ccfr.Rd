@@ -21,7 +21,7 @@ for delays between case detection and outcome. Given that it is a proportion,
 it must be between 0.0 and 1.0.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 200 by default.}
+approximation. Set to 100 by default.}
 }
 \value{
 A named vector with the MLE and 95\% confidence interval of the

@@ -24,7 +24,7 @@ parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 200 by default.}
+approximation. Set to 100 by default.}
 }
 \value{
 A named vector with the MLE and 95\% confidence interval of the

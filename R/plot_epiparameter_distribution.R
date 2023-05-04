@@ -15,16 +15,13 @@
 #' @export
 #'
 #' @examples
-#' Retrieve the delay distribution between onset and death for Ebola, using the epiparameter function epiparameter::epidist_db()
 #'
 #' onset_to_death_ebola <- epiparameter::epidist_db(
 #' disease = "Ebola Virus Disease",
 #' epi_dist = "onset_to_death",
 #' author = "Barry_etal")
 #'
-#' Plot the distribution with this function
 #' plot_epiparameter_distribution(onset_to_death_ebola, by = 1)
-#' 
 #' 
 plot_epiparameter_distribution <- function(epidist, 
                                            from = 0,

@@ -21,10 +21,11 @@
 #' A typical example would be a symptom onset to death delay distribution.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
-#' approximation. Set to 200 by default.
+#' approximation. Set to 100 by default.
 #'
 #' @return A named vector with the MLE and 95% confidence interval of the
 #' CFR estimates, named "cfr_me", "cfr_low", and "cfr_high".
+#' 
 #' @export
 #'
 #' @examples
@@ -81,8 +82,7 @@ static_cfr <- function(df_in,
     # for total deaths in the original cfr formula
     df_corrected <- known_outcomes(
       df_in = df_in,
-      epi_dist = epi_dist,
-      cumulative = FALSE
+      epi_dist = epi_dist
     )
 
     # calculating the total number of cases and deaths after correcting for
