@@ -32,13 +32,14 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
-    data.table,
     epiparameter,
-    ggplot2,
-    patchwork,
     rlang,
     stats
 Suggests: 
+    ggplot2,
+    graphics,
+    grid,
+    patchwork,
     testthat (>= 3.0.0),
     covidregionaldata,
     usethis

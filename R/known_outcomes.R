@@ -67,15 +67,23 @@ known_outcomes <- function(df_in,
     at = seq(from = 0, to = nrow(df_in) - 1L)
   )
   
+  # defining vectors to be used in the main loop
   cases <- df_in$cases
-  deaths <- df_in$deaths
-  case_times <- as.numeric(df_in$date - min(df_in$date, na.rm = TRUE), units = "days")
+  
+  # the times at which cases are reported, in numbers of days (or whichever
+  # time units are used) since the first case was reported
+  case_times <- as.numeric(df_in$date - min(df_in$date, na.rm = TRUE),
+                           units = "days") + 1
+  
+  # the total number of time points at which cases were reported
   case_length <- length(case_times)
   
+  # declaring the outputs of the main loop as vectors within the main 
+  # data.frame
   df_in$known_outcomes <- numeric(case_length)
   df_in$u_t <- numeric(case_length)
   
-  # Compile onsets
+  # main calculation loop
   for(i in case_length:1){
     
     # Delay probability mass function, evaluated at times

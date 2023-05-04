@@ -38,13 +38,20 @@ HFR, along with a confidence interval.
 
 # Setup: installation and requirements
 
+Installation of `datadelay` requires the package `devtools`. If the user does
+not already have this package installed, they can install it with the following
+command
+
+```{r message = FALSE, warning = FALSE, eval = FALSE}
+install.packages("devtools")
+```
+
 `datadelay` can be installed from Github, using the `devtools` package, with the following command:
 
 ```{r message = FALSE, warning = FALSE, eval = FALSE}
 # installs the datadelay package from Github, as recommended on their repository:
 # https://github.com/epiverse-trace/datadelay
-if(!require("devtools")) install.packages("devtools")
-devtools::install_github("epiverse-trace/datadelay")
+install_github(paste0("epiverse-trace", "/", "datadelay"))
 ```
 
 Additionally, there are two more packages required for the examples in this vignette. The `epiparameter` package is the source of the delay distributions used 
@@ -54,17 +61,14 @@ and the `covidregionaldata` package is the source of the COVID-19 case and death
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
 # installs the epiparameter package from Github, as recommended on their repository:
 # https://github.com/epiverse-trace/epiparameter
-if(!require("remotes")) install.packages("remotes")
-remotes::install_github("epiverse-trace/epiparameter")
+install_github(paste0("epiverse-trace", "/", "epiparameter"))
 ```
 
 We install `covidregionaldata` using the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
-# installs the stable version of covidregionaldata package from r-universe, as recommended on 
-# their repository: 
-# https://github.com/epiforecasts/covidregionaldata
-install.packages("covidregionaldata", repos = "https://epiforecasts.r-universe.dev")
+install.packages("covidregionaldata",
+                 repos = "https://epiforecasts.r-universe.dev")
 ```
 
 Now we load these three packages using the following commands:
@@ -142,7 +146,7 @@ describing the delay between onset-to-death. As such, we retrieve such a distrib
 the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
-onset_to_death_ebola <- epiparameter::epidist_db(
+onset_to_death_ebola <- epidist_db(
   disease = "Ebola Virus Disease", 
   epi_dist = "onset_to_death",
   author = "Barry_etal")
@@ -223,7 +227,7 @@ in this vignette do not account for changes in severity over time, which means t
 the `covidregionaldata` package ---  and subset it with the following commands:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_covid_uk <- covidregionaldata::get_national_data(
+df_covid_uk <- get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE) |>
   dplyr::rename(cases = cases_new, deaths = deaths_new)
 
@@ -241,7 +245,7 @@ plot_raw_data(df_covid_uk_subset, together = FALSE)
 We again retrieve the appropriate distribution (reported [here](https://doi.org/10.3390/jcm9020538)), using the `epidist_db()` function from the `epiparameter` package, using the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
-onset_to_death_covid <- epiparameter::epidist_db(
+onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
   author = "Linton_etal")
