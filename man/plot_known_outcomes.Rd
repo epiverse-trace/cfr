@@ -9,6 +9,10 @@ plot_known_outcomes(df_in, together = TRUE)
 \arguments{
 \item{df_in}{A data.frame of the format that the known_outcomes() function returns from the
 datadelay package}
+
+\item{together}{A boolean flag which determines whether both the
+cases/known outcomes are plotted in the same panel as the deaths. If
+the two are on significantly different scales, plot them separately.}
 }
 \value{
 A plot of the three time-series on the same plot, with a legend

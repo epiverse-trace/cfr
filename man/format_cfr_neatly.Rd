@@ -9,6 +9,9 @@ format_cfr_neatly(cfr_in, type)
 \arguments{
 \item{cfr_in}{A named vector of the format outputted by \code{\link[=estimate_ccfr]{estimate_ccfr()}}
 or \code{\link[=static_cfr]{static_cfr()}}}
+
+\item{type}{A string describing the type of severity estimate. Typical
+entries would be CFR, HFR, Naive, Corrected, etc.}
 }
 \value{
 Prints the output of \code{\link[=estimate_ccfr]{estimate_ccfr()}} or \code{\link[=static_cfr]{static_cfr()}} neatly to
@@ -20,27 +23,18 @@ estimates to 3 significant figures and presenting the MLE and 95\% interval
 on a single line
 }
 \examples{
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "Barry_etal"
-)
-
-# load Ebola 1976 outbreak data
 data("ebola1976")
-# Calculate static naive CFR
-ncfr <- static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
 
-# Calculate static corrected CFRs
-ccfr <- static_cfr(
-  df_in = ebola1976,
-  correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
-)
+df_ebola_subset <- subset(ebola1976, date <= "1976-09-18")
 
-# Formats the output of the CFR data.frames nicely
-# and prints to the terminal
-format_cfr_neatly(ncfr)
-format_cfr_neatly(ccfr)
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease", 
+  epi_dist = "onset_to_death",
+  author = "Barry_etal")
+  
+static_cfr(
+  df_ebola_subset,
+  correct_for_delays = FALSE) |> 
+  format_cfr_neatly(type = "Naive")
+  
 }

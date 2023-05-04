@@ -17,14 +17,16 @@
 ---
 
     Code
-      format_cfr_neatly(scfr_naive)
+      format_cfr_neatly(scfr_naive, type = "Naive")
     Output
-      [1] "CFR: 0.96% (95% CI: 0.92% - 0.98%)"
+                            CFR_estimate  Type
+      1 95.51% (95% CI: 92.11% - 97.74%) Naive
 
 ---
 
     Code
-      format_cfr_neatly(scfr_corrected)
+      format_cfr_neatly(scfr_corrected, type = "Corrected")
     Output
-      [1] "CFR: 0.96% (95% CI: 0.84% - 1.00%)"
+                             CFR_estimate      Type
+      1 95.90% (95% CI: 84.20% - 100.00%) Corrected
 

@@ -22,6 +22,7 @@
 #'
 #' @return A named vector with the MLE and 95% confidence interval of the
 #' corrected CFR estimates, named "cfr_me", "cfr_low", and "cfr_high".
+#' 
 #' @export
 #'
 #' @examples

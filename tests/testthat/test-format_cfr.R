@@ -15,32 +15,9 @@ ccfr <- estimate_ccfr(
 
 # Check type and snapshot
 test_that("`format_cfr_neatly` basic functionality", {
-  expect_type(format_cfr_neatly(ncfr), "character")
-  expect_type(format_cfr_neatly(ccfr), "character")
+  expect_type(format_cfr_neatly(ncfr, type = "Naive"), "list")
+  expect_type(format_cfr_neatly(ccfr, type = "Corrected"), "list")
 
-  expect_snapshot(format_cfr_neatly(ncfr))
-  expect_snapshot(format_cfr_neatly(ccfr))
-})
-
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "Barry_etal"
-)
-
-rolling_cfr_ebola <- rolling_cfr(
-  df_in = ebola1976,
-  correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
-)
-
-# Check failure when a dataframe is passed
-test_that("`format_cfr_neatly` does not work with data.frames", {
-  expect_error(
-    format_cfr_neatly(rolling_cfr_ebola),
-    regexp = paste0(
-      "(`cfr_in`)*(static estimates)*(rolling CFR estimate)"
-    )
-  )
+  expect_snapshot(format_cfr_neatly(ncfr, type = "Naive"))
+  expect_snapshot(format_cfr_neatly(ccfr, type = "Corrected"))
 })

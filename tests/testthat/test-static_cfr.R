@@ -37,10 +37,10 @@ test_that("Basic expectations of static_cfr", {
   # Formats the output of the CFR data.frames nicely
   # and prints to the terminal
   expect_snapshot(
-    format_cfr_neatly(scfr_naive)
+    format_cfr_neatly(scfr_naive, type = "Naive")
   )
   expect_snapshot(
-    format_cfr_neatly(scfr_corrected)
+    format_cfr_neatly(scfr_corrected, type = "Corrected")
   )
 
   # expect error when corrected CFR requested without delay PMF

@@ -3,8 +3,8 @@
 #' @description Estimates the expected number of individuals with known outcomes
 #' from a case and death time series of data of an outbreak, up to the time
 #' point supplied.
-#' Can either calculate the daily new number of known outcomes or the cumulative
-#' number.
+#' Calculates the daily new number of known outcomes.
+#' 
 #' Uses the probability mass function representing the delay between
 #' case detection and death, typically approximated by a symptom onset to death
 #' distribution from the literature for the disease in question.
@@ -20,11 +20,9 @@
 #' parameterised with disease-specific parameters before it is supplied here.
 #' A typical example would be a symptom onset to death delay distribution.
 #'
-#' @param cumulative A boolean flag to indicate whether the user wants the daily
-#' or total number of known outcomes
-#'
 #' @return A data.frame containing the MLE estimate and 95% confidence interval
 #' of the corrected CFR
+#' 
 #' @export
 #'
 #' @examples
@@ -40,16 +38,13 @@
 #'
 #' df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
 known_outcomes <- function(df_in,
-                           epi_dist,
-                           cumulative = TRUE) {
+                           epi_dist) {
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =
       (is.data.frame(df_in)),
     "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(df_in))),
-    "Option `cumulative` must be `TRUE` or `FALSE`" =
-      (is.logical(cumulative))
+      (all(c("cases", "deaths") %in% colnames(df_in)))
   )
   if (!missing(epi_dist)) {
     stopifnot(
@@ -96,9 +91,6 @@ known_outcomes <- function(df_in,
     # Collecting all current known onset estimates in a new
     # column of the original data.frame
     df_in$known_outcomes[[i]] <- sum(known_onsets_current)
-    
-    #--- CALCULATE BINOMIAL CONFIDENCE INTERVAL (DIRECTLY)
-    #--- HERE FOR TIME-VARYING CFR
     
     # Calculating the proportion of cases with known onset,
     # for use in the simple likelihood function

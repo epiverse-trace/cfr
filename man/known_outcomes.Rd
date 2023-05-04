@@ -4,7 +4,7 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(df_in, epi_dist, cumulative = TRUE)
+known_outcomes(df_in, epi_dist)
 }
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
@@ -17,9 +17,6 @@ mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
-
-\item{cumulative}{A boolean flag to indicate whether the user wants the daily
-or total number of known outcomes}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
@@ -29,8 +26,8 @@ of the corrected CFR
 Estimates the expected number of individuals with known outcomes
 from a case and death time series of data of an outbreak, up to the time
 point supplied.
-Can either calculate the daily new number of known outcomes or the cumulative
-number.
+Calculates the daily new number of known outcomes.
+
 Uses the probability mass function representing the delay between
 case detection and death, typically approximated by a symptom onset to death
 distribution from the literature for the disease in question.
