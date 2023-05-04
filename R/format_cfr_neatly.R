@@ -43,7 +43,8 @@ format_cfr_neatly <- function(cfr_in, type) {
               cfr_in[[1]]*100, 
               cfr_in[[2]]*100, 
               cfr_in[[3]]*100), 
-    "Type" = type)
+    "Type" = type,
+    stringsAsFactors = FALSE)
   
   return(df_out)
 }
