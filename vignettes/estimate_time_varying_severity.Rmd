@@ -1,0 +1,354 @@
+---
+title: "Estimating how disease severity varies over the course of an outbreak"
+output: rmarkdown::html_vignette
+bibliography: resources/library.bib
+csl: resources/bmj.csl
+vignette: >
+  %\VignetteIndexEntry{Estimating how disease severity varies over the course of an outbreak}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- removes the ugly border around the figures -->
+<style>
+    img {
+        border: 0;
+    }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align  = "left",
+  fig.width  = 700/80,
+  fig.height = 400/80,
+  dpi = 80,
+  fig.retina = 2,
+  dev.args = list(type = "cairo-png")
+)
+```
+
+# Overview
+
+This vignette outlines how to use `datadelay` to estimate how the severity of a
+disease changes over the course of an ongoing outbreak. We wish to estimate one 
+of the typical severity quantities used in epidemiology over time: 
+the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or 
+*hospitalisation fatality risk (HFR)*. 
+
+We do so using a method that uses a time series of cases, infections of 
+hospitalisations (respectively) and deaths with an appropriate delay 
+distribution. The methods used here originate from Nishiura et al.
+(2009)^[@nishiura2009early]^.
+
+Now we load the five key packages we need to run the commands in this vignette:
+
+```{r, message = FALSE, warning=FALSE, eval = TRUE}
+library(datadelay)
+library(epiparameter)
+library(covidregionaldata)
+library(knitr)
+```
+
+and the four optional packages, to run the multiple examples in the last
+section of this vignette:
+
+```{r, message = FALSE, warning=FALSE, eval = TRUE}
+library(dplyr)
+library(ggplot2)
+library(scales)
+```
+
+# Motivation
+
+There are many biological, epidemiological and behavioural reasons why the 
+severity of a disease might change during the course of an outbreak. We list a
+few of the most common reasons here: 
+
+* The introduction of non-pharmaceutical interventions (e.g. social distancing,
+masks, lockdowns, etc.), reducing the numbers of infections, but not necessarily
+the relative number of deaths.
+
+* The development of effective therapeutics, which do not reduce transmission
+and hence the numbers of infections, but do reduce the severity of the symptoms 
+and therefore the number of hospitalisations and deaths.
+
+* The emergence of variants. Pathogen evolution is highly complex and as such,
+variants with a number of different epidemiological characteristics can emerge. 
+For example, a more transmissible variant causing more infections, but not a 
+higher relative number of hospitalisations or deaths could emerge. However, a
+less transmissible, but more severe variant is also possible, resulting in 
+fewer infections, but a higher relative number of deaths.
+
+For example, suppose a new variant of a currently circulating pathogen has 
+emerged. Typically, estimating the severity of a the newly emerged variant is of
+critical importance for surveillance and planning purposes. Running the
+`estimate_static()` function on datasets corresponding to outbreaks caused by 
+the two variants would lead to two static estimates, which may or may not 
+differ. This could be useful, but a more detailed and easier to interpret
+approach is to use the function demonstrated in this vignette: 
+`estimate_time_varying()`.
+
+# Methods
+
+## Data required
+
+The data required to estimate how the severity of a disease changes over time
+using the `datadelay` package includes:
+
+* A time-series of cases, hospitalisations or some other proxy for infections 
+over time;
+* A time-series of deaths;
+* A delay distribution, describing the probability an individual will die $t$ 
+days after they were initially exposed. Such distributions come from the
+literature, where studies have typically fit distributions to data describing 
+the process. 
+
+In practice, the time-series of cases and deaths will already be together, given
+that they usually originate from sources that will have typically collated them
+into a single data file.
+
+The package requires a `data.frame` of input data --- typically case and death 
+time series data --- and a delay distribution. The delay distribution we use 
+here comes from the `epiparameter` package.
+
+## Adjusting for delays between the two time series 
+
+The function `estimate_time_varying()` from the `datadelay` package estimates
+the number of cases which have a known outcome over time. The method used 
+within this function follows Nishiura et al. (2009)^[@nishiura2009early]^. 
+The function calculates a quantity $k_t$ for each day within the input data, 
+which represents the number of cases with a known outcome, on day $t$. Following
+Nishiura et al., $k_t$ is calculated in the following way:
+
+\begin{equation}
+  k_t = \sum_{j = 0}^t c_t f_{j - t}.
+\end{equation}
+
+We then assume that the severity measure, for example CFR, of interest is
+Binomially-distributed, in the following way 
+
+\begin{equation}
+  d_t \sim \text{Binomial}(k_t, \theta_t). 
+\end{equation}
+
+We use maximum-likelihood techniques to determine the value of $\theta_t$ for 
+each $t$, whereby $\theta$ represents the severity measure of interest.
+
+## Interpreting the estimates
+
+The precise severity measure — CFR, IFR, HFR, etc — that \theta represents
+depends upon the input data given by the user. For complete clarity, here are
+the most common time series that users might calculate severity from and the 
+resulting severity estimate from such data:
+
+* Case and death incidence data, with a case-to-death delay distribution (or 
+close approximation, such as onset-to-death). This would
+result in a Case Fatality Risk (CFR) estimate.
+
+* Infection and death incidence data, with an exposure-to-death delay
+distribution (or close approximation). This would result in an Infection 
+Fatality Risk (IFR) estimate.
+
+* Hospitalisation and death incidence data, with a hospitalisation-to-death
+delay distribution (or close approximation). This would result in a 
+Hospitalisation Fatality Risk (HFR) estimate.
+
+# Example with data from the ongoing COVID-19 pandemic in the U.K.
+
+We outline how the time-varying severity estimation works in *datadelay* using a
+number of examples. The data for all of the examples is from the ongoing 
+COVID-19 epidemic. Firstly, we analyse the U.K. data, then we pick three other
+countries with large outbreaks to analyse. 
+
+## Downloading the raw data
+
+First of all, we subset the data so that we focus on just the first year of the
+COVID-19 outbreak in the U.K. We do so, as the CFR changed dramatically as a 
+result of a number of factors: changes in policy, such as implementation and 
+relaxation of lockdown; rollout of the vaccine; new variants emerging, etc. We
+download the data --- using the `covidregionaldata` package --- with the 
+following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE}
+df_covid_uk <- get_national_data(
+  countries = "united kingdom", source = "who", verbose = FALSE) |>
+  rename(cases = cases_new, deaths = deaths_new)
+```
+
+We then subset the data to focus on just the first few months of the outbreak 
+with the following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE}
+df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
+```
+
+## Plotting the raw data
+
+First, we plot case incidence data with following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 1:** Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."}
+plot_case_data(df_covid_uk_subset)
+```
+
+Then, we plot the death incidence data with following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 2:** Incidence of  deaths over time for the ongoing COVID-19 outbreak in the U.K."}
+plot_death_data(df_covid_uk_subset)
+```
+
+## The delay distribution
+
+We again retrieve the appropriate distribution (reported 
+[here](https://doi.org/10.3390/jcm9020538)^[@linton2020incubation]^), using the
+`epidist_db()` function from the `epiparameter` package, using the following
+command:
+
+```{r message=FALSE, warning=FALSE, eval=TRUE}
+onset_to_death_covid <- epidist_db(
+  disease = "COVID-19",
+  epi_dist = "onset_to_death",
+  author = "Linton_etal"
+)
+```
+
+To visualise this distribution, we evaluate it between 0 and 30 days, and plot
+the results over time. We do so using the following command:
+
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:delay_dist_covid} **Figure 3: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
+plot_epiparameter_distribution(onset_to_death_covid, by = 0.1)
+```
+
+## Estimating the naive and corrected CFR
+
+We use the `estimate_time_varying()` function within the `datadelay` package 
+to calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+# calculating the naive time-varying CFR
+df_covid_cfr_uk_naive <- estimate_time_varying(
+  df_covid_uk_subset,
+  epi_dist = onset_to_death_covid,
+  smooth_inputs = TRUE,
+  burn_in = TRUE,
+  correct_for_delays = FALSE)
+
+df_covid_cfr_uk_corrected <- estimate_time_varying(
+  df_covid_uk_subset,
+  epi_dist = onset_to_death_covid,
+  smooth_inputs = TRUE,
+  burn_in = TRUE,
+  correct_for_delays = TRUE)
+```
+
+Once we have calculated both severity quantities over time, we plot the results.
+First we plot the naive — uncorrected for delays — estiamte:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_naive} **Figure 3: Example plot of the naive time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays."}
+plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
+```
+
+Lastly, we plot the corrected — for delays — estimate:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 4: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays."}
+plot_time_varying(df_covid_cfr_uk_corrected, lower = 0, upper = 5)
+```
+
+# Example using COVID-19 data from multiple countries
+
+This section uses functions from the `dplyr` package. It does so for two 
+reasons: `covidregionaldata`, the package we use to download the raw data,
+downloads it as a `tibble`, the in-built data.frame class of the `dplyr` 
+package and because the package includes functions which allow the user to
+easily map a function across one `tibble`, separated by groups. In our case, we
+wish the run the `estimate_time_varying()` function across all countries. The 
+`tibble` contains data from all countries. We could make a separate `tibble`
+for each country we wish to run. However, as the package `dplyr` already 
+contains the functionality to run a function across a large `tibble`, separated
+by a group, we use it. Furthermore, `dplyr`, as part of the `tidyverse` is a
+common package, which many users will already have installed. 
+
+First of all, we retrieve daily case and death data for COVID-19 for all
+countries, again using the `covidregionaldata` package:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+ df_covid <- get_national_data(
+   source = "who",verbose = FALSE) |>
+   rename(cases = cases_new, deaths = deaths_new)
+```
+
+Next, we run some `dplyr` commands to group the data and map the
+`estimate_time_varying()` function across each group within the `tibble`. We do
+not focus on the `dplyr` commands in this vignette. Instead, we refer the user
+to the `dplyr` documentation [here](https://dplyr.tidyverse.org/). 
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+df_covid_cfr <- df_covid |>
+  group_by(iso_code) |>
+  mutate(total_deaths = max(deaths_total)) |> 
+  filter(total_deaths > 100000 & !is.na(country)) |>
+  group_map(~estimate_time_varying(
+    df_in = .,
+    epi_dist = onset_to_death_covid,
+    smooth_inputs = TRUE,
+    smoothing_window = 7,
+    burn_in = TRUE)) |>
+  bind_rows()
+```
+
+Note, for simplicity, we use the same delay distribution between onset and
+death for all locations.
+
+We then plot the time-varying CFR for a selection of three more countries with
+large outbreaks of COVID-19. First of all, we plot the time-varying CFR
+estimate for the COVID-19 outbreak in Brazil:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 5: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, corrected for delays."}
+ subset(df_covid_cfr, country == "Brazil") |>
+  plot_time_varying(lower = 0, upper = 5)
+```
+
+Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in India:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 6: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Germany deaths in total, corrected for delays."}
+ subset(df_covid_cfr, country == "Germany") |>
+   plot_time_varying(lower = 0, upper = 5)
+```
+
+Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in the
+United States:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 7: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays."}
+ subset(df_covid_cfr, country == "United States") |>
+   plot_time_varying(lower = 0, upper = 5)
+```
+
+Finally, we plot all of the countries we have calculated the time-varying CFR
+for, using the package `ggplot2`, which contains the `facet_wrap()` function.
+This allows us to loop over the different countries with ease. We do so with
+the following commands:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.height = 1000/80, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 8: The corrected time-varying CFR for each country with a large outbreak.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in each country with a large outbreak — defined as any country with more than 100,000 deaths in total — corrected for delays."}
+ df_covid_cfr |> 
+  ggplot(aes(x = date)) + 
+  geom_line(aes(y = severity_me), linetype = "dashed", alpha = 0.25) +
+  geom_ribbon(aes(ymin = severity_lo, 
+                  ymax = severity_hi),
+              fill = "dodgerblue", alpha = 0.5) + 
+  coord_cartesian(clip = "off") + 
+  facet_wrap(~country, ncol = 2) + 
+  theme_minimal() + 
+  labs(x = "Date", y = "CFR (%)") +
+  scale_y_continuous(labels = percent, limits = c(0, 0.1))
+```
+
+We do not focus on the `ggplot2` commands in this vignette. Instead, we refer 
+the user to the `ggplot2` documentation [here](https://ggplot2.tidyverse.org/0). 
+
+
+
+
+
+
+

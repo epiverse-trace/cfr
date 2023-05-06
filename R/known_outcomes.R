@@ -53,14 +53,11 @@ known_outcomes <- function(df_in,
     )
   }
 
-  # nolint start
-  # Code following https://github.com/adamkucharski/ebola-cfr/
-  # blob/e2683eee62fb6fef8140b4b1d9dc13d542c5eacb/R/cfr_function.R#L12-L22
-  # nolint end
   pmf_vals <- stats::density(
     epi_dist,
     at = seq(from = 0, to = nrow(df_in) - 1L)
   )
+<<<<<<< Updated upstream
   
   # defining vectors to be used in the main loop
   cases <- df_in$cases
@@ -81,22 +78,39 @@ known_outcomes <- function(df_in,
   # main calculation loop
   for(i in case_length:1){
     
+=======
+
+  cases <- df_in$cases
+  case_times <- as.numeric(df_in$date - min(df_in$date, 
+                                            na.rm = TRUE),
+                           units = "days") + 1
+  case_length <- length(case_times)
+
+  df_in$known_outcomes <- numeric(case_length)
+  df_in$u_t <- numeric(case_length)
+
+  # Compile onsets
+  for (i in case_length:1) {
+>>>>>>> Stashed changes
     # Delay probability mass function, evaluated at times
-    # within the case and death times series 
+    # within the case and death times series
     delay_pmf_eval <- pmf_vals[case_times[1:i]]
-    
+
     # Estimate the number of onsets associated with deaths
     known_onsets_current <- cases[1:i]*rev(delay_pmf_eval)
-    
+
     # Collecting all current known onset estimates in a new
     # column of the original data.frame
     df_in$known_outcomes[[i]] <- sum(known_onsets_current)
+<<<<<<< Updated upstream
     
+=======
+
+>>>>>>> Stashed changes
     # Calculating the proportion of cases with known onset,
     # for use in the simple likelihood function
-    df_in$u_t <- cumsum(df_in$known_outcomes)/cumsum(cases)
+    df_in$u_t <- cumsum(df_in$known_outcomes) / cumsum(cases)
   }
-  
+
   return(df_in)
-  
 }

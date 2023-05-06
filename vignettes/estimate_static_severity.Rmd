@@ -1,0 +1,399 @@
+---
+title: "Calculating disease severity by adjusting for delays between onset and outcome during an outbreak"
+output: rmarkdown::html_vignette
+bibliography: resources/library.bib
+csl: resources/bmj.csl
+vignette: >
+  %\VignetteIndexEntry{title: "Calculating disease severity by adjusting for delays between onset and outcome during an outbreak}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+<!-- removes the ugly border around the figures -->
+<style>
+    img {
+        border: 0;
+    }
+</style>
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align  = "left",
+  fig.width  = 700/80,
+  fig.height = 400/80,
+  dpi = 80,
+  fig.retina = 2,
+  dev.args = list(type = "cairo-png")
+)
+```
+
+# Overview
+
+This vignette outlines how to use `datadelay` to calculate disease severity
+during an ongoing outbreak. We wish to estimate one of the typical severity 
+quantities used in epidemiology: the *case fatality risk (CFR)*, 
+*infection hospitality risk (IFR)* or  *hospitalisation fatality risk (HFR)*. We
+do so using a method that uses a time series of cases, infections of
+hospitalisations (respectively) and deaths with an appropriate delay 
+distribution. The methods used here originate from Nishiura et 
+al. (2009)^[@nishiura2009early]^.
+
+This vignette demonstrates how to implement the core functions within
+`datadelay`. Specifically, we will cover
+
+1. Why naive estimates of CFR or HFR generated during an ongoing outbreak 
+require adjusting, given out of sync time series are often being compared. 
+
+2. Arrive at estimates over time for the number of symptomatic individuals 
+that will likely be known to have had an outcome $t$ days after symptom onset
+
+3. Define an unbiased estimator to estimate the CFR or HFR from Nishiura et al
+(2009)^[@nishiura2009early]^
+
+4. Numerically implement the unbiased estimator numerically using
+maximum likelihood estimation to arrive at central estimates of the CFR or HFR,
+along with a confidence interval.
+
+Now we load the three packages we need using the following commands:
+
+```{r, message = FALSE, warning=FALSE, eval = TRUE}
+library(datadelay)
+library(epiparameter)
+library(covidregionaldata)
+library(knitr)
+library(kableExtra)
+```
+
+# Motivation
+
+Key epidemiological quantities estimated in real-time often suffer from biases.
+In particular, dividing deaths-to-date by cases-to-date, infections-to-date or 
+hospitalisations-to-date leads to biased estimates of the CFR, IFR or 
+HFR (respectively). This is because this calculation does not account 
+for delays from confirmation of a case, infection or hospitalisation-to-death. 
+
+If we had perfectly synchronised case and death incidence data, the basic
+versions of the CFR, IFR and HFR — defined as either the ratio of the 
+total number of deaths and the total number of cases, infections or 
+hospitalisations — would be accurate. These basic estimates are referred to as
+naive estimators. However, due to delays between onset or hospitalisation and 
+death for all known diseases, this synchronisation is never true.
+
+For example, suppose 10 people start showing symptoms of a specific disease on 
+a given day and the end of that day all remain alive. Suppose that for the next 
+5 days, the numbers of new cases continue to rise until they reach 100 new cases
+on day 5. However, suppose that by day 5, all infected individuals remain alive.
+The naive estimate of the CFR would be zero calculated at the end of the first 5
+days would be zero, because there would have been zero deaths in total. 
+Even after deaths begin to occur, this lag between the ascertainment of a case
+or hospitalisation and outcome leads to a consistently biased estimate. Hence,
+adjusting for such delays using an appropriate delay distribution 
+is essential for accurate estimates of severity.
+
+# Methods
+
+## Data required
+
+The data required to estimate the severity of a disease during an ongoing 
+outbreak using the `datadelay` package includes:
+
+* A time-series of cases, hospitalisations or some other proxy for infections 
+over time;
+* A time-series of deaths;
+* A delay distribution, describing the probability an individual will die $t$ 
+days after they were initially exposed. Such distributions come from the
+literature, where studies have typically fit distributions to data describing 
+the process. 
+
+In practice, the time-series of cases and deaths will already be together, given
+that they usually originate from sources that will have typically collated them
+into a single data file.
+
+The function within `datadelay` used to estimate the severity of a disease at a
+single time-point — `estimate_static()` — requires a `data.frame` of input data
+--- typically case and death  time series data --- and a delay distribution. The
+delay distribution we use here comes from the `epiparameter` package.
+
+## Adjusting for delays between the two time series 
+
+The method used by this function follows Nishiura et al.^[@nishiura2009early]^.
+The function calculates a quantity $u_t$ for each day within the input data,
+which represents the proportion of cases with a known outcome, on day $t$.
+Following Nishiura et al., $u_t$ is calculated in the following way:
+
+\begin{equation}
+  u_t = \frac{\sum_{i = 0}^t
+        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
+\end{equation}
+
+where $f_t$ is the value of the probability mass function at time $t$ and $c_t$,
+$d_t$ are the number of new cases and new deaths at time $t$, (respectively). We
+then use $u_t$ at the end of the outbreak in the following likelihood 
+function to estimate the severity of the disease in question.
+
+\begin{equation}
+  L(\theta | y) = \log{\binom{u_tC}{D}} + D \log{\theta} +
+  (u_tC - D)\log{(1.0 - \theta)},
+\end{equation}
+
+$C$ and $D$ are the cumulative number of cases and deaths (respectively) up
+until time $t$. Lastly, $\theta$ is the parameter we wish to estimate, the
+severity of the disease. We estimate $\theta$ using simple maximum-likelihood 
+methods, allowing the functions within this package to be quick and easy tools 
+to use.
+
+## Interpreting the estimates
+
+The precise severity measure — CFR, IFR, HFR, etc — that \theta represents
+depends upon the input data given by the user. For complete clarity, here are
+the most common time series that users might calculate severity from and the 
+resulting severity estimate from such data:
+
+* Case and death incidence data, with a case-to-death delay distribution (or 
+close approximation, such as onset-to-death) — Case Fatality Risk (CFR).
+
+* Infection and death incidence data, with an exposure-to-death delay
+distribution (or close approximation) — Infection Fatality Risk (IFR).
+
+* Hospitalisation and death incidence data, with a hospitalisation-to-death
+delay distribution (or close approximation) — Hospitalisation Fatality Risk
+(HFR).
+
+# Example: 1976 Ebola outbreak in The Democratic Republic of the Congo
+
+We use case and death incidence data from the 1976 Ebola outbreak to estimate 
+the overall severity of Ebola. We do so as though we were roughly half way
+through the outbreak, emulating when the methods presented in this package are 
+arguably their most useful. 
+
+First of all, we plot the data from the entire outbreak. Then we subset the 
+data, keeping only the first half of each time series, in order to emulate
+attempting to calculate the severity of the disease when the effects of long
+lag-times between case detection and death are most serious.
+
+## Plotting the raw data
+
+First of all, we load the raw data and add the location to it with the following
+commands:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+data("ebola1976")
+
+# Adding the location to the dataset
+ebola1976$location <- "Democractic Republic of the Congo"
+```
+
+Then, we plot the case incidence data with the following command:
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:ebola_case_data} **Figure 1:** Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the *datadelay* package"}
+plot_case_data(ebola1976)
+```
+
+Lastly, we plot the death incidence data with the following command:
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_ebola} **Figure 2:** Incidence of deaths over time from the same dataset as Figure 1."}
+plot_death_data(ebola1976)
+```
+
+We will focus on the roughly the first half of this dataset. We do so by
+subsetting the data so that we only include days before the 30th September 1976,
+using the following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE}
+df_ebola_subset <- subset(ebola1976, date <= "1976-09-30")
+```
+
+## The delay distribution
+
+For this example, given that we are using case data and detection of a case is
+well-approximated by symptom onset, we use the distribution describing the delay
+between onset-to-death. As such, we retrieve such a distribution from the
+literature (reported 
+[here](https://doi.org/10.1016/S0140-6736(18)31387-4)^[@barry2018outbreak]^), 
+using the `epidist_db()` function from the `epiparameter` package with the
+following command:
+
+```{r message = FALSE, warning = FALSE, eval=TRUE}
+onset_to_death_ebola <- epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
+```
+
+To visualise this distribution, we evaluate it between 0 and 30 days, and plot
+the results over time:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:delay_dist_ebola} **Figure 3: Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)."}
+plot_epiparameter_distribution(onset_to_death_ebola, by = 0.1)
+```
+
+## Estimating incidence of cases (or similar timeseries) with a known outcome
+
+The function `known_outcomes()` from the `datadelay` package estimates the 
+number of cases which have a known outcome over time.
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:known_outcomes_ebola} **Figure 4:** The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included."}
+df_known_outcomes_ebola <- known_outcomes(
+  df_in = df_ebola_subset,
+  epi_dist = onset_to_death_ebola)
+
+plot_known_outcomes(df_known_outcomes_ebola)
+```
+
+## Estimating the naive and corrected CFR
+
+Once we calculate the proportion of cases with known outcomes, we apply the
+proportion to the number of cases to correct for the delay between
+onset-to-death. We do so by using the function `estimate_static()` from the
+`datadelay` package. This function estimates the proportion of known outcomes
+over time, and uses the estimate to correct the naive severity estimate. This is
+controlled using the `correct_for_delays` boolean flag argument in the
+`estimate_static` function. Otherwise, it calculates a naive severity estimate, 
+which does not adjust for delays and is simply the total number of deaths in the
+dataset divided by the total number of cases. We run this function for the naive
+and corrected estimates using the following two commands (respectively):
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+# calculating the naive CFR
+df_ncfr_static_ebola <- estimate_static(
+  df_ebola_subset,
+  correct_for_delays = FALSE,
+  group_by = "location") |>
+  format_output(estimate_type = "severity",
+                type = "Naive CFR")
+
+# calculating the corrected CFR
+df_ccfr_static_ebola <- estimate_static(
+  df_ebola_subset,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola,
+  group_by = "location") |>
+  format_output(estimate_type = "severity",
+                type = "Corrected CFR")
+
+# putting the two results together
+df_static_clean_ebola <- rbind(df_ncfr_static_ebola, df_ccfr_static_ebola)
+```
+
+Once we have calculated both the naive and corrected severity estimates, in this
+case CFRs, we put them together and make a table, using the `kable()` function 
+from the `knitr` package, using the following command:
+
+```{r message=FALSE, warning = FALSE, eval = TRUE}
+kable(df_static_clean_ebola,
+  align = "c",
+  col.names = c("Location", "CFR estimate", "Type")) |>
+  kable_styling(full_width = FALSE)
+```
+
+# Example with data from the ongoing COVID-19 pandemic in the U.K.
+
+We now perform a similar analysis with all of the same steps, with data taken 
+from the ongoing COVID-19 epidemic in the U.K. For brevity, we describe the
+steps without methodological explanations throughout this example.
+
+## Plotting the raw data
+
+First of all, we subset the data so that we focus on just the first year of the
+COVID-19 outbreak in the U.K. We do so, as the CFR changed dramatically as a 
+result of the vaccine campaign. The static severity calculations we are 
+performing in this vignette are not able to deal with changes in severity over
+time. We download the data --- using the `covidregionaldata` package --- 
+change some default column names to match those required by `datadelay` and
+subset the data.frame to focus on the first year of the pandemic in the U.K.,
+with the following commands:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE}
+df_covid_uk <- get_national_data(
+  countries = "united kingdom", source = "who", verbose = FALSE)
+
+names(df_covid_uk)[names(df_covid_uk) == "cases_new"] <- "cases"
+names(df_covid_uk)[names(df_covid_uk) == "deaths_new"] <- "deaths"
+
+df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
+```
+
+Then, we plot the subsetted case data with following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 5:** Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."}
+plot_case_data(df_covid_uk_subset)
+```
+Then, we plot the subsetted death data with following command:
+
+```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 6:** Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K."}
+plot_death_data(df_covid_uk_subset)
+```
+
+## The delay distribution
+
+We again retrieve the appropriate distribution (reported 
+[here](https://doi.org/10.3390/jcm9020538)^[@linton2020incubation]^), using the 
+`epidist_db()` function 
+from the `epiparameter` package, using the following command:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+onset_to_death_covid <- epidist_db(
+  disease = "COVID-19",
+  epi_dist = "onset_to_death",
+  author = "Linton_etal"
+)
+```
+
+To visualise this distribution, we evaluate it between 0 and 30 days, and plot
+the results over time. We do so using the following command:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:delay_dist_covid} **Figure 7: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)."}
+plot_epiparameter_distribution(onset_to_death_covid, by = 0.1)
+```
+
+## Estimating incidence of cases (or similar timeseries) with a known outcome
+
+We use the same method and implementation as in the Ebola example to calculate
+the number of known outcomes over time, using the following command:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:known_outcomes_covid} **Figure 8:** The same case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included."}
+df_known_outcomes_covid <- known_outcomes(
+  df_in = df_covid_uk_subset,
+  epi_dist = onset_to_death_covid
+)
+
+plot_known_outcomes(df_known_outcomes_covid)
+```
+
+## Estimating the naive and corrected CFR
+
+Finally, we calculate the naive and corrected CFRs for the COVID-19 epidemic in
+the U.K:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+# calculating the naive CFR
+df_ncfr_static_covid <- estimate_static(
+  df_covid_uk_subset,
+  correct_for_delays = FALSE,
+  group_by = "country") |>
+  format_output(
+    estimate_type = "severity", type = "Naive CFR")
+
+# calculating the corrected CFR
+df_ccfr_static_covid <- estimate_static(
+  df_covid_uk_subset,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_covid,
+  group_by = "country") |>
+  format_output(estimate_type = "severity", type = "Corrected CFR")
+
+# putting the two results together
+df_static_clean_covid <- rbind(df_ncfr_static_covid, df_ccfr_static_covid)
+```
+
+Once we have calculated both the naive and corrected CFR values, we put them 
+together and make a table, using the `kable()` function from the `knitr` 
+package, using the following command:
+
+```{r message = FALSE, warning = FALSE, eval = TRUE}
+kable(df_static_clean_covid,
+  align = "c",
+  col.names = c("Location", "CFR estimate", "Type")) |>
+  kable_styling(full_width = FALSE)
+```

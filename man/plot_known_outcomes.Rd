@@ -4,7 +4,7 @@
 \alias{plot_known_outcomes}
 \title{Plot the estimated known outcomes, as well as the raw data}
 \usage{
-plot_known_outcomes(df_in, together = TRUE)
+plot_known_outcomes(df_in)
 }
 \arguments{
 \item{df_in}{A data.frame of the format that the known_outcomes() function returns from the
@@ -26,13 +26,15 @@ as well as the estimated number of known outcomes on each day
 data("ebola1976")
 
 onset_to_death_ebola <- epiparameter::epidist_db(
-disease = "Ebola Virus Disease",
-epi_dist = "onset_to_death",
-author = "Barry_etal")
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
 
 df_known_outcomes <- known_outcomes(
-df_in = ebola1976,
-epi_dist = onset_to_death_ebola)
+  df_in = ebola1976,
+  epi_dist = onset_to_death_ebola
+)
 
 plot_known_outcomes(df_known_outcomes)
 }

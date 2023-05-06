@@ -1,0 +1,74 @@
+---
+title: "Setup and Installation"
+output: rmarkdown::html_vignette
+bibliography: resources/library.bib
+csl: resources/bmj.csl
+vignette: >
+  %\VignetteIndexEntry{Setup and Installation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.align = "center"
+)
+```
+
+This short vignette makes sure the key packages are installed properly to use
+`datadelay` easily. 
+
+## Essential packages
+### Installing `devtools`
+We use the `devtools` package to install the required packages: `datadelay`, 
+`epiparameter` and (optionally) `covidregionaldata`. To install and load the
+`devtools` package, use the following commands:
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
+install.packages("devtools")
+library(devtools)
+```
+
+
+### Installing `datadelay`
+`datadelay` can be installed from Github, using the `devtools` package, with the
+following command:
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
+install_github(repo = paste0("epiverse-trace", "/", "datadelay"))
+```
+### Installing `epiparameter`
+The `epiparameter` package is also from the *Epiverse* and has been developed to
+work seemlessly with `datadelay` and other *Epiverse* packages. We therefore 
+describe it as essential for `datadelay`. However, in the case whereby the user 
+supplies the delay distribution, the `epiparameter` package is not needed. We 
+install `epiparameter` using the following command:
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
+install_github(repo = paste0("epiverse-trace", "/", "epiparameter"))
+```
+
+## Optional packages — required to run the code in the vignettes
+### Installing `covidregionaldata`
+The `covidregionaldata` package is the source of the case and death time-series
+used in the case studies in the vignettes for the `datadelay` package. 
+Therefore, to ensure that the examples in the vignettes run, we install 
+`covidregionaldata` using the following command:
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
+install.packages("covidregionaldata",
+                 repos = "https://epiforecasts.r-universe.dev")
+```
+
+### Installing `knitr` and `kableExtra`
+The `knitr` package builds tables — called `kables`, using the `kable()` 
+function — in html or PDF form automatically from data.frames. We use it in the 
+vignettes to build the tables. To install it,
+run the following command:
+
+```{r, message = FALSE, warning = FALSE, eval = FALSE}
+install.packages("covidregionaldata",
+                 repos = "https://epiforecasts.r-universe.dev")
+```
