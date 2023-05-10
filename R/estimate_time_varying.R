@@ -90,33 +90,35 @@ estimate_time_varying <- function(df_in,
                                   smooth_inputs = FALSE,
                                   smoothing_window = 7,
                                   correct_for_delays = TRUE) {
+  # TODO input checking
+  checkmate::assert_logical(burn_in, len = 1L, any.missing = FALSE)
+  checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
+  checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
+
   pmf_vals <- stats::density(
     epi_dist,
     at = seq(from = 0, to = nrow(df_in) - 1L)
   )
 
-  if (burn_in == TRUE && is.na(burn_in_arg)) {
+  # assign default value to burn in and modify if requested
+  burn_in_num <- 0
+  if (burn_in && missing(burn_in_arg)) {
     burn_in_num <- round(epi_dist$summary_stats$centre_spread$mean)
-  } else if (burn_in == TRUE && is.numeric(burn_in_arg)) {
+  } else if (burn_in && checkmate::test_number(burn_in_arg, na.ok = FALSE)) {
     burn_in_num <- burn_in_arg
-  } else if (burn_in == FALSE) {
-    burn_in_num <- 0
   }
 
-  if (smooth_inputs == TRUE) {
-    df_in$cases <- round(zoo::rollmean(df_in$cases,
-      k = smoothing_window,
-      fill = NA
-    ))
+  # smooth cases if requested
+  if (smooth_inputs) {
+    df_in$cases <- round(
+      zoo::rollmean(df_in$cases, k = smoothing_window, fill = NA)
+    )
 
-    df_in$deaths <- round(zoo::rollmean(df_in$deaths,
-      k = smoothing_window,
-      fill = NA
-    ))
+    df_in$deaths <- round(
+      zoo::rollmean(df_in$deaths, k = smoothing_window, fill = NA)
+    )
   } else {
     smoothing_window <- 0
-    df_in$cases <- df_in$cases
-    df_in$deaths <- df_in$deaths
   }
 
   cases <- df_in$cases
@@ -127,61 +129,59 @@ estimate_time_varying <- function(df_in,
 
   case_length <- length(case_times)
 
+  # create columns with NA values for later assignment
   df_in$known_outcomes <- numeric(case_length)
-  df_in$u_t <- numeric(case_length)
+  df_in$u_t <- numeric(case_length) # does not seem to be used?
 
-  df_in$severity_me <- rep(NA, case_length)
-  df_in$severity_lo <- rep(NA, case_length)
-  df_in$severity_hi <- rep(NA, case_length)
+  # assign columns for severity estimate and intervals
+  df_in$severity_me <- NA_real_
+  df_in$severity_lo <- NA_real_
+  df_in$severity_hi <- NA_real_
 
-  if (correct_for_delays == TRUE) {
-    # Compile onsets
-    for (i in (case_length - smoothing_window):burn_in_num) {
+  # when not correcting for delays, set known outcomes to cases
+  # this is to avoid if-else ladders
+  df_in$known_outcomes <- df_in$cases
 
-      # Delay probability mass function, evaluated at times
-      # within the case and death times series
-      delay_pmf_eval <- pmf_vals[case_times[1:(i - burn_in_num)]]
+  # Compile onsets
+  for (i in seq(case_length - smoothing_window, burn_in_num, -1)) {
 
-      # Estimate the number of onsets associated with deaths
-      known_onsets_current <- cases[1:(i - burn_in_num)] * rev(delay_pmf_eval)
+    # handle case of correcting for delays - modify known outcomes
+    # for potential use in the binomial test
+    if (correct_for_delays) {
+      for (i in seq(case_length - smoothing_window, burn_in_num, -1)) {
+        # Delay probability mass function, evaluated at times
+        # within the case and death times series
+        delay_pmf_eval <- pmf_vals[case_times[seq_len(i - burn_in_num)]]
 
-      # Collecting all current known onset estimates in a new
-      # column of the original data.frame
-      df_in$known_outcomes[i] <- round(sum(known_onsets_current, na.rm = TRUE))
+        # Estimate the number of onsets associated with deaths
+        known_onsets_current <- cases[seq_len(i - burn_in_num)] *
+          rev(delay_pmf_eval)
 
-      if (df_in$deaths[i] <= df_in$known_outcomes[i] &&
-        df_in$known_outcomes[i] > 0) {
-        severity_current_estimate <- binom.test(
-          df_in$deaths[i],
-          df_in$known_outcomes[i]
+        # Collecting all current known onset estimates in a new
+        # column of the original data.frame
+        df_in$known_outcomes[i] <- round(
+          sum(known_onsets_current, na.rm = TRUE)
         )
-
-        df_in$severity_me[i] <- severity_current_estimate$estimate[[1]]
-        df_in$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
-        df_in$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
-      } else {
-        df_in$severity_me[i] <- NA
-        df_in$severity_lo[i] <- NA
-        df_in$severity_hi[i] <- NA
       }
     }
-  } else {
-    for (i in (case_length - smoothing_window):burn_in_num) {
-      if (df_in$deaths[i] <= df_in$cases[i] && df_in$cases[i] > 0) {
-        severity_current_estimate <- binom.test(
-          df_in$deaths[i],
-          df_in$cases[i]
-        )
 
-        df_in$severity_me[i] <- severity_current_estimate$estimate[[1]]
-        df_in$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
-        df_in$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
-      } else {
-        df_in$severity_me[i] <- NA
-        df_in$severity_lo[i] <- NA
-        df_in$severity_hi[i] <- NA
-      }
+    # handle case where deaths are fewer than non-zero known outcomes
+    if (df_in$deaths[i] <= df_in$known_outcomes[i] &&
+      isTRUE(df_in$known_outcomes[i] > 0)) {
+      severity_current_estimate <- stats::binom.test(
+        df_in$deaths[i],
+        df_in$known_outcomes[i]
+      )
+
+      df_in$severity_me[i] <- severity_current_estimate$estimate[[1]]
+      df_in$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
+      df_in$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
     }
   }
-  return(df_in)
+
+  # remove known outcomes column as this is not expected as a side effect
+  df_in$known_outcomes <- NULL
+
+  # return data
+  df_in
 }
