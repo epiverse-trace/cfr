@@ -20,17 +20,17 @@
 plot_death_data <- function(df_in) {
   dates <- df_in$date
   deaths <- df_in$deaths
-  
+
   plot(dates, deaths,
-       col = "red",
-       type = "s", lwd = 2,
-       xlab = "Date", ylab = "Incidence"
+    col = "red",
+    type = "s", lwd = 2,
+    xlab = "Date", ylab = "Incidence"
   )
   legend("topright",
-         legend = "Deaths",
-         col = "red",
-         lty = 1,
-         cex = 1
+    legend = "Deaths",
+    col = "red",
+    lty = 1,
+    cex = 1
   )
   grid(
     nx = NULL, ny = NULL,
