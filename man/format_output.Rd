@@ -28,7 +28,7 @@ estimates to 3 significant figures and presenting the MLE and 95\% interval
 on a single line
 }
 \examples{
-load Ebola 1976 outbreak data
+# load Ebola 1976 outbreak data
 data("ebola1976")
 
 # add the location the dataset relates to, for ease of formatting at the end
@@ -47,16 +47,18 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 
 # Calculate static naive CFR
 ncfr <- estimate_static(
-  df_in = df_ebola_subset, 
+  df_in = df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location")
+  group_by = "location"
+)
 
 # Calculate static corrected CFRs
 ccfr <- estimate_static(
   df_in = ebola1976,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location")
+  group_by = "location"
+)
 
 # Formats the output of the CFR data.frames nicely
 # and prints to the terminal

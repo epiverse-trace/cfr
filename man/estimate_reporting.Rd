@@ -74,8 +74,12 @@ library(covidregionaldata)
 library(dplyr)
 
 df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE) |>
-  dplyr::rename(cases = cases_new, deaths = deaths_new)
+  countries = "united kingdom", source = "who", verbose = FALSE
+)
+df_covid_uk <- dplyr::rename(
+  df_covid_uk,
+  cases = cases_new, deaths = deaths_new
+)
 
 df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 
@@ -86,13 +90,19 @@ onset_to_death_covid <- epidist_db(
 )
 
 df_reporting_varying <- estimate_reporting(df_covid_uk,
-                                           epi_dist = onset_to_death_covid,
-                                           type = "varying",
-                                           severity_baseline = 0.014,
-                                           smooth_inputs = TRUE,
-                                           burn_in = TRUE,
-                                           correct_for_delays = TRUE,
-                                           max_date = "2020-06-30") |> 
-  format_output(estimate_type = "reporting", type = "Under-reporting")
+  epi_dist = onset_to_death_covid,
+  type = "varying",
+  severity_baseline = 0.014,
+  smooth_inputs = TRUE,
+  burn_in = TRUE,
+  correct_for_delays = TRUE,
+  max_date = "2020-06-30"
+)
+
+format_output(
+  df_reporting_varying,
+  estimate_type = "reporting",
+  type = "Under-reporting"
+)
 
 }

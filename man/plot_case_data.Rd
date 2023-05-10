@@ -23,5 +23,5 @@ time-series data
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-plot_case_data(ebola_1976)
+plot_case_data(ebola1976)
 }
