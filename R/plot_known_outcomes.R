@@ -5,10 +5,10 @@
 #'
 #' @param df_in A data.frame of the format that the known_outcomes() function returns from the
 #' datadelay package
-#' 
-#' @param together A boolean flag which determines whether both the 
+#'
+#' @param together A boolean flag which determines whether both the
 #' cases/known outcomes are plotted in the same panel as the deaths. If
-#' the two are on significantly different scales, plot them separately. 
+#' the two are on significantly different scales, plot them separately.
 #'
 #' @return A plot of the three time-series on the same plot, with a legend
 #'
@@ -31,30 +31,29 @@
 #'
 #' plot_known_outcomes(df_known_outcomes)
 plot_known_outcomes <- function(df_in) {
-  
   dates <- df_in$date
   cases <- df_in$cases
   deaths <- df_in$deaths
   known_outcomes <- df_in$known_outcomes
 
-    plot(dates, cases,
-      col = "blue", type = "s", lwd = 2,
-      xlab = "Date", ylab = "Incidence"
-    )
+  plot(dates, cases,
+    col = "blue", type = "s", lwd = 2,
+    xlab = "Date", ylab = "Incidence"
+  )
 
-    lines(dates, known_outcomes, type = "s", lwd = 2, col = "green")
+  lines(dates, known_outcomes, type = "s", lwd = 2, col = "green")
 
-    legend("topleft",
-      legend = c("Cases", "Known outcomes"),
-      col = c("blue", "green"),
-      lty = 1,
-      cex = 1
-    )
+  legend("topleft",
+    legend = c("Cases", "Known outcomes"),
+    col = c("blue", "green"),
+    lty = 1,
+    cex = 1
+  )
 
-    grid(
-      nx = NULL, ny = NULL,
-      lty = 6, # Grid line type
-      col = "cornsilk2", # Grid line color
-      lwd = 2
-    )
+  grid(
+    nx = NULL, ny = NULL,
+    lty = 6, # Grid line type
+    col = "cornsilk2", # Grid line color
+    lwd = 2
+  )
 }

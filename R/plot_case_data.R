@@ -16,21 +16,21 @@
 #' # Load Ebola 1976 outbreak data
 #' data("ebola1976")
 #'
-#' plot_case_data(ebola_1976)
+#' plot_case_data(ebola1976)
 plot_case_data <- function(df_in) {
   dates <- df_in$date
   cases <- df_in$cases
-  
+
   plot(dates, cases,
-       col = "blue",
-       type = "s", lwd = 2,
-       xlab = "Date", ylab = "Incidence"
+    col = "blue",
+    type = "s", lwd = 2,
+    xlab = "Date", ylab = "Incidence"
   )
   legend("topright",
-         legend = "Cases",
-         col = "blue",
-         lty = 1,
-         cex = 1
+    legend = "Cases",
+    col = "blue",
+    lty = 1,
+    cex = 1
   )
   grid(
     nx = NULL, ny = NULL,
