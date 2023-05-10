@@ -1,16 +1,16 @@
 #' Plot time-varying severity estimates
 #'
-#' @description Produces a plot, using base R, of the time-varying severity estimate over the entire
-#' period it was calculated
+#' @description Produces a plot, using base R, of the time-varying severity
+#' estimate over the entire period it was calculated.
 #'
-#' @param df_in A data.frame of the format that the known_outcomes() function returns from the
-#' datadelay package
+#' @param df_in A data.frame of the format returned by [known_outcomes()].
 #'
-#' @param lower A numeric value determining the lower limit of the y-axis of the plot. In place to
-#' easily help the user produce a readable graph, as severity estimates often have typical ranges
-#' for certain diseases
+#' @param lower A numeric value determining the lower limit of the y-axis of the
+#' plot. In place to easily help the user produce a readable graph, as severity
+#' estimates often have typical ranges for certain diseases.
 #'
-#' @param upper A numeric value determining the upper limit of the y-axis of the plot
+#' @param upper A numeric value determining the upper limit of the y-axis of the
+#' plot.
 #'
 #' @return A plot of the time-varying severity estimate
 #'

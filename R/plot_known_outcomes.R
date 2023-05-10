@@ -1,10 +1,10 @@
 #' Plot the estimated known outcomes, as well as the raw data
 #'
-#' @description Produces a simple plot, using base R, of the raw case and death time-series data,
-#' as well as the estimated number of known outcomes on each day
+#' @description Produces a simple plot, using base R, of the raw case and death
+#' time-series data, as well as the estimated number of known outcomes on each
+#' day.
 #'
-#' @param df_in A data.frame of the format that the known_outcomes() function returns from the
-#' datadelay package
+#' @param df_in A data.frame of the format returned by [known_outcomes()].
 #'
 #' @param together A boolean flag which determines whether both the
 #' cases/known outcomes are plotted in the same panel as the deaths. If
