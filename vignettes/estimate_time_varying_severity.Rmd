@@ -20,9 +20,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.align  = "left",
-  fig.width  = 700/80,
-  fig.height = 400/80,
+  fig.align = "left",
+  fig.width = 700 / 80,
+  fig.height = 400 / 80,
   dpi = 80,
   fig.retina = 2,
   dev.args = list(type = "cairo-png")
@@ -173,7 +173,8 @@ following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE) |>
+  countries = "united kingdom", source = "who", verbose = FALSE
+) |>
   rename(cases = cases_new, deaths = deaths_new)
 ```
 
@@ -232,14 +233,16 @@ df_covid_cfr_uk_naive <- estimate_time_varying(
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
   burn_in = TRUE,
-  correct_for_delays = FALSE)
+  correct_for_delays = FALSE
+)
 
 df_covid_cfr_uk_corrected <- estimate_time_varying(
   df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
   burn_in = TRUE,
-  correct_for_delays = TRUE)
+  correct_for_delays = TRUE
+)
 ```
 
 Once we have calculated both severity quantities over time, we plot the results.
@@ -273,9 +276,10 @@ First of all, we retrieve daily case and death data for COVID-19 for all
 countries, again using the `covidregionaldata` package:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
- df_covid <- get_national_data(
-   source = "who",verbose = FALSE) |>
-   rename(cases = cases_new, deaths = deaths_new)
+df_covid <- get_national_data(
+  source = "who", verbose = FALSE
+) |>
+  rename(cases = cases_new, deaths = deaths_new)
 ```
 
 Next, we run some `dplyr` commands to group the data and map the
@@ -286,14 +290,15 @@ to the `dplyr` documentation [here](https://dplyr.tidyverse.org/).
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_cfr <- df_covid |>
   group_by(iso_code) |>
-  mutate(total_deaths = max(deaths_total)) |> 
+  mutate(total_deaths = max(deaths_total)) |>
   filter(total_deaths > 100000 & !is.na(country)) |>
-  group_map(~estimate_time_varying(
+  group_map(~ estimate_time_varying(
     df_in = .,
     epi_dist = onset_to_death_covid,
     smooth_inputs = TRUE,
     smoothing_window = 7,
-    burn_in = TRUE)) |>
+    burn_in = TRUE
+  )) |>
   bind_rows()
 ```
 
@@ -305,23 +310,23 @@ large outbreaks of COVID-19. First of all, we plot the time-varying CFR
 estimate for the COVID-19 outbreak in Brazil:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 5: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, corrected for delays."}
- subset(df_covid_cfr, country == "Brazil") |>
+subset(df_covid_cfr, country == "Brazil") |>
   plot_time_varying(lower = 0, upper = 5)
 ```
 
 Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in India:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 6: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Germany deaths in total, corrected for delays."}
- subset(df_covid_cfr, country == "Germany") |>
-   plot_time_varying(lower = 0, upper = 5)
+subset(df_covid_cfr, country == "Germany") |>
+  plot_time_varying(lower = 0, upper = 5)
 ```
 
 Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in the
 United States:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 7: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays."}
- subset(df_covid_cfr, country == "United States") |>
-   plot_time_varying(lower = 0, upper = 5)
+subset(df_covid_cfr, country == "United States") |>
+  plot_time_varying(lower = 0, upper = 5)
 ```
 
 Finally, we plot all of the countries we have calculated the time-varying CFR
@@ -330,15 +335,18 @@ This allows us to loop over the different countries with ease. We do so with
 the following commands:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.height = 1000/80, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 8: The corrected time-varying CFR for each country with a large outbreak.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in each country with a large outbreak — defined as any country with more than 100,000 deaths in total — corrected for delays."}
- df_covid_cfr |> 
-  ggplot(aes(x = date)) + 
+df_covid_cfr |>
+  ggplot(aes(x = date)) +
   geom_line(aes(y = severity_me), linetype = "dashed", alpha = 0.25) +
-  geom_ribbon(aes(ymin = severity_lo, 
-                  ymax = severity_hi),
-              fill = "dodgerblue", alpha = 0.5) + 
-  coord_cartesian(clip = "off") + 
-  facet_wrap(~country, ncol = 2) + 
-  theme_minimal() + 
+  geom_ribbon(aes(
+    ymin = severity_lo,
+    ymax = severity_hi
+  ),
+  fill = "dodgerblue", alpha = 0.5
+  ) +
+  coord_cartesian(clip = "off") +
+  facet_wrap(~country, ncol = 2) +
+  theme_minimal() +
   labs(x = "Date", y = "CFR (%)") +
   scale_y_continuous(labels = percent, limits = c(0, 0.1))
 ```
