@@ -80,9 +80,6 @@
 #'   correct_for_delays = TRUE
 #' )
 #'
-#' plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
-#' plot_time_varying(df_covid_cfr_uk_corrected, lower = 0, upper = 5)
-#'
 estimate_time_varying <- function(df_in,
                                   epi_dist,
                                   burn_in = TRUE,
@@ -148,21 +145,19 @@ estimate_time_varying <- function(df_in,
     # handle case of correcting for delays - modify known outcomes
     # for potential use in the binomial test
     if (correct_for_delays) {
-      for (i in seq(case_length - smoothing_window, burn_in_num, -1)) {
-        # Delay probability mass function, evaluated at times
-        # within the case and death times series
-        delay_pmf_eval <- pmf_vals[case_times[seq_len(i - burn_in_num)]]
+      # Delay probability mass function, evaluated at times
+      # within the case and death times series
+      delay_pmf_eval <- pmf_vals[case_times[seq_len(i - burn_in_num)]]
 
-        # Estimate the number of onsets associated with deaths
-        known_onsets_current <- cases[seq_len(i - burn_in_num)] *
-          rev(delay_pmf_eval)
+      # Estimate the number of onsets associated with deaths
+      known_onsets_current <- cases[seq_len(i - burn_in_num)] *
+        rev(delay_pmf_eval)
 
-        # Collecting all current known onset estimates in a new
-        # column of the original data.frame
-        df_in$known_outcomes[i] <- round(
-          sum(known_onsets_current, na.rm = TRUE)
-        )
-      }
+      # Collecting all current known onset estimates in a new
+      # column of the original data.frame
+      df_in$known_outcomes[i] <- round(
+        sum(known_onsets_current, na.rm = TRUE)
+      )
     }
 
     # handle case where deaths are fewer than non-zero known outcomes
