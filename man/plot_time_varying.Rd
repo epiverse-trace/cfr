@@ -30,8 +30,12 @@ library(covidregionaldata)
 library(dplyr)
 
 df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE) |>
-  rename(cases = cases_new, deaths = deaths_new)
+  countries = "united kingdom", source = "who", verbose = FALSE
+)
+df_covid_uk <- dplyr::rename(
+  df_covid_uk,
+  cases = cases_new, deaths = deaths_new
+)
 
 df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
 
@@ -46,14 +50,16 @@ df_covid_cfr_uk_naive <- estimate_time_varying(
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
   burn_in = TRUE,
-  correct_for_delays = FALSE)
+  correct_for_delays = FALSE
+)
 
 df_covid_cfr_uk_corrected <- estimate_time_varying(
   df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
   burn_in = TRUE,
-  correct_for_delays = TRUE)
+  correct_for_delays = TRUE
+)
 
 plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
 plot_time_varying(df_covid_cfr_uk_corrected, lower = 0, upper = 5)

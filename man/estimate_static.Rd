@@ -62,17 +62,27 @@ onset_to_death_ebola <- epidist_db(
 df_ncfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location") |>
-  format_output(estimate_type = "severity",
-                type = "Naive CFR")
+  group_by = "location"
+)
+
+format_output(
+  df_ncfr_static_ebola,
+  estimate_type = "severity",
+  type = "Naive CFR"
+)
 
 # calculating the corrected CFR
 df_ccfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location") |>
-  format_output(estimate_type = "severity",
-                type = "Corrected CFR")
+  group_by = "location"
+)
+
+format_output(
+  df_ccfr_static_ebola,
+  estimate_type = "severity",
+  type = "Corrected CFR"
+)
 
 }
