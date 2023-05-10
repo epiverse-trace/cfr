@@ -1,16 +1,22 @@
 #' Plot an epiparameter distribution object
 #'
-#' @description Produces a simple plot, using base R, of an epiparameter distribution object
+#' @description Produces a simple plot, using base R, of an epiparameter
+#' distribution object of the class [epiparameter::epidist()].
 #'
-#' @param epidist An epiparameter object retrieved using the epiparameter::epidist_db()
+#' @param epidist An epiparameter object retrieved using the function
+#' [epiparameter::epidist_db()] or otherwise constructed using
+#' [epiparameter::epidist()]
 #'
-#' @param from The day from which to start plotting the distribution. Default option is day 0.
+#' @param from The day from which to start plotting the distribution. Default
+#' option is day 0.
 #'
-#' @param to The day to which to start plotting the distribution. Default option is day 30.
+#' @param to The day to which to start plotting the distribution. Default
+#' option is day 30.
 #'
-#' @param by The time resolution at which which to plot the distribution. Default option is 0.1 days.
+#' @param by The time resolution at which which to plot the distribution.
+#' Default option is 0.1 days.
 #'
-#' @return A plot of the epiparameter distribution over time
+#' @return A plot of the delay distribution over time
 #'
 #' @export
 #'
