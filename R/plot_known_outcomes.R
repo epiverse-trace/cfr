@@ -6,10 +6,6 @@
 #'
 #' @param df_in A data.frame of the format returned by [known_outcomes()].
 #'
-#' @param together A boolean flag which determines whether both the
-#' cases/known outcomes are plotted in the same panel as the deaths. If
-#' the two are on significantly different scales, plot them separately.
-#'
 #' @return A plot of the three time-series on the same plot, with a legend
 #'
 #' @export
@@ -33,7 +29,6 @@
 plot_known_outcomes <- function(df_in) {
   dates <- df_in$date
   cases <- df_in$cases
-  deaths <- df_in$deaths
   known_outcomes <- df_in$known_outcomes
 
   plot(dates, cases,
