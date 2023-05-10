@@ -20,9 +20,9 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.align  = "left",
-  fig.width  = 700/80,
-  fig.height = 400/80,
+  fig.align = "left",
+  fig.width = 700 / 80,
+  fig.height = 400 / 80,
   dpi = 80,
   fig.retina = 2,
   dev.args = list(type = "cairo-png")
@@ -236,7 +236,8 @@ number of cases which have a known outcome over time.
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:known_outcomes_ebola} **Figure 4:** The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included."}
 df_known_outcomes_ebola <- known_outcomes(
   df_in = df_ebola_subset,
-  epi_dist = onset_to_death_ebola)
+  epi_dist = onset_to_death_ebola
+)
 
 plot_known_outcomes(df_known_outcomes_ebola)
 ```
@@ -259,18 +260,24 @@ and corrected estimates using the following two commands (respectively):
 df_ncfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location") |>
-  format_output(estimate_type = "severity",
-                type = "Naive CFR")
+  group_by = "location"
+) |>
+  format_output(
+    estimate_type = "severity",
+    type = "Naive CFR"
+  )
 
 # calculating the corrected CFR
 df_ccfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location") |>
-  format_output(estimate_type = "severity",
-                type = "Corrected CFR")
+  group_by = "location"
+) |>
+  format_output(
+    estimate_type = "severity",
+    type = "Corrected CFR"
+  )
 
 # putting the two results together
 df_static_clean_ebola <- rbind(df_ncfr_static_ebola, df_ccfr_static_ebola)
@@ -283,7 +290,8 @@ from the `knitr` package, using the following command:
 ```{r message=FALSE, warning = FALSE, eval = TRUE}
 kable(df_static_clean_ebola,
   align = "c",
-  col.names = c("Location", "CFR estimate", "Type")) |>
+  col.names = c("Location", "CFR estimate", "Type")
+) |>
   kable_styling(full_width = FALSE)
 ```
 
@@ -306,7 +314,8 @@ with the following commands:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE)
+  countries = "united kingdom", source = "who", verbose = FALSE
+)
 
 names(df_covid_uk)[names(df_covid_uk) == "cases_new"] <- "cases"
 names(df_covid_uk)[names(df_covid_uk) == "deaths_new"] <- "deaths"
@@ -371,16 +380,19 @@ the U.K:
 df_ncfr_static_covid <- estimate_static(
   df_covid_uk_subset,
   correct_for_delays = FALSE,
-  group_by = "country") |>
+  group_by = "country"
+) |>
   format_output(
-    estimate_type = "severity", type = "Naive CFR")
+    estimate_type = "severity", type = "Naive CFR"
+  )
 
 # calculating the corrected CFR
 df_ccfr_static_covid <- estimate_static(
   df_covid_uk_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_covid,
-  group_by = "country") |>
+  group_by = "country"
+) |>
   format_output(estimate_type = "severity", type = "Corrected CFR")
 
 # putting the two results together
@@ -394,6 +406,7 @@ package, using the following command:
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 kable(df_static_clean_covid,
   align = "c",
-  col.names = c("Location", "CFR estimate", "Type")) |>
+  col.names = c("Location", "CFR estimate", "Type")
+) |>
   kable_styling(full_width = FALSE)
 ```

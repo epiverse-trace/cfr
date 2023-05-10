@@ -15,10 +15,10 @@ vignette: "# %\\VignetteIndexEntry{datadelay Case Study 1}\n%\\VignetteEncoding{
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-  collapse=TRUE,
-  echo=TRUE,
+  collapse = TRUE,
+  echo = TRUE,
   comment = "#>",
-  eval=TRUE
+  eval = TRUE
 )
 ```
 
@@ -68,7 +68,8 @@ We install `covidregionaldata` using the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
 install.packages("covidregionaldata",
-                 repos = "https://epiforecasts.r-universe.dev")
+  repos = "https://epiforecasts.r-universe.dev"
+)
 ```
 
 Now we load these three packages using the following commands:
@@ -147,9 +148,10 @@ the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
 onset_to_death_ebola <- epidist_db(
-  disease = "Ebola Virus Disease", 
+  disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Barry_etal")
+  author = "Barry_etal"
+)
 ```
 
 To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time:
@@ -174,8 +176,9 @@ It requires a `data.frame` of input data of new cases and new outcomes over time
 ```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:known_outcomes_ebola} **Figure 3:** The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included."}
 df_known_outcomes_ebola <- known_outcomes(
   df_in = df_ebola_subset,
-  epi_dist = onset_to_death_ebola)
-  
+  epi_dist = onset_to_death_ebola
+)
+
 plot_known_outcomes(df_known_outcomes_ebola)
 ```
 
@@ -190,14 +193,16 @@ it calculates the naive CFR. We run this function using the following commands:
 # calculating the naive CFR
 dt_ncfr_static_ebola <- static_cfr(
   df_ebola_subset,
-  correct_for_delays = FALSE) |> 
+  correct_for_delays = FALSE
+) |>
   format_cfr_neatly(type = "Naive")
 
 # calculating the corrected CFR
 dt_ccfr_static_ebola <- static_cfr(
   df_ebola_subset,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola) |>
+  epi_dist = onset_to_death_ebola
+) |>
   format_cfr_neatly(type = "Corrected")
 
 # putting the two results together
@@ -209,8 +214,9 @@ from the `knitr` package, using the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
 knitr::kable(dt_static_clean_ebola,
-             align = "c",
-             col.names = c("CFR estimate", "Type")) |> 
+  align = "c",
+  col.names = c("CFR estimate", "Type")
+) |>
   kableExtra::kable_styling(full_width = FALSE)
 ```
 
@@ -228,7 +234,8 @@ the `covidregionaldata` package ---  and subset it with the following commands:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE) |>
+  countries = "united kingdom", source = "who", verbose = FALSE
+) |>
   dplyr::rename(cases = cases_new, deaths = deaths_new)
 
 df_covid_uk_subset <- subset(df_covid_uk, date > "2020-07-01" & date <= "2020-11-01")
@@ -248,7 +255,8 @@ We again retrieve the appropriate distribution (reported [here](https://doi.org/
 onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal")
+  author = "Linton_etal"
+)
 ```
 
 To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time. We do so using the following command:
@@ -264,8 +272,9 @@ We use the same method and implementation as in the Ebola example to calculate t
 ```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:known_outcomes_covid} **Figure 6:** The same case and death time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included."}
 df_known_outcomes_covid <- known_outcomes(
   df_in = df_covid_uk_subset,
-  epi_dist = onset_to_death_covid)
-  
+  epi_dist = onset_to_death_covid
+)
+
 plot_known_outcomes(df_known_outcomes_covid, together = FALSE)
 ```
 
@@ -277,14 +286,16 @@ Using the same functions as the Ebola example, we calculate the naive and correc
 # calculating the naive CFR
 dt_ncfr_static_covid <- static_cfr(
   df_covid_uk_subset,
-  correct_for_delays = FALSE) |> 
+  correct_for_delays = FALSE
+) |>
   format_cfr_neatly(type = "Naive")
 
 # calculating the corrected CFR
 dt_ccfr_static_covid <- static_cfr(
   df_covid_uk_subset,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_covid) |>
+  epi_dist = onset_to_death_covid
+) |>
   format_cfr_neatly(type = "Corrected")
 
 # putting the two results together
@@ -296,7 +307,8 @@ from the `knitr` package, using the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
 knitr::kable(dt_static_clean_covid,
-             align = "c", 
-             col.names = c("CFR estimate", "Type")) |> 
+  align = "c",
+  col.names = c("CFR estimate", "Type")
+) |>
   kableExtra::kable_styling(full_width = FALSE)
 ```

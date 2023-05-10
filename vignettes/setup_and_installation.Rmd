@@ -59,7 +59,8 @@ Therefore, to ensure that the examples in the vignettes run, we install
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
 install.packages("covidregionaldata",
-                 repos = "https://epiforecasts.r-universe.dev")
+  repos = "https://epiforecasts.r-universe.dev"
+)
 ```
 
 ### Installing `knitr` and `kableExtra`
@@ -70,5 +71,6 @@ run the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
 install.packages("covidregionaldata",
-                 repos = "https://epiforecasts.r-universe.dev")
+  repos = "https://epiforecasts.r-universe.dev"
+)
 ```
