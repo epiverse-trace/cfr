@@ -22,13 +22,14 @@ it must be between 0.0 and 1.0.}
 }
 \value{
 A named vector with the MLE and 95\% confidence interval of the
-corrected severity estimates, named "severity_me", "severity_low", and "severity_high".
+corrected severity estimates, named "severity_me", "severity_low", and
+"severity_high".
 }
 \description{
 Estimate the maximum likelihood estimate and 95\% confidence
-interval of a corrected severity, using the total cases and total cases with known
-outcomes, where the latter replaces the total number of deaths in the
-standard (naive) severity definition. We use a binomial likelihood, approximated
-by a Poisson likelihood for large samples
+interval of a corrected severity, using the total cases and total cases with
+known outcomes, where the latter replaces the total number of deaths in the
+standard (naive) severity definition. We use a binomial likelihood,
+approximated by a Poisson likelihood for large samples
 }
 \keyword{internal}

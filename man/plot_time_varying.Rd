@@ -7,21 +7,21 @@
 plot_time_varying(df_in, lower = 0, upper = 10)
 }
 \arguments{
-\item{df_in}{A data.frame of the format that the known_outcomes() function returns from the
-datadelay package}
+\item{df_in}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
 
-\item{lower}{A numeric value determining the lower limit of the y-axis of the plot. In place to
-easily help the user produce a readable graph, as severity estimates often have typical ranges
-for certain diseases}
+\item{lower}{A numeric value determining the lower limit of the y-axis of the
+plot. In place to easily help the user produce a readable graph, as severity
+estimates often have typical ranges for certain diseases.}
 
-\item{upper}{A numeric value determining the upper limit of the y-axis of the plot}
+\item{upper}{A numeric value determining the upper limit of the y-axis of the
+plot.}
 }
 \value{
 A plot of the time-varying severity estimate
 }
 \description{
-Produces a plot, using base R, of the time-varying severity estimate over the entire
-period it was calculated
+Produces a plot, using base R, of the time-varying severity
+estimate over the entire period it was calculated.
 }
 \examples{
 library(datadelay)

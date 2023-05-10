@@ -7,8 +7,7 @@
 plot_known_outcomes(df_in)
 }
 \arguments{
-\item{df_in}{A data.frame of the format that the known_outcomes() function returns from the
-datadelay package}
+\item{df_in}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
 
 \item{together}{A boolean flag which determines whether both the
 cases/known outcomes are plotted in the same panel as the deaths. If
@@ -18,8 +17,9 @@ the two are on significantly different scales, plot them separately.}
 A plot of the three time-series on the same plot, with a legend
 }
 \description{
-Produces a simple plot, using base R, of the raw case and death time-series data,
-as well as the estimated number of known outcomes on each day
+Produces a simple plot, using base R, of the raw case and death
+time-series data, as well as the estimated number of known outcomes on each
+day.
 }
 \examples{
 # Load Ebola 1976 outbreak data
