@@ -15,23 +15,17 @@
 #' @export
 #'
 #' @examples
-<<<<<<< Updated upstream
-=======
-#' Retrieve the delay distribution between onset and death for Ebola,
-#' using the epiparameter function epiparameter::epidist_db()
->>>>>>> Stashed changes
+#' # Retrieve the delay distribution between onset and death for Ebola,
+#' # using the epiparameter function `epiparameter::epidist_db()`
 #'
 #' onset_to_death_ebola <- epiparameter::epidist_db(
-#' disease = "Ebola Virus Disease",
-#' epi_dist = "onset_to_death",
-#' author = "Barry_etal")
+#'   disease = "Ebola Virus Disease",
+#'   epi_dist = "onset_to_death",
+#'   author = "Barry_etal"
+#' )
 #'
 #' plot_epiparameter_distribution(onset_to_death_ebola, by = 1)
-<<<<<<< Updated upstream
-#' 
-=======
->>>>>>> Stashed changes
-plot_epiparameter_distribution <- function(epidist, 
+plot_epiparameter_distribution <- function(epidist,
                                            from = 0,
                                            to = 30,
                                            by = 0.1) {
