@@ -7,19 +7,25 @@
 plot_epiparameter_distribution(epidist, from = 0, to = 30, by = 0.1)
 }
 \arguments{
-\item{epidist}{An epiparameter object retrieved using the epiparameter::epidist_db()}
+\item{epidist}{An epiparameter object retrieved using the function
+\code{\link[epiparameter:epidist_db]{epiparameter::epidist_db()}} or otherwise constructed using
+\code{\link[epiparameter:epidist]{epiparameter::epidist()}}}
 
-\item{from}{The day from which to start plotting the distribution. Default option is day 0.}
+\item{from}{The day from which to start plotting the distribution. Default
+option is day 0.}
 
-\item{to}{The day to which to start plotting the distribution. Default option is day 30.}
+\item{to}{The day to which to start plotting the distribution. Default
+option is day 30.}
 
-\item{by}{The time resolution at which which to plot the distribution. Default option is 0.1 days.}
+\item{by}{The time resolution at which which to plot the distribution.
+Default option is 0.1 days.}
 }
 \value{
-A plot of the epiparameter distribution over time
+A plot of the delay distribution over time
 }
 \description{
-Produces a simple plot, using base R, of an epiparameter distribution object
+Produces a simple plot, using base R, of an epiparameter
+distribution object of the class \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
 }
 \examples{
 # Retrieve the delay distribution between onset and death for Ebola,
