@@ -34,7 +34,8 @@ RoxygenNote: 7.2.3
 Imports:
     epiparameter,
     rlang,
-    stats
+    stats,
+    zoo
 Suggests: 
     ggplot2,
     graphics,

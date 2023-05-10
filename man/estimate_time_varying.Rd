@@ -95,7 +95,4 @@ df_covid_cfr_uk_corrected <- estimate_time_varying(
   correct_for_delays = TRUE
 )
 
-plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
-plot_time_varying(df_covid_cfr_uk_corrected, lower = 0, upper = 5)
-
 }
