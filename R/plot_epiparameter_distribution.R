@@ -50,7 +50,7 @@ plot_epiparameter_distribution <- function(epidist,
     type = "l"
   )
 
-  polygon(c(time, max(time)), c(pmf_vals, 0),
-    col = adjustcolor("slateblue1", alpha.f = 0.2)
+  graphics::polygon(c(time, max(time)), c(pmf_vals, 0),
+    col = grDevices::adjustcolor("slateblue1", alpha.f = 0.2)
   )
 }

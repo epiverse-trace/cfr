@@ -36,16 +36,16 @@ plot_known_outcomes <- function(df_in) {
     xlab = "Date", ylab = "Incidence"
   )
 
-  lines(dates, known_outcomes, type = "s", lwd = 2, col = "green")
+  graphics::lines(dates, known_outcomes, type = "s", lwd = 2, col = "green")
 
-  legend("topleft",
+  graphics::legend("topleft",
     legend = c("Cases", "Known outcomes"),
     col = c("blue", "green"),
     lty = 1,
     cex = 1
   )
 
-  grid(
+  graphics::grid(
     nx = NULL, ny = NULL,
     lty = 6, # Grid line type
     col = "cornsilk2", # Grid line color

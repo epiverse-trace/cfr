@@ -26,13 +26,13 @@ plot_death_data <- function(df_in) {
     type = "s", lwd = 2,
     xlab = "Date", ylab = "Incidence"
   )
-  legend("topright",
+  graphics::legend("topright",
     legend = "Deaths",
     col = "red",
     lty = 1,
     cex = 1
   )
-  grid(
+  graphics::grid(
     nx = NULL, ny = NULL,
     lty = 6, # Grid line type
     col = "cornsilk2", # Grid line color
