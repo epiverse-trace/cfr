@@ -214,9 +214,9 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   type = "varying",
   severity_baseline = 0.014,
   smooth_inputs = TRUE,
-  burn_in = TRUE,
+  burn_in_value = 7,
   correct_for_delays = TRUE,
-  custom_date = "2020-06-30"
+  max_date = "2020-06-30"
 ) |>
   format_output(estimate_type = "reporting", type = "Under-reporting")
 ```
@@ -278,7 +278,7 @@ df_reporting <- df_covid |>
     epi_dist = onset_to_death_covid,
     type = "varying",
     severity_baseline = 0.014,
-    burn_in = TRUE,
+    burn_in_value = 7,
     smooth_inputs = TRUE,
     correct_for_delays = TRUE
   )) |>
