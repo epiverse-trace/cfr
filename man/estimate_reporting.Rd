@@ -10,7 +10,7 @@ estimate_reporting(
   epi_dist,
   type = "static",
   severity_baseline = 0.014,
-  burn_in = NULL,
+  burn_in_value = NULL,
   smooth_inputs = NULL,
   correct_for_delays = NULL,
   max_date = NULL
@@ -35,12 +35,6 @@ rate}
 \item{severity_baseline}{The assumed to be true baseline severity estimate
 used in the final ratio to estimate the overall ascertainment rate}
 
-\item{burn_in}{A boolean flag to determine whether a burn in at the start
-of time time-series should be used. Specifically, it askes whether the user
-wishes to disregard the first \link{burn_in_arg} days of the time-series, given
-that the calculation can produce noisey and uncertain estimates when case
-and death numbers are both low, which is typical at the start of outbreaks}
-
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
 before calculating the time-varying severity. Useful for noisey time-series
@@ -55,6 +49,12 @@ calculating a corrected severity}
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period}
+
+\item{burn_in}{A boolean flag to determine whether a burn in at the start
+of time time-series should be used. Specifically, it askes whether the user
+wishes to disregard the first \link{burn_in_arg} days of the time-series, given
+that the calculation can produce noisey and uncertain estimates when case
+and death numbers are both low, which is typical at the start of outbreaks}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
@@ -94,7 +94,7 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   type = "varying",
   severity_baseline = 0.014,
   smooth_inputs = TRUE,
-  burn_in = TRUE,
+  burn_in_value = 7L,
   correct_for_delays = TRUE,
   max_date = "2020-06-30"
 )
