@@ -12,10 +12,10 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 data("ebola1976")
 
 # Calculate static naive CFR
-scfr_naive <- static_cfr(df_in = ebola1976, correct_for_delays = FALSE)
+scfr_naive <- estimate_static(df_in = ebola1976, correct_for_delays = FALSE)
 
 # Calculate static corrected CFRs
-scfr_corrected <- static_cfr(
+scfr_corrected <- estimate_static(
   df_in = ebola1976,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola
@@ -24,28 +24,21 @@ scfr_corrected <- static_cfr(
 # Basic expectations
 test_that("Basic expectations of static_cfr", {
   # expect named vectors
-  expect_named(scfr_naive, c("cfr_me", "cfr_low", "cfr_high"))
-  expect_named(scfr_corrected, c("cfr_me", "cfr_low", "cfr_high"))
+  expect_named(scfr_naive, c("severity_me", "severity_lo", "severity_hi"))
+  expect_named(
+    scfr_corrected, c("severity_me", "severity_lo", "severity_hi")
+  )
 
   # expect named doubles
-  expect_vector(scfr_naive, ptype = numeric())
-  expect_vector(scfr_corrected, ptype = numeric())
+  expect_s3_class(scfr_naive, "data.frame")
+  expect_s3_class(scfr_corrected, "data.frame")
 
   expect_snapshot(scfr_naive)
   expect_snapshot(scfr_corrected)
 
-  # Formats the output of the CFR data.frames nicely
-  # and prints to the terminal
-  expect_snapshot(
-    format_cfr_neatly(scfr_naive, type = "Naive")
-  )
-  expect_snapshot(
-    format_cfr_neatly(scfr_corrected, type = "Corrected")
-  )
-
   # expect error when corrected CFR requested without delay PMF
   expect_error(
-    static_cfr(
+    estimate_static(
       df_in = ebola1976,
       correct_for_delays = TRUE
     ),
@@ -57,7 +50,7 @@ test_that("Basic expectations of static_cfr", {
 
   # expect error when columns are missing
   expect_error(
-    static_cfr(
+    estimate_static(
       df_in = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
     ),
