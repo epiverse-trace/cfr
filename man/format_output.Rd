@@ -7,6 +7,9 @@
 format_output(df_in, estimate_type, type = NULL)
 }
 \arguments{
+\item{df_in}{A data.frame of the format outputted by \code{\link[=estimate_static]{estimate_static()}}
+or \code{\link[=estimate_time_varying]{estimate_time_varying()}}.}
+
 \item{estimate_type}{A required string describing whether a severity of
 reporting estimate is to be formatted. The package calculates both severity
 and under-ascertainment estimates and uses the same formatting function for
@@ -14,13 +17,10 @@ both}
 
 \item{type}{An optional string describing the estimate, typically used to
 describe whether the estimate has been corrected for delays or not}
-
-\item{cfr_in}{A named vector of the format outputted by \code{\link[=estimate_ccfr]{estimate_ccfr()}}
-or \code{\link[=static_cfr]{static_cfr()}}}
 }
 \value{
-Prints the output of \code{\link[=estimate_ccfr]{estimate_ccfr()}} or \code{\link[=static_cfr]{static_cfr()}} neatly to
-the R terminal
+Prints the output of \code{\link[=estimate_static]{estimate_static()}} or \code{\link[=estimate_time_varying]{estimate_time_varying()}}
+neatly to the R terminal.
 }
 \description{
 Format the CFR MLE and 95\% range estimates neatly, giving the
