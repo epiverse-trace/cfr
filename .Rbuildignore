@@ -5,5 +5,12 @@
 ^codecov\.yml$
 ^README\.Rmd$
 ^\.lintr$
-^data-raw$
+^\_pkgdown.yml$
+^cran-comments\.md$
+^doc$
 ^docs$
+^Meta$
+^pkgdown$
+^data-raw$
+^revdep$
+^CRAN-SUBMISSION$

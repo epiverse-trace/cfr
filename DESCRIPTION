@@ -32,18 +32,27 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
+    checkmate,
     epiparameter,
     rlang,
     stats,
-    zoo
+    zoo,
+    grDevices,
+    graphics
 Suggests: 
+    dplyr,
+    forcats,
+    kableExtra,
+    scales,
     ggplot2,
-    graphics,
     grid,
     patchwork,
+    pak,
     testthat (>= 3.0.0),
     covidregionaldata,
-    usethis
+    usethis,
+    knitr,
+    rmarkdown
 Remotes:
     epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
@@ -51,3 +60,4 @@ Config/testthat/edition: 3
 Depends: 
     R (>= 3.5.0)
 LazyData: true
+VignetteBuilder: knitr
