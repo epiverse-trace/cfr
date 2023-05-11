@@ -16,20 +16,27 @@
 #' parameterised with disease-specific parameters before it is supplied here.
 #' A typical example would be a symptom onset to death delay distribution.
 #'
-#' @param burn_in A boolean flag to determine whether a burn in at the start
-#' of time time-series should be used. Specifically, it askes whether the user
-#' wishes to disregard the first [burn_in_arg] days of the time-series, given
-#' that the calculation can produce noisey and uncertain estimates when case
-#' and death numbers are both low, which is typical at the start of outbreaks
 #'
-#' @param burn_in_arg The number of time-points (typically days) to disregard
-#' at the start of the time-series, if a burn-in period is desired. Default
-#' value is set to 7, assuming the temporal resolution is daily
+#' @param burn_in_value The number of time-points (typically days) to disregard
+#' at the start of the time-series, if a burn-in period is desired.
+#' The default value is set to the mean of the central spread of the `epidist`
+#' object passed to the function, assuming the temporal resolution is daily.
+#' Alternatively, a sensible value might be 7, to disregard the first week of
+#' cases and deaths.
+#' To consider all case data including the start of the time-series, set this
+#' argument to 0.
 #'
 #' @param smooth_inputs A boolean flag determining whether the user wishes to
 #' smooth the case and death time-series, using a moving average procedure
 #' before calculating the time-varying severity. Useful for noisey time-series
 #' or time-series with strong reporting (e.g., weekend) effects
+#'
+#' @param smoothing_window A number determining the smoothing window size to use
+#' when smoothing the case and death time-series, using a moving average
+#' procedure before calculating the time-varying severity.
+#' Useful for noisy time-series or time-series with strong reporting
+#' (e.g., weekend) effects.
+#' The default value is 1 for _no smoothing_. Values > 1 apply smoothing.
 #'
 #' @param correct_for_delays A boolean flag indicating whether the user wishes
 #' to correct for the delay between case detection and death. FALSE corresponds
@@ -68,7 +75,7 @@
 #'   df_covid_uk_subset,
 #'   epi_dist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
-#'   burn_in = TRUE,
+#'   burn_in_value = 7L,
 #'   correct_for_delays = FALSE
 #' )
 #'
@@ -76,34 +83,25 @@
 #'   df_covid_uk_subset,
 #'   epi_dist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
-#'   burn_in = TRUE,
+#'   burn_in_value = 7L,
 #'   correct_for_delays = TRUE
 #' )
 #'
 estimate_time_varying <- function(df_in,
                                   epi_dist,
-                                  burn_in = TRUE,
-                                  burn_in_arg = 7,
+                                  burn_in_value = get_default_burn_in(epi_dist),
                                   smooth_inputs = FALSE,
                                   smoothing_window = 7,
                                   correct_for_delays = TRUE) {
   # TODO input checking
-  checkmate::assert_logical(burn_in, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
+  checkmate::assert_integerish(burn_in_value, lower = 0, len = 1L)
 
   pmf_vals <- stats::density(
     epi_dist,
     at = seq(from = 0, to = nrow(df_in) - 1L)
   )
-
-  # assign default value to burn in and modify if requested
-  burn_in_num <- 0
-  if (burn_in && missing(burn_in_arg)) {
-    burn_in_num <- round(epi_dist$summary_stats$centre_spread$mean)
-  } else if (burn_in && checkmate::test_number(burn_in_arg, na.ok = FALSE)) {
-    burn_in_num <- burn_in_arg
-  }
 
   # smooth cases if requested
   if (smooth_inputs) {
@@ -126,39 +124,36 @@ estimate_time_varying <- function(df_in,
 
   case_length <- length(case_times)
 
+  ##### prepare data.frame for severity estimation ####
   # create columns with NA values for later assignment
-  df_in$known_outcomes <- numeric(case_length)
   df_in$u_t <- numeric(case_length) # does not seem to be used?
+  # when not correcting for delays, set known outcomes to cases
+  # this is to avoid if-else ladders
+  df_in$known_outcomes <- df_in$cases
 
   # assign columns for severity estimate and intervals
   df_in$severity_me <- NA_real_
   df_in$severity_lo <- NA_real_
   df_in$severity_hi <- NA_real_
 
-  # when not correcting for delays, set known outcomes to cases
-  # this is to avoid if-else ladders
-  df_in$known_outcomes <- df_in$cases
+  indices <- seq(case_length - smoothing_window, burn_in_value, -1)
+  if (correct_for_delays) {
+    df_in$known_outcomes[indices] <- vapply(
+      X = indices,
+      FUN = function(x) {
+        delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in_value)]]
+        known_onsets_current <- cases[seq_len(x - burn_in_value)] *
+          rev(delay_pmf_eval)
 
-  # Compile onsets
-  for (i in seq(case_length - smoothing_window, burn_in_num, -1)) {
+        # return rounded sum of known_onsets_current
+        round(sum(known_onsets_current, na.rm = TRUE))
+      },
+      FUN.VALUE = numeric(1)
+    )
+  }
 
-    # handle case of correcting for delays - modify known outcomes
-    # for potential use in the binomial test
-    if (correct_for_delays) {
-      # Delay probability mass function, evaluated at times
-      # within the case and death times series
-      delay_pmf_eval <- pmf_vals[case_times[seq_len(i - burn_in_num)]]
-
-      # Estimate the number of onsets associated with deaths
-      known_onsets_current <- cases[seq_len(i - burn_in_num)] *
-        rev(delay_pmf_eval)
-
-      # Collecting all current known onset estimates in a new
-      # column of the original data.frame
-      df_in$known_outcomes[i] <- round(
-        sum(known_onsets_current, na.rm = TRUE)
-      )
-    }
+  #### Get severity estimates ####
+  for (i in indices) {
 
     # handle case where deaths are fewer than non-zero known outcomes
     if (df_in$deaths[i] <= df_in$known_outcomes[i] &&
