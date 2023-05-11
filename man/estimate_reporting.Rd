@@ -10,7 +10,7 @@ estimate_reporting(
   epi_dist,
   type = "static",
   severity_baseline = 0.014,
-  burn_in_value = NULL,
+  burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = NULL,
   correct_for_delays = NULL,
   max_date = NULL
@@ -35,6 +35,15 @@ rate}
 \item{severity_baseline}{The assumed to be true baseline severity estimate
 used in the final ratio to estimate the overall ascertainment rate}
 
+\item{burn_in_value}{The number of time-points (typically days) to disregard
+at the start of the time-series, if a burn-in period is desired.
+The default value is set to the mean of the central spread of the \code{epidist}
+object passed to the function, assuming the temporal resolution is daily.
+Alternatively, a sensible value might be 7, to disregard the first week of
+cases and deaths.
+To consider all case data including the start of the time-series, set this
+argument to 0.}
+
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
 before calculating the time-varying severity. Useful for noisey time-series
@@ -49,12 +58,6 @@ calculating a corrected severity}
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period}
-
-\item{burn_in}{A boolean flag to determine whether a burn in at the start
-of time time-series should be used. Specifically, it askes whether the user
-wishes to disregard the first \link{burn_in_arg} days of the time-series, given
-that the calculation can produce noisey and uncertain estimates when case
-and death numbers are both low, which is typical at the start of outbreaks}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
@@ -71,15 +74,13 @@ estimate and the delay-adjusted severity estimate
 library(datadelay)
 library(epiparameter)
 library(covidregionaldata)
-library(dplyr)
 
 df_covid_uk <- get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE
 )
-df_covid_uk <- dplyr::rename(
-  df_covid_uk,
-  cases = cases_new, deaths = deaths_new
-)
+# rename columns
+colnames(df_covid_uk)[colnames(df_covid_uk) == "cases_new"] <- "cases"
+colnames(df_covid_uk)[colnames(df_covid_uk) == "deaths_new"] <- "deaths"
 
 df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 

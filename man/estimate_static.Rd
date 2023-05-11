@@ -31,6 +31,8 @@ A typical example would be a symptom onset to death delay distribution.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
+
+\item{group_by}{Column name as a string by which to group data for estimates.}
 }
 \value{
 A named vector with the MLE and 95\% confidence interval of the
