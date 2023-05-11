@@ -175,3 +175,13 @@ estimate_time_varying <- function(df_in,
   # return data
   df_in
 }
+
+#' Get a default burn-in value from a delay distribution
+#'
+#' @inheritParams estimate_time_varying
+#'
+#' @return A single integer, the burn-in value.
+#' @keywords internal
+get_default_burn_in <- function(epi_dist) {
+  as.integer(round(epi_dist$summary_stats$centre_spread$mean))
+}
