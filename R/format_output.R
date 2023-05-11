@@ -4,8 +4,8 @@
 #' estimates to 3 significant figures and presenting the MLE and 95% interval
 #' on a single line
 #'
-#' @param cfr_in A named vector of the format outputted by [estimate_ccfr()]
-#' or [static_cfr()]
+#' @param df_in A data.frame of the format outputted by [estimate_static()]
+#' or [estimate_time_varying()].
 #'
 #' @param estimate_type A required string describing whether a severity of
 #' reporting estimate is to be formatted. The package calculates both severity
@@ -15,8 +15,8 @@
 #' @param type An optional string describing the estimate, typically used to
 #' describe whether the estimate has been corrected for delays or not
 #'
-#' @return Prints the output of [estimate_ccfr()] or [static_cfr()] neatly to
-#' the R terminal
+#' @return Prints the output of [estimate_static()] or [estimate_time_varying()]
+#' neatly to the R terminal.
 #'
 #' @export
 #'
