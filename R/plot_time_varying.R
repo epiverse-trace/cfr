@@ -71,18 +71,18 @@ plot_time_varying <- function(df_in,
   )
   # make polygon where coordinates start with lower limit and
   # then upper limit in reverse order
-  polygon(c(dates, rev(dates)),
+  graphics::polygon(c(dates, rev(dates)),
     c(severity_hi, rev(severity_lo)),
     col = "grey75", border = FALSE
   )
 
-  lines(dates, severity_me, lwd = 2)
+  graphics::lines(dates, severity_me, lwd = 2)
   # add red lines on borders of polygon
-  lines(dates, severity_hi, col = "blue", lty = 2, lwd = 0.5)
-  lines(dates, severity_lo, col = "blue", lty = 2, lwd = 0.5)
-  par(mfrow = c(1, 1))
+  graphics::lines(dates, severity_hi, col = "blue", lty = 2, lwd = 0.5)
+  graphics::lines(dates, severity_lo, col = "blue", lty = 2, lwd = 0.5)
+  graphics::par(mfrow = c(1, 1))
 
-  grid(
+  graphics::grid(
     nx = NULL, ny = NULL,
     lty = 6, # Grid line type
     col = "cornsilk2", # Grid line color
