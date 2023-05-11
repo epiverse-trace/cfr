@@ -23,9 +23,7 @@ knitr::opts_chunk$set(
   fig.align = "left",
   fig.width = 600 / 80,
   fig.height = 400 / 80,
-  dpi = 80,
-  fig.retina = 2,
-  dev.args = list(type = "cairo-png")
+  dpi = 80
 )
 ```
 
