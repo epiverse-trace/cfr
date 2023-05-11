@@ -7,8 +7,7 @@
 estimate_time_varying(
   df_in,
   epi_dist,
-  burn_in = TRUE,
-  burn_in_arg = 7,
+  burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
   smoothing_window = 7,
   correct_for_delays = TRUE
@@ -26,20 +25,26 @@ probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
-\item{burn_in}{A boolean flag to determine whether a burn in at the start
-of time time-series should be used. Specifically, it askes whether the user
-wishes to disregard the first \link{burn_in_arg} days of the time-series, given
-that the calculation can produce noisey and uncertain estimates when case
-and death numbers are both low, which is typical at the start of outbreaks}
-
-\item{burn_in_arg}{The number of time-points (typically days) to disregard
-at the start of the time-series, if a burn-in period is desired. Default
-value is set to 7, assuming the temporal resolution is daily}
+\item{burn_in_value}{The number of time-points (typically days) to disregard
+at the start of the time-series, if a burn-in period is desired.
+The default value is set to the mean of the central spread of the \code{epidist}
+object passed to the function, assuming the temporal resolution is daily.
+Alternatively, a sensible value might be 7, to disregard the first week of
+cases and deaths.
+To consider all case data including the start of the time-series, set this
+argument to 0.}
 
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
 before calculating the time-varying severity. Useful for noisey time-series
 or time-series with strong reporting (e.g., weekend) effects}
+
+\item{smoothing_window}{A number determining the smoothing window size to use
+when smoothing the case and death time-series, using a moving average
+procedure before calculating the time-varying severity.
+Useful for noisy time-series or time-series with strong reporting
+(e.g., weekend) effects.
+The default value is 1 for \emph{no smoothing}. Values > 1 apply smoothing.}
 
 \item{correct_for_delays}{A boolean flag indicating whether the user wishes
 to correct for the delay between case detection and death. FALSE corresponds
@@ -83,7 +88,7 @@ df_covid_cfr_uk_naive <- estimate_time_varying(
   df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
-  burn_in = TRUE,
+  burn_in_value = 7L,
   correct_for_delays = FALSE
 )
 
@@ -91,7 +96,7 @@ df_covid_cfr_uk_corrected <- estimate_time_varying(
   df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   smooth_inputs = TRUE,
-  burn_in = TRUE,
+  burn_in_value = 7L,
   correct_for_delays = TRUE
 )
 
