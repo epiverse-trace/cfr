@@ -27,8 +27,7 @@ We use the `devtools` package to install the required packages: `datadelay`,
 `devtools` package, use the following commands:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
-install.packages("devtools")
-library(devtools)
+library(pak)
 ```
 
 
@@ -37,7 +36,7 @@ library(devtools)
 following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
-install_github(repo = paste0("epiverse-trace", "/", "datadelay"))
+pak(file.path("epiverse-trace", "datadelay"))
 ```
 ### Installing `epiparameter`
 The `epiparameter` package is also from the *Epiverse* and has been developed to
@@ -47,7 +46,7 @@ supplies the delay distribution, the `epiparameter` package is not needed. We
 install `epiparameter` using the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = FALSE}
-install_github(repo = paste0("epiverse-trace", "/", "epiparameter"))
+pak(file.path("epiverse-trace", "epiparameter"))
 ```
 
 ## Optional packages — required to run the code in the vignettes

@@ -4,7 +4,7 @@ output: rmarkdown::html_vignette
 bibliography: resources/library.bib
 csl: resources/bmj.csl
 vignette: >
-  %\VignetteIndexEntry{title: "Calculating disease severity by adjusting for delays between onset and outcome during an outbreak}
+  %\VignetteIndexEntry{Calculating disease severity by adjusting for delays between onset and outcome during an outbreak}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
