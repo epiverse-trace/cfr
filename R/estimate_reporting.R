@@ -7,40 +7,13 @@
 #' ascertainment estimate is calculated as the ratio of the baseline severity
 #' estimate and the delay-adjusted severity estimate
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
-#' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-#' the numbers of new cases and new deaths at each time point
-#'
-#' @param epi_dist The delay distribution used, in the form of an
-#' [epiparameter::epidist()] object. This is used to obtain a probability
-#' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-#' probability a case has a known outcomes (i.e. death) at time \eqn{t},
-#' parameterised with disease-specific parameters before it is supplied here.
-#' A typical example would be a symptom onset to death delay distribution.
+#' @inheritParams estimate_time_varying
 #'
 #' @param type A boolean flag which determines whether [estimate_static()] or
 #' [estimate_time_varying()] is used to calculate the resulting ascertainment
 #' rate
-#'
 #' @param severity_baseline The assumed to be true baseline severity estimate
 #' used in the final ratio to estimate the overall ascertainment rate
-#'
-#' @param burn_in A boolean flag to determine whether a burn in at the start
-#' of time time-series should be used. Specifically, it askes whether the user
-#' wishes to disregard the first [burn_in_arg] days of the time-series, given
-#' that the calculation can produce noisey and uncertain estimates when case
-#' and death numbers are both low, which is typical at the start of outbreaks
-#'
-#' @param smooth_inputs A boolean flag determining whether the user wishes to
-#' smooth the case and death time-series, using a moving average procedure
-#' before calculating the time-varying severity. Useful for noisey time-series
-#' or time-series with strong reporting (e.g., weekend) effects
-#'
-#' @param correct_for_delays A boolean flag indicating whether the user wishes
-#' to correct for the delay between case detection and death. FALSE corresponds
-#' to a naive severity being calculated, TRUE corresponds to the user
-#' calculating a corrected severity
-#'
 #' @param max_date A string representing a user supplied maximum date, up to
 #' which the time-varying severity estimate will be calculated. Useful in the
 #' case of long time-series, where the user wishes to focus on a specific
@@ -54,15 +27,13 @@
 #' library(datadelay)
 #' library(epiparameter)
 #' library(covidregionaldata)
-#' library(dplyr)
 #'
 #' df_covid_uk <- get_national_data(
 #'   countries = "united kingdom", source = "who", verbose = FALSE
 #' )
-#' df_covid_uk <- dplyr::rename(
-#'   df_covid_uk,
-#'   cases = cases_new, deaths = deaths_new
-#' )
+#' # rename columns
+#' colnames(df_covid_uk)[colnames(df_covid_uk) == "cases_new"] <- "cases"
+#' colnames(df_covid_uk)[colnames(df_covid_uk) == "deaths_new"] <- "deaths"
 #'
 #' df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 #'

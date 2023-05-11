@@ -20,15 +20,13 @@
 #' library(datadelay)
 #' library(epiparameter)
 #' library(covidregionaldata)
-#' library(dplyr)
 #'
 #' df_covid_uk <- get_national_data(
 #'   countries = "united kingdom", source = "who", verbose = FALSE
 #' )
-#' df_covid_uk <- dplyr::rename(
-#'   df_covid_uk,
-#'   cases = cases_new, deaths = deaths_new
-#' )
+#' # rename columns
+#' colnames(df_covid_uk)[colnames(df_covid_uk) == "cases_new"] <- "cases"
+#' colnames(df_covid_uk)[colnames(df_covid_uk) == "deaths_new"] <- "deaths"
 #'
 #' df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
 #'

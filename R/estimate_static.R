@@ -23,6 +23,7 @@
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 200 by default.
+#' @param group_by Column name as a string by which to group data for estimates.
 #'
 #' @return A named vector with the MLE and 95% confidence interval of the
 #' severity estimates, named "severity_me", "severity_low", and "severity_high".
