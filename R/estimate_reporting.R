@@ -77,7 +77,7 @@
 #'   type = "varying",
 #'   severity_baseline = 0.014,
 #'   smooth_inputs = TRUE,
-#'   burn_in = TRUE,
+#'   burn_in_value = 7L,
 #'   correct_for_delays = TRUE,
 #'   max_date = "2020-06-30"
 #' )
@@ -92,7 +92,7 @@ estimate_reporting <- function(df_in,
                                epi_dist,
                                type = "static",
                                severity_baseline = 0.014,
-                               burn_in = NULL,
+                               burn_in_value = get_default_burn_in(epi_dist),
                                smooth_inputs = NULL,
                                correct_for_delays = NULL,
                                max_date = NULL) {
@@ -107,7 +107,7 @@ estimate_reporting <- function(df_in,
       df_in,
       epi_dist = epi_dist,
       smooth_inputs = smooth_inputs,
-      burn_in = burn_in,
+      burn_in_value = burn_in_value,
       correct_for_delays = correct_for_delays
     )
 
