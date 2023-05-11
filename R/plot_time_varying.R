@@ -42,7 +42,7 @@
 #'   df_covid_uk_subset,
 #'   epi_dist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
-#'   burn_in = TRUE,
+#'   burn_in_value = 7,
 #'   correct_for_delays = FALSE
 #' )
 #'
@@ -50,7 +50,7 @@
 #'   df_covid_uk_subset,
 #'   epi_dist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
-#'   burn_in = TRUE,
+#'   burn_in_value = 7,
 #'   correct_for_delays = TRUE
 #' )
 #'
