@@ -30,17 +30,17 @@ knitr::opts_chunk$set(
 # Overview
 
 This vignette outlines how to use `datadelay` to estimate how the severity of a
-disease changes over the course of an ongoing outbreak. We wish to estimate one 
-of the typical severity quantities used in epidemiology over time: 
+disease changes over the course of an ongoing outbreak. We wish to estimate 
+how common severity quantities change over time: 
 the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or 
 *hospitalisation fatality risk (HFR)*. 
 
-We do so using a method that uses a time series of cases, infections of 
-hospitalisations (respectively) and deaths with an appropriate delay 
-distribution. The methods used here originate from Nishiura et al.
+We do so using a method that analyses the time series of cases and outcomes
+with an appropriate delay 
+distribution. The methods used here are documented in Nishiura et al.
 (2009)^[@nishiura2009early]^.
 
-Now we load the five key packages we need to run the commands in this vignette:
+First, we load the five essential packages needed for this vignette:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(datadelay)
@@ -64,20 +64,9 @@ There are many biological, epidemiological and behavioural reasons why the
 severity of a disease might change during the course of an outbreak. We list a
 few of the most common reasons here: 
 
-* The introduction of non-pharmaceutical interventions (e.g. social distancing,
-masks, lockdowns, etc.), reducing the numbers of infections, but not necessarily
-the relative number of deaths.
+* The introduction of vaccines or therapeutics, reducing the relative risk of death compared to infection.
 
-* The development of effective therapeutics, which do not reduce transmission
-and hence the numbers of infections, but do reduce the severity of the symptoms 
-and therefore the number of hospitalisations and deaths.
-
-* The emergence of variants. Pathogen evolution is highly complex and as such,
-variants with a number of different epidemiological characteristics can emerge. 
-For example, a more transmissible variant causing more infections, but not a 
-higher relative number of hospitalisations or deaths could emerge. However, a
-less transmissible, but more severe variant is also possible, resulting in 
-fewer infections, but a higher relative number of deaths.
+* The emergence of pathogen variants, which may alter the risk of hospitalisation or death associated with infection.
 
 For example, suppose a new variant of a currently circulating pathogen has 
 emerged. Typically, estimating the severity of a the newly emerged variant is of
@@ -244,10 +233,10 @@ df_covid_cfr_uk_corrected <- estimate_time_varying(
 ```
 
 Once we have calculated both severity quantities over time, we plot the results.
-First we plot the naive — uncorrected for delays — estiamte:
+First we plot the naive estimate, uncorrected for delays:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_naive} **Figure 3: Example plot of the naive time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays."}
-plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
+plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 30)
 ```
 
 Lastly, we plot the corrected — for delays — estimate:
@@ -283,7 +272,7 @@ df_covid <- get_national_data(
 Next, we run some `dplyr` commands to group the data and map the
 `estimate_time_varying()` function across each group within the `tibble`. We do
 not focus on the `dplyr` commands in this vignette. Instead, we refer the user
-to the `dplyr` documentation [here](https://dplyr.tidyverse.org/). 
+to the `dplyr` [documentation](https://dplyr.tidyverse.org/). Note the below code takes a few moments to run.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_cfr <- df_covid |>
