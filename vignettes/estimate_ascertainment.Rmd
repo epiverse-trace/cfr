@@ -32,10 +32,7 @@ knitr::opts_chunk$set(
 This vignette outlines the function within `datadelay` used to estimate the
 proportion of cases, infections or hospitalisations ascertained.
 
-We load the three packages required in this vignette using the following 
-commands:
-
-Now we load the five key packages we need to run the commands in this vignette:
+First, we load the key packages required for this vignette:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(datadelay)
@@ -58,25 +55,21 @@ library(scales)
 
 # Motivation
 
-There are several reasons why cases, infections or hospitalisations and even 
+There are several reasons why cases, infections or hospitalisations and 
 deaths might be under-ascertained during an outbreak of an infectious disease. 
 Some examples include:
 
-* Testing effort or ability is not high enough to catch all infections.
+* Testing capacity or criteria is not sufficient to identify all infections.
 
-* Testing triggered by individuals rather than sampling at random in the 
+* Symptom-based testing rather than sampling at random in the 
 population. This can lead to biases due to some infections either being 
-asymptomatic or having a pre-symptomatic phase. For example, if testing is 
-initiated by an individual who appears not to have any symptoms, it is likely 
-the ascertainment of their infection will be delayed, or possibly missed 
-entirely.
+asymptomatic or having a pre-symptomatic phase.
 
-* Changes in the criteria, either used to diagnose the disease in question or
-to determine whether a death can be atttributed to the disease in question.
+* Changes in case definition over time.
 
-For example, during the recent COVID-19 pandemic, the U.K. were not able to roll
+For example, during the recent COVID-19 pandemic, the U.K. did not roll
 out widespread testing until around May 2020. This means that during March and 
-April, infections were significantly under-ascertained. We focus on this period
+April, infections were heavily under-ascertained. We focus on this period
 within this vignette, as it illustrates the use for this analysis pipeline well.
 
 # Methods
