@@ -26,7 +26,8 @@ Authors@R: c(
     )
 Description: Delay functions for routine surveillance data.
 License: MIT + file LICENSE
-URL: https://github.com/epiverse-trace/datadelay
+URL: https://github.com/epiverse-trace/datadelay,
+    https://epiverse-trace.github.io/datadelay/
 BugReports: https://github.com/epiverse-trace/datadelay/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
