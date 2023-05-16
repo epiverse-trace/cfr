@@ -58,6 +58,8 @@ Remotes:
     epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
 Config/testthat/edition: 3
+Config/Needs/website:
+    epiverse-trace/epiversetheme
 Depends: 
     R (>= 3.5.0)
 LazyData: true
