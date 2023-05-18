@@ -258,7 +258,7 @@ and corrected estimates using the following two commands (respectively):
 df_ncfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location"
+  location = "location"
 ) |>
   format_output(
     estimate_type = "severity",
@@ -270,7 +270,7 @@ df_ccfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location"
+  location = "location"
 ) |>
   format_output(
     estimate_type = "severity",
@@ -378,7 +378,7 @@ the U.K:
 df_ncfr_static_covid <- estimate_static(
   df_covid_uk_subset,
   correct_for_delays = FALSE,
-  group_by = "country"
+  location = "country"
 ) |>
   format_output(
     estimate_type = "severity", type = "Naive CFR"
@@ -389,7 +389,7 @@ df_ccfr_static_covid <- estimate_static(
   df_covid_uk_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_covid,
-  group_by = "country"
+  location = "country"
 ) |>
   format_output(estimate_type = "severity", type = "Corrected CFR")
 
