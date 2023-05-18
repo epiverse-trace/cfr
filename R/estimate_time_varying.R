@@ -5,18 +5,7 @@
 #' distribution representing the delay between case detection and death, then
 #' a case fatality ratio over time is estimated
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
-#' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-#' the numbers of new cases and new deaths at each time point
-#'
-#' @param epi_dist The delay distribution used, in the form of an
-#' [epiparameter::epidist()] object. This is used to obtain a probability
-#' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-#' probability a case has a known outcomes (i.e. death) at time \eqn{t},
-#' parameterised with disease-specific parameters before it is supplied here.
-#' A typical example would be a symptom onset to death delay distribution.
-#'
-#'
+#' @inheritParams estimate_static
 #' @param burn_in_value The number of time-points (typically days) to disregard
 #' at the start of the time-series, if a burn-in period is desired.
 #' The default value is set to the mean of the central spread of the `epidist`
@@ -37,11 +26,6 @@
 #' Useful for noisy time-series or time-series with strong reporting
 #' (e.g., weekend) effects.
 #' The default value is 1 for _no smoothing_. Values > 1 apply smoothing.
-#'
-#' @param correct_for_delays A boolean flag indicating whether the user wishes
-#' to correct for the delay between case detection and death. FALSE corresponds
-#' to a naive severity being calculated, TRUE corresponds to the user
-#' calculating a corrected severity
 #'
 #' @return A data.frame containing the MLE estimate and 95% confidence interval
 #' of the corrected severity
@@ -97,10 +81,26 @@ estimate_time_varying <- function(df_in,
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
   checkmate::assert_integerish(burn_in_value, lower = 0, len = 1L)
+  checkmate::assert_data_frame(df_in)
+  checkmate::assert_logical(correct_for_delays, len = 1L)
 
-  pmf_vals <- stats::density(
-    epi_dist,
-    at = seq(from = 0, to = nrow(df_in) - 1L)
+  # returns error message if no delay distribution is supplied, but correction
+  # for delays was requested
+  if (missing(epi_dist) && (isTRUE(correct_for_delays))) {
+    stop(
+      "To correct for the delay between case detection and death,\
+       please provide an onset-to-death (or similar) `epidist` object"
+    )
+  }
+  if (!missing(epi_dist)) {
+    stopifnot(
+      "`epi_dist` must be an `epidist` object" =
+        (epiparameter::is_epidist(epi_dist))
+    )
+  }
+  stopifnot(
+    "Case data must contain columns `cases` and `deaths`" =
+      (all(c("cases", "deaths") %in% colnames(df_in)))
   )
 
   # smooth cases if requested
@@ -138,6 +138,10 @@ estimate_time_varying <- function(df_in,
 
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
   if (correct_for_delays) {
+    pmf_vals <- stats::density(
+      epi_dist,
+      at = seq(from = 0, to = nrow(df_in) - 1L)
+    )
     df_in$known_outcomes[indices] <- vapply(
       X = indices,
       FUN = function(x) {

@@ -23,10 +23,14 @@
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 200 by default.
-#' @param group_by Column name as a string by which to group data for estimates.
+#' @param location Column name as a string by which to disaggregate data for
+#' estimates. This is usually a column indicating the region or country to which
+#' the estimate applies.
 #'
-#' @return A named vector with the MLE and 95% confidence interval of the
-#' severity estimates, named "severity_me", "severity_low", and "severity_high".
+#' @return A data.frame with the MLE and 95% confidence interval of the
+#' severity estimates, named "severity_me", "severity_low", and "severity_high",
+#' as well as a column "location" holding the grouping variable indicating the
+#' region.
 #'
 #' @export
 #'
@@ -50,7 +54,7 @@
 #' df_ncfr_static_ebola <- estimate_static(
 #'   df_ebola_subset,
 #'   correct_for_delays = FALSE,
-#'   group_by = "location"
+#'   location = "location"
 #' )
 #'
 #' format_output(
@@ -64,7 +68,7 @@
 #'   df_ebola_subset,
 #'   correct_for_delays = TRUE,
 #'   epi_dist = onset_to_death_ebola,
-#'   group_by = "location"
+#'   location = "location"
 #' )
 #'
 #' format_output(
@@ -77,7 +81,18 @@ estimate_static <- function(df_in,
                             correct_for_delays = TRUE,
                             epi_dist,
                             poisson_threshold = 100,
-                            group_by = NA) {
+                            location) {
+
+  # input checking
+  checkmate::assert_data_frame(df_in)
+  checkmate::assert_logical(correct_for_delays, len = 1L)
+  checkmate::assert_number(poisson_threshold, lower = 0, finite = FALSE)
+  if (!missing(location)) {
+    checkmate::assert_string(location)
+  }
+  if (missing(location)) {
+    location <- NULL
+  }
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
@@ -126,7 +141,7 @@ estimate_static <- function(df_in,
     severity_estimate <- estimate_severity(
       df_in = df_corrected,
       poisson_threshold = poisson_threshold,
-      group_by = group_by
+      location = location
     )
   } else {
     # calculating the total number of cases (without correcting) and deaths
@@ -143,9 +158,9 @@ estimate_static <- function(df_in,
     # extracting the lower and upper intervals respectively
     severity_lims <- severity_conf$conf.int
 
-    if (group_by %in% colnames(df_in)) {
+    if (!is.null(location) && location %in% colnames(df_in)) {
       severity_estimate <- data.frame(
-        "location" = unique(df_in[[group_by]]),
+        "location" = unique(df_in[[location]]),
         "severity_me" = severity_me,
         "severity_lo" = severity_lims[[1]],
         "severity_hi" = severity_lims[[2]]
