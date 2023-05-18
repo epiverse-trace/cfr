@@ -49,7 +49,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 ncfr <- estimate_static(
   df_in = df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location"
+  location = "location"
 )
 
 # Calculate static corrected CFRs
@@ -57,7 +57,7 @@ ccfr <- estimate_static(
   df_in = ebola1976,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location"
+  location = "location"
 )
 
 # Formats the output of the CFR data.frames nicely

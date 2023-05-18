@@ -4,24 +4,22 @@
 \alias{estimate_severity}
 \title{Estimate the corrected case fatality rate}
 \usage{
-estimate_severity(df_in, poisson_threshold = 100, group_by = "country")
+estimate_severity(df_in, poisson_threshold = 100, location)
 }
 \arguments{
-\item{total_cases}{The total number of cases observed over the period of an
-outbreak of interest. The total number of cases must be greater than or equal
-to the total number of deaths}
+\item{df_in}{A data.frame containing the outbreak data. A daily time series
+with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
+the numbers of new cases and new deaths at each time point}
 
-\item{total_deaths}{The total number of deaths observed over the period of an
-outbreak of interest. The total number of deaths must be less than or equal
-to the total number of cases}
+\item{poisson_threshold}{The case count above which to use Poisson
+approximation. Set to 200 by default.}
 
-\item{u_t}{The proportion of cases to cases with known outcomes up to the
-point of an outbreak of interest. Used to correct the total number of deaths
-for delays between case detection and outcome. Given that it is a proportion,
-it must be between 0.0 and 1.0.}
+\item{location}{Column name as a string by which to disaggregate data for
+estimates. This is usually a column indicating the region or country to which
+the estimate applies.}
 }
 \value{
-A named vector with the MLE and 95\% confidence interval of the
+A data.frame with the MLE and 95\% confidence interval of the
 corrected severity estimates, named "severity_me", "severity_low", and
 "severity_high".
 }
