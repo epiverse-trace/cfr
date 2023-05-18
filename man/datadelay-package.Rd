@@ -12,6 +12,7 @@ Delay functions for routine surveillance data.
 Useful links:
 \itemize{
   \item \url{https://github.com/epiverse-trace/datadelay}
+  \item \url{https://epiverse-trace.github.io/datadelay/}
   \item Report bugs at \url{https://github.com/epiverse-trace/datadelay/issues}
 }
 

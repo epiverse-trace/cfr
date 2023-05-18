@@ -9,7 +9,7 @@ estimate_static(
   correct_for_delays = TRUE,
   epi_dist,
   poisson_threshold = 100,
-  group_by = NA
+  location
 )
 }
 \arguments{
@@ -32,11 +32,15 @@ A typical example would be a symptom onset to death delay distribution.}
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
 
-\item{group_by}{Column name as a string by which to group data for estimates.}
+\item{location}{Column name as a string by which to disaggregate data for
+estimates. This is usually a column indicating the region or country to which
+the estimate applies.}
 }
 \value{
-A named vector with the MLE and 95\% confidence interval of the
-severity estimates, named "severity_me", "severity_low", and "severity_high".
+A data.frame with the MLE and 95\% confidence interval of the
+severity estimates, named "severity_me", "severity_low", and "severity_high",
+as well as a column "location" holding the grouping variable indicating the
+region.
 }
 \description{
 Calculates the severity of a disease, corrected for a
@@ -64,7 +68,7 @@ onset_to_death_ebola <- epidist_db(
 df_ncfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = FALSE,
-  group_by = "location"
+  location = "location"
 )
 
 format_output(
@@ -78,7 +82,7 @@ df_ccfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
   epi_dist = onset_to_death_ebola,
-  group_by = "location"
+  location = "location"
 )
 
 format_output(
