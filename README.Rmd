@@ -49,6 +49,9 @@ library(datadelay)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
+# assign a location
+ebola1976$location <- "DRC"
+
 # read epidist for EVD onset to death from {epiparameter}
 # accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
 onset_to_death_ebola <- epiparameter::epidist_db(
@@ -58,27 +61,43 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # Calculate the static naive and corrected CFRs
-ncfr <- static_cfr(ebola1976, correct_for_delays = FALSE)
-ccfr <- static_cfr(ebola1976, correct_for_delays = TRUE, onset_to_death_ebola)
+ncfr <- estimate_static(
+  df_in = ebola1976, correct_for_delays = FALSE, location = "location"
+)
+ccfr <- estimate_static(
+  df_in = ebola1976,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola,
+  location = "location"
+)
 
 # Print nicely formatted case fatality rate estimates
-format_cfr_neatly(ncfr)
-format_cfr_neatly(ccfr)
+format_output(ncfr, estimate_type = "severity")
+format_output(ccfr, estimate_type = "severity")
 ```
 
 Calculate and plot real-time CFR estimates up to a given point in time
 
 ```{r example-ebola-plot}
 # Calculate naive and corrected static CFRs up to a given point in time
-df_ncfr <- rolling_cfr(ebola1976, correct_for_delays = FALSE)
-df_ccfr <- rolling_cfr(
-  ebola1976,
-  correct_for_delays = TRUE,
-  onset_to_death_ebola
+df_ncfr <- estimate_time_varying(
+  df_in = ebola1976, correct_for_delays = FALSE,
+  burn_in_value = 7
 )
 
+df_ccfr <- estimate_time_varying(
+  ebola1976,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola,
+  burn_in_value = 7
+)
+
+# plot case and death data
+plot_case_data(df_ccfr)
+plot_death_data(df_ccfr)
+
 # Plotting case and death data along with CFRs
-plot_data_and_cfr(df_ncfr, df_ccfr)
+plot_time_varying(df_ncfr, lower = 0, upper = 100)
 ```
 
 This package is currently a *concept*, as defined by the [RECON software
