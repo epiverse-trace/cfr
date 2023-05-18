@@ -42,7 +42,7 @@
 #' ncfr <- estimate_static(
 #'   df_in = df_ebola_subset,
 #'   correct_for_delays = FALSE,
-#'   group_by = "location"
+#'   location = "location"
 #' )
 #'
 #' # Calculate static corrected CFRs
@@ -50,7 +50,7 @@
 #'   df_in = ebola1976,
 #'   correct_for_delays = TRUE,
 #'   epi_dist = onset_to_death_ebola,
-#'   group_by = "location"
+#'   location = "location"
 #' )
 #'
 #' # Formats the output of the CFR data.frames nicely
@@ -67,8 +67,15 @@ format_output <- function(df_in,
       (estimate_type %in% c("severity", "reporting"))
   )
 
+  # assign location vector
+  if ("location" %in% colnames(df_in)) {
+    vec_location <- df_in[["location"]]
+  } else {
+    vec_location <- NA_character_
+  }
+
   df_out <- data.frame(
-    "Location" = df_in[["location"]],
+    "Location" = vec_location,
     "Estimate" =
       sprintf(
         "%.2f%% (95%% CI: %.2f%% - %.2f%%)",
@@ -79,9 +86,12 @@ format_output <- function(df_in,
     stringsAsFactors = FALSE
   )
 
+
+
   if (!is.null(type)) {
     df_out$Type <- type
   }
 
-  return(df_out)
+  # return data frame
+  df_out
 }
