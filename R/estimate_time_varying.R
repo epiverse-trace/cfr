@@ -158,7 +158,6 @@ estimate_time_varying <- function(df_in,
 
   #### Get severity estimates ####
   for (i in indices) {
-
     # handle case where deaths are fewer than non-zero known outcomes
     if (df_in$deaths[i] <= df_in$known_outcomes[i] &&
       isTRUE(df_in$known_outcomes[i] > 0)) {

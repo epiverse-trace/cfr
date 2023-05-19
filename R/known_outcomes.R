@@ -77,7 +77,6 @@ known_outcomes <- function(df_in,
 
   # main calculation loop
   for (i in case_length:1) {
-
     # Delay probability mass function, evaluated at times
     # within the case and death times series
     delay_pmf_eval <- pmf_vals[case_times[1:i]]
