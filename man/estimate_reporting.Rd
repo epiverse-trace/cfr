@@ -13,7 +13,8 @@ estimate_reporting(
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = NULL,
   correct_for_delays = NULL,
-  max_date = NULL
+  max_date = NULL,
+  location = "country"
 )
 }
 \arguments{
@@ -28,9 +29,9 @@ probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
-\item{type}{A boolean flag which determines whether \code{\link[=estimate_static]{estimate_static()}} or
-\code{\link[=estimate_time_varying]{estimate_time_varying()}} is used to calculate the resulting ascertainment
-rate}
+\item{type}{A string, either \code{"static"} or \code{"varying"} which determines
+whether \code{\link[=estimate_static]{estimate_static()}} or \code{\link[=estimate_time_varying]{estimate_time_varying()}} is used to calculate
+the resulting ascertainment rate}
 
 \item{severity_baseline}{The assumed to be true baseline severity estimate
 used in the final ratio to estimate the overall ascertainment rate}
@@ -97,7 +98,8 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   smooth_inputs = TRUE,
   burn_in_value = 7L,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30"
+  max_date = "2020-06-30",
+  location = "U.K."
 )
 
 format_output(
