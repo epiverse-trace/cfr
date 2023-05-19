@@ -325,11 +325,12 @@ the following commands:
 df_covid_cfr |>
   ggplot(aes(x = date)) +
   geom_line(aes(y = severity_me), linetype = "dashed", alpha = 0.25) +
-  geom_ribbon(aes(
-    ymin = severity_lo,
-    ymax = severity_hi
-  ),
-  fill = "dodgerblue", alpha = 0.5
+  geom_ribbon(
+    aes(
+      ymin = severity_lo,
+      ymax = severity_hi
+    ),
+    fill = "dodgerblue", alpha = 0.5
   ) +
   coord_cartesian(clip = "off") +
   facet_wrap(~country, ncol = 2) +
