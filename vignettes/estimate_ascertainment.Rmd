@@ -5,8 +5,10 @@ bibliography: resources/library.bib
 csl: resources/bmj.csl
 vignette: >
   %\VignetteIndexEntry{Estimating the proportion of cases that are reported during an outbreak}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 <!-- removes the ugly border around the figures -->
@@ -102,8 +104,7 @@ proportion of cases, infections, hospitalisations --- or whichever proxy for
 infections is provide --- which have been ascertained. The method used within 
 this function extends the methods outlined in the previous vignettes about 
 estimating the severity during an ongoing outbreak and measuring how the 
-severity changes over time. Both methods are based on the Nishiura et 
-al.^[@nishiura2009early]^ methods to estimate severity. We extend this by 
+severity changes over time. Both methods are based on the @nishiura2009early methods to estimate severity. We extend this by 
 combining the resulting severity estimates with an assumed baseline severity 
 estimate. The proportion of cases, infections or other quantity provided that 
 have been ascertained is given by the ratio of the assumed to be true baseline 
@@ -182,13 +183,16 @@ We use the `estimate_reporting()` function within the `datadelay` package to
 calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
-df_reporting_static <- estimate_reporting(df_covid_uk_subset,
+df_reporting_static <- estimate_reporting(
+  df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   type = "static",
   severity_baseline = 0.014,
   correct_for_delays = TRUE
 ) |>
-  format_output(estimate_type = "reporting", type = "Under-reporting")
+  format_output(
+    estimate_type = "reporting", type = "Under-reporting"
+  )
 ```
 
 The function includes a `type` argument, which determines whether
@@ -207,9 +211,12 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   smooth_inputs = TRUE,
   burn_in_value = 7,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30"
+  max_date = "2020-06-30",
+  location = "country"
 ) |>
-  format_output(estimate_type = "reporting", type = "Under-reporting")
+  format_output(
+    estimate_type = "reporting", type = "Under-reporting"
+  )
 ```
 
 Once we have calculated both severity quantities over time, we plot the results.
@@ -263,8 +270,10 @@ df_reporting <- df_covid |>
   group_by(iso_code) |>
   mutate(total_deaths = max(deaths_total)) |>
   filter(total_deaths > 100000 & !is.na(country)) |>
-  filter(date < "2020-06-01") |>
-  group_map(~ estimate_reporting(
+  filter(date < "2020-06-01")
+
+df_reporting <-
+  group_map(df_reporting, ~ estimate_reporting(
     df_in = .,
     epi_dist = onset_to_death_covid,
     type = "varying",
