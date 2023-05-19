@@ -9,9 +9,9 @@
 #'
 #' @inheritParams estimate_time_varying
 #'
-#' @param type A boolean flag which determines whether [estimate_static()] or
-#' [estimate_time_varying()] is used to calculate the resulting ascertainment
-#' rate
+#' @param type A string, either `"static"` or `"varying"` which determines
+#' whether [estimate_static()] or [estimate_time_varying()] is used to calculate
+#' the resulting ascertainment rate
 #' @param severity_baseline The assumed to be true baseline severity estimate
 #' used in the final ratio to estimate the overall ascertainment rate
 #' @param max_date A string representing a user supplied maximum date, up to
@@ -50,7 +50,8 @@
 #'   smooth_inputs = TRUE,
 #'   burn_in_value = 7L,
 #'   correct_for_delays = TRUE,
-#'   max_date = "2020-06-30"
+#'   max_date = "2020-06-30",
+#'   location = "U.K."
 #' )
 #'
 #' format_output(
@@ -66,7 +67,8 @@ estimate_reporting <- function(df_in,
                                burn_in_value = get_default_burn_in(epi_dist),
                                smooth_inputs = NULL,
                                correct_for_delays = NULL,
-                               max_date = NULL) {
+                               max_date = NULL,
+                               location = "country") {
   if (type == "static") {
     df_severity <- estimate_static(
       df_in,
@@ -82,37 +84,37 @@ estimate_reporting <- function(df_in,
       correct_for_delays = correct_for_delays
     )
 
-    df_severity <- subset(df_severity, !is.na(df_severity$severity_me))
+    df_severity <- df_severity[!is.na(df_severity$severity_me), ]
 
     if (!is.null(max_date)) {
-      df_severity <- subset(df_severity, date == max(max_date))
+      df_severity <- df_severity[df_severity$date == max_date, ]
     } else {
-      df_severity <- subset(df_severity, date == max(date))
+      df_severity <- df_severity[df_severity$date == max(df_severity$date), ]
     }
   }
 
-  if (!is.null(df_in$country)) {
-    df_out <- data.frame(
-      location = unique(df_in$country),
-      reporting_me = numeric(1),
-      reporting_lo = numeric(1),
-      reporting_hi = numeric(1)
-    )
-  } else {
-    df_out <- data.frame(
-      reporting_me = numeric(1),
-      reporting_lo = numeric(1),
-      reporting_hi = numeric(1)
-    )
+  # data frame for exports
+  df_out <- apply(
+    df_severity[, grepl("severity", colnames(df_severity), fixed = TRUE)],
+    MARGIN = 2,
+    FUN = function(x) {
+      x_ <- severity_baseline / x
+      x_[x_ > 1.0] <- 1.0
+      x_
+    },
+    simplify = FALSE
+  )
+  df_out <- as.data.frame(df_out)
+  colnames(df_out) <- gsub(
+    "severity", "reporting",
+    x = colnames(df_out), fixed = TRUE
+  )
+
+  # assign location or NA if not present
+  df_out$location <- NA_character_
+  if (location %in% colnames(df_in)) {
+    df_out$location <- unique(df_in[[location]])
   }
-
-  df_out$reporting_me <- severity_baseline / unique(df_severity$severity_me)
-  df_out$reporting_lo <- severity_baseline / unique(df_severity$severity_hi)
-  df_out$reporting_hi <- severity_baseline / unique(df_severity$severity_lo)
-
-  df_out$reporting_me[df_out$reporting_me > 1] <- 1
-  df_out$reporting_lo[df_out$reporting_lo > 1] <- 1
-  df_out$reporting_hi[df_out$reporting_hi > 1] <- 1
 
   return(df_out)
 }
