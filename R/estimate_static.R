@@ -82,7 +82,6 @@ estimate_static <- function(df_in,
                             epi_dist,
                             poisson_threshold = 100,
                             location) {
-
   # input checking
   checkmate::assert_data_frame(df_in)
   checkmate::assert_logical(correct_for_delays, len = 1L)

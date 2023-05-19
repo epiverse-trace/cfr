@@ -15,7 +15,6 @@
 estimate_severity <- function(df_in,
                               poisson_threshold = 100,
                               location) {
-
   # transferring from data.frame to vector format, to tidy up the slightly messy
   # likelihood calculation
   total_cases <- unique(df_in$total_cases)
