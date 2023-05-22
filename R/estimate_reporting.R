@@ -8,6 +8,7 @@
 #' estimate and the delay-adjusted severity estimate
 #'
 #' @inheritParams estimate_time_varying
+#' @inheritParams estimate_static
 #'
 #' @param type A string, either `"static"` or `"varying"` which determines
 #' whether [estimate_static()] or [estimate_time_varying()] is used to calculate
