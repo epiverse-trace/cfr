@@ -59,6 +59,10 @@ calculating a corrected severity}
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period}
+
+\item{location}{Column name as a string by which to disaggregate data for
+estimates. This is usually a column indicating the region or country to which
+the estimate applies.}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
