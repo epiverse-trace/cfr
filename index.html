@@ -104,6 +104,9 @@
 <span><span class="co"># Load the Ebola 1976 data provided with the package</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># assign a location</span></span>
+<span><span class="va">ebola1976</span><span class="op">$</span><span class="va">location</span> <span class="op">&lt;-</span> <span class="st">"DRC"</span></span>
+<span></span>
 <span><span class="co"># read epidist for EVD onset to death from {epiparameter}</span></span>
 <span><span class="co"># accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4</span></span>
 <span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu">epiparameter</span><span class="fu">::</span><span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
@@ -111,30 +114,53 @@
 <span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
 <span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using Barry et al. (2018) &lt;10.1016/S0140-6736(18)31387-4&gt; PMID: 30047375. </span></span>
+<span><span class="co">#&gt; To retrieve the short citation use the 'get_citation' function</span></span>
 <span></span>
 <span><span class="co"># Calculate the static naive and corrected CFRs</span></span>
-<span><span class="va">ncfr</span> <span class="op">&lt;-</span> <span class="fu">static_cfr</span><span class="op">(</span><span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">ccfr</span> <span class="op">&lt;-</span> <span class="fu">static_cfr</span><span class="op">(</span><span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">onset_to_death_ebola</span><span class="op">)</span></span>
+<span><span class="va">ncfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span>  df_in <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>, location <span class="op">=</span> <span class="st">"location"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">ccfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span>  df_in <span class="op">=</span> <span class="va">ebola1976</span>,</span>
+<span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"location"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Print nicely formatted case fatality rate estimates</span></span>
-<span><span class="fu">format_cfr_neatly</span><span class="op">(</span><span class="va">ncfr</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "CFR: 0.96% (95% CI: 0.92% - 0.98%)"</span></span>
-<span><span class="fu">format_cfr_neatly</span><span class="op">(</span><span class="va">ccfr</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "CFR: 0.96% (95% CI: 0.84% - 1.00%)"</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/format_output.html">format_output</a></span><span class="op">(</span><span class="va">ncfr</span>, estimate_type <span class="op">=</span> <span class="st">"severity"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Location                         Estimate</span></span>
+<span><span class="co">#&gt; 1      DRC 95.51% (95% CI: 92.11% - 97.74%)</span></span>
+<span><span class="fu"><a href="reference/format_output.html">format_output</a></span><span class="op">(</span><span class="va">ccfr</span>, estimate_type <span class="op">=</span> <span class="st">"severity"</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   Location                          Estimate</span></span>
+<span><span class="co">#&gt; 1      DRC 95.90% (95% CI: 84.20% - 100.00%)</span></span></code></pre></div>
 <p>Calculate and plot real-time CFR estimates up to a given point in time</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate naive and corrected static CFRs up to a given point in time</span></span>
-<span><span class="va">df_ncfr</span> <span class="op">&lt;-</span> <span class="fu">rolling_cfr</span><span class="op">(</span><span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="va">df_ccfr</span> <span class="op">&lt;-</span> <span class="fu">rolling_cfr</span><span class="op">(</span></span>
-<span>  <span class="va">ebola1976</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  <span class="va">onset_to_death_ebola</span></span>
+<span><span class="va">df_ncfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_time_varying.html">estimate_time_varying</a></span><span class="op">(</span></span>
+<span>  df_in <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  burn_in_value <span class="op">=</span> <span class="fl">7</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Plotting case and death data along with CFRs</span></span>
-<span><span class="fu">plot_data_and_cfr</span><span class="op">(</span><span class="va">df_ncfr</span>, <span class="va">df_ccfr</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 1 row containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="va">df_ccfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_time_varying.html">estimate_time_varying</a></span><span class="op">(</span></span>
+<span>  <span class="va">ebola1976</span>,</span>
+<span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
+<span>  burn_in_value <span class="op">=</span> <span class="fl">7</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot case and death data</span></span>
+<span><span class="fu"><a href="reference/plot_case_data.html">plot_case_data</a></span><span class="op">(</span><span class="va">df_ccfr</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example-ebola-plot-1.png" width="100%"></p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/plot_death_data.html">plot_death_data</a></span><span class="op">(</span><span class="va">df_ccfr</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-example-ebola-plot-2.png" width="100%"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Plotting case and death data along with CFRs</span></span>
+<span><span class="fu"><a href="reference/plot_time_varying.html">plot_time_varying</a></span><span class="op">(</span><span class="va">df_ncfr</span>, lower <span class="op">=</span> <span class="fl">0</span>, upper <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-example-ebola-plot-3.png" width="100%"></p>
 <p>This package is currently a <em>concept</em>, as defined by the <a href="https://www.reconverse.org/lifecycle.html" class="external-link">RECON software lifecycle</a>. This means that essential features and mechanisms are still being developed, and the package is not ready for use outside of the development team.</p>
 </div>
 </div>
@@ -189,6 +215,8 @@
 <li><a href="https://opensource.org/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a></li>
 <li><a href="https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main" class="external-link"><img src="https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://www.repostatus.org/#wip" class="external-link"><img src="https://www.repostatus.org/badges/latest/wip.svg" alt="Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public."></a></li>
 <li><a href="https://CRAN.R-project.org/package=datadelay" class="external-link"><img src="https://www.r-pkg.org/badges/version/datadelay" alt="CRAN status"></a></li>
 </ul>
 </div>

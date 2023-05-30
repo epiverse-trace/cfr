@@ -86,7 +86,8 @@ estimate and the delay-adjusted severity estimate</p>
 <span>  burn_in_value <span class="op">=</span> <span class="fu"><a href="get_default_burn_in.html">get_default_burn_in</a></span><span class="op">(</span><span class="va">epi_dist</span><span class="op">)</span>,</span>
 <span>  smooth_inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_date <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  max_date <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,9 +109,9 @@ A typical example would be a symptom onset to death delay distribution.</p></dd>
 
 
 <dt>type</dt>
-<dd><p>A boolean flag which determines whether <code><a href="estimate_static.html">estimate_static()</a></code> or
-<code><a href="estimate_time_varying.html">estimate_time_varying()</a></code> is used to calculate the resulting ascertainment
-rate</p></dd>
+<dd><p>A string, either <code>"static"</code> or <code>"varying"</code> which determines
+whether <code><a href="estimate_static.html">estimate_static()</a></code> or <code><a href="estimate_time_varying.html">estimate_time_varying()</a></code> is used to calculate
+the resulting ascertainment rate</p></dd>
 
 
 <dt>severity_baseline</dt>
@@ -148,6 +149,12 @@ calculating a corrected severity</p></dd>
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period</p></dd>
+
+
+<dt>location</dt>
+<dd><p>Column name as a string by which to disaggregate data for
+estimates. This is usually a column indicating the region or country to which
+the estimate applies.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -189,7 +196,8 @@ of the corrected severity</p>
 <span class="r-in"><span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  burn_in_value <span class="op">=</span> <span class="fl">7L</span>,</span></span>
 <span class="r-in"><span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span></span></span>
+<span class="r-in"><span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span>,</span></span>
+<span class="r-in"><span>  location <span class="op">=</span> <span class="st">"U.K."</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="format_output.html">format_output</a></span><span class="op">(</span></span></span>
@@ -197,8 +205,8 @@ of the corrected severity</p>
 <span class="r-in"><span>  estimate_type <span class="op">=</span> <span class="st">"reporting"</span>,</span></span>
 <span class="r-in"><span>  type <span class="op">=</span> <span class="st">"Under-reporting"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         Location                         Estimate            Type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 United Kingdom 21.76% (95% CI: 17.52% - 27.43%) Under-reporting</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Location                         Estimate            Type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     &lt;NA&gt; 21.76% (95% CI: 27.43% - 17.52%) Under-reporting</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

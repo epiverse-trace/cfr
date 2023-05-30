@@ -350,7 +350,7 @@ estimates using the following two commands (respectively):</p>
 <span><span class="va">df_ncfr_static_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_ebola_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="st">"location"</span></span>
+<span>  location <span class="op">=</span> <span class="st">"location"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
 <span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>,</span>
@@ -362,7 +362,7 @@ estimates using the following two commands (respectively):</p>
 <span>  <span class="va">df_ebola_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="st">"location"</span></span>
+<span>  location <span class="op">=</span> <span class="st">"location"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
 <span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>,</span>
@@ -524,7 +524,7 @@ epidemic in the U.K:</p>
 <span><span class="va">df_ncfr_static_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="st">"country"</span></span>
+<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
 <span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>, type <span class="op">=</span> <span class="st">"Naive CFR"</span></span>
@@ -535,7 +535,7 @@ epidemic in the U.K:</p>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="st">"country"</span></span>
+<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span>estimate_type <span class="op">=</span> <span class="st">"severity"</span>, type <span class="op">=</span> <span class="st">"Corrected CFR"</span><span class="op">)</span></span>
 <span></span>
@@ -569,7 +569,7 @@ Type
 United Kingdom
 </td>
 <td style="text-align:center;">
-3.64% (95% CI: 3.62% - 3.67%)
+3.64% (95% CI: 3.62% - 3.66%)
 </td>
 <td style="text-align:center;">
 Naive CFR
@@ -580,7 +580,7 @@ Naive CFR
 United Kingdom
 </td>
 <td style="text-align:center;">
-4.70% (95% CI: 4.60% - 4.70%)
+4.60% (95% CI: 4.60% - 4.70%)
 </td>
 <td style="text-align:center;">
 Corrected CFR

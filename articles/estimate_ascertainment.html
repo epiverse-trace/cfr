@@ -169,15 +169,13 @@ infections, hospitalisations — or whichever proxy for infections is
 provide — which have been ascertained. The method used within this
 function extends the methods outlined in the previous vignettes about
 estimating the severity during an ongoing outbreak and measuring how the
-severity changes over time. Both methods are based on the Nishiura et
-al.<sup><span class="citation">[1]</span></sup> methods to estimate
-severity. We extend this by combining the resulting severity estimates
-with an assumed baseline severity estimate. The proportion of cases,
-infections or other quantity provided that have been ascertained is
-given by the ratio of the assumed to be true baseline severity estimate
-to the delay-adjusted severity estimate. The delay-adjusted severity
-estimates can be calculated using either the
-<code><a href="../reference/estimate_static.html">estimate_static()</a></code> or the
+severity changes over time. Both methods are based on the <span class="citation">[1]</span> methods to estimate severity. We extend this
+by combining the resulting severity estimates with an assumed baseline
+severity estimate. The proportion of cases, infections or other quantity
+provided that have been ascertained is given by the ratio of the assumed
+to be true baseline severity estimate to the delay-adjusted severity
+estimate. The delay-adjusted severity estimates can be calculated using
+either the <code><a href="../reference/estimate_static.html">estimate_static()</a></code> or the
 <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> functions.</p>
 </div>
 </div>
@@ -262,13 +260,16 @@ distribution we use throughout this example for COVID-19, reported in <a href="h
 <code>datadelay</code> package to calculate the time-varying CFR for the
 COVID-19 epidemic in the U.K:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_reporting_static</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_reporting.html">estimate_reporting</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span>,</span>
+<code class="sourceCode R"><span><span class="va">df_reporting_static</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_reporting.html">estimate_reporting</a></span><span class="op">(</span></span>
+<span>  <span class="va">df_covid_uk_subset</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"static"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span>estimate_type <span class="op">=</span> <span class="st">"reporting"</span>, type <span class="op">=</span> <span class="st">"Under-reporting"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
+<span>    estimate_type <span class="op">=</span> <span class="st">"reporting"</span>, type <span class="op">=</span> <span class="st">"Under-reporting"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>The function includes a <code>type</code> argument, which determines
 whether <code><a href="../reference/estimate_static.html">estimate_static()</a></code> or
 <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> is used to estimate the
@@ -286,9 +287,12 @@ arguments are the same as those found in the
 <span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  burn_in_value <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span></span>
+<span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span>,</span>
+<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span>estimate_type <span class="op">=</span> <span class="st">"reporting"</span>, type <span class="op">=</span> <span class="st">"Under-reporting"</span><span class="op">)</span></span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
+<span>    estimate_type <span class="op">=</span> <span class="st">"reporting"</span>, type <span class="op">=</span> <span class="st">"Under-reporting"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
 <p>Once we have calculated both severity quantities over time, we plot
 the results. First we plot the naive (uncorrected for delays)
 estiamte:</p>
@@ -315,7 +319,7 @@ Type
 United Kingdom
 </td>
 <td style="text-align:center;">
-5.98% (95% CI: 5.93% - 6.01%)
+5.98% (95% CI: 6.01% - 5.93%)
 </td>
 <td style="text-align:center;">
 Under-reporting
@@ -345,7 +349,7 @@ Type
 United Kingdom
 </td>
 <td style="text-align:center;">
-21.76% (95% CI: 17.52% - 27.43%)
+21.76% (95% CI: 27.43% - 17.52%)
 </td>
 <td style="text-align:center;">
 Under-reporting
@@ -382,8 +386,10 @@ with manipulating large data.frames which are structured by group:</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">iso_code</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>total_deaths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">deaths_total</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">total_deaths</span> <span class="op">&gt;</span> <span class="fl">100000</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">country</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2020-06-01"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_map.html" class="external-link">group_map</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="../reference/estimate_reporting.html">estimate_reporting</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2020-06-01"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df_reporting</span> <span class="op">&lt;-</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_map.html" class="external-link">group_map</a></span><span class="op">(</span><span class="va">df_reporting</span>, <span class="op">~</span> <span class="fu"><a href="../reference/estimate_reporting.html">estimate_reporting</a></span><span class="op">(</span></span>
 <span>    df_in <span class="op">=</span> <span class="va">.</span>,</span>
 <span>    epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
 <span>    type <span class="op">=</span> <span class="st">"varying"</span>,</span>
@@ -452,7 +458,7 @@ Type
 Argentina
 </td>
 <td style="text-align:center;">
-10.24% (95% CI: 7.47% - 14.67%)
+10.24% (95% CI: 14.67% - 7.47%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -463,7 +469,7 @@ Ascertainment
 Brazil
 </td>
 <td style="text-align:center;">
-9.06% (95% CI: 8.54% - 9.61%)
+9.06% (95% CI: 9.61% - 8.54%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -474,7 +480,7 @@ Ascertainment
 China
 </td>
 <td style="text-align:center;">
-100.00% (95% CI: 5.29% - 100.00%)
+100.00% (95% CI: 100.00% - 5.29%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -485,7 +491,7 @@ Ascertainment
 Colombia
 </td>
 <td style="text-align:center;">
-21.79% (95% CI: 14.76% - 34.01%)
+21.79% (95% CI: 34.01% - 14.76%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -496,7 +502,7 @@ Ascertainment
 Germany
 </td>
 <td style="text-align:center;">
-100.00% (95% CI: 73.41% - 100.00%)
+100.00% (95% CI: 100.00% - 73.41%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -507,7 +513,7 @@ Ascertainment
 Spain
 </td>
 <td style="text-align:center;">
-28.44% (95% CI: 22.42% - 36.73%)
+28.44% (95% CI: 36.73% - 22.42%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -518,7 +524,7 @@ Ascertainment
 France
 </td>
 <td style="text-align:center;">
-22.87% (95% CI: 18.30% - 29.04%)
+22.87% (95% CI: 29.04% - 18.30%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -529,7 +535,7 @@ Ascertainment
 United Kingdom
 </td>
 <td style="text-align:center;">
-17.67% (95% CI: 15.90% - 19.71%)
+17.67% (95% CI: 19.71% - 15.90%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -540,7 +546,7 @@ Ascertainment
 Indonesia
 </td>
 <td style="text-align:center;">
-15.78% (95% CI: 11.44% - 22.64%)
+15.78% (95% CI: 22.64% - 11.44%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -551,7 +557,7 @@ Ascertainment
 India
 </td>
 <td style="text-align:center;">
-24.68% (95% CI: 21.11% - 29.07%)
+24.68% (95% CI: 29.07% - 21.11%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -562,7 +568,7 @@ Ascertainment
 Iran
 </td>
 <td style="text-align:center;">
-30.95% (95% CI: 24.00% - 40.76%)
+30.95% (95% CI: 40.76% - 24.00%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -573,7 +579,7 @@ Ascertainment
 Italy
 </td>
 <td style="text-align:center;">
-22.05% (95% CI: 18.45% - 26.63%)
+22.05% (95% CI: 26.63% - 18.45%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -584,7 +590,7 @@ Ascertainment
 Mexico
 </td>
 <td style="text-align:center;">
-4.44% (95% CI: 4.16% - 4.76%)
+4.44% (95% CI: 4.76% - 4.16%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -595,7 +601,7 @@ Ascertainment
 Peru
 </td>
 <td style="text-align:center;">
-6.56% (95% CI: 6.10% - 7.09%)
+6.56% (95% CI: 7.09% - 6.10%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -606,7 +612,7 @@ Ascertainment
 Poland
 </td>
 <td style="text-align:center;">
-41.49% (95% CI: 23.50% - 82.54%)
+41.49% (95% CI: 82.54% - 23.50%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -617,7 +623,7 @@ Ascertainment
 Russia
 </td>
 <td style="text-align:center;">
-87.85% (95% CI: 74.64% - 100.00%)
+87.85% (95% CI: 100.00% - 74.64%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -628,7 +634,7 @@ Ascertainment
 Turkey
 </td>
 <td style="text-align:center;">
-100.00% (95% CI: 78.68% - 100.00%)
+100.00% (95% CI: 100.00% - 78.68%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -639,7 +645,7 @@ Ascertainment
 Ukraine
 </td>
 <td style="text-align:center;">
-49.65% (95% CI: 29.33% - 92.72%)
+49.65% (95% CI: 92.72% - 29.33%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -650,7 +656,7 @@ Ascertainment
 United States
 </td>
 <td style="text-align:center;">
-33.78% (95% CI: 31.90% - 35.80%)
+33.78% (95% CI: 35.80% - 31.90%)
 </td>
 <td style="text-align:center;">
 Ascertainment
@@ -661,7 +667,7 @@ Ascertainment
 South Africa
 </td>
 <td style="text-align:center;">
-16.89% (95% CI: 12.05% - 24.73%)
+16.89% (95% CI: 24.73% - 12.05%)
 </td>
 <td style="text-align:center;">
 Ascertainment
