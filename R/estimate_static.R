@@ -140,9 +140,12 @@ estimate_static <- function(df_in,
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
     # of deaths
-    df_corrected$total_cases <- sum(df_corrected$cases)
-    df_corrected$total_deaths <- sum(df_corrected$deaths)
-    df_corrected$total_outcomes <- sum(df_corrected$known_outcomes)
+    df_corrected$total_cases <- sum(df_corrected$cases, na.rm = TRUE)
+    df_corrected$total_deaths <- sum(df_corrected$deaths, na.rm = TRUE)
+    df_corrected$total_outcomes <- sum(
+      df_corrected$known_outcomes,
+      na.rm = TRUE
+    )
 
     # calculating the proportion of cases with known outcome
     df_corrected$u_t <- df_corrected$total_outcomes / df_corrected$total_cases
