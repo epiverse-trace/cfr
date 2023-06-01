@@ -9,7 +9,14 @@ estimate_severity(df_in, poisson_threshold = 100, location)
 \arguments{
 \item{df_in}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point}
+the numbers of new cases and new deaths at each time point.
+Note that the required columns are "date" (for the date), "cases" (for the
+number of reported cases), and "deaths" (for the number of reported deaths)
+on each day of the outbreak.
+Note that the data.frame is required to have an unbroken sequence of dates
+with no missing dates in between.
+Note also that the total number of cases must be greater than the total
+number of reported deaths.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
