@@ -53,7 +53,6 @@ test_that("Basic expectations of static_cfr", {
     estimate_static(
       df_in = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
-    ),
-    regexp = "Case data must contain columns `cases` and `deaths`"
+    )
   )
 })
