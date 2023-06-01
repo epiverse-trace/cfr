@@ -84,6 +84,18 @@ estimate_static <- function(df_in,
                             location) {
   # input checking
   checkmate::assert_data_frame(df_in)
+  # check that input data frame has columns date, cases, and deaths
+  checkmate::assert_names(
+    colnames(df_in),
+    must.include = c("date", "cases", "deaths")
+  )
+  # check that df_in$date is a date column
+  checkmate::assert_date(df_in$date, any.missing = FALSE, all.missing = FALSE)
+  # check for excessive missing date and throw an error
+  stopifnot(
+    "Input data.frame must have sequential dates with none missing" =
+      (unique(diff(df_in$date)) == 1)
+  )
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_number(poisson_threshold, lower = 0, finite = FALSE)
   if (!missing(location)) {
