@@ -166,8 +166,8 @@ estimate_static <- function(df_in,
     )
   } else {
     # calculating the total number of cases (without correcting) and deaths
-    total_cases <- sum(df_in$cases)
-    total_deaths <- sum(df_in$deaths)
+    total_cases <- sum(df_in$cases, na.rm = TRUE)
+    total_deaths <- sum(df_in$deaths, na.rm = TRUE)
 
     # calculating the central estimate
     severity_me <- total_deaths / total_cases
