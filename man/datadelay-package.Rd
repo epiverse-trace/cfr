@@ -4,9 +4,9 @@
 \name{datadelay-package}
 \alias{datadelay}
 \alias{datadelay-package}
-\title{datadelay: Delay Functions for Epidemic Data}
+\title{datadelay: Estimate Disease Severity and Under-reporting}
 \description{
-Delay functions for routine surveillance data.
+Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) \doi{10.1371/journal.pone.0006852}.
 }
 \seealso{
 Useful links:

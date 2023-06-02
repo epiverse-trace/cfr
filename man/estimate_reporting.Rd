@@ -54,7 +54,7 @@ argument to 0.}
 
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
-before calculating the time-varying severity. Useful for noisey time-series
+before calculating the time-varying severity. Useful for noisy time-series
 or time-series with strong reporting (e.g., weekend) effects}
 
 \item{correct_for_delays}{A boolean flag indicating whether the user wishes
