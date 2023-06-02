@@ -53,6 +53,7 @@ Suggests:
     covidregionaldata,
     usethis,
     knitr,
+    bookdown,
     rmarkdown,
     spelling
 Remotes:
