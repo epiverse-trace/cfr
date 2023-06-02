@@ -100,8 +100,11 @@ estimate_static <- function(df_in,
   checkmate::assert_date(df_in$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
   stopifnot(
-    "Input data.frame must have sequential dates with none missing" =
-      (unique(diff(df_in$date)) == 1)
+    "Input data must have sequential dates with none missing or duplicated" =
+      identical(unique(diff(df_in$date)), 1) # use numeric 1, not integer
+    # this solution works when df$date is `Date`
+    # this may need more thought for dates that are integers, POSIXct,
+    # or other units; consider the units package
   )
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_number(poisson_threshold, lower = 0, finite = FALSE)
