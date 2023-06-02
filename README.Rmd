@@ -1,5 +1,7 @@
 ---
 output: github_document
+bibliography: vignettes/resources/library.json
+link-citations: true
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -8,41 +10,43 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  message = FALSE,
+  warning = FALSE,
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
 ```
 
-# *datadelay*: Estimating disease severity and under-reporting
+# _{{ packagename }}_: Estimating disease severity and under-reporting
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main)
+[![R-CMD-check](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/{{ gh_repo }}/branch/main/graph/badge.svg)](https://app.codecov.io/gh/{{ gh_repo }}?branch=main)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
-[![CRAN status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
+[![CRAN status](https://www.r-pkg.org/badges/version/{{ packagename }})](https://CRAN.R-project.org/package={{ packagename }})
 <!-- badges: end -->
 
-The goal of datadelay is to provide simple, fast methods for estimation of disease severity and under-reporting in real-time, accounting for delays in epidemic timeseries.
+_{{ packagename }}_ is an R package that provides simple, fast methods, based in part on @nishiura2009, to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
 
 ## Installation
 
-You can install the development version of datadelay from [GitHub](https://github.com/) with:
+The current development version of _{{ packagename }}_ can be installed from [GitHub](https://github.com/) using the `pak` package.
 
-``` r
-# install.packages("devtools")
-devtools::install_github("epiverse-trace/datadelay")
+```r
+if(!require("pak")) install.packages("pak")
+pak::pak("{{ gh_repo }}")
 
-# Also install epiparameter for epidemiological parameter values
-devtools::install_github("epiverse-trace/epiparameter")
+# Also install R package {epiparameter} for epidemiological parameter values
+pak::pak("epiverse-trace/epiparameter")
 ```
 
 ## Quick start
 
 ### Ebola 1976
 
-This example of basic usage shows how to use _datadelay_ to estimate case fatality ratios from the 1976 Ebola outbreak.
+This example of basic usage shows how to use _{{ packagename }}_ to estimate case fatality ratios from the 1976 Ebola outbreak.
 
 ```{r example-ebola-calc}
 # Load package
@@ -78,7 +82,7 @@ format_output(ncfr, estimate_type = "severity")
 format_output(ccfr, estimate_type = "severity")
 ```
 
-Calculate and plot real-time CFR estimates up to a given point in time
+Calculate and plot real-time CFR estimates up to a given point in time.
 
 ```{r example-ebola-plot}
 # Calculate naive and corrected static CFRs up to a given point in time
@@ -102,7 +106,20 @@ plot_death_data(df_ccfr)
 plot_time_varying(df_ncfr, lower = 0, upper = 100)
 ```
 
-This package is currently a *concept*, as defined by the [RECON software
-lifecycle](https://www.reconverse.org/lifecycle.html). This means that
-essential features and mechanisms are still being developed, and the
-package is not ready for use outside of the development team.
+## Package vignettes
+
+More details on how to use _{{ packagename }}_ can be found in the [online documentation as package vignettes](https://epiverse-trace.github.io/{{ packagename }}/), under "Articles".
+
+## Help
+
+To report a bug please open an [issue](https://github.com/{{ gh_repo }}/issues/new/choose).
+
+## Contribute
+
+Contributions to _{{ packagename }}_ are welcomed. Please follow the [package contributing guide](https://github.com/{{ gh_repo }}/blob/main/.github/CONTRIBUTING.md).
+
+## Code of conduct
+
+Please note that the _{{ packagename }}_ project is released with a [Contributor Code of Conduct](https://github.com/epiverse-trace/.github/blob/main/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
+
+## References
