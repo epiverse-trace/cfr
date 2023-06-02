@@ -19,8 +19,13 @@ parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 }
 \value{
-A data.frame containing the MLE estimate and 95\% confidence interval
-of the corrected CFR
+A data.frame with the columns in \code{df_in}, and with two additional
+columns,
+\itemize{
+\item "known_outcomes" for the total number of known outcomes on that day
+of the outbreak, and
+\item "u_t" for the under-reporting factor.
+}
 }
 \description{
 Estimates the expected number of individuals with known outcomes
