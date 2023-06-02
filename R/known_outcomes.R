@@ -20,8 +20,13 @@
 #' parameterised with disease-specific parameters before it is supplied here.
 #' A typical example would be a symptom onset to death delay distribution.
 #'
-#' @return A data.frame containing the MLE estimate and 95% confidence interval
-#' of the corrected CFR
+#' @return A data.frame with the columns in `df_in`, and with two additional
+#' columns,
+#'
+#'  - "known_outcomes" for the total number of known outcomes on that day
+#' of the outbreak, and
+#'
+#'  - "u_t" for the under-reporting factor.
 #'
 #' @export
 #'
@@ -73,25 +78,24 @@ known_outcomes <- function(df_in,
   # declaring the outputs of the main loop as vectors within the main
   # data.frame
   df_in$known_outcomes <- numeric(case_length)
-  df_in$u_t <- numeric(case_length)
 
   # main calculation loop
-  for (i in case_length:1) {
+  for (i in rev(seq_len(case_length))) {
     # Delay probability mass function, evaluated at times
     # within the case and death times series
-    delay_pmf_eval <- pmf_vals[case_times[1:i]]
+    delay_pmf_eval <- pmf_vals[case_times[seq_len(i)]]
 
     # Estimate the number of onsets associated with deaths
-    known_onsets_current <- cases[1:i] * rev(delay_pmf_eval)
+    known_onsets_current <- cases[seq_len(i)] * rev(delay_pmf_eval)
 
     # Collecting all current known onset estimates in a new
     # column of the original data.frame
-    df_in$known_outcomes[[i]] <- sum(known_onsets_current)
-
-    # Calculating the proportion of cases with known onset,
-    # for use in the simple likelihood function
-    df_in$u_t <- cumsum(df_in$known_outcomes) / cumsum(cases)
+    df_in$known_outcomes[i] <- sum(known_onsets_current)
   }
+  # Calculating the proportion of cases with known onset,
+  # for use in the simple likelihood function
+  df_in$u_t <- cumsum(df_in$known_outcomes) / cumsum(cases)
 
-  return(df_in)
+  # return dataframe with added columns
+  df_in
 }

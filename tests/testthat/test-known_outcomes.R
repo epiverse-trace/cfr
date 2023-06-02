@@ -31,7 +31,4 @@ test_that("`known_outcomes` basic functionality", {
   expect_snapshot(
     head(df_known_outcomes)
   )
-  expect_snapshot(
-    head(df_known_outcomes)
-  )
 })
