@@ -19,21 +19,22 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-The goal of datadelay is to provide simple, fast methods for estimation
-of disease severity and under-reporting in real-time, accounting for
-delays in epidemic timeseries.
+*datadelay* is an R package that provides simple, fast methods, based in
+part on Nishiura et al. ([2009](#ref-nishiura2009)), to estimate disease
+severity and under-reporting in real-time, accounting for delays in
+epidemic time-series.
 
 ## Installation
 
-You can install the development version of datadelay from
-[GitHub](https://github.com/) with:
+The current development version of *datadelay* can be installed from
+[GitHub](https://github.com/) using the `pak` package.
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("epiverse-trace/datadelay")
+if(!require("pak")) install.packages("pak")
+pak::pak("epiverse-trace/datadelay")
 
-# Also install epiparameter for epidemiological parameter values
-devtools::install_github("epiverse-trace/epiparameter")
+# Also install R package {epiparameter} for epidemiological parameter values
+pak::pak("epiverse-trace/epiparameter")
 ```
 
 ## Quick start
@@ -60,8 +61,6 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   epi_dist = "onset_to_death",
   author = "Barry_etal"
 )
-#> Using Barry et al. (2018) <10.1016/S0140-6736(18)31387-4> PMID: 30047375. 
-#> To retrieve the short citation use the 'get_citation' function
 
 # Calculate the static naive and corrected CFRs
 ncfr <- estimate_static(
@@ -83,7 +82,7 @@ format_output(ccfr, estimate_type = "severity")
 #> 1      DRC 95.90% (95% CI: 84.20% - 100.00%)
 ```
 
-Calculate and plot real-time CFR estimates up to a given point in time
+Calculate and plot real-time CFR estimates up to a given point in time.
 
 ``` r
 # Calculate naive and corrected static CFRs up to a given point in time
@@ -119,7 +118,42 @@ plot_time_varying(df_ncfr, lower = 0, upper = 100)
 
 <img src="man/figures/README-example-ebola-plot-3.png" width="100%" />
 
-This package is currently a *concept*, as defined by the [RECON software
-lifecycle](https://www.reconverse.org/lifecycle.html). This means that
-essential features and mechanisms are still being developed, and the
-package is not ready for use outside of the development team.
+## Package vignettes
+
+More details on how to use *datadelay* can be found in the [online
+documentation as package
+vignettes](https://epiverse-trace.github.io/datadelay/), under
+“Articles”.
+
+## Help
+
+To report a bug please open an
+[issue](https://github.com/epiverse-trace/datadelay/issues/new/choose).
+
+## Contribute
+
+Contributions to *datadelay* are welcomed. Please follow the [package
+contributing
+guide](https://github.com/epiverse-trace/datadelay/blob/main/.github/CONTRIBUTING.md).
+
+## Code of conduct
+
+Please note that the *datadelay* project is released with a [Contributor
+Code of
+Conduct](https://github.com/epiverse-trace/.github/blob/main/CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.
+
+## References
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-nishiura2009" class="csl-entry">
+
+Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P.
+Heesterbeek. 2009. “Early Epidemiological Assessment of the Virulence of
+Emerging Infectious Diseases: A Case Study of an Influenza Pandemic.”
+*PLOS ONE* 4 (8): e6852. <https://doi.org/10.1371/journal.pone.0006852>.
+
+</div>
+
+</div>
