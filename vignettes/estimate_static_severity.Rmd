@@ -1,8 +1,13 @@
 ---
 title: "Calculating disease severity by adjusting for delays between onset and outcome during an outbreak"
-output: rmarkdown::html_vignette
-bibliography: resources/library.bib
-csl: resources/bmj.csl
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
+bibliography: resources/library.json
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{Calculating disease severity by adjusting for delays between onset and outcome during an outbreak}
   %\VignetteEngine{knitr::rmarkdown}
@@ -35,8 +40,7 @@ quantities used in epidemiology: the *case fatality risk (CFR)*,
 *infection hospitality risk (IFR)* or  *hospitalisation fatality risk (HFR)*. We
 do so using a method that uses a time series of cases, infections of
 hospitalisations (respectively) and deaths with an appropriate delay 
-distribution. The methods used here originate from Nishiura et 
-al. (2009)^[@nishiura2009early]^.
+distribution. The methods used here originate from @nishiura2009.
 
 This vignette demonstrates how to implement the core functions within
 `datadelay`. Specifically, we will cover
@@ -47,8 +51,7 @@ require adjusting, given out of sync time series are often being compared.
 2. Arrive at estimates over time for the number of symptomatic individuals 
 that will likely be known to have had an outcome $t$ days after symptom onset
 
-3. Define an unbiased estimator to estimate the CFR or HFR from Nishiura et al
-(2009)^[@nishiura2009early]^
+3. Define an unbiased estimator to estimate the CFR or HFR from @nishiura2009
 
 4. Numerically implement the unbiased estimator numerically using
 maximum likelihood estimation to arrive at central estimates of the CFR or HFR,
@@ -116,7 +119,7 @@ delay distribution we use here comes from the `epiparameter` package.
 
 ## Adjusting for delays between the two time series 
 
-The method used by this function follows Nishiura et al.^[@nishiura2009early]^.
+The method used by this function follows @nishiura2009.
 The function calculates a quantity $u_t$ for each day within the input data,
 which represents the proportion of cases with a known outcome, on day $t$.
 Following Nishiura et al., $u_t$ is calculated in the following way:
@@ -226,7 +229,7 @@ the results over time:
 plot_epiparameter_distribution(onset_to_death_ebola, by = 0.1)
 ```
 
-## Estimating incidence of cases (or similar timeseries) with a known outcome
+## Estimating incidence of cases (or similar time-series) with a known outcome
 
 The function `known_outcomes()` from the `datadelay` package estimates the 
 number of cases which have a known outcome over time.
@@ -354,7 +357,7 @@ the results over time. We do so using the following command:
 plot_epiparameter_distribution(onset_to_death_covid, by = 0.1)
 ```
 
-## Estimating incidence of cases (or similar timeseries) with a known outcome
+## Estimating incidence of cases (or similar time-series) with a known outcome
 
 We use the same method and implementation as in the Ebola example to calculate
 the number of known outcomes over time, using the following command:
@@ -408,3 +411,5 @@ kable(df_static_clean_covid,
 ) |>
   kable_styling(full_width = FALSE)
 ```
+
+## References

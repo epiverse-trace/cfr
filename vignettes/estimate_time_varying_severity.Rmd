@@ -1,8 +1,13 @@
 ---
 title: "Estimating how disease severity varies over the course of an outbreak"
-output: rmarkdown::html_vignette
-bibliography: resources/library.bib
-csl: resources/bmj.csl
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
+bibliography: resources/library.json
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{Estimating how disease severity varies over the course of an outbreak}
   %\VignetteEngine{knitr::rmarkdown}
@@ -37,8 +42,7 @@ the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or
 
 We do so using a method that analyses the time series of cases and outcomes
 with an appropriate delay 
-distribution. The methods used here are documented in Nishiura et al.
-(2009)^[@nishiura2009early]^.
+distribution. The methods used here are documented in @nishiura2009.
 
 First, we load the five essential packages needed for this vignette:
 
@@ -104,7 +108,7 @@ here comes from the `epiparameter` package.
 
 The function `estimate_time_varying()` from the `datadelay` package estimates
 the number of cases which have a known outcome over time. The method used 
-within this function follows Nishiura et al. (2009)^[@nishiura2009early]^. 
+within this function follows @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, 
 which represents the number of cases with a known outcome, on day $t$. Following
 Nishiura et al., $k_t$ is calculated in the following way:
@@ -342,9 +346,4 @@ df_covid_cfr |>
 We do not focus on the `ggplot2` commands in this vignette. Instead, we refer 
 the user to the `ggplot2` documentation [here](https://ggplot2.tidyverse.org/0). 
 
-
-
-
-
-
-
+## References
