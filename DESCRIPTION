@@ -53,7 +53,8 @@ Suggests:
     covidregionaldata,
     usethis,
     knitr,
-    rmarkdown
+    rmarkdown,
+    spelling
 Remotes:
     epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
@@ -64,3 +65,4 @@ Depends:
     R (>= 3.5.0)
 LazyData: true
 VignetteBuilder: knitr
+Language: en-GB
