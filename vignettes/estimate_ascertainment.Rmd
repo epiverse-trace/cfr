@@ -1,8 +1,13 @@
 ---
 title: "Estimating the proportion of cases that are reported during an outbreak"
-output: rmarkdown::html_vignette
-bibliography: resources/library.bib
-csl: resources/bmj.csl
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
+bibliography: resources/library.json
+link-citations: true
 vignette: >
   %\VignetteIndexEntry{Estimating the proportion of cases that are reported during an outbreak}
   %\VignetteEncoding{UTF-8}
@@ -104,7 +109,7 @@ proportion of cases, infections, hospitalisations --- or whichever proxy for
 infections is provide --- which have been ascertained. The method used within 
 this function extends the methods outlined in the previous vignettes about 
 estimating the severity during an ongoing outbreak and measuring how the 
-severity changes over time. Both methods are based on the @nishiura2009early methods to estimate severity. We extend this by 
+severity changes over time. Both methods are based on the @nishiura2009 methods to estimate severity. We extend this by 
 combining the resulting severity estimates with an assumed baseline severity 
 estimate. The proportion of cases, infections or other quantity provided that 
 have been ascertained is given by the ratio of the assumed to be true baseline 
@@ -220,7 +225,7 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
 ```
 
 Once we have calculated both severity quantities over time, we plot the results.
-First we plot the naive (uncorrected for delays) estiamte:
+First we plot the naive (uncorrected for delays) estimate:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
 knitr::kable(df_reporting_static,
@@ -324,3 +329,4 @@ kable(df_reporting_neat,
   kable_styling(full_width = FALSE)
 ```
 
+## References
