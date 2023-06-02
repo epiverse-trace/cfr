@@ -1,5 +1,5 @@
 Package: datadelay
-Title: Delay Functions for Epidemic Data
+Title: Estimate Disease Severity and Under-reporting
 Version: 0.1
 Authors@R: c(
     person(
@@ -24,7 +24,7 @@ Authors@R: c(
           comment = c(ORCID = "0000-0001-5294-7819")
         )
     )
-Description: Delay functions for routine surveillance data.
+Description: Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
 License: MIT + file LICENSE
 URL: https://github.com/epiverse-trace/datadelay,
     https://epiverse-trace.github.io/datadelay/
