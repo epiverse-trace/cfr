@@ -5,12 +5,14 @@ COVID
 Codecov
 Epiverse
 HFR
+Heesterbeek
 IFR
+Klinkenberg
 Lifecycle
 Nishiura
 ORCID
+PLOS
 Poisson
-RECON
 WIP
 binom
 codeblock
@@ -18,7 +20,6 @@ codecov
 com
 doi
 epiday
-epiparameter
 epiweek
 etc
 frac
@@ -26,7 +27,6 @@ gh
 github
 infty
 io
-lifecycle
 lockdown
 md
 org
@@ -39,7 +39,6 @@ st
 svg
 tC
 th
-timeseries
 u
 www
 yaml
