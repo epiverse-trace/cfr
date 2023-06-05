@@ -54,11 +54,11 @@ section of this vignette:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(dplyr)
+library(tidyr)
+library(purrr)
 library(ggplot2)
 library(forcats)
-library(scales)
 ```
-
 
 # Motivation
 
@@ -135,15 +135,16 @@ command:
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_uk <- get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE
-) |>
-  dplyr::rename(cases = cases_new, deaths = deaths_new)
+)
+
+df_covid_uk <- rename(df_covid_uk, cases = cases_new, deaths = deaths_new)
 ```
 
 We then subset the data to focus on just the first few months of the outbreak 
 with the following command:
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
+df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 ```
 
 ## Plotting the raw data
@@ -179,7 +180,7 @@ To visualise this distribution, we evaluate it between 0 and 30 days, and plot
 the results over time. We do so using the following command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:delay_dist_covid} **Figure 3: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
-plot_epiparameter_distribution(onset_to_death_covid, by = 0.1)
+plot(onset_to_death_covid, day_range = seq_len(30))
 ```
 
 ## Estimating the proportion of cases that have been ascertained
@@ -189,15 +190,12 @@ calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 df_reporting_static <- estimate_reporting(
-  df_covid_uk_subset,
+  data = df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   type = "static",
   severity_baseline = 0.014,
   correct_for_delays = TRUE
-) |>
-  format_output(
-    estimate_type = "reporting", type = "Under-reporting"
-  )
+)
 ```
 
 The function includes a `type` argument, which determines whether
@@ -209,50 +207,37 @@ under-ascertainment calculation. The other arguments are the same as those
 found in the `estimate_time_varying()`. 
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
-df_reporting_varying <- estimate_reporting(df_covid_uk,
+df_reporting_varying <- estimate_reporting(
+  data = df_covid_uk,
   epi_dist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
   smooth_inputs = TRUE,
   burn_in_value = 7,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30",
-  location = "country"
-) |>
-  format_output(
-    estimate_type = "reporting", type = "Under-reporting"
-  )
+  max_date = "2020-06-30"
+)
 ```
 
-Once we have calculated both severity quantities over time, we plot the results.
-First we plot the naive (uncorrected for delays) estimate:
+Once we have calculated both severity quantities over time, we visualise the results.
 
-```{r message=FALSE, warning=FALSE, eval=TRUE}
-knitr::kable(df_reporting_static,
-  align = "c",
-  col.names = c("Location", "Under-reporting estimate", "Type")
-) |>
-  kableExtra::kable_styling(full_width = FALSE)
+```{r}
+# the static reporting estimate
+df_reporting_static
+
+# the time-varying reporting estimate
+df_reporting_varying
 ```
-
-```{r message=FALSE, warning=FALSE, eval=TRUE}
-knitr::kable(df_reporting_varying,
-  align = "c",
-  col.names = c("Location", "Under-reporting estimate", "Type")
-) |>
-  kableExtra::kable_styling(full_width = FALSE)
-```
-
 
 # Example with all countries with large early COVID-19 outbreaks
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid <- get_national_data(
   source = "who", verbose = FALSE
-) |>
+) %>%
   rename(cases = cases_new, deaths = deaths_new)
 
-df_covid_subset <- subset(df_covid, date <= "2020-05-31")
+df_covid_subset <- filter(df_covid, date <= "2020-05-31")
 ```
 
 Finally, we put the ascertainment estimates for all countries with large 
@@ -271,29 +256,35 @@ this codeblock depends on the package `dplyr`, for ease with manipulating
 large data.frames which are structured by group:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
-df_reporting <- df_covid |>
-  group_by(iso_code) |>
-  mutate(total_deaths = max(deaths_total)) |>
-  filter(total_deaths > 100000 & !is.na(country)) |>
-  filter(date < "2020-06-01")
+# calculate the total number deaths by country and filter for countries
+# with 100,000 deaths, and then filter for the first six months of 2020
+df_reporting <- df_covid %>%
+  group_by(iso_code) %>%
+  mutate(total_deaths = max(deaths_total)) %>%
+  filter(total_deaths > 100000 & !is.na(country)) %>%
+  filter(date < "2020-06-01") %>%
+  ungroup()
 
-df_reporting <-
-  group_map(df_reporting, ~ estimate_reporting(
-    df_in = .,
-    epi_dist = onset_to_death_covid,
-    type = "varying",
-    severity_baseline = 0.014,
-    burn_in_value = 7,
-    smooth_inputs = TRUE,
-    correct_for_delays = TRUE
-  )) |>
-  bind_rows()
+# nest the data
+df_reporting <- nest(df_reporting, .by = country)
 
-df_reporting_neat <- format_output(
-  df_in = df_reporting,
-  estimate_type = "reporting",
-  type = "Ascertainment"
+# calculate the reporting rate in each country using
+# map on nested dataframes
+df_reporting <- mutate(
+  df_reporting,
+  reporting = map(
+    .x = data, .f = estimate_reporting,
+    # arguments to function
+    epi_dist = onset_to_death_covid, type = "varying",
+    burn_in_value = 7, smooth_inputs = TRUE, correct_for_delays = TRUE
+  )
 )
+
+# unnest the data
+df_reporting <- unnest(df_reporting, cols = "reporting")
+
+# visualise the data
+head(df_reporting)
 ```
 
 Then, to plot all of these results on a single figure, we use the following 
@@ -301,15 +292,15 @@ command — this codeblock depends on the commonly used package `ggplot2`, for
 ease with plotting large data.frames:
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 5: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays."}
-df_reporting |>
+df_reporting %>%
   ggplot() +
   geom_pointrange(
     aes(
-      x = fct_reorder(location, reporting_me),
+      x = fct_reorder(country, reporting_me),
       y = reporting_me,
       ymin = reporting_lo,
       ymax = reporting_hi,
-      colour = location
+      colour = country
     )
   ) +
   coord_flip() +
@@ -317,16 +308,6 @@ df_reporting |>
   theme_minimal() +
   theme(legend.position = "none") +
   scale_y_continuous(labels = percent, limits = c(0, 1))
-```
-
-Finally, we put the same results in a large table with the following command:
-
-```{r message = FALSE, warning = FALSE, eval = TRUE}
-kable(df_reporting_neat,
-  align = "c",
-  col.names = c("Location", "Estimate", "Type")
-) |>
-  kable_styling(full_width = FALSE)
 ```
 
 ## References
