@@ -13,15 +13,15 @@
 #' Alternatively, a sensible value might be 7, to disregard the first week of
 #' cases and deaths.
 #' To consider all case data including the start of the time-series, set this
-#' argument to 0.
+#' argument to 1.
 #'
 #' @param smooth_inputs A boolean flag determining whether the user wishes to
 #' smooth the case and death time-series, using a moving average procedure
 #' before calculating the time-varying severity. Useful for noisy time-series
 #' or time-series with strong reporting (e.g., weekend) effects
 #'
-#' @param smoothing_window A number determining the smoothing window size to use
-#' when smoothing the case and death time-series, using a moving average
+#' @param smoothing_window An _odd_ number determining the smoothing window size
+#' to use when smoothing the case and death time-series, using a moving average
 #' procedure before calculating the time-varying severity.
 #' Useful for noisy time-series or time-series with strong reporting
 #' (e.g., weekend) effects.
@@ -71,7 +71,7 @@
 #'   correct_for_delays = TRUE
 #' )
 #'
-estimate_time_varying <- function(df_in,
+estimate_time_varying <- function(data,
                                   epi_dist,
                                   burn_in_value = get_default_burn_in(epi_dist),
                                   smooth_inputs = FALSE,
@@ -80,45 +80,50 @@ estimate_time_varying <- function(df_in,
   # TODO input checking
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
-  checkmate::assert_integerish(burn_in_value, lower = 0, len = 1L)
-  checkmate::assert_data_frame(df_in)
+  checkmate::assert_integerish(burn_in_value, lower = 1, len = 1L)
+  checkmate::assert_data_frame(data)
   checkmate::assert_logical(correct_for_delays, len = 1L)
+  checkmate::assert_integerish(smoothing_window, lower = 1, len = 1L)
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
-  if (missing(epi_dist) && (isTRUE(correct_for_delays))) {
+  if (correct_for_delays && missing(epi_dist)) {
     stop(
-      "To correct for the delay between case detection and death,\
-       please provide an onset-to-death (or similar) `epidist` object"
+      "`epidist` object required when `correct_for_delays` is TRUE"
     )
   }
   if (!missing(epi_dist)) {
-    stopifnot(
-      "`epi_dist` must be an `epidist` object" =
-        (epiparameter::is_epidist(epi_dist))
-    )
+    checkmate::assert_class(epi_dist, "epidist")
   }
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(df_in)))
+      (all(c("cases", "deaths") %in% colnames(data))),
+    "`smoothing_window` must be an odd number greater than 0" =
+      (smoothing_window %% 2 != 0)
   )
 
+  # prepare a new dataframe with smoothed columns if requested
+  # all temporary operations are performed on df_temp,
+  # data is returned with only three new columns added, and no other changes
+  df_temp <- data
   # smooth cases if requested
   if (smooth_inputs) {
-    df_in$cases <- round(
-      zoo::rollmean(df_in$cases, k = smoothing_window, fill = NA)
+    df_temp$cases <- stats::runmed(data$cases,
+      k = smoothing_window,
+      endrule = "keep"
     )
 
-    df_in$deaths <- round(
-      zoo::rollmean(df_in$deaths, k = smoothing_window, fill = NA)
+    df_temp$deaths <- stats::runmed(data$deaths,
+      k = smoothing_window,
+      endrule = "keep"
     )
   } else {
     smoothing_window <- 0
   }
 
-  cases <- df_in$cases
+  cases <- df_temp$cases
 
-  case_times <- as.numeric(df_in$date - min(df_in$date, na.rm = TRUE),
+  case_times <- as.numeric(df_temp$date - min(df_temp$date, na.rm = TRUE),
     units = "days"
   ) + 1
 
@@ -126,23 +131,23 @@ estimate_time_varying <- function(df_in,
 
   ##### prepare data.frame for severity estimation ####
   # create columns with NA values for later assignment
-  df_in$u_t <- numeric(case_length) # does not seem to be used?
   # when not correcting for delays, set known outcomes to cases
   # this is to avoid if-else ladders
-  df_in$known_outcomes <- df_in$cases
+  df_temp$known_outcomes <- df_temp$cases
 
   # assign columns for severity estimate and intervals
-  df_in$severity_me <- NA_real_
-  df_in$severity_lo <- NA_real_
-  df_in$severity_hi <- NA_real_
+  data$severity_me <- NA_real_
+  data$severity_lo <- NA_real_
+  data$severity_hi <- NA_real_
 
+  # calculation of indices to modify seems questionable
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
   if (correct_for_delays) {
     pmf_vals <- stats::density(
       epi_dist,
-      at = seq(from = 0, to = nrow(df_in) - 1L)
+      at = seq(from = 0, to = nrow(data) - 1L)
     )
-    df_in$known_outcomes[indices] <- vapply(
+    df_temp[indices, "known_outcomes"] <- vapply(
       X = indices,
       FUN = function(x) {
         delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in_value)]]
@@ -159,24 +164,24 @@ estimate_time_varying <- function(df_in,
   #### Get severity estimates ####
   for (i in indices) {
     # handle case where deaths are fewer than non-zero known outcomes
-    if (df_in$deaths[i] <= df_in$known_outcomes[i] &&
-      isTRUE(df_in$known_outcomes[i] > 0)) {
+    if (df_temp$deaths[i] <= df_temp$known_outcomes[i] &&
+      isTRUE(df_temp$known_outcomes[i] > 0)) {
       severity_current_estimate <- stats::binom.test(
-        df_in$deaths[i],
-        df_in$known_outcomes[i]
+        df_temp$deaths[i],
+        df_temp$known_outcomes[i]
       )
 
-      df_in$severity_me[i] <- severity_current_estimate$estimate[[1]]
-      df_in$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
-      df_in$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
+      data$severity_me[i] <- severity_current_estimate$estimate[[1]]
+      data$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
+      data$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
     }
   }
 
   # remove known outcomes column as this is not expected as a side effect
-  df_in$known_outcomes <- NULL
+  data$known_outcomes <- NULL
 
   # return data
-  df_in
+  data
 }
 
 #' Get a default burn-in value from a delay distribution
