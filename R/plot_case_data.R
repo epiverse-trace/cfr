@@ -3,7 +3,7 @@
 #' @description Produces a simple plot, using base R, of the raw case
 #' time-series data
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
+#' @param data A data.frame containing the outbreak data. A daily time series
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 #' the numbers of new case at each time point. The input data.frame assumes
 #' columns with the names: date, cases and deaths
@@ -17,9 +17,9 @@
 #' data("ebola1976")
 #'
 #' plot_case_data(ebola1976)
-plot_case_data <- function(df_in) {
-  dates <- df_in$date
-  cases <- df_in$cases
+plot_case_data <- function(data) {
+  dates <- data$date
+  cases <- data$cases
 
   plot(dates, cases,
     col = "blue",

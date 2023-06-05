@@ -3,7 +3,7 @@
 #' @description Produces a simple plot, using base R, of the raw death
 #' time-series data
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
+#' @param data A data.frame containing the outbreak data. A daily time series
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 #' the numbers of new deaths at each time point. The input data.frame assumes
 #' columns with the names: date, cases and deaths
@@ -17,9 +17,9 @@
 #' data("ebola1976")
 #'
 #' plot_death_data(ebola1976)
-plot_death_data <- function(df_in) {
-  dates <- df_in$date
-  deaths <- df_in$deaths
+plot_death_data <- function(data) {
+  dates <- data$date
+  deaths <- data$deaths
 
   plot(dates, deaths,
     col = "red",

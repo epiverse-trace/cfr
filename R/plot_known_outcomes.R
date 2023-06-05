@@ -4,7 +4,7 @@
 #' time-series data, as well as the estimated number of known outcomes on each
 #' day.
 #'
-#' @param df_in A data.frame of the format returned by [known_outcomes()].
+#' @param data A data.frame of the format returned by [known_outcomes()].
 #'
 #' @return A plot of the three time-series on the same plot, with a legend
 #'
@@ -21,15 +21,15 @@
 #' )
 #'
 #' df_known_outcomes <- known_outcomes(
-#'   df_in = ebola1976,
+#'   data = ebola1976,
 #'   epi_dist = onset_to_death_ebola
 #' )
 #'
 #' plot_known_outcomes(df_known_outcomes)
-plot_known_outcomes <- function(df_in) {
-  dates <- df_in$date
-  cases <- df_in$cases
-  known_outcomes <- df_in$known_outcomes
+plot_known_outcomes <- function(data) {
+  dates <- data$date
+  cases <- data$cases
+  known_outcomes <- data$known_outcomes
 
   plot(dates, cases,
     col = "blue", type = "s", lwd = 2,

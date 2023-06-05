@@ -3,7 +3,7 @@
 #' @description Produces a plot, using base R, of the time-varying severity
 #' estimate over the entire period it was calculated.
 #'
-#' @param df_in A data.frame of the format returned by [known_outcomes()].
+#' @param data A data.frame of the format returned by [known_outcomes()].
 #'
 #' @param lower A numeric value determining the lower limit of the y-axis of the
 #' plot. In place to easily help the user produce a readable graph, as severity
@@ -55,10 +55,10 @@
 #' plot_time_varying(df_covid_cfr_uk_naive, lower = 0, upper = 5)
 #' plot_time_varying(df_covid_cfr_uk_corrected, lower = 0, upper = 5)
 #'
-plot_time_varying <- function(df_in,
+plot_time_varying <- function(data,
                               lower = 0,
                               upper = 10) {
-  df_plot <- subset(df_in, is.na(severity_me) == FALSE)
+  df_plot <- subset(data, is.na(severity_me) == FALSE)
 
   dates <- df_plot$date
   severity_me <- df_plot$severity_me * 100
