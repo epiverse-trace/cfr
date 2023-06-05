@@ -5,22 +5,22 @@
 \title{Estimate a static (in time) severity measure}
 \usage{
 estimate_static(
-  df_in,
+  data,
   correct_for_delays = TRUE,
   epi_dist,
-  poisson_threshold = 100,
-  location
+  poisson_threshold = 100
 )
 }
 \arguments{
-\item{df_in}{A data.frame containing the outbreak data. A daily time series
+\item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
 Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between.
+with no missing dates in between. The "date" column must be of the class
+\code{Date} (see \code{\link[=as.Date]{as.Date()}}).
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
@@ -38,10 +38,6 @@ A typical example would be a symptom onset to death delay distribution.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
-
-\item{location}{Column name as a string by which to disaggregate data for
-estimates. This is usually a column indicating the region or country to which
-the estimate applies.}
 }
 \value{
 A data.frame with the MLE and 95\% confidence interval of the
@@ -74,8 +70,7 @@ onset_to_death_ebola <- epidist_db(
 
 df_ncfr_static_ebola <- estimate_static(
   df_ebola_subset,
-  correct_for_delays = FALSE,
-  location = "location"
+  correct_for_delays = FALSE
 )
 
 format_output(
@@ -88,8 +83,7 @@ format_output(
 df_ccfr_static_ebola <- estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  location = "location"
+  epi_dist = onset_to_death_ebola
 )
 
 format_output(

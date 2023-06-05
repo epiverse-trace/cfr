@@ -4,10 +4,10 @@
 \alias{plot_time_varying}
 \title{Plot time-varying severity estimates}
 \usage{
-plot_time_varying(df_in, lower = 0, upper = 10)
+plot_time_varying(data, lower = 0, upper = 10)
 }
 \arguments{
-\item{df_in}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
+\item{data}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
 
 \item{lower}{A numeric value determining the lower limit of the y-axis of the
 plot. In place to easily help the user produce a readable graph, as severity

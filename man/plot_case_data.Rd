@@ -4,10 +4,10 @@
 \alias{plot_case_data}
 \title{Plot the raw case time-series data}
 \usage{
-plot_case_data(df_in)
+plot_case_data(data)
 }
 \arguments{
-\item{df_in}{A data.frame containing the outbreak data. A daily time series
+\item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new case at each time point. The input data.frame assumes
 columns with the names: date, cases and deaths}

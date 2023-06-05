@@ -4,10 +4,10 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(df_in, epi_dist)
+known_outcomes(data, epi_dist)
 }
 \arguments{
-\item{df_in}{A data.frame containing the outbreak data. A daily time series
+\item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point}
 
@@ -19,7 +19,7 @@ parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 }
 \value{
-A data.frame with the columns in \code{df_in}, and with two additional
+A data.frame with the columns in \code{data}, and with two additional
 columns,
 \itemize{
 \item "known_outcomes" for the total number of known outcomes on that day
@@ -48,5 +48,5 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   author = "Barry_etal"
 )
 
-df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
+df_known_outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
 }

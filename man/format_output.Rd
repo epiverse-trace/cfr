@@ -4,10 +4,10 @@
 \alias{format_output}
 \title{Neatly format CFR estimates}
 \usage{
-format_output(df_in, estimate_type, type = NULL)
+format_output(data, estimate_type, type = NULL)
 }
 \arguments{
-\item{df_in}{A data.frame of the format outputted by \code{\link[=estimate_static]{estimate_static()}}
+\item{data}{A data.frame of the format outputted by \code{\link[=estimate_static]{estimate_static()}}
 or \code{\link[=estimate_time_varying]{estimate_time_varying()}}.}
 
 \item{estimate_type}{A required string describing whether a severity of
@@ -47,17 +47,15 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 
 # Calculate static naive CFR
 ncfr <- estimate_static(
-  df_in = df_ebola_subset,
-  correct_for_delays = FALSE,
-  location = "location"
+  data = df_ebola_subset,
+  correct_for_delays = FALSE
 )
 
 # Calculate static corrected CFRs
 ccfr <- estimate_static(
-  df_in = ebola1976,
+  data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  location = "location"
+  epi_dist = onset_to_death_ebola
 )
 
 # Formats the output of the CFR data.frames nicely

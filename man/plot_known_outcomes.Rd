@@ -4,10 +4,10 @@
 \alias{plot_known_outcomes}
 \title{Plot the estimated known outcomes, as well as the raw data}
 \usage{
-plot_known_outcomes(df_in)
+plot_known_outcomes(data)
 }
 \arguments{
-\item{df_in}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
+\item{data}{A data.frame of the format returned by \code{\link[=known_outcomes]{known_outcomes()}}.}
 }
 \value{
 A plot of the three time-series on the same plot, with a legend
@@ -28,7 +28,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 df_known_outcomes <- known_outcomes(
-  df_in = ebola1976,
+  data = ebola1976,
   epi_dist = onset_to_death_ebola
 )
 

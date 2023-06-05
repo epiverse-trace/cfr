@@ -6,26 +6,26 @@
 true) severity estimate}
 \usage{
 estimate_reporting(
-  df_in,
+  data,
   epi_dist,
-  type = "static",
+  type = c("static", "varying"),
   severity_baseline = 0.014,
   burn_in_value = get_default_burn_in(epi_dist),
-  smooth_inputs = NULL,
-  correct_for_delays = NULL,
-  max_date = NULL,
-  location = "country"
+  smooth_inputs = FALSE,
+  correct_for_delays = FALSE,
+  max_date
 )
 }
 \arguments{
-\item{df_in}{A data.frame containing the outbreak data. A daily time series
+\item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
 Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between.
+with no missing dates in between. The "date" column must be of the class
+\code{Date} (see \code{\link[=as.Date]{as.Date()}}).
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
@@ -50,7 +50,7 @@ object passed to the function, assuming the temporal resolution is daily.
 Alternatively, a sensible value might be 7, to disregard the first week of
 cases and deaths.
 To consider all case data including the start of the time-series, set this
-argument to 0.}
+argument to 1.}
 
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
@@ -66,10 +66,6 @@ calculating a corrected severity}
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period}
-
-\item{location}{Column name as a string by which to disaggregate data for
-estimates. This is usually a column indicating the region or country to which
-the estimate applies.}
 }
 \value{
 A data.frame containing the MLE estimate and 95\% confidence interval
@@ -109,8 +105,7 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   smooth_inputs = TRUE,
   burn_in_value = 7L,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30",
-  location = "U.K."
+  max_date = "2020-06-30"
 )
 
 format_output(
