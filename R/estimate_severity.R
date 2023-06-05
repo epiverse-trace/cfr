@@ -12,14 +12,12 @@
 #' corrected severity estimates, named "severity_me", "severity_low", and
 #' "severity_high".
 #'
-estimate_severity <- function(df_in,
-                              poisson_threshold = 100,
-                              location) {
+estimate_severity <- function(data, poisson_threshold = 100) {
   # transferring from data.frame to vector format, to tidy up the slightly messy
   # likelihood calculation
-  total_cases <- unique(df_in$total_cases)
-  total_deaths <- unique(df_in$total_deaths)
-  u_t <- unique(df_in$u_t)
+  total_cases <- unique(data$total_cases)
+  total_deaths <- unique(data$total_deaths)
+  u_t <- unique(data$u_t)
 
   stopifnot(
     "`total_cases` must be equal to or more than `total_deaths`" =
@@ -44,25 +42,15 @@ estimate_severity <- function(df_in,
   severity_me <- pprange[which.max(lik)]
 
   # 95% range of likelihood
+  # TODO: explain why this value is hardcoded
   severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
-  if (!is.null(location) && location %in% colnames(df_in)) {
-    severity_estimate <- data.frame(
-      "location" = unique(df_in[[location]]),
-      "severity_me" = severity_me,
-      "severity_lo" = severity_lims[[1]],
-      "severity_hi" = severity_lims[[2]]
-    )
-  } else {
-    severity_estimate <- data.frame(
-      "severity_me" = severity_me,
-      "severity_lo" = severity_lims[[1]],
-      "severity_hi" = severity_lims[[2]]
-    )
-  }
-
-  severity_estimate[is.na(severity_estimate)] <- NA_real_
+  severity_estimate <- data.frame(
+    "severity_me" = severity_me,
+    "severity_lo" = severity_lims[[1]],
+    "severity_hi" = severity_lims[[2]]
+  )
 
   # returning vector with corrected estimates
-  return(severity_estimate)
+  severity_estimate
 }
