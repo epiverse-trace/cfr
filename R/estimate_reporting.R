@@ -51,8 +51,7 @@
 #'   smooth_inputs = TRUE,
 #'   burn_in_value = 7L,
 #'   correct_for_delays = TRUE,
-#'   max_date = "2020-06-30",
-#'   location = "U.K."
+#'   max_date = "2020-06-30"
 #' )
 #'
 #' format_output(
@@ -61,24 +60,57 @@
 #'   type = "Under-reporting"
 #' )
 #'
-estimate_reporting <- function(df_in,
+estimate_reporting <- function(data,
                                epi_dist,
-                               type = "static",
+                               type = c("static", "varying"),
                                severity_baseline = 0.014,
                                burn_in_value = get_default_burn_in(epi_dist),
-                               smooth_inputs = NULL,
-                               correct_for_delays = NULL,
-                               max_date = NULL,
-                               location = "country") {
+                               smooth_inputs = FALSE,
+                               correct_for_delays = FALSE,
+                               max_date) {
+  # input checking
+  checkmate::assert_data_frame(data)
+  checkmate::assert_names(
+    colnames(data),
+    must.include = c("date", "cases", "deaths")
+  )
+  if (!missing(epi_dist)) {
+    checkmate::assert_class(epi_dist, "epidist")
+  }
+  checkmate::assert_number(
+    severity_baseline,
+    lower = 0.0, upper = 1.0, finite = TRUE
+  )
+  checkmate::assert_integerish(burn_in_value,
+    lower = 1, len = 1L
+  )
+  checkmate::assert_logical(
+    smooth_inputs,
+    len = 1L, any.missing = FALSE, all.missing = FALSE
+  )
+  checkmate::assert_logical(
+    correct_for_delays,
+    len = 1L, any.missing = FALSE, all.missing = FALSE
+  )
+  if (!missing(max_date)) {
+    checkmate::assert_string(max_date)
+  }
+
+  # match argument for type
+  type <- match.arg(type, several.ok = FALSE)
+
+  # create empty data frame
+  df_severity <- data.frame()
+
   if (type == "static") {
     df_severity <- estimate_static(
-      df_in,
+      data,
       epi_dist = epi_dist,
       correct_for_delays = TRUE
     )
   } else if (type == "varying") {
     df_severity <- estimate_time_varying(
-      df_in,
+      data,
       epi_dist = epi_dist,
       smooth_inputs = smooth_inputs,
       burn_in_value = burn_in_value,
@@ -87,14 +119,16 @@ estimate_reporting <- function(df_in,
 
     df_severity <- df_severity[!is.na(df_severity$severity_me), ]
 
-    if (!is.null(max_date)) {
+    # collect the severity at the last date, or the date specified by
+    # the user in `max_date`
+    if (!missing(max_date)) {
       df_severity <- df_severity[df_severity$date == max_date, ]
     } else {
       df_severity <- df_severity[df_severity$date == max(df_severity$date), ]
     }
   }
 
-  # data frame for exports
+  # data frame for exports, first scale all values and ensure maximum is 1.0
   df_out <- apply(
     df_severity[, grepl("severity", colnames(df_severity), fixed = TRUE)],
     MARGIN = 2,
@@ -105,17 +139,15 @@ estimate_reporting <- function(df_in,
     },
     simplify = FALSE
   )
+  # re-convert to data.frame from matrix
   df_out <- as.data.frame(df_out)
+
+  # assign column names
   colnames(df_out) <- gsub(
     "severity", "reporting",
     x = colnames(df_out), fixed = TRUE
   )
 
-  # assign location or NA if not present
-  df_out$location <- NA_character_
-  if (location %in% colnames(df_in)) {
-    df_out$location <- unique(df_in[[location]])
-  }
-
-  return(df_out)
+  # return data
+  df_out
 }
