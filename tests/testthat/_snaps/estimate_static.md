@@ -1,4 +1,4 @@
-# Basic expectations of static_cfr
+# `estimate_static`: Basic expectations
 
     Code
       scfr_naive
