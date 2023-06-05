@@ -5,14 +5,15 @@
 #' representing the delay between case detection and death, then a case
 #' fatality ratio over time is estimated
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
+#' @param data A data.frame containing the outbreak data. A daily time series
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 #' the numbers of new cases and new deaths at each time point.
 #' Note that the required columns are "date" (for the date), "cases" (for the
 #' number of reported cases), and "deaths" (for the number of reported deaths)
 #' on each day of the outbreak.
 #' Note that the data.frame is required to have an unbroken sequence of dates
-#' with no missing dates in between.
+#' with no missing dates in between. The "date" column must be of the class
+#' `Date` (see [as.Date()]).
 #' Note also that the total number of cases must be greater than the total
 #' number of reported deaths.
 #'
@@ -60,8 +61,7 @@
 #'
 #' df_ncfr_static_ebola <- estimate_static(
 #'   df_ebola_subset,
-#'   correct_for_delays = FALSE,
-#'   location = "location"
+#'   correct_for_delays = FALSE
 #' )
 #'
 #' format_output(
@@ -74,8 +74,7 @@
 #' df_ccfr_static_ebola <- estimate_static(
 #'   df_ebola_subset,
 #'   correct_for_delays = TRUE,
-#'   epi_dist = onset_to_death_ebola,
-#'   location = "location"
+#'   epi_dist = onset_to_death_ebola
 #' )
 #'
 #' format_output(
@@ -84,36 +83,29 @@
 #'   type = "Corrected CFR"
 #' )
 #'
-estimate_static <- function(df_in,
+estimate_static <- function(data,
                             correct_for_delays = TRUE,
                             epi_dist,
-                            poisson_threshold = 100,
-                            location) {
+                            poisson_threshold = 100) {
   # input checking
-  checkmate::assert_data_frame(df_in)
+  checkmate::assert_data_frame(data)
   # check that input data frame has columns date, cases, and deaths
   checkmate::assert_names(
-    colnames(df_in),
+    colnames(data),
     must.include = c("date", "cases", "deaths")
   )
-  # check that df_in$date is a date column
-  checkmate::assert_date(df_in$date, any.missing = FALSE, all.missing = FALSE)
+  # check that data$date is a date column
+  checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(df_in$date)), 1) # use numeric 1, not integer
+      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_number(poisson_threshold, lower = 0, finite = FALSE)
-  if (!missing(location)) {
-    checkmate::assert_string(location)
-  }
-  if (missing(location)) {
-    location <- NULL
-  }
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
@@ -131,7 +123,7 @@ estimate_static <- function(df_in,
   }
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(df_in)))
+      (all(c("cases", "deaths") %in% colnames(data)))
   )
 
   # calculating the naive severity: (total deaths) / (total cases)
@@ -143,7 +135,7 @@ estimate_static <- function(df_in,
     # detection and outcome calculating the number of cases with known outcome,
     # used as a replacement for total deaths in the original severity formula
     df_corrected <- known_outcomes(
-      df_in = df_in,
+      data = data,
       epi_dist = epi_dist
     )
 
@@ -163,14 +155,13 @@ estimate_static <- function(df_in,
     # calculating the maximum likelihood estimate and 95% confidence interval
     # using the binomial likelihood function from Nishiura
     severity_estimate <- estimate_severity(
-      df_in = df_corrected,
-      poisson_threshold = poisson_threshold,
-      location = location
+      data = df_corrected,
+      poisson_threshold = poisson_threshold
     )
   } else {
     # calculating the total number of cases (without correcting) and deaths
-    total_cases <- sum(df_in$cases, na.rm = TRUE)
-    total_deaths <- sum(df_in$deaths, na.rm = TRUE)
+    total_cases <- sum(data$cases, na.rm = TRUE)
+    total_deaths <- sum(data$deaths, na.rm = TRUE)
 
     # calculating the central estimate
     severity_me <- total_deaths / total_cases
@@ -182,21 +173,14 @@ estimate_static <- function(df_in,
     # extracting the lower and upper intervals respectively
     severity_lims <- severity_conf$conf.int
 
-    if (!is.null(location) && location %in% colnames(df_in)) {
-      severity_estimate <- data.frame(
-        "location" = unique(df_in[[location]]),
-        "severity_me" = severity_me,
-        "severity_lo" = severity_lims[[1]],
-        "severity_hi" = severity_lims[[2]]
-      )
-    } else {
-      severity_estimate <- data.frame(
-        "severity_me" = severity_me,
-        "severity_lo" = severity_lims[[1]],
-        "severity_hi" = severity_lims[[2]]
-      )
-    }
-    severity_estimate[is.na(severity_estimate)] <- NA_real_
+    severity_estimate <- data.frame(
+      # "location" = unique(data[[location]]),
+      "severity_me" = severity_me,
+      "severity_lo" = severity_lims[[1]],
+      "severity_hi" = severity_lims[[2]]
+    )
   }
-  return(severity_estimate)
+
+  # return the severity estimate
+  severity_estimate
 }
