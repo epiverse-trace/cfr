@@ -4,7 +4,7 @@
 #' estimates to 3 significant figures and presenting the MLE and 95% interval
 #' on a single line
 #'
-#' @param df_in A data.frame of the format outputted by [estimate_static()]
+#' @param data A data.frame of the format outputted by [estimate_static()]
 #' or [estimate_time_varying()].
 #'
 #' @param estimate_type A required string describing whether a severity of
@@ -40,17 +40,15 @@
 #'
 #' # Calculate static naive CFR
 #' ncfr <- estimate_static(
-#'   df_in = df_ebola_subset,
-#'   correct_for_delays = FALSE,
-#'   location = "location"
+#'   data = df_ebola_subset,
+#'   correct_for_delays = FALSE
 #' )
 #'
 #' # Calculate static corrected CFRs
 #' ccfr <- estimate_static(
-#'   df_in = ebola1976,
+#'   data = ebola1976,
 #'   correct_for_delays = TRUE,
-#'   epi_dist = onset_to_death_ebola,
-#'   location = "location"
+#'   epi_dist = onset_to_death_ebola
 #' )
 #'
 #' # Formats the output of the CFR data.frames nicely
@@ -58,7 +56,7 @@
 #' format_output(ncfr, estimate_type = "severity", type = "Naive")
 #' format_output(ccfr, estimate_type = "severity", type = "Corrected")
 #'
-format_output <- function(df_in,
+format_output <- function(data,
                           estimate_type,
                           type = NULL) {
   stopifnot(
@@ -68,8 +66,8 @@ format_output <- function(df_in,
   )
 
   # assign location vector
-  if ("location" %in% colnames(df_in)) {
-    vec_location <- df_in[["location"]]
+  if ("location" %in% colnames(data)) {
+    vec_location <- data[["location"]]
   } else {
     vec_location <- NA_character_
   }
@@ -79,9 +77,9 @@ format_output <- function(df_in,
     "Estimate" =
       sprintf(
         "%.2f%% (95%% CI: %.2f%% - %.2f%%)",
-        df_in[[paste0(estimate_type, "_me")]] * 100,
-        df_in[[paste0(estimate_type, "_lo")]] * 100,
-        df_in[[paste0(estimate_type, "_hi")]] * 100
+        data[[paste0(estimate_type, "_me")]] * 100,
+        data[[paste0(estimate_type, "_lo")]] * 100,
+        data[[paste0(estimate_type, "_hi")]] * 100
       ),
     stringsAsFactors = FALSE
   )

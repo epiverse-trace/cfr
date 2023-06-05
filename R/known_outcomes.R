@@ -9,7 +9,7 @@
 #' case detection and death, typically approximated by a symptom onset to death
 #' distribution from the literature for the disease in question.
 #'
-#' @param df_in A data.frame containing the outbreak data. A daily time series
+#' @param data A data.frame containing the outbreak data. A daily time series
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 #' the numbers of new cases and new deaths at each time point
 #'
@@ -20,7 +20,7 @@
 #' parameterised with disease-specific parameters before it is supplied here.
 #' A typical example would be a symptom onset to death delay distribution.
 #'
-#' @return A data.frame with the columns in `df_in`, and with two additional
+#' @return A data.frame with the columns in `data`, and with two additional
 #' columns,
 #'
 #'  - "known_outcomes" for the total number of known outcomes on that day
@@ -41,15 +41,15 @@
 #'   author = "Barry_etal"
 #' )
 #'
-#' df_known_outcomes <- known_outcomes(df_in = ebola1976, onset_to_death_ebola)
-known_outcomes <- function(df_in,
+#' df_known_outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+known_outcomes <- function(data,
                            epi_dist) {
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =
-      (is.data.frame(df_in)),
+      (is.data.frame(data)),
     "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(df_in)))
+      (all(c("cases", "deaths") %in% colnames(data)))
   )
   if (!missing(epi_dist)) {
     stopifnot(
@@ -60,15 +60,15 @@ known_outcomes <- function(df_in,
 
   pmf_vals <- stats::density(
     epi_dist,
-    at = seq(from = 0, to = nrow(df_in) - 1L)
+    at = seq(from = 0, to = nrow(data) - 1L)
   )
 
   # defining vectors to be used in the main loop
-  cases <- df_in$cases
+  cases <- data$cases
 
   # the times at which cases are reported, in numbers of days (or whichever
   # time units are used) since the first case was reported
-  case_times <- as.numeric(df_in$date - min(df_in$date, na.rm = TRUE),
+  case_times <- as.numeric(data$date - min(data$date, na.rm = TRUE),
     units = "days"
   ) + 1
 
@@ -77,7 +77,7 @@ known_outcomes <- function(df_in,
 
   # declaring the outputs of the main loop as vectors within the main
   # data.frame
-  df_in$known_outcomes <- numeric(case_length)
+  data$known_outcomes <- numeric(case_length)
 
   # main calculation loop
   for (i in rev(seq_len(case_length))) {
@@ -90,12 +90,12 @@ known_outcomes <- function(df_in,
 
     # Collecting all current known onset estimates in a new
     # column of the original data.frame
-    df_in$known_outcomes[i] <- sum(known_onsets_current)
+    data$known_outcomes[i] <- sum(known_onsets_current)
   }
   # Calculating the proportion of cases with known onset,
   # for use in the simple likelihood function
-  df_in$u_t <- cumsum(df_in$known_outcomes) / cumsum(cases)
+  data$u_t <- cumsum(data$known_outcomes) / cumsum(cases)
 
   # return dataframe with added columns
-  df_in
+  data
 }
