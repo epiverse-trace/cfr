@@ -358,7 +358,7 @@ df_covid_cfr %>%
   facet_wrap(facets = vars(country), ncol = 2) +
   theme_minimal() +
   labs(x = "Date", y = "CFR (%)") +
-  scale_y_continuous(labels = percent, limits = c(0, 0.1))
+  scale_y_continuous(labels = scales::percent, limits = c(0, 0.1))
 ```
 
 We do not focus on the `ggplot2` commands in this vignette. Instead, we refer 

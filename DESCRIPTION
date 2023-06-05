@@ -42,6 +42,7 @@ Suggests:
     dplyr,
     tidyr,
     purrr,
+    scales,
     forcats,
     kableExtra,
     ggplot2,
