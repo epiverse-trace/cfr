@@ -31,9 +31,6 @@
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 200 by default.
-#' @param location Column name as a string by which to disaggregate data for
-#' estimates. This is usually a column indicating the region or country to which
-#' the estimate applies.
 #'
 #' @return A data.frame with the MLE and 95% confidence interval of the
 #' severity estimates, named "severity_me", "severity_low", and "severity_high",
