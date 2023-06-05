@@ -5,7 +5,7 @@
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
 estimate_time_varying(
-  df_in,
+  data,
   epi_dist,
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
@@ -14,14 +14,15 @@ estimate_time_varying(
 )
 }
 \arguments{
-\item{df_in}{A data.frame containing the outbreak data. A daily time series
+\item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
 Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between.
+with no missing dates in between. The "date" column must be of the class
+\code{Date} (see \code{\link[=as.Date]{as.Date()}}).
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
@@ -39,15 +40,15 @@ object passed to the function, assuming the temporal resolution is daily.
 Alternatively, a sensible value might be 7, to disregard the first week of
 cases and deaths.
 To consider all case data including the start of the time-series, set this
-argument to 0.}
+argument to 1.}
 
 \item{smooth_inputs}{A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
 before calculating the time-varying severity. Useful for noisy time-series
 or time-series with strong reporting (e.g., weekend) effects}
 
-\item{smoothing_window}{A number determining the smoothing window size to use
-when smoothing the case and death time-series, using a moving average
+\item{smoothing_window}{An \emph{odd} number determining the smoothing window size
+to use when smoothing the case and death time-series, using a moving average
 procedure before calculating the time-varying severity.
 Useful for noisy time-series or time-series with strong reporting
 (e.g., weekend) effects.
