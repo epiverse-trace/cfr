@@ -171,7 +171,6 @@ estimate_static <- function(data,
     severity_lims <- severity_conf$conf.int
 
     severity_estimate <- data.frame(
-      # "location" = unique(data[[location]]),
       "severity_me" = severity_me,
       "severity_lo" = severity_lims[[1]],
       "severity_hi" = severity_lims[[2]]
