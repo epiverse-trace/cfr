@@ -75,7 +75,7 @@ estimate_time_varying <- function(data,
                                   epi_dist = NULL,
                                   burn_in_value = get_default_burn_in(epi_dist),
                                   smooth_inputs = FALSE,
-                                  smoothing_window = 7,
+                                  smoothing_window = 1,
                                   correct_for_delays = TRUE) {
   # TODO input checking
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
@@ -84,21 +84,17 @@ estimate_time_varying <- function(data,
   checkmate::assert_data_frame(data)
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_integerish(smoothing_window, lower = 1, len = 1L)
-
-  # returns error message if no delay distribution is supplied, but correction
-  # for delays was requested
-  if (correct_for_delays && is.null(epi_dist)) {
-    stop(
-      "`epidist` object required when `correct_for_delays` is TRUE"
-    )
-  }
   checkmate::assert_class(epi_dist, "epidist", null.ok = TRUE) # optional arg.
+
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(data))),
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0)
   )
+  if (correct_for_delays) {
+    checkmate::assert_class(epi_dist, "epidist")
+  }
 
   # prepare a new dataframe with smoothed columns if requested
   # all temporary operations are performed on df_temp,
