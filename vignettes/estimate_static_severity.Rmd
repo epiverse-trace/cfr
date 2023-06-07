@@ -315,7 +315,7 @@ estimate_static(
 )
 ```
 
-# Example with data from the ongoing COVID-19 pandemic in the U.K.
+# Severity of the COVID-19 pandemic in the U.K.
 
 We now perform a similar analysis with all of the same steps, with data taken 
 from the ongoing COVID-19 epidemic in the U.K. For brevity, we describe the
@@ -348,12 +348,27 @@ df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-12-31")
 Then, we plot the subsetted case data with following command:
 
 ```{r, fig.cap = "Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
-plot_case_data(df_covid_uk_subset)
+ggplot(df_covid_uk_subset) +
+  geom_step(
+    aes(
+      x = date, y = cases
+    ),
+    colour = "darkblue"
+  ) +
+  scale_x_date(
+    date_labels = "%d-%b-%Y"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  labs(
+    x = "Date", y = "Cases"
+  )
 ```
 
 Then, we plot the subsetted death data with following command:
 
-```{r, fig.cap = "Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K."}
+```{r, fig.cap = "Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
   geom_step(
     aes(
@@ -391,7 +406,7 @@ the results over time. We do so using the following command:
 plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE)
 ```
 
-## Estimating incidence of cases (or similar time-series) with a known outcome
+## Estimating incidence of cases with a known outcome
 
 We use the same method and implementation as in the Ebola example to calculate
 the number of known outcomes over time, using the following command:
