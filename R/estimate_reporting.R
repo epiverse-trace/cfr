@@ -67,7 +67,7 @@ estimate_reporting <- function(data,
                                burn_in_value = get_default_burn_in(epi_dist),
                                smooth_inputs = FALSE,
                                correct_for_delays = FALSE,
-                               max_date) {
+                               max_date = NULL) {
   # input checking
   checkmate::assert_data_frame(data)
   checkmate::assert_names(
@@ -92,9 +92,7 @@ estimate_reporting <- function(data,
     correct_for_delays,
     len = 1L, any.missing = FALSE, all.missing = FALSE
   )
-  if (!missing(max_date)) {
-    checkmate::assert_string(max_date)
-  }
+  checkmate::assert_string(max_date, null.ok = TRUE)
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)
@@ -121,7 +119,7 @@ estimate_reporting <- function(data,
 
     # collect the severity at the last date, or the date specified by
     # the user in `max_date`
-    if (!missing(max_date)) {
+    if (!is.null(max_date)) {
       df_severity <- df_severity[df_severity$date == max_date, ]
     } else {
       df_severity <- df_severity[df_severity$date == max(df_severity$date), ]
