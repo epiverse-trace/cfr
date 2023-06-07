@@ -163,8 +163,7 @@ plot_death_data(df_covid_uk_subset)
 
 ## The delay distribution
 
-We again retrieve the appropriate distribution — reported 
-[here](https://doi.org/10.3390/jcm9020538)^[@linton2020incubation]^ — using the
+We again retrieve the appropriate distribution — reported in @linton2020incubation — using the
 `epidist_db()` function from the `epiparameter` package, using the following
 command:
 
