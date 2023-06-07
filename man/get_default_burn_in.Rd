@@ -4,7 +4,7 @@
 \alias{get_default_burn_in}
 \title{Get a default burn-in value from a delay distribution}
 \usage{
-get_default_burn_in(epi_dist)
+get_default_burn_in(epi_dist = NULL)
 }
 \arguments{
 \item{epi_dist}{The delay distribution used, in the form of an

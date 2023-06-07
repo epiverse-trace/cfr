@@ -9,7 +9,7 @@ estimate_time_varying(
   epi_dist = NULL,
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
-  smoothing_window = 7,
+  smoothing_window = 1,
   correct_for_delays = TRUE
 )
 }
@@ -70,39 +70,28 @@ distribution representing the delay between case detection and death, then
 a case fatality ratio over time is estimated
 }
 \examples{
+# load package data
+data("ebola1976")
 
-library(datadelay)
-library(epiparameter)
-library(covidregionaldata)
-library(dplyr)
-
-df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE
-)
-df_covid_uk <- dplyr::rename(
-  df_covid_uk,
-  cases = cases_new, deaths = deaths_new
-)
-
-df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-12-31")
-
-onset_to_death_covid <- epidist_db(
-  disease = "COVID-19",
+# get an onset to death distribution from the {epiparameter} package
+onset_to_death_ebola <- epiparameter::epidist_db(
+  disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Linton_etal"
+  author = "Barry_etal"
 )
 
-df_covid_cfr_uk_naive <- estimate_time_varying(
-  df_covid_uk_subset,
-  epi_dist = onset_to_death_covid,
+# estimate time varying severity without correcting for delays
+estimate_time_varying(
+  data = ebola1976,
   smooth_inputs = TRUE,
   burn_in_value = 7L,
   correct_for_delays = FALSE
 )
 
-df_covid_cfr_uk_corrected <- estimate_time_varying(
-  df_covid_uk_subset,
-  epi_dist = onset_to_death_covid,
+# estimate time varying severity while correcting for delays
+estimate_time_varying(
+  data = ebola1976,
+  epi_dist = onset_to_death_ebola,
   smooth_inputs = TRUE,
   burn_in_value = 7L,
   correct_for_delays = TRUE
