@@ -43,7 +43,7 @@
 #'
 #' # examine the first few rows of the output
 #' head(
-#' known_outcomes(data = ebola1976, onset_to_death_ebola)
+#'   known_outcomes(data = ebola1976, onset_to_death_ebola)
 #' )
 known_outcomes <- function(data,
                            epi_dist = NULL) {
