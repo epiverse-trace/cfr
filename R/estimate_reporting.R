@@ -54,18 +54,13 @@
 #'   max_date = "2020-06-30"
 #' )
 #'
-#' format_output(
-#'   df_reporting_varying,
-#'   estimate_type = "reporting",
-#'   type = "Under-reporting"
-#' )
-#'
 estimate_reporting <- function(data,
-                               epi_dist,
+                               epi_dist = NULL,
                                type = c("static", "varying"),
                                severity_baseline = 0.014,
                                burn_in_value = get_default_burn_in(epi_dist),
                                smooth_inputs = FALSE,
+                               smoothing_window = 1,
                                correct_for_delays = FALSE,
                                max_date = NULL) {
   # input checking
@@ -74,9 +69,6 @@ estimate_reporting <- function(data,
     colnames(data),
     must.include = c("date", "cases", "deaths")
   )
-  if (!missing(epi_dist)) {
-    checkmate::assert_class(epi_dist, "epidist")
-  }
   checkmate::assert_number(
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE
@@ -93,6 +85,9 @@ estimate_reporting <- function(data,
     len = 1L, any.missing = FALSE, all.missing = FALSE
   )
   checkmate::assert_string(max_date, null.ok = TRUE)
+  if (correct_for_delays) {
+    checkmate::assert_class(epi_dist, "epidist")
+  }
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)
@@ -104,13 +99,14 @@ estimate_reporting <- function(data,
     df_severity <- estimate_static(
       data,
       epi_dist = epi_dist,
-      correct_for_delays = TRUE
+      correct_for_delays = correct_for_delays
     )
   } else if (type == "varying") {
     df_severity <- estimate_time_varying(
       data,
       epi_dist = epi_dist,
       smooth_inputs = smooth_inputs,
+      smoothing_window = smoothing_window,
       burn_in_value = burn_in_value,
       correct_for_delays = correct_for_delays
     )
@@ -137,13 +133,15 @@ estimate_reporting <- function(data,
     },
     simplify = FALSE
   )
-  # re-convert to data.frame from matrix
-  df_out <- as.data.frame(df_out)
 
-  # assign column names
-  colnames(df_out) <- gsub(
-    "severity", "reporting",
-    x = colnames(df_out), fixed = TRUE
+  # re-convert to data.frame from list
+  # here, the estimate called "severity_me" translates to "reporting_me"
+  # and the estimate "severity_hi" translates to "reporting_lo"
+  # TODO: check if this is correct
+  df_out <- data.frame(
+    reporting_me = df_out$severity_me,
+    reporting_lo = df_out$severity_hi,
+    reporting_hi = df_out$severity_lo
   )
 
   # return data
