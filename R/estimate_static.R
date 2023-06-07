@@ -40,44 +40,27 @@
 #' @export
 #'
 #' @examples
-#' library(datadelay)
-#' library(epiparameter)
-#' library(covidregionaldata)
-#'
+#' # load package data
 #' data("ebola1976")
 #'
-#' ebola1976$location <- "Democractic Republic of the Congo"
-#'
-#' df_ebola_subset <- subset(ebola1976, date <= "1976-09-30")
-#'
-#' onset_to_death_ebola <- epidist_db(
+#' # get an onset to death distribution from the {epiparameter} package
+#' onset_to_death_ebola <- epiparameter::epidist_db(
 #'   disease = "Ebola Virus Disease",
 #'   epi_dist = "onset_to_death",
 #'   author = "Barry_etal"
 #' )
 #'
-#' df_ncfr_static_ebola <- estimate_static(
-#'   df_ebola_subset,
+#' # estimate severity without correcting for delays
+#' estimate_static(
+#'   ebola1976,
 #'   correct_for_delays = FALSE
 #' )
 #'
-#' format_output(
-#'   df_ncfr_static_ebola,
-#'   estimate_type = "severity",
-#'   type = "Naive CFR"
-#' )
-#'
-#' # calculating the corrected CFR
-#' df_ccfr_static_ebola <- estimate_static(
-#'   df_ebola_subset,
+#' # # estimate severity while correcting for delays
+#' estimate_static(
+#'   ebola1976,
 #'   correct_for_delays = TRUE,
 #'   epi_dist = onset_to_death_ebola
-#' )
-#'
-#' format_output(
-#'   df_ccfr_static_ebola,
-#'   estimate_type = "severity",
-#'   type = "Corrected CFR"
 #' )
 #'
 estimate_static <- function(data,

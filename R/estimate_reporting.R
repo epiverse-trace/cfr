@@ -44,7 +44,8 @@
 #'   author = "Linton_etal"
 #' )
 #'
-#' df_reporting_varying <- estimate_reporting(df_covid_uk,
+#' estimate_reporting(
+#'   data = df_covid_uk,
 #'   epi_dist = onset_to_death_covid,
 #'   type = "varying",
 #'   severity_baseline = 0.014,
