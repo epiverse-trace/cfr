@@ -184,6 +184,10 @@ estimate_time_varying <- function(data,
 #'
 #' @return A single integer, the burn-in value.
 #' @keywords internal
-get_default_burn_in <- function(epi_dist) {
-  as.integer(round(epi_dist$summary_stats$centre_spread$mean))
+get_default_burn_in <- function(epi_dist = NULL) {
+  if (is.null(epi_dist)) {
+    7
+  } else {
+    as.integer(round(epi_dist$summary_stats$centre_spread$mean))
+  }
 }
