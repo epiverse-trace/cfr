@@ -13,7 +13,7 @@ estimate_reporting(
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
   correct_for_delays = FALSE,
-  max_date
+  max_date = NULL
 )
 }
 \arguments{

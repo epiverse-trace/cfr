@@ -72,7 +72,7 @@
 #' )
 #'
 estimate_time_varying <- function(data,
-                                  epi_dist,
+                                  epi_dist = NULL,
                                   burn_in_value = get_default_burn_in(epi_dist),
                                   smooth_inputs = FALSE,
                                   smoothing_window = 7,
@@ -87,14 +87,12 @@ estimate_time_varying <- function(data,
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
-  if (correct_for_delays && missing(epi_dist)) {
+  if (correct_for_delays && is.null(epi_dist)) {
     stop(
       "`epidist` object required when `correct_for_delays` is TRUE"
     )
   }
-  if (!missing(epi_dist)) {
-    checkmate::assert_class(epi_dist, "epidist")
-  }
+  checkmate::assert_class(epi_dist, "epidist", null.ok = TRUE) # optional arg.
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(data))),

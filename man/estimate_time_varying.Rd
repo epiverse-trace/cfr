@@ -6,7 +6,7 @@
 \usage{
 estimate_time_varying(
   data,
-  epi_dist,
+  epi_dist = NULL,
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
   smoothing_window = 7,
