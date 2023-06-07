@@ -13,11 +13,16 @@
 #' "severity_high".
 #'
 estimate_severity <- function(data, poisson_threshold = 100) {
-  # transferring from data.frame to vector format, to tidy up the slightly messy
-  # likelihood calculation
-  total_cases <- unique(data$total_cases)
-  total_deaths <- unique(data$total_deaths)
-  u_t <- unique(data$u_t)
+
+  # calculating the total number of cases and deaths after correcting for
+  # the number of cases with known outcomes and using this estimate as the
+  # of deaths
+  total_cases <- sum(data$cases, na.rm = TRUE)
+  total_deaths <- sum(data$deaths, na.rm = TRUE)
+  total_outcomes <- sum(data$known_outcomes, na.rm = TRUE)
+
+  # calculating the proportion of cases with known outcome
+  u_t <- total_outcomes / total_cases
 
   stopifnot(
     "`total_cases` must be equal to or more than `total_deaths`" =
