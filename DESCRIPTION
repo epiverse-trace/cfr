@@ -54,6 +54,7 @@ Suggests:
     spelling,
     epiparameter
 Remotes:
+    epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
 Config/testthat/edition: 3
 Config/Needs/website:
