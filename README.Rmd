@@ -44,9 +44,9 @@ pak::pak("epiverse-trace/epiparameter")
 
 ## Quick start
 
-### Ebola 1976
+### Overall severity of the 1976 Ebola outbreak
 
-This example of basic usage shows how to use _{{ packagename }}_ to estimate case fatality ratios from the 1976 Ebola outbreak.
+This example of basic usage shows how to use _{{ packagename }}_ to estimate the overall case fatality ratios from the 1976 Ebola outbreak.
 
 ```{r example-ebola-calc}
 # Load package
@@ -55,10 +55,7 @@ library(datadelay)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
-# assign a location
-ebola1976$location <- "DRC"
-
-# read epidist for EVD onset to death from {epiparameter}
+# read delay distribution for ebolavirus onset to death from {epiparameter}
 # accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
 onset_to_death_ebola <- epiparameter::epidist_db(
   disease = "Ebola Virus Disease",
@@ -66,44 +63,41 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   author = "Barry_etal"
 )
 
-# Calculate the static naive and corrected CFRs
-ncfr <- estimate_static(
-  df_in = ebola1976, correct_for_delays = FALSE, location = "location"
-)
-ccfr <- estimate_static(
-  df_in = ebola1976,
-  correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  location = "location"
-)
+# Calculate the static CFR without correcting for delays
+estimate_static(data = ebola1976)
 
-# Print nicely formatted case fatality rate estimates
-format_output(ncfr, estimate_type = "severity")
-format_output(ccfr, estimate_type = "severity")
+# Calculate the static CFR while correcting for delays
+estimate_static(
+  data = ebola1976,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola
+)
 ```
 
-Calculate and plot real-time CFR estimates up to a given point in time.
+### Change in disease severity over the 1976 Ebola outbreak
+
+Calculate the time-varying CFR estimates up to a given point in time.
 
 ```{r example-ebola-plot}
-# Calculate naive and corrected static CFRs up to a given point in time
-df_ncfr <- estimate_time_varying(
-  df_in = ebola1976, correct_for_delays = FALSE,
-  burn_in_value = 7
+# Calculate the CFR without correcting for delays on each day of the outbreak
+head(
+  estimate_time_varying(
+    data = ebola1976, correct_for_delays = FALSE,
+    burn_in_value = 7
+  )
 )
 
-df_ccfr <- estimate_time_varying(
-  ebola1976,
-  correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  burn_in_value = 7
+# Calculate the daily CFR while correcting for delays
+head(
+  estimate_time_varying(
+    ebola1976,
+    correct_for_delays = TRUE,
+    epi_dist = onset_to_death_ebola,
+    burn_in_value = 7
+  )
 )
 
-# plot case and death data
-plot_case_data(df_ccfr)
-plot_death_data(df_ccfr)
-
-# Plotting case and death data along with CFRs
-plot_time_varying(df_ncfr, lower = 0, upper = 100)
+# plots to be added later
 ```
 
 ## Package vignettes
