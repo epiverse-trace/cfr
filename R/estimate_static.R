@@ -81,8 +81,8 @@
 #' )
 #'
 estimate_static <- function(data,
-                            correct_for_delays = TRUE,
-                            epi_dist,
+                            correct_for_delays = FALSE,
+                            epi_dist = NULL,
                             poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(data)
@@ -95,6 +95,8 @@ estimate_static <- function(data,
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
   stopifnot(
+    "Case data must contain columns `cases` and `deaths`" =
+      (all(c("cases", "deaths") %in% colnames(data))),
     "Input data must have sequential dates with none missing or duplicated" =
       identical(unique(diff(data$date)), 1) # use numeric 1, not integer
     # this solution works when df$date is `Date`
@@ -106,28 +108,15 @@ estimate_static <- function(data,
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
-  if (missing(epi_dist) && (correct_for_delays)) {
-    stop(
-      "To correct for the delay between case detection and death,\
-       please provide an onset-to-death (or similar) `epidist` object"
-    )
+  if (correct_for_delays) {
+    checkmate::assert_class(epi_dist, "epidist")
   }
-  if (!missing(epi_dist)) {
-    stopifnot(
-      "`epi_dist` must be an `epidist` object" =
-        (epiparameter::is_epidist(epi_dist))
-    )
-  }
-  stopifnot(
-    "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(data)))
-  )
 
   # calculating the naive severity: (total deaths) / (total cases)
   severity_estimate <- numeric()
 
   # with the standard binomial
-  if (correct_for_delays == TRUE) {
+  if (correct_for_delays) {
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,
     # used as a replacement for total deaths in the original severity formula
