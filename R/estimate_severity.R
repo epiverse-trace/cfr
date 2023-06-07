@@ -11,8 +11,8 @@
 #' @return A data.frame with the MLE and 95% confidence interval of the
 #' corrected severity estimates, named "severity_me", "severity_low", and
 #' "severity_high".
-#'
 estimate_severity <- function(data, poisson_threshold = 100) {
+  # No input checking as this function is called internally by other functions
 
   # calculating the total number of cases and deaths after correcting for
   # the number of cases with known outcomes and using this estimate as the
