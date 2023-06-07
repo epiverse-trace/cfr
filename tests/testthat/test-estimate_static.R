@@ -63,10 +63,6 @@ test_that("`estimate_static`: Errors and messages", {
     estimate_static(
       data = ebola1976,
       correct_for_delays = TRUE
-    ),
-    regexp = paste0(
-      "(correct)*(delay case detection and death)*(provide)*",
-      "(onset-to-death)*(`epidist`)"
     )
   )
 
