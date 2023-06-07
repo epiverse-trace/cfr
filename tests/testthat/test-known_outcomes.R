@@ -24,6 +24,18 @@ test_that("`known_outcomes` basic functionality", {
     c("date", "cases", "deaths", "known_outcomes", "u_t")
   )
 
+  # expect that columns u_t is within the 0 -- 1 range
+  # TODO: determine whether NA values are allowed
+  expect_true(
+    all(df_known_outcomes$u_t >= 0.0 & df_known_outcomes$u_t <= 1.0)
+  )
+
+  # expect that column known_outcomes is >= 0
+  # TODO: determine whether NA values are allowed
+  expect_true(
+    all(df_known_outcomes$known_outcomes >= 0)
+  )
+
   # expect that known_outcome column is not always increasing
   expect_false(
     all(diff(df_known_outcomes$known_outcomes) > 0)
