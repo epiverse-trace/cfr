@@ -7,11 +7,12 @@ true) severity estimate}
 \usage{
 estimate_reporting(
   data,
-  epi_dist,
+  epi_dist = NULL,
   type = c("static", "varying"),
   severity_baseline = 0.014,
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
+  smoothing_window = 1,
   correct_for_delays = FALSE,
   max_date = NULL
 )
@@ -57,6 +58,13 @@ smooth the case and death time-series, using a moving average procedure
 before calculating the time-varying severity. Useful for noisy time-series
 or time-series with strong reporting (e.g., weekend) effects}
 
+\item{smoothing_window}{An \emph{odd} number determining the smoothing window size
+to use when smoothing the case and death time-series, using a moving average
+procedure before calculating the time-varying severity.
+Useful for noisy time-series or time-series with strong reporting
+(e.g., weekend) effects.
+The default value is 1 for \emph{no smoothing}. Values > 1 apply smoothing.}
+
 \item{correct_for_delays}{A boolean flag indicating whether the user wishes
 to correct for the delay between case detection and death. FALSE corresponds
 to a naive severity being calculated, TRUE corresponds to the user
@@ -98,7 +106,8 @@ onset_to_death_covid <- epidist_db(
   author = "Linton_etal"
 )
 
-df_reporting_varying <- estimate_reporting(df_covid_uk,
+estimate_reporting(
+  data = df_covid_uk,
   epi_dist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
@@ -106,12 +115,6 @@ df_reporting_varying <- estimate_reporting(df_covid_uk,
   burn_in_value = 7L,
   correct_for_delays = TRUE,
   max_date = "2020-06-30"
-)
-
-format_output(
-  df_reporting_varying,
-  estimate_type = "reporting",
-  type = "Under-reporting"
 )
 
 }

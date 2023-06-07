@@ -4,7 +4,7 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(data, epi_dist)
+known_outcomes(data, epi_dist = NULL)
 }
 \arguments{
 \item{data}{A data.frame containing the outbreak data. A daily time series
@@ -48,5 +48,8 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   author = "Barry_etal"
 )
 
-df_known_outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+# examine the first few rows of the output
+head(
+known_outcomes(data = ebola1976, onset_to_death_ebola)
+)
 }
