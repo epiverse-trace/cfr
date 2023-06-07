@@ -43,7 +43,7 @@
 #'
 #' df_known_outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
 known_outcomes <- function(data,
-                           epi_dist) {
+                           epi_dist = NULL) {
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =
@@ -51,12 +51,7 @@ known_outcomes <- function(data,
     "Case data must contain columns `cases` and `deaths`" =
       (all(c("cases", "deaths") %in% colnames(data)))
   )
-  if (!missing(epi_dist)) {
-    stopifnot(
-      "`epi_dist` must be an `epidist` object" =
-        (epiparameter::is_epidist(epi_dist))
-    )
-  }
+  checkmate::assert_class(epi_dist, "epidist")
 
   pmf_vals <- stats::density(
     epi_dist,
