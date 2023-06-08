@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/{{ packagename }})](https://CRAN.R-project.org/package={{ packagename }})
 <!-- badges: end -->
 
-_{{ packagename }}_ is an R package that provides simple, fast methods, based in part on @nishiura2009, to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
+_{{ packagename }}_ is an R package that provides simple, fast methods based on @nishiura2009 to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
 
 ## Installation
 
