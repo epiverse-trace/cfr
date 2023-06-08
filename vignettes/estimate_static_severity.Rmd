@@ -167,8 +167,7 @@ lag-times between case detection and death are most serious.
 
 ## Plotting the raw data
 
-First of all, we load the raw data and add the location to it with the following
-commands:
+First of all, we load the raw data.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 data("ebola1976")
