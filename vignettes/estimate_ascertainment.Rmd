@@ -16,13 +16,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-<!-- removes the ugly border around the figures -->
-<style>
-    img {
-        border: 0;
-    }
-</style>
-
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -132,7 +125,7 @@ dramatically as a result of the vaccine campaign. We download the data —
 using the `covidregionaldata` package — with the following 
 command:
 
-```{r, message = FALSE, warning = FALSE, eval = TRUE}
+```{r}
 df_covid_uk <- get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE
 )
@@ -143,7 +136,7 @@ df_covid_uk <- rename(df_covid_uk, cases = cases_new, deaths = deaths_new)
 We then subset the data to focus on just the first few months of the outbreak 
 with the following command:
 
-```{r, message = FALSE, warning = FALSE, eval = TRUE}
+```{r}
 df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 ```
 
@@ -151,14 +144,44 @@ df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 
 First, we plot case incidence data with following command:
 
-```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 1:** Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."}
-plot_case_data(df_covid_uk_subset)
+```{r, Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
+ggplot(df_covid_uk_subset) +
+  geom_step(
+    aes(
+      x = date, y = cases
+    ),
+    colour = "darkblue"
+  ) +
+  scale_x_date(
+    date_labels = "%d-%b-%Y"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  labs(
+    x = "Date", y = "Cases"
+  )
 ```
 
 Then, we plot the death incidence data with following command:
 
-```{r, message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:raw_data_covid} **Figure 2:** Incidence of  deaths over time for the ongoing COVID-19 outbreak in the U.K."}
-plot_death_data(df_covid_uk_subset)
+```{r, Incidence of  deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
+ggplot(df_covid_uk_subset) +
+  geom_step(
+    aes(
+      x = date, y = deaths
+    ),
+    colour = "red"
+  ) +
+  scale_x_date(
+    date_labels = "%d-%b-%Y"
+  ) +
+  scale_y_continuous(
+    labels = scales::comma
+  ) +
+  labs(
+    x = "Date", y = "Deaths"
+  )
 ```
 
 ## The delay distribution
@@ -178,7 +201,7 @@ onset_to_death_covid <- epidist_db(
 To visualise this distribution, we evaluate it between 0 and 30 days, and plot
 the results over time. We do so using the following command:
 
-```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "\\label{fig:delay_dist_covid} **Figure 3: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
+```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
 plot(onset_to_death_covid, day_range = seq_len(30))
 ```
 
@@ -187,7 +210,7 @@ plot(onset_to_death_covid, day_range = seq_len(30))
 We use the `estimate_reporting()` function within the `datadelay` package to 
 calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
-```{r message = FALSE, warning = FALSE, eval = TRUE}
+```{r }
 df_reporting_static <- estimate_reporting(
   data = df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
@@ -205,7 +228,7 @@ under-ascertainment calculation. The `severity_baseline` argument in the
 under-ascertainment calculation. The other arguments are the same as those 
 found in the `estimate_time_varying()`. 
 
-```{r message = FALSE, warning = FALSE, eval = TRUE}
+```{r }
 df_reporting_varying <- estimate_reporting(
   data = df_covid_uk,
   epi_dist = onset_to_death_covid,
@@ -230,7 +253,7 @@ df_reporting_varying
 
 # Example with all countries with large early COVID-19 outbreaks
 
-```{r, message = FALSE, warning = FALSE, eval = TRUE}
+```{r}
 df_covid <- get_national_data(
   source = "who", verbose = FALSE
 ) %>%
@@ -254,7 +277,7 @@ large COVID-19 outbreaks up to the 1st June 2020, we use the following command �
 this codeblock depends on the package `dplyr`, for ease with manipulating
 large data.frames which are structured by group:
 
-```{r message = FALSE, warning = FALSE, eval = TRUE}
+```{r }
 # calculate the total number deaths by country and filter for countries
 # with 100,000 deaths, and then filter for the first six months of 2020
 df_reporting <- df_covid %>%
@@ -290,7 +313,7 @@ Then, to plot all of these results on a single figure, we use the following
 command — this codeblock depends on the commonly used package `ggplot2`, for
 ease with plotting large data.frames:
 
-```{r message = FALSE, warning = FALSE, eval = TRUE, fig.cap = "\\label{fig:time_varying_cfr_corrected} **Figure 5: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays."}
+```{r , fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays.", class.source = 'fold-hide'}
 df_reporting %>%
   ggplot() +
   geom_pointrange(
@@ -304,9 +327,10 @@ df_reporting %>%
   ) +
   coord_flip() +
   labs(x = NULL, y = "Ascertainment Rate") +
-  theme_minimal() +
   theme(legend.position = "none") +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 1))
+  scale_y_continuous(
+    labels = scales::percent, limits = c(0, 1)
+  )
 ```
 
 ## References
