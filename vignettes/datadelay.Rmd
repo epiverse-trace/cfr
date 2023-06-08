@@ -1,0 +1,131 @@
+---
+title: "Estimating disease severity while correcting for reporting delays"
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
+bibliography: resources/library.json
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Estimating disease severity while correcting for reporting delays}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
+During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
+Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
+The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in @nishiura2009, and which are implemented in the _datadelay_ package.
+
+::: {.alert .alert-primary}
+## Use case {-}
+
+A disease outbreak is underway. We want to know **how severe the disease is**, that is, the case fatality ratio, but there is a delay between cases being reported, and the outcomes of those cases --- whether recovery or death --- being known. This is the _reporting delay_, and can be accounted for by knowing the reporting delay from past outbreaks.
+:::
+
+::: {.alert .alert-secondary}
+### What we have {-}
+
+  1. A dataset of daily cases and deaths reported;
+  2. Data on the distribution of reporting delays from past outbreaks of similar diseases.
+
+### What we assume {-}
+
+  1. That data on reporting delays from past outbreaks is informative about reporting delays in the current outbreak.
+:::
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+# load datadelay
+library(datadelay)
+```
+
+## Case and death data
+
+Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [_covidregionaldata_ package for data on the Covid-19 outbreak](https://epiforecasts.io/covidregionaldata/).
+
+In an outbreak response scenario, such data may also be compiled and shared locally.
+
+The _datadelay_ package requires only a data frame with three columns, "date", "cases", and "deaths", giving the daily number of reported cases and deaths.
+
+::: {.alert .alert-warning}
+Datasets with columns that contain this information under different names can be handled by common data science tools, such as [packages in the Tidyverse](https://www.tidyverse.org/), to prepare data for _datadelay_.
+
+See examples of this in the [vignette on obtaining a static severity estimate](estimate_static_severity.html).
+:::
+
+Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with the package [@camacho2014].
+
+```{r}
+data("ebola1976")
+```
+
+## Obtaining data on reporting delays
+
+We can access data on the distribution of delays between cases being reported, and deaths or recoveries from those cases being known, using the convenient [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
+
+We access the disease's 'onset-to-death' distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function [epiparameter::epidist_db()] [@barry2018].
+
+```{r}
+library(epiparameter)
+```
+
+```{r}
+onset_to_death_ebola <- epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
+
+# print the object
+onset_to_death_ebola
+```
+
+This `epidist` object can be passed to the functions in _datadelay_ to help correct for reporting delays.
+
+## Estimate disease severity
+
+We use the function [estimate_static()] to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
+
+```{r}
+estimate_static(
+  data = ebola1976,
+  correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola
+)
+```
+
+The [estimate_static()] function is well suited to small outbreaks. For larger outbreaks where it may be useful to know how severity has changed over time, the function [estimate_time_varying()] is available. This function is however not well suited to small outbreaks. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
+
+## Estimate reporting rate
+
+It is important to know what proportion of cases in an outbreak are being reported to muster the appropriate response, and to estimate the overall burden of the outbreak.
+
+The [estimate_reporting()] function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
+
+Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).
+
+```{r}
+# estimate reporting with a baseline severity of 70%
+estimate_reporting(
+  data = ebola1976,
+  epi_dist = onset_to_death_ebola,
+  type = "static",
+  severity_baseline = 0.7,
+  correct_for_delays = TRUE
+)
+```
+
+This analysis suggests that between 70% and 83% of cases were reported in this outbreak.
+
+More details can be found in the [vignette on estimating the proportion of cases that are reported during an outbreak](estimate_ascertainment.html).
+
+## References
