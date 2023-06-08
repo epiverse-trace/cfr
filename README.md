@@ -19,10 +19,10 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-*datadelay* is an R package that provides simple, fast methods, based in
-part on Nishiura et al. ([2009](#ref-nishiura2009)), to estimate disease
-severity and under-reporting in real-time, accounting for delays in
-epidemic time-series.
+*datadelay* is an R package that provides simple, fast methods based on
+Nishiura et al. ([2009](#ref-nishiura2009)) to estimate disease severity
+and under-reporting in real-time, accounting for delays in epidemic
+time-series.
 
 ## Installation
 
@@ -39,10 +39,10 @@ pak::pak("epiverse-trace/epiparameter")
 
 ## Quick start
 
-### Ebola 1976
+### Overall severity of the 1976 Ebola outbreak
 
-This example of basic usage shows how to use *datadelay* to estimate
-case fatality ratios from the 1976 Ebola outbreak.
+This example of basic usage shows how to use *datadelay* to estimate the
+overall case fatality ratios from the 1976 Ebola outbreak.
 
 ``` r
 # Load package
@@ -51,10 +51,7 @@ library(datadelay)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
-# assign a location
-ebola1976$location <- "DRC"
-
-# read epidist for EVD onset to death from {epiparameter}
+# read delay distribution for ebolavirus onset to death from {epiparameter}
 # accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
 onset_to_death_ebola <- epiparameter::epidist_db(
   disease = "Ebola Virus Disease",
@@ -62,61 +59,60 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   author = "Barry_etal"
 )
 
-# Calculate the static naive and corrected CFRs
-ncfr <- estimate_static(
-  df_in = ebola1976, correct_for_delays = FALSE, location = "location"
-)
-ccfr <- estimate_static(
-  df_in = ebola1976,
+# Calculate the static CFR without correcting for delays
+estimate_static(data = ebola1976)
+#>   severity_me severity_lo severity_hi
+#> 1    0.955102   0.9210866   0.9773771
+
+# Calculate the static CFR while correcting for delays
+estimate_static(
+  data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  location = "location"
+  epi_dist = onset_to_death_ebola
 )
-
-# Print nicely formatted case fatality rate estimates
-format_output(ncfr, estimate_type = "severity")
-#>   Location                         Estimate
-#> 1      DRC 95.51% (95% CI: 92.11% - 97.74%)
-format_output(ccfr, estimate_type = "severity")
-#>   Location                          Estimate
-#> 1      DRC 95.90% (95% CI: 84.20% - 100.00%)
+#>   severity_me severity_lo severity_hi
+#> 1       0.959       0.842           1
 ```
 
-Calculate and plot real-time CFR estimates up to a given point in time.
+### Change in disease severity over the 1976 Ebola outbreak
+
+Calculate the time-varying CFR estimates up to a given point in time.
 
 ``` r
-# Calculate naive and corrected static CFRs up to a given point in time
-df_ncfr <- estimate_time_varying(
-  df_in = ebola1976, correct_for_delays = FALSE,
-  burn_in_value = 7
+# Calculate the CFR without correcting for delays on each day of the outbreak
+head(
+  estimate_time_varying(
+    data = ebola1976, correct_for_delays = FALSE,
+    burn_in_value = 7
+  )
 )
+#>         date cases deaths severity_me severity_lo severity_hi
+#> 1 1976-08-25     1      0          NA          NA          NA
+#> 2 1976-08-26     0      0          NA          NA          NA
+#> 3 1976-08-27     0      0          NA          NA          NA
+#> 4 1976-08-28     0      0          NA          NA          NA
+#> 5 1976-08-29     0      0          NA          NA          NA
+#> 6 1976-08-30     0      0          NA          NA          NA
 
-df_ccfr <- estimate_time_varying(
-  ebola1976,
-  correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola,
-  burn_in_value = 7
+# Calculate the daily CFR while correcting for delays
+head(
+  estimate_time_varying(
+    ebola1976,
+    correct_for_delays = TRUE,
+    epi_dist = onset_to_death_ebola,
+    burn_in_value = 7
+  )
 )
+#>         date cases deaths severity_me severity_lo severity_hi
+#> 1 1976-08-25     1      0          NA          NA          NA
+#> 2 1976-08-26     0      0          NA          NA          NA
+#> 3 1976-08-27     0      0          NA          NA          NA
+#> 4 1976-08-28     0      0          NA          NA          NA
+#> 5 1976-08-29     0      0          NA          NA          NA
+#> 6 1976-08-30     0      0          NA          NA          NA
 
-# plot case and death data
-plot_case_data(df_ccfr)
+# plots to be added later
 ```
-
-<img src="man/figures/README-example-ebola-plot-1.png" width="100%" />
-
-``` r
-plot_death_data(df_ccfr)
-```
-
-<img src="man/figures/README-example-ebola-plot-2.png" width="100%" />
-
-``` r
-
-# Plotting case and death data along with CFRs
-plot_time_varying(df_ncfr, lower = 0, upper = 100)
-```
-
-<img src="man/figures/README-example-ebola-plot-3.png" width="100%" />
 
 ## Package vignettes
 
