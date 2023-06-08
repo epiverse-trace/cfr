@@ -33,9 +33,7 @@
 #' approximation. Set to 200 by default.
 #'
 #' @return A data.frame with the MLE and 95% confidence interval of the
-#' severity estimates, named "severity_me", "severity_low", and "severity_high",
-#' as well as a column "location" holding the grouping variable indicating the
-#' region.
+#' severity estimates, named "severity_me", "severity_lo", and "severity_hi".
 #'
 #' @export
 #'
