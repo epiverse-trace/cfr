@@ -219,7 +219,7 @@ ggplot(df_covid_uk_subset) +
 
 ## The delay distribution
 
-We again retrieve the appropriate distribution reported in @linton2020incubation using the
+We again retrieve the appropriate distribution reported in @linton2020 using the
 `epidist_db()` function from the `epiparameter` package, using the following
 command:
 

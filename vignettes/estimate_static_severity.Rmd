@@ -222,7 +222,7 @@ df_ebola_subset <- dplyr::filter(ebola1976, date <= "1976-09-30")
 For this example, given that we are using case data and detection of a case is
 well-approximated by symptom onset, we use the distribution describing the delay
 between onset-to-death. As such, we retrieve such a distribution from the
-literature [@barry2018outbreak] using the `epidist_db()` function from the `epiparameter` package with the following command:
+literature [@barry2018] using the `epidist_db()` function from the `epiparameter` package with the following command:
 
 ```{r}
 onset_to_death_ebola <- epidist_db(

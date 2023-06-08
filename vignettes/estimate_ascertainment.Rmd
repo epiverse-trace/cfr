@@ -45,7 +45,7 @@ library(kableExtra)
 and the four optional packages, to run the multiple examples in the last 
 section of this vignette:
 
-```{r, message = FALSE, warning=FALSE, eval = TRUE}
+```{r}
 library(dplyr)
 library(tidyr)
 library(purrr)
@@ -144,7 +144,7 @@ df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 
 First, we plot case incidence data with following command:
 
-```{r, Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
+```{r fig.cap="Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
   geom_step(
     aes(
@@ -165,7 +165,7 @@ ggplot(df_covid_uk_subset) +
 
 Then, we plot the death incidence data with following command:
 
-```{r, Incidence of  deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
+```{r fig.cap="Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
   geom_step(
     aes(
@@ -186,11 +186,11 @@ ggplot(df_covid_uk_subset) +
 
 ## The delay distribution
 
-We again retrieve the appropriate distribution — reported in @linton2020incubation — using the
+We again retrieve the appropriate distribution — reported in @linton2020 — using the
 `epidist_db()` function from the `epiparameter` package, using the following
 command:
 
-```{r message=FALSE, warning=FALSE, eval=TRUE}
+```{r}
 onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
@@ -201,7 +201,7 @@ onset_to_death_covid <- epidist_db(
 To visualise this distribution, we evaluate it between 0 and 30 days, and plot
 the results over time. We do so using the following command:
 
-```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
+```{r fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
 plot(onset_to_death_covid, day_range = seq_len(30))
 ```
 
@@ -277,7 +277,7 @@ large COVID-19 outbreaks up to the 1st June 2020, we use the following command �
 this codeblock depends on the package `dplyr`, for ease with manipulating
 large data.frames which are structured by group:
 
-```{r }
+```{r}
 # calculate the total number deaths by country and filter for countries
 # with 100,000 deaths, and then filter for the first six months of 2020
 df_reporting <- df_covid %>%
@@ -313,7 +313,7 @@ Then, to plot all of these results on a single figure, we use the following
 command — this codeblock depends on the commonly used package `ggplot2`, for
 ease with plotting large data.frames:
 
-```{r , fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays.", class.source = 'fold-hide'}
+```{r fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays.", class.source = 'fold-hide'}
 df_reporting %>%
   ggplot() +
   geom_pointrange(
