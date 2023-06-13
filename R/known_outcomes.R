@@ -11,7 +11,9 @@
 #'
 #' @param data A data.frame containing the outbreak data. A daily time series
 #' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-#' the numbers of new cases and new deaths at each time point
+#' the numbers of new cases at each time point. This function does not require
+#' data on daily deaths, but this column (and any others) will be retained if
+#' present.
 #'
 #' @param epi_dist The delay distribution used, in the form of an
 #' [epiparameter::epidist()] object. This is used to obtain a probability
@@ -51,8 +53,8 @@ known_outcomes <- function(data,
   stopifnot(
     "Case data must be a data.frame" =
       (is.data.frame(data)),
-    "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(data)))
+    "Case data must contain columns `cases`" =
+      "cases" %in% colnames(data)
   )
   checkmate::assert_class(epi_dist, "epidist")
 

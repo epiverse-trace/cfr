@@ -21,7 +21,7 @@ test_that("`known_outcomes` basic functionality", {
   )
   expect_identical(
     colnames(df_known_outcomes),
-    c("date", "cases", "deaths", "known_outcomes", "u_t")
+    c(colnames(ebola1976), "known_outcomes", "u_t")
   )
 
   # expect that columns u_t is within the 0 -- 1 range
