@@ -28,7 +28,14 @@ knitr::opts_chunk$set(
 [![CRAN status](https://www.r-pkg.org/badges/version/{{ packagename }})](https://CRAN.R-project.org/package={{ packagename }})
 <!-- badges: end -->
 
-_{{ packagename }}_ is an R package that provides simple, fast methods based on @nishiura2009 to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
+_{{ packagename }}_ is an R package to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
+
+_{{ packagename }}_ provides simple, fast methods to calculate the overall or static case fatality ratio (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak.
+_{{ packagename }}_ can help estimate disease under-reporting in real-time, accounting for delays reporting the outcomes of cases.
+
+_{{ packagename }}_ implements methods outlined in @nishiura2009, and CFR estimates based on more methods are likely to be added.
+
+_{{ packagename }}_ relies on the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/), and both are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
 
