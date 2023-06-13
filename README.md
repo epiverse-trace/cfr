@@ -19,10 +19,26 @@ public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostat
 status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
 <!-- badges: end -->
 
-*datadelay* is an R package that provides simple, fast methods based on
-Nishiura et al. ([2009](#ref-nishiura2009)) to estimate disease severity
-and under-reporting in real-time, accounting for delays in epidemic
+*datadelay* is an R package to estimate disease severity and
+under-reporting in real-time, accounting for delays in epidemic
 time-series.
+
+*datadelay* provides simple, fast methods to calculate the overall or
+static case fatality ratio (CFR) of an outbreak up to a given time
+point, as well as how the CFR changes over the course of the outbreak.
+*datadelay* can help estimate disease under-reporting in real-time,
+accounting for delays reporting the outcomes of cases.
+
+*datadelay* implements methods outlined in Nishiura et al.
+([2009](#ref-nishiura2009)), and CFR estimates based on more methods are
+likely to be added.
+
+*datadelay* relies on the [*epiparameter*
+package](https://epiverse-trace.github.io/epiparameter/), and both are
+developed at the [Centre for the Mathematical Modelling of Infectious
+Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases)
+at the London School of Hygiene and Tropical Medicine as part of the
+[Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
 
