@@ -292,7 +292,7 @@ ggplot(df_covid_cfr_uk_naive) +
 
 Lastly, we plot the corrected — for delays — estimate:
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays."}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays.", class.source = 'fold-hide'}
 ggplot(df_covid_cfr_uk_corrected) +
   geom_ribbon(
     aes(
@@ -387,7 +387,7 @@ We then plot the time-varying CFR for a selection of three more countries with
 large outbreaks of COVID-19. First of all, we plot the time-varying CFR
 estimate for the COVID-19 outbreak in Brazil:
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, corrected for delays."}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, corrected for delays.", class.source = 'fold-hide'}
 filter(df_covid_cfr, country == "Brazil") %>%
   ggplot() +
   geom_ribbon(
@@ -415,7 +415,7 @@ filter(df_covid_cfr, country == "Brazil") %>%
 
 Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in India:
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Germany deaths in total, corrected for delays."}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Germany deaths in total, corrected for delays.", class.source = 'fold-hide'}
 filter(df_covid_cfr, country == "Germany") %>%
   ggplot() +
   geom_ribbon(
@@ -444,7 +444,7 @@ filter(df_covid_cfr, country == "Germany") %>%
 Next, we plot the time-varying CFR estimate for the COVID-19 outbreak in the
 United States:
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays."}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays.", class.source = 'fold-hide'}
 filter(df_covid_cfr, country == "United States") %>%
   ggplot() +
   geom_ribbon(
@@ -475,7 +475,7 @@ for, using the package `ggplot2`, which contains the `facet_wrap()` function.
 This allows us to loop over the different countries with ease. We do so with
 the following commands:
 
-```{r, fig.height = 1000/80, fig.cap = "The corrected time-varying CFR for each country with a large outbreak. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in each country with a large outbreak — defined as any country with more than 100,000 deaths in total — corrected for delays."}
+```{r, fig.height = 1000/80, fig.cap = "The corrected time-varying CFR for each country with a large outbreak. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in each country with a large outbreak — defined as any country with more than 100,000 deaths in total — corrected for delays.", class.source = 'fold-hide'}
 df_covid_cfr %>%
   ggplot(
     aes(x = date)

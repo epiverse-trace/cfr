@@ -72,7 +72,7 @@ data("ebola1976")
 
 We can access data on the distribution of delays between cases being reported, and deaths or recoveries from those cases being known, using the convenient [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
-We access the disease's 'onset-to-death' distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function [epiparameter::epidist_db()] [@barry2018].
+We access the disease's 'onset-to-death' distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function `epiparameter::epidist_db()` [@barry2018].
 
 ```{r}
 library(epiparameter)
@@ -93,7 +93,7 @@ This `epidist` object can be passed to the functions in _datadelay_ to help corr
 
 ## Estimate disease severity
 
-We use the function [estimate_static()] to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
+We use the function `estimate_static()` to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
 
 ```{r}
 estimate_static(
@@ -103,13 +103,13 @@ estimate_static(
 )
 ```
 
-The [estimate_static()] function is well suited to small outbreaks. For larger outbreaks where it may be useful to know how severity has changed over time, the function [estimate_time_varying()] is available. This function is however not well suited to small outbreaks. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
+The `estimate_static()` function is well suited to small outbreaks. For larger outbreaks where it may be useful to know how severity has changed over time, the function `estimate_time_varying()` is available. This function is however not well suited to small outbreaks. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
 
 ## Estimate reporting rate
 
 It is important to know what proportion of cases in an outbreak are being reported to muster the appropriate response, and to estimate the overall burden of the outbreak.
 
-The [estimate_reporting()] function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
+The `estimate_reporting()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
 
 Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).
 
