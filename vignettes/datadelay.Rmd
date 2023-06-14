@@ -89,7 +89,7 @@ onset_to_death_ebola <- epidist_db(
 onset_to_death_ebola
 ```
 
-This `epidist` object can be passed to the functions in _datadelay_ to help correct for reporting delays.
+This `<epidist>` object can be passed to the functions in _datadelay_ to help correct for reporting delays.
 
 ## Estimate disease severity
 

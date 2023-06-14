@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 # Overview
 
-This vignette outlines how to use `datadelay` to estimate how the severity of a
+This vignette outlines how to use _datadelay_ to estimate how the severity of a
 disease changes over the course of an ongoing outbreak. We wish to estimate 
 how common severity quantities change over time: 
 the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or 
@@ -45,7 +45,6 @@ First, we load the five essential packages needed for this vignette:
 library(datadelay)
 library(epiparameter)
 library(covidregionaldata)
-library(knitr)
 ```
 
 and the four optional packages, to run the multiple examples in the last
@@ -55,6 +54,7 @@ section of this vignette:
 library(dplyr)
 library(tidyr)
 library(purrr)
+library(scales)
 library(ggplot2)
 ```
 
@@ -82,7 +82,7 @@ approach is to use the function demonstrated in this vignette:
 ## Data required
 
 The data required to estimate how the severity of a disease changes over time
-using the `datadelay` package includes:
+using the _datadelay_ package includes:
 
 * A time-series of cases, hospitalisations or some other proxy for infections 
 over time;
@@ -98,11 +98,11 @@ into a single data file.
 
 The package requires a `data.frame` of input data --- typically case and death 
 time series data --- and a delay distribution. The delay distribution we use 
-here comes from the `epiparameter` package.
+here comes from the _epiparameter_ package.
 
 ## Adjusting for delays between the two time series 
 
-The function `estimate_time_varying()` from the `datadelay` package estimates
+The function `estimate_time_varying()` from the _datadelay_ package estimates
 the number of cases which have a known outcome over time. The method used 
 within this function follows @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, 
@@ -189,7 +189,7 @@ ggplot(df_covid_uk_subset) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::comma
+    labels = comma
   ) +
   labs(
     x = "Date", y = "Cases"
@@ -210,7 +210,7 @@ ggplot(df_covid_uk_subset) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::comma
+    labels = comma
   ) +
   labs(
     x = "Date", y = "Deaths"
@@ -220,7 +220,7 @@ ggplot(df_covid_uk_subset) +
 ## The delay distribution
 
 We again retrieve the appropriate distribution reported in @linton2020 using the
-`epidist_db()` function from the `epiparameter` package, using the following
+`epidist_db()` function from the _epiparameter_ package, using the following
 command:
 
 ```{r message=FALSE, warning=FALSE, eval=TRUE}
@@ -240,7 +240,7 @@ plot(onset_to_death_covid, day_range = seq(30))
 
 ## Estimating the naive and corrected CFR
 
-We use the `estimate_time_varying()` function within the `datadelay` package 
+We use the `estimate_time_varying()` function within the _datadelay_ package 
 to calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
 ```{r}
@@ -283,7 +283,7 @@ ggplot(df_covid_cfr_uk_naive) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::percent
+    labels = percent
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -310,7 +310,7 @@ ggplot(df_covid_cfr_uk_corrected) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::percent
+    labels = percent
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -406,7 +406,7 @@ filter(df_covid_cfr, country == "Brazil") %>%
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::percent
+    labels = percent
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -434,7 +434,7 @@ filter(df_covid_cfr, country == "Germany") %>%
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::percent
+    labels = percent
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -463,7 +463,7 @@ filter(df_covid_cfr, country == "United States") %>%
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::percent
+    labels = percent
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -492,7 +492,7 @@ df_covid_cfr %>%
   facet_wrap(facets = vars(country), ncol = 2) +
   theme_minimal() +
   labs(x = "Date", y = "CFR (%)") +
-  scale_y_continuous(labels = scales::percent, limits = c(0, 0.1))
+  scale_y_continuous(labels = percent, limits = c(0, 0.1))
 ```
 
 We do not focus on the `ggplot2` commands in this vignette. Instead, we refer 
