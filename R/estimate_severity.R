@@ -46,8 +46,7 @@ estimate_severity <- function(data, poisson_threshold = 100) {
   # MLE estimate
   severity_me <- pprange[which.max(lik)]
 
-  # 95% range of likelihood
-  # TODO: explain why this value is hardcoded
+  # 95% confidence interval of likelihood
   severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
   severity_estimate <- data.frame(
