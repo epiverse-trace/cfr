@@ -33,9 +33,10 @@ accounting for delays reporting the outcomes of cases.
 ([2009](#ref-nishiura2009)), and CFR estimates based on more methods are
 likely to be added.
 
-*datadelay* relies on the [*epiparameter*
-package](https://epiverse-trace.github.io/epiparameter/), and both are
-developed at the [Centre for the Mathematical Modelling of Infectious
+*datadelay* uses the [*epiparameter*
+package](https://epiverse-trace.github.io/epiparameter/) for
+delay-corrected CFR estimates, and both packages are developed at the
+[Centre for the Mathematical Modelling of Infectious
 Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases)
 at the London School of Hygiene and Tropical Medicine as part of the
 [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
