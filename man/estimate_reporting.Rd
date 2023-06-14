@@ -46,7 +46,7 @@ used in the final ratio to estimate the overall ascertainment rate}
 
 \item{burn_in_value}{The number of time-points (typically days) to disregard
 at the start of the time-series, if a burn-in period is desired.
-The default value is set to the mean of the central spread of the \code{epidist}
+The default value is set to the mean of the central spread of the \verb{<epidist>}
 object passed to the function, assuming the temporal resolution is daily.
 Alternatively, a sensible value might be 7, to disregard the first week of
 cases and deaths.
