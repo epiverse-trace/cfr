@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 # Overview
 
-This vignette outlines how to use `datadelay` to calculate disease severity
+This vignette outlines how to use _datadelay_ to calculate disease severity
 during an ongoing outbreak. We wish to estimate one of the typical severity 
 quantities used in epidemiology: the *case fatality risk (CFR)*, 
 *infection hospitality risk (IFR)* or  *hospitalisation fatality risk (HFR)*. We
@@ -38,7 +38,7 @@ hospitalisations (respectively) and deaths with an appropriate delay
 distribution. The methods used here originate from @nishiura2009.
 
 This vignette demonstrates how to implement the core functions within
-`datadelay`. Specifically, we will cover
+_datadelay_. Specifically, we will cover
 
 1. Why naive estimates of CFR or HFR generated during an ongoing outbreak 
 require adjusting, given out of sync time series are often being compared. 
@@ -58,8 +58,8 @@ Now we load the three packages we need using the following commands:
 library(datadelay)
 library(epiparameter)
 library(covidregionaldata)
-library(knitr)
 library(dplyr)
+library(scales)
 library(ggplot2)
 ```
 
@@ -94,7 +94,7 @@ is essential for accurate estimates of severity.
 ## Data required
 
 The data required to estimate the severity of a disease during an ongoing 
-outbreak using the `datadelay` package includes:
+outbreak using the _datadelay_ package includes:
 
 * A time-series of cases, hospitalisations or some other proxy for infections 
 over time;
@@ -108,10 +108,10 @@ In practice, the time-series of cases and deaths will already be together, given
 that they usually originate from sources that will have typically collated them
 into a single data file.
 
-The function within `datadelay` used to estimate the severity of a disease at a
+The function within _datadelay_ used to estimate the severity of a disease at a
 single time-point — `estimate_static()` — requires a `data.frame` of input data
 --- typically case and death  time series data --- and a delay distribution. The
-delay distribution we use here comes from the `epiparameter` package.
+delay distribution we use here comes from the _epiparameter_ package.
 
 ## Adjusting for delays between the two time series 
 
@@ -222,7 +222,7 @@ df_ebola_subset <- dplyr::filter(ebola1976, date <= "1976-09-30")
 For this example, given that we are using case data and detection of a case is
 well-approximated by symptom onset, we use the distribution describing the delay
 between onset-to-death. As such, we retrieve such a distribution from the
-literature [@barry2018] using the `epidist_db()` function from the `epiparameter` package with the following command:
+literature [@barry2018] using the `epidist_db()` function from the _epiparameter_ package with the following command:
 
 ```{r}
 onset_to_death_ebola <- epidist_db(
@@ -241,7 +241,7 @@ plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE)
 
 ## Estimating incidence of cases (or similar time-series) with a known outcome
 
-The function `known_outcomes()` from the `datadelay` package estimates the 
+The function `known_outcomes()` from the _datadelay_ package estimates the 
 number of cases which have a known outcome over time.
 
 ```{r}
@@ -291,7 +291,7 @@ ggplot(df_known_outcomes_ebola) +
 Once we calculate the proportion of cases with known outcomes, we apply the
 proportion to the number of cases to correct for the delay between
 onset-to-death. We do so by using the function `estimate_static()` from the
-`datadelay` package. This function estimates the proportion of known outcomes
+_datadelay_ package. This function estimates the proportion of known outcomes
 over time, and uses the estimate to correct the naive severity estimate. This is
 controlled using the `correct_for_delays` boolean flag argument in the
 `estimate_static()` function. Otherwise, it calculates a naive severity estimate, 
@@ -327,7 +327,7 @@ COVID-19 outbreak in the U.K. We do so, as the CFR changed dramatically as a
 result of the vaccine campaign. The static severity calculations we are 
 performing in this vignette are not able to deal with changes in severity over
 time. We download the data --- using the `covidregionaldata` package --- 
-change some default column names to match those required by `datadelay` and
+change some default column names to match those required by _datadelay_ and
 subset the data.frame to focus on the first year of the pandemic in the U.K.,
 with the following commands:
 
@@ -358,7 +358,7 @@ ggplot(df_covid_uk_subset) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::comma
+    labels = comma
   ) +
   labs(
     x = "Date", y = "Cases"
@@ -379,7 +379,7 @@ ggplot(df_covid_uk_subset) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::comma
+    labels = comma
   ) +
   labs(
     x = "Date", y = "Deaths"
@@ -388,7 +388,7 @@ ggplot(df_covid_uk_subset) +
 
 ## The delay distribution
 
-We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the `epiparameter` package, using the following command.
+We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the _epiparameter_ package, using the following command.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 onset_to_death_covid <- epidist_db(
@@ -442,7 +442,7 @@ ggplot(df_known_outcomes_covid) +
     date_labels = "%d-%b-%Y"
   ) +
   scale_y_continuous(
-    labels = scales::comma
+    labels = comma
   ) +
   theme(
     legend.position = "top"
