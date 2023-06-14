@@ -35,7 +35,7 @@ _{{ packagename }}_ can help estimate disease under-reporting in real-time, acco
 
 _{{ packagename }}_ implements methods outlined in @nishiura2009, and CFR estimates based on more methods are likely to be added.
 
-_{{ packagename }}_ relies on the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/), and both are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
+_{{ packagename }}_ uses the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) for delay-corrected CFR estimates, and both packages are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
 
