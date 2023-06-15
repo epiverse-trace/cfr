@@ -35,7 +35,6 @@ RoxygenNote: 7.2.3
 Imports:
     checkmate,
     stats,
-    graphics
 Suggests: 
     dplyr,
     tidyr,
