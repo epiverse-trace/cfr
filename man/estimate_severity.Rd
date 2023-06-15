@@ -4,20 +4,24 @@
 \alias{estimate_severity}
 \title{Estimate the corrected case fatality rate}
 \usage{
-estimate_severity(data, poisson_threshold = 100)
+estimate_severity(
+  total_cases,
+  total_deaths,
+  total_outcomes,
+  poisson_threshold = 100
+)
 }
 \arguments{
-\item{data}{A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
-Note that the required columns are "date" (for the date), "cases" (for the
-number of reported cases), and "deaths" (for the number of reported deaths)
-on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
-\code{Date} (see \code{\link[=as.Date]{as.Date()}}).
-Note also that the total number of cases must be greater than the total
-number of reported deaths.}
+\item{total_cases}{The total number of cases observed over the period of an
+outbreak of interest. The total number of cases must be greater than or equal
+to the total number of deaths.}
+
+\item{total_deaths}{The total number of deaths observed over the period of an
+outbreak of interest. The total number of deaths must be less than or equal
+to the total number of cases.}
+
+\item{total_outcomes}{The total number of outcomes estimated observed over
+the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 200 by default.}
