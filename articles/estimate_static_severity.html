@@ -6,12 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="datadelay">
-<title>Calculating disease severity by adjusting for delays between onset and outcome during an outbreak • datadelay</title>
+<title>Calculating disease severity by adjusting for delays between onset and outcomes • datadelay</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculating disease severity by adjusting for delays between onset and outcome during an outbreak">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Calculating disease severity by adjusting for delays between onset and outcomes">
 <meta property="og:description" content="datadelay">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -42,15 +42,17 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
+  <a class="nav-link" href="../articles/datadelay.html">Get started</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcome during an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
-    <a class="dropdown-item" href="../articles/setup_and_installation.html">Setup and Installation</a>
   </div>
 </li>
       </ul>
@@ -73,11 +75,9 @@
 </nav><div class="container template-article">
 
 
-
-<script src="estimate_static_severity_files/kePrint-0.0.1/kePrint.js"></script><link href="estimate_static_severity_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Calculating disease severity by adjusting for delays between onset and outcome during an outbreak</h1>
+      <img src="" class="logo" alt=""><h1>Calculating disease severity by adjusting for delays between onset and outcomes</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/epiverse-trace/datadelay/blob/HEAD/vignettes/estimate_static_severity.Rmd" class="external-link"><code>vignettes/estimate_static_severity.Rmd</code></a></small>
@@ -86,72 +86,61 @@
 
     
     
-<!-- removes the ugly border around the figures -->
-<style>
-    img {
-        border: 0;
-    }
-</style>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p>This vignette outlines how to use <code>datadelay</code> to calculate
-disease severity during an ongoing outbreak. We wish to estimate one of
-the typical severity quantities used in epidemiology: the <em>case
-fatality risk (CFR)</em>, <em>infection hospitality risk (IFR)</em> or
-<em>hospitalisation fatality risk (HFR)</em>. We do so using a method
-that uses a time series of cases, infections of hospitalisations
-(respectively) and deaths with an appropriate delay distribution. The
-methods used here originate from Nishiura et al. (2009)<sup><span class="citation">[1]</span></sup>.</p>
+<p>This vignette outlines how to use <em>datadelay</em> to calculate disease severity
+during an ongoing outbreak. We wish to estimate one of the typical severity
+quantities used in epidemiology: the <em>case fatality risk (CFR)</em>,
+<em>infection hospitality risk (IFR)</em> or <em>hospitalisation fatality risk (HFR)</em>. We
+do so using a method that uses a time series of cases, infections of
+hospitalisations (respectively) and deaths with an appropriate delay
+distribution. The methods used here originate from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>.</p>
 <p>This vignette demonstrates how to implement the core functions within
-<code>datadelay</code>. Specifically, we will cover</p>
+<em>datadelay</em>. Specifically, we will cover</p>
 <ol style="list-style-type: decimal">
-<li><p>Why naive estimates of CFR or HFR generated during an ongoing
-outbreak require adjusting, given out of sync time series are often
-being compared.</p></li>
-<li><p>Arrive at estimates over time for the number of symptomatic
-individuals that will likely be known to have had an outcome <span class="math inline">\(t\)</span> days after symptom onset</p></li>
-<li><p>Define an unbiased estimator to estimate the CFR or HFR from
-Nishiura et al (2009)<sup><span class="citation">[1]</span></sup></p></li>
+<li><p>Why naive estimates of CFR or HFR generated during an ongoing outbreak
+require adjusting, given out of sync time series are often being compared.</p></li>
+<li><p>Arrive at estimates over time for the number of symptomatic individuals
+that will likely be known to have had an outcome <span class="math inline">\(t\)</span> days after symptom onset</p></li>
+<li><p>Define an unbiased estimator to estimate the CFR or HFR from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span></p></li>
 <li><p>Numerically implement the unbiased estimator numerically using
-maximum likelihood estimation to arrive at central estimates of the CFR
-or HFR, along with a confidence interval.</p></li>
+maximum likelihood estimation to arrive at central estimates of the CFR or HFR,
+along with a confidence interval.</p></li>
 </ol>
-<p>Now we load the three packages we need using the following
-commands:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<p>Now we load the three packages we need using the following commands:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/datadelay" class="external-link">datadelay</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://epiforecasts.io/covidregionaldata/" class="external-link">covidregionaldata</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/" class="external-link">kableExtra</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level2">
 <h2 id="motivation">Motivation<a class="anchor" aria-label="anchor" href="#motivation"></a>
 </h2>
-<p>Key epidemiological quantities estimated in real-time often suffer
-from biases. In particular, dividing deaths-to-date by cases-to-date,
-infections-to-date or hospitalisations-to-date leads to biased estimates
-of the CFR, IFR or HFR (respectively). This is because this calculation
-does not account for delays from confirmation of a case, infection or
-hospitalisation-to-death.</p>
-<p>If we had perfectly synchronised case and death incidence data, the
-basic versions of the CFR, IFR and HFR — defined as either the ratio of
-the total number of deaths and the total number of cases, infections or
-hospitalisations — would be accurate. These basic estimates are referred
-to as naive estimators. However, due to delays between onset or
-hospitalisation and death for all known diseases, this synchronisation
-is never true.</p>
-<p>For example, suppose 10 people start showing symptoms of a specific
-disease on a given day and the end of that day all remain alive. Suppose
-that for the next 5 days, the numbers of new cases continue to rise
-until they reach 100 new cases on day 5. However, suppose that by day 5,
-all infected individuals remain alive. The naive estimate of the CFR
-would be zero calculated at the end of the first 5 days would be zero,
-because there would have been zero deaths in total. Even after deaths
-begin to occur, this lag between the ascertainment of a case or
-hospitalisation and outcome leads to a consistently biased estimate.
-Hence, adjusting for such delays using an appropriate delay distribution
+<p>Key epidemiological quantities estimated in real-time often suffer from biases.
+In particular, dividing deaths-to-date by cases-to-date, infections-to-date or
+hospitalisations-to-date leads to biased estimates of the CFR, IFR or
+HFR (respectively). This is because this calculation does not account
+for delays from confirmation of a case, infection or hospitalisation-to-death.</p>
+<p>If we had perfectly synchronised case and death incidence data, the basic
+versions of the CFR, IFR and HFR — defined as either the ratio of the
+total number of deaths and the total number of cases, infections or
+hospitalisations — would be accurate. These basic estimates are referred to as
+naive estimators. However, due to delays between onset or hospitalisation and
+death for all known diseases, this synchronisation is never true.</p>
+<p>For example, suppose 10 people start showing symptoms of a specific disease on
+a given day and the end of that day all remain alive. Suppose that for the next
+5 days, the numbers of new cases continue to rise until they reach 100 new cases
+on day 5. However, suppose that by day 5, all infected individuals remain alive.
+The naive estimate of the CFR would be zero calculated at the end of the first 5
+days would be zero, because there would have been zero deaths in total.
+Even after deaths begin to occur, this lag between the ascertainment of a case
+or hospitalisation and outcome leads to a consistently biased estimate. Hence,
+adjusting for such delays using an appropriate delay distribution
 is essential for accurate estimates of severity.</p>
 </div>
 <div class="section level2">
@@ -160,457 +149,430 @@ is essential for accurate estimates of severity.</p>
 <div class="section level3">
 <h3 id="data-required">Data required<a class="anchor" aria-label="anchor" href="#data-required"></a>
 </h3>
-<p>The data required to estimate the severity of a disease during an
-ongoing outbreak using the <code>datadelay</code> package includes:</p>
+<p>The data required to estimate the severity of a disease during an ongoing
+outbreak using the <em>datadelay</em> package includes:</p>
 <ul>
-<li>A time-series of cases, hospitalisations or some other proxy for
-infections over time;</li>
+<li>A time-series of cases, hospitalisations or some other proxy for infections
+over time;</li>
 <li>A time-series of deaths;</li>
-<li>A delay distribution, describing the probability an individual will
-die <span class="math inline">\(t\)</span> days after they were
-initially exposed. Such distributions come from the literature, where
-studies have typically fit distributions to data describing the
-process.</li>
+<li>A delay distribution, describing the probability an individual will die <span class="math inline">\(t\)</span>
+days after they were initially exposed. Such distributions come from the
+literature, where studies have typically fit distributions to data describing
+the process.</li>
 </ul>
-<p>In practice, the time-series of cases and deaths will already be
-together, given that they usually originate from sources that will have
-typically collated them into a single data file.</p>
-<p>The function within <code>datadelay</code> used to estimate the
-severity of a disease at a single time-point —
-<code><a href="../reference/estimate_static.html">estimate_static()</a></code> — requires a <code>data.frame</code> of
-input data — typically case and death time series data — and a delay
-distribution. The delay distribution we use here comes from the
-<code>epiparameter</code> package.</p>
+<p>In practice, the time-series of cases and deaths will already be together, given
+that they usually originate from sources that will have typically collated them
+into a single data file.</p>
+<p>The function within <em>datadelay</em> used to estimate the severity of a disease at a
+single time-point — <code><a href="../reference/estimate_static.html">estimate_static()</a></code> — requires a <code>data.frame</code> of input data
+— typically case and death time series data — and a delay distribution. The
+delay distribution we use here comes from the <em>epiparameter</em> package.</p>
 </div>
 <div class="section level3">
 <h3 id="adjusting-for-delays-between-the-two-time-series">Adjusting for delays between the two time series<a class="anchor" aria-label="anchor" href="#adjusting-for-delays-between-the-two-time-series"></a>
 </h3>
-<p>The method used by this function follows Nishiura et al.<sup><span class="citation">[1]</span></sup>. The function calculates a quantity
-<span class="math inline">\(u_t\)</span> for each day within the input
-data, which represents the proportion of cases with a known outcome, on
-day <span class="math inline">\(t\)</span>. Following Nishiura et al.,
-<span class="math inline">\(u_t\)</span> is calculated in the following
-way:</p>
+<p>The method used by this function follows <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>.
+The function calculates a quantity <span class="math inline">\(u_t\)</span> for each day within the input data,
+which represents the proportion of cases with a known outcome, on day <span class="math inline">\(t\)</span>.
+Following Nishiura et al., <span class="math inline">\(u_t\)</span> is calculated in the following way:</p>
 <p><span class="math display">\[\begin{equation}
   u_t = \frac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
 \end{equation}\]</span></p>
-<p>where <span class="math inline">\(f_t\)</span> is the value of the
-probability mass function at time <span class="math inline">\(t\)</span>
-and <span class="math inline">\(c_t\)</span>, <span class="math inline">\(d_t\)</span> are the number of new cases and new
-deaths at time <span class="math inline">\(t\)</span>, (respectively).
-We then use <span class="math inline">\(u_t\)</span> at the end of the
-outbreak in the following likelihood function to estimate the severity
-of the disease in question.</p>
+<p>where <span class="math inline">\(f_t\)</span> is the value of the probability mass function at time <span class="math inline">\(t\)</span> and <span class="math inline">\(c_t\)</span>,
+<span class="math inline">\(d_t\)</span> are the number of new cases and new deaths at time <span class="math inline">\(t\)</span>, (respectively). We
+then use <span class="math inline">\(u_t\)</span> at the end of the outbreak in the following likelihood
+function to estimate the severity of the disease in question.</p>
 <p><span class="math display">\[\begin{equation}
   L(\theta | y) = \log{\binom{u_tC}{D}} + D \log{\theta} +
   (u_tC - D)\log{(1.0 - \theta)},
 \end{equation}\]</span></p>
-<p><span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span> are the cumulative number of cases and
-deaths (respectively) up until time <span class="math inline">\(t\)</span>. Lastly, <span class="math inline">\(\theta\)</span> is the parameter we wish to
-estimate, the severity of the disease. We estimate <span class="math inline">\(\theta\)</span> using simple maximum-likelihood
-methods, allowing the functions within this package to be quick and easy
-tools to use.</p>
+<p><span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span> are the cumulative number of cases and deaths (respectively) up
+until time <span class="math inline">\(t\)</span>. Lastly, <span class="math inline">\(\theta\)</span> is the parameter we wish to estimate, the
+severity of the disease. We estimate <span class="math inline">\(\theta\)</span> using simple maximum-likelihood
+methods, allowing the functions within this package to be quick and easy tools
+to use.</p>
 </div>
 <div class="section level3">
 <h3 id="interpreting-the-estimates">Interpreting the estimates<a class="anchor" aria-label="anchor" href="#interpreting-the-estimates"></a>
 </h3>
 <p>The precise severity measure — CFR, IFR, HFR, etc — that represents
-depends upon the input data given by the user. For complete clarity,
-here are the most common time series that users might calculate severity
-from and the resulting severity estimate from such data:</p>
-<ul>
-<li><p>Case and death incidence data, with a case-to-death delay
-distribution (or close approximation, such as onset-to-death) — Case
-Fatality Risk (CFR).</p></li>
-<li><p>Infection and death incidence data, with an exposure-to-death
-delay distribution (or close approximation) — Infection Fatality Risk
-(IFR).</p></li>
-<li><p>Hospitalisation and death incidence data, with a
-hospitalisation-to-death delay distribution (or close approximation) —
-Hospitalisation Fatality Risk (HFR).</p></li>
-</ul>
+depends upon the input data given by the user. For complete clarity, here are
+the most common time series that users might calculate severity from and the
+resulting severity estimate from such data:</p>
+<p>:Case and death incidence data, with a case-to-death delay distribution (or close approximation, such as onset-to-death) — Case Fatality Risk (CFR).</p>
+<p>:Infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).</p>
+<p>:Hospitalisation Fatality Risk (HFR) — Hospitalisation and death incidence data, delay distribution (or close approximation).</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="example-1976-ebola-outbreak-in-the-democratic-republic-of-the-congo">Example: 1976 Ebola outbreak in The Democratic Republic of the
-Congo<a class="anchor" aria-label="anchor" href="#example-1976-ebola-outbreak-in-the-democratic-republic-of-the-congo"></a>
+<h2 id="severity-of-the-1976-ebola-outbreak">Severity of the 1976 Ebola Outbreak<a class="anchor" aria-label="anchor" href="#severity-of-the-1976-ebola-outbreak"></a>
 </h2>
-<p>We use case and death incidence data from the 1976 Ebola outbreak to
-estimate the overall severity of Ebola. We do so as though we were
-roughly half way through the outbreak, emulating when the methods
-presented in this package are arguably their most useful.</p>
-<p>First of all, we plot the data from the entire outbreak. Then we
-subset the data, keeping only the first half of each time series, in
-order to emulate attempting to calculate the severity of the disease
-when the effects of long lag-times between case detection and death are
-most serious.</p>
+<p>We use case and death incidence data from the 1976 Ebola outbreak in the Democratic the overall severity of Ebola. We do so as though we were roughly half way
+through the outbreak, emulating when the methods presented in this package are
+arguably their most useful.</p>
+<p>First of all, we plot the data from the entire outbreak. Then we subset the
+data, keeping only the first half of each time series, in order to emulate
+attempting to calculate the severity of the disease when the effects of long
+lag-times between case detection and death are most serious.</p>
 <div class="section level3">
 <h3 id="plotting-the-raw-data">Plotting the raw data<a class="anchor" aria-label="anchor" href="#plotting-the-raw-data"></a>
 </h3>
-<p>First of all, we load the raw data and add the location to it with
-the following commands:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Adding the location to the dataset</span></span>
-<span><span class="va">ebola1976</span><span class="op">$</span><span class="va">location</span> <span class="op">&lt;-</span> <span class="st">"Democractic Republic of the Congo"</span></span></code></pre></div>
-<p>Then, we plot the case incidence data with the following command:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_case_data.html">plot_case_data</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-4-1.png" alt="\label{fig:ebola_case_data} **Figure 1:** Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the *datadelay* package" width="700"><p class="caption">
-<strong>Figure 1:</strong> Incidence of cases over time, taken from the
-1976 Ebola outbreak in the Democratic Republic of the Congo. Data
-retrieved from within the <em>datadelay</em> package
+<p>First of all, we load the raw data.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span></code></pre></div>
+</details><p>Then, we plot the case incidence data with the following command:</p>
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">cases</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"darkblue"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Cases"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-4-1.png" alt="Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the *datadelay* package."><p class="caption">
+Figure 1: Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the <em>datadelay</em> package.
 </p>
 </div>
-<p>Lastly, we plot the death incidence data with the following
-command:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_death_data.html">plot_death_data</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-5-1.png" alt="\label{fig:raw_data_ebola} **Figure 2:** Incidence of deaths over time from the same dataset as Figure 1." width="700"><p class="caption">
-<strong>Figure 2:</strong> Incidence of deaths over time from the same
-dataset as Figure 1.
+<p>Lastly, we plot the death incidence data with the following command:</p>
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">deaths</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"red"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Deaths"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-5-1.png" alt="Incidence of deaths over time from the same dataset as Figure 1."><p class="caption">
+Figure 2: Incidence of deaths over time from the same dataset as Figure 1.
 </p>
 </div>
-<p>We will focus on the roughly the first half of this dataset. We do so
-by subsetting the data so that we only include days before the 30th
-September 1976, using the following command:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_ebola_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">ebola1976</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"1976-09-30"</span><span class="op">)</span></span></code></pre></div>
+<p>We will focus on the roughly the first half of this dataset. We do so by
+subsetting the data so that we only include days before the 30th September 1976,
+using <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter()</a></code>.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">df_ebola_subset</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">ebola1976</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"1976-09-30"</span><span class="op">)</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="the-delay-distribution">The delay distribution<a class="anchor" aria-label="anchor" href="#the-delay-distribution"></a>
 </h3>
-<p>For this example, given that we are using case data and detection of
-a case is well-approximated by symptom onset, we use the distribution
-describing the delay between onset-to-death. As such, we retrieve such a
-distribution from the literature (reported <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">here</a><sup><span class="citation">[2]</span></sup>), using the <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db()</a></code>
-function from the <code>epiparameter</code> package with the following
-command:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>For this example, given that we are using case data and detection of a case is
+well-approximated by symptom onset, we use the distribution describing the delay
+between onset-to-death. As such, we retrieve such a distribution from the
+literature <span class="citation">(<a href="#ref-barry2018" role="doc-biblioref">Barry et al. 2018</a>)</span> using the <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db()</a></code> function from the <em>epiparameter</em> package with the following command:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
 <span>  disease <span class="op">=</span> <span class="st">"Ebola Virus Disease"</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
 <span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>To visualise this distribution, we evaluate it between 0 and 30 days,
-and plot the results over time:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_epiparameter_distribution.html">plot_epiparameter_distribution</a></span><span class="op">(</span><span class="va">onset_to_death_ebola</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-8-1.png" alt="\label{fig:delay_dist_ebola} **Figure 3: Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)." width="700"><p class="caption">
-<strong>Figure 3: Example plot of the appropriate delay distribution for
-the 1976 Ebola dataset.</strong> We plot the onset-to-death distribution
-we use throughout this example for Ebola Virus Disease (EVD), reported
-<a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">here</a>.
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; Using Barry et al. (2018) &lt;10.1016/S0140-6736(18)31387-4&gt; PMID: 30047375. </span></span>
+<span><span class="co">#&gt; To retrieve the short citation use the 'get_citation' function</span></span></code></pre></div>
+</details><p>To visualise this distribution, we evaluate it between 0 and 30 days, and plot
+the results over time using the appropriate plot method from the <em>epiparameter</em> package.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">onset_to_death_ebola</span>, day_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span>, vb <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-8-1.png" alt="Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)."><p class="caption">
+Figure 3: Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">here</a>.
 </p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="estimating-incidence-of-cases-or-similar-timeseries-with-a-known-outcome">Estimating incidence of cases (or similar timeseries) with a known
-outcome<a class="anchor" aria-label="anchor" href="#estimating-incidence-of-cases-or-similar-timeseries-with-a-known-outcome"></a>
+<h3 id="estimating-incidence-of-cases-or-similar-time-series-with-a-known-outcome">Estimating incidence of cases (or similar time-series) with a known outcome<a class="anchor" aria-label="anchor" href="#estimating-incidence-of-cases-or-similar-time-series-with-a-known-outcome"></a>
 </h3>
-<p>The function <code><a href="../reference/known_outcomes.html">known_outcomes()</a></code> from the
-<code>datadelay</code> package estimates the number of cases which have
-a known outcome over time.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_known_outcomes_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/known_outcomes.html">known_outcomes</a></span><span class="op">(</span></span>
-<span>  df_in <span class="op">=</span> <span class="va">df_ebola_subset</span>,</span>
+<p>The function <code><a href="../reference/known_outcomes.html">known_outcomes()</a></code> from the <em>datadelay</em> package estimates the
+number of cases which have a known outcome over time.</p>
+<p>The resulting data frame contains two new columns, “known_outcomes”, for the number of known outcomes (deaths) expected for each day, and “u_t”, the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known outcomes.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># calculate known outcomes</span></span>
+<span><span class="va">df_known_outcomes_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/known_outcomes.html">known_outcomes</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">df_ebola_subset</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/plot_known_outcomes.html">plot_known_outcomes</a></span><span class="op">(</span><span class="va">df_known_outcomes_ebola</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-9-1.png" alt="\label{fig:known_outcomes_ebola} **Figure 4:** The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included." width="700"><p class="caption">
-<strong>Figure 4:</strong> The same case and death time series for the
-1976 Ebola outbreak in D.R.C., with estimated known outcomes included.
+<span><span class="co"># visualise head of data frame</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df_known_outcomes_ebola</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         date cases deaths known_outcomes        u_t</span></span>
+<span><span class="co">#&gt; 1 1976-08-25     1      0     0.00000000 0.00000000</span></span>
+<span><span class="co">#&gt; 2 1976-08-26     0      0     0.03316057 0.03316057</span></span>
+<span><span class="co">#&gt; 3 1976-08-27     0      0     0.06482994 0.09799050</span></span>
+<span><span class="co">#&gt; 4 1976-08-28     0      0     0.08472567 0.18271617</span></span>
+<span><span class="co">#&gt; 5 1976-08-29     0      0     0.09389465 0.27661082</span></span>
+<span><span class="co">#&gt; 6 1976-08-30     0      0     0.09506629 0.37167711</span></span></code></pre></div>
+</details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># plot cases and known outcomes as separate layers</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_known_outcomes_ebola</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">cases</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"Cases"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">known_outcomes</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"Known outcomes"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Cases"</span> <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
+<span>      <span class="st">"Known outcomes"</span> <span class="op">=</span> <span class="st">"darkgreen"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"top"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"No. of individuals"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-10"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-10-1.png" alt="The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included."><p class="caption">
+Figure 4: The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included.
 </p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="estimating-the-naive-and-corrected-cfr">Estimating the naive and corrected CFR<a class="anchor" aria-label="anchor" href="#estimating-the-naive-and-corrected-cfr"></a>
 </h3>
-<p>Once we calculate the proportion of cases with known outcomes, we
-apply the proportion to the number of cases to correct for the delay
-between onset-to-death. We do so by using the function
-<code><a href="../reference/estimate_static.html">estimate_static()</a></code> from the <code>datadelay</code> package.
-This function estimates the proportion of known outcomes over time, and
-uses the estimate to correct the naive severity estimate. This is
-controlled using the <code>correct_for_delays</code> boolean flag
-argument in the <code>estimate_static</code> function. Otherwise, it
-calculates a naive severity estimate, which does not adjust for delays
-and is simply the total number of deaths in the dataset divided by the
-total number of cases. We run this function for the naive and corrected
-estimates using the following two commands (respectively):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>Once we calculate the proportion of cases with known outcomes, we apply the
+proportion to the number of cases to correct for the delay between
+onset-to-death. We do so by using the function <code><a href="../reference/estimate_static.html">estimate_static()</a></code> from the
+<em>datadelay</em> package. This function estimates the proportion of known outcomes
+over time, and uses the estimate to correct the naive severity estimate. This is
+controlled using the <code>correct_for_delays</code> boolean flag argument in the
+<code><a href="../reference/estimate_static.html">estimate_static()</a></code> function. Otherwise, it calculates a naive severity estimate,
+which does not adjust for delays and is simply the total number of deaths in the
+dataset divided by the total number of cases. We run this function for the naive
+and corrected estimates using the following two commands (respectively):</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculating the naive CFR</span></span>
-<span><span class="va">df_ncfr_static_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
-<span>  <span class="va">df_ebola_subset</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"location"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
-<span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>,</span>
-<span>    type <span class="op">=</span> <span class="st">"Naive CFR"</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">df_ebola_subset</span>,</span>
+<span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1   0.7197802   0.6485503   0.7836984</span></span>
 <span></span>
 <span><span class="co"># calculating the corrected CFR</span></span>
-<span><span class="va">df_ccfr_static_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_ebola_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"location"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
-<span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>,</span>
-<span>    type <span class="op">=</span> <span class="st">"Corrected CFR"</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="co"># putting the two results together</span></span>
-<span><span class="va">df_static_clean_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_ncfr_static_ebola</span>, <span class="va">df_ccfr_static_ebola</span><span class="op">)</span></span></code></pre></div>
-<p>Once we have calculated both the naive and corrected severity
-estimates, in this case CFRs, we put them together and make a table,
-using the <code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable()</a></code> function from the <code>knitr</code>
-package, using the following command:</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">df_static_clean_ebola</span>,</span>
-<span>  align <span class="op">=</span> <span class="st">"c"</span>,</span>
-<span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Location"</span>, <span class="st">"CFR estimate"</span>, <span class="st">"Type"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<table class="table table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:center;">
-Location
-</th>
-<th style="text-align:center;">
-CFR estimate
-</th>
-<th style="text-align:center;">
-Type
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-Democractic Republic of the Congo
-</td>
-<td style="text-align:center;">
-71.98% (95% CI: 64.86% - 78.37%)
-</td>
-<td style="text-align:center;">
-Naive CFR
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-Democractic Republic of the Congo
-</td>
-<td style="text-align:center;">
-100.00% (95% CI: 87.00% - 100.00%)
-</td>
-<td style="text-align:center;">
-Corrected CFR
-</td>
-</tr>
-</tbody>
-</table>
+<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1           1        0.87           1</span></span></code></pre></div>
+</details>
 </div>
 </div>
 <div class="section level2">
-<h2 id="example-with-data-from-the-ongoing-covid-19-pandemic-in-the-u-k-">Example with data from the ongoing COVID-19 pandemic in the
-U.K.<a class="anchor" aria-label="anchor" href="#example-with-data-from-the-ongoing-covid-19-pandemic-in-the-u-k-"></a>
+<h2 id="severity-of-the-covid-19-pandemic-in-the-u-k-">Severity of the COVID-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#severity-of-the-covid-19-pandemic-in-the-u-k-"></a>
 </h2>
-<p>We now perform a similar analysis with all of the same steps, with
-data taken from the ongoing COVID-19 epidemic in the U.K. For brevity,
-we describe the steps without methodological explanations throughout
-this example.</p>
+<p>We now perform a similar analysis with all of the same steps, with data taken
+from the ongoing COVID-19 epidemic in the U.K. For brevity, we describe the
+steps without methodological explanations throughout this example.</p>
 <div class="section level3">
 <h3 id="plotting-the-raw-data-1">Plotting the raw data<a class="anchor" aria-label="anchor" href="#plotting-the-raw-data-1"></a>
 </h3>
-<p>First of all, we subset the data so that we focus on just the first
-year of the COVID-19 outbreak in the U.K. We do so, as the CFR changed
-dramatically as a result of the vaccine campaign. The static severity
-calculations we are performing in this vignette are not able to deal
-with changes in severity over time. We download the data — using the
-<code>covidregionaldata</code> package — change some default column
-names to match those required by <code>datadelay</code> and subset the
-data.frame to focus on the first year of the pandemic in the U.K., with
-the following commands:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>First of all, we subset the data so that we focus on just the first year of the
+COVID-19 outbreak in the U.K. We do so, as the CFR changed dramatically as a
+result of the vaccine campaign. The static severity calculations we are
+performing in this vignette are not able to deal with changes in severity over
+time. We download the data — using the <code>covidregionaldata</code> package —
+change some default column names to match those required by <em>datadelay</em> and
+subset the data.frame to focus on the first year of the pandemic in the U.K.,
+with the following commands:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiforecasts.io/covidregionaldata/reference/get_national_data.html" class="external-link">get_national_data</a></span><span class="op">(</span></span>
 <span>  countries <span class="op">=</span> <span class="st">"united kingdom"</span>, source <span class="op">=</span> <span class="st">"who"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"cases_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"cases"</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"deaths_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"deaths"</span></span>
+<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span>
+<span>  <span class="va">df_covid_uk</span>,</span>
+<span>  cases <span class="op">=</span> <span class="va">cases_new</span>, deaths <span class="op">=</span> <span class="va">deaths_new</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-12-31"</span><span class="op">)</span></span></code></pre></div>
-<p>Then, we plot the subsetted case data with following command:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_case_data.html">plot_case_data</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-13-1.png" alt="\label{fig:raw_data_covid} **Figure 5:** Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K." width="700"><p class="caption">
-<strong>Figure 5:</strong> Incidence of cases over time for the ongoing
-COVID-19 outbreak in the U.K.
+<span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-12-31"</span><span class="op">)</span></span></code></pre></div>
+</details><p>Then, we plot the subsetted case data with following command:</p>
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">cases</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"darkblue"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    labels <span class="op">=</span> <span class="va">comma</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Cases"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-13"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-13-1.png" alt="Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."><p class="caption">
+Figure 5: Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.
 </p>
 </div>
 <p>Then, we plot the subsetted death data with following command:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_death_data.html">plot_death_data</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-14-1.png" alt="\label{fig:raw_data_covid} **Figure 6:** Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K." width="700"><p class="caption">
-<strong>Figure 6:</strong> Incidence of deaths over time for the ongoing
-COVID-19 outbreak in the U.K.
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">deaths</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    colour <span class="op">=</span> <span class="st">"red"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    labels <span class="op">=</span> <span class="va">comma</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Deaths"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-14"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-14-1.png" alt="Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K."><p class="caption">
+Figure 6: Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.
 </p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="the-delay-distribution-1">The delay distribution<a class="anchor" aria-label="anchor" href="#the-delay-distribution-1"></a>
 </h3>
-<p>We again retrieve the appropriate distribution (reported <a href="https://doi.org/10.3390/jcm9020538" class="external-link">here</a><sup><span class="citation">[3]</span></sup>), using the <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db()</a></code>
-function from the <code>epiparameter</code> package, using the following
-command:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>We again retrieve the appropriate distribution from <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> using the <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db()</a></code> function from the <em>epiparameter</em> package, using the following command.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">onset_to_death_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
 <span>  disease <span class="op">=</span> <span class="st">"COVID-19"</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
 <span>  author <span class="op">=</span> <span class="st">"Linton_etal"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>To visualise this distribution, we evaluate it between 0 and 30 days,
-and plot the results over time. We do so using the following
-command:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plot_epiparameter_distribution.html">plot_epiparameter_distribution</a></span><span class="op">(</span><span class="va">onset_to_death_covid</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-16-1.png" alt="\label{fig:delay_dist_covid} **Figure 7: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.** We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)." width="700"><p class="caption">
-<strong>Figure 7: Example plot of the appropriate delay distribution for
-the COVID-19 epidemic in the U.K.</strong> We plot the onset-to-death
-distribution we use throughout this example for COVID-19, reported <a href="https://doi.org/10.3390/jcm9020538" class="external-link">here</a>.
+</details><p>To visualise this distribution, we evaluate it between 0 and 30 days, and plot
+the results over time. We do so using the following command:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">onset_to_death_covid</span>, day_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span>, vb <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-16-1.png" alt="Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)."><p class="caption">
+Figure 7: Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported <a href="https://doi.org/10.3390/jcm9020538" class="external-link">here</a>.
 </p>
 </div>
 </div>
 <div class="section level3">
-<h3 id="estimating-incidence-of-cases-or-similar-timeseries-with-a-known-outcome-1">Estimating incidence of cases (or similar timeseries) with a known
-outcome<a class="anchor" aria-label="anchor" href="#estimating-incidence-of-cases-or-similar-timeseries-with-a-known-outcome-1"></a>
+<h3 id="estimating-incidence-of-cases-with-a-known-outcome">Estimating incidence of cases with a known outcome<a class="anchor" aria-label="anchor" href="#estimating-incidence-of-cases-with-a-known-outcome"></a>
 </h3>
-<p>We use the same method and implementation as in the Ebola example to
-calculate the number of known outcomes over time, using the following
-command:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<p>We use the same method and implementation as in the Ebola example to calculate
+the number of known outcomes over time, using the following command:</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_known_outcomes_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/known_outcomes.html">known_outcomes</a></span><span class="op">(</span></span>
-<span>  df_in <span class="op">=</span> <span class="va">df_covid_uk_subset</span>,</span>
+<span>  data <span class="op">=</span> <span class="va">df_covid_uk_subset</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="../reference/plot_known_outcomes.html">plot_known_outcomes</a></span><span class="op">(</span><span class="va">df_known_outcomes_covid</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: left">
-<img src="estimate_static_severity_files/figure-html/unnamed-chunk-17-1.png" alt="\label{fig:known_outcomes_covid} **Figure 8:** The same case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included." width="700"><p class="caption">
-<strong>Figure 8:</strong> The same case time series for the ongoing
-COVID-19 epidemic in the U.K., with estimated known outcomes included.
+<span><span class="op">)</span></span></code></pre></div>
+</details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_known_outcomes_covid</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">cases</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"Cases"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">known_outcomes</span>,</span>
+<span>      colour <span class="op">=</span> <span class="st">"Known outcomes"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_manual.html" class="external-link">scale_colour_manual</a></span><span class="op">(</span></span>
+<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"Cases"</span> <span class="op">=</span> <span class="st">"darkblue"</span>,</span>
+<span>      <span class="st">"Known outcomes"</span> <span class="op">=</span> <span class="st">"darkgreen"</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    name <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
+<span>    date_labels <span class="op">=</span> <span class="st">"%d-%b-%Y"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
+<span>    labels <span class="op">=</span> <span class="va">comma</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
+<span>    legend.position <span class="op">=</span> <span class="st">"top"</span></span>
+<span>  <span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
+<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"No. of individuals"</span></span>
+<span>  <span class="op">)</span></span></code></pre></div>
+</details><div class="figure" style="text-align: left">
+<span style="display:block;" id="fig:unnamed-chunk-18"></span>
+<img src="estimate_static_severity_files/figure-html/unnamed-chunk-18-1.png" alt="The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included."><p class="caption">
+Figure 8: The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included.
 </p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="estimating-the-naive-and-corrected-cfr-1">Estimating the naive and corrected CFR<a class="anchor" aria-label="anchor" href="#estimating-the-naive-and-corrected-cfr-1"></a>
 </h3>
-<p>Finally, we calculate the naive and corrected CFRs for the COVID-19
-epidemic in the U.K:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>Finally, we calculate the naive and corrected CFRs for the COVID-19 epidemic in
+the U.K.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculating the naive CFR</span></span>
-<span><span class="va">df_ncfr_static_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span></span>
-<span>    estimate_type <span class="op">=</span> <span class="st">"severity"</span>, type <span class="op">=</span> <span class="st">"Naive CFR"</span></span>
-<span>  <span class="op">)</span></span>
+<span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1  0.03779862  0.03756107  0.03803725</span></span>
 <span></span>
 <span><span class="co"># calculating the corrected CFR</span></span>
-<span><span class="va">df_ccfr_static_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/format_output.html">format_output</a></span><span class="op">(</span>estimate_type <span class="op">=</span> <span class="st">"severity"</span>, type <span class="op">=</span> <span class="st">"Corrected CFR"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># putting the two results together</span></span>
-<span><span class="va">df_static_clean_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">df_ncfr_static_covid</span>, <span class="va">df_ccfr_static_covid</span><span class="op">)</span></span></code></pre></div>
-<p>Once we have calculated both the naive and corrected CFR values, we
-put them together and make a table, using the <code><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable()</a></code>
-function from the <code>knitr</code> package, using the following
-command:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">df_static_clean_covid</span>,</span>
-<span>  align <span class="op">=</span> <span class="st">"c"</span>,</span>
-<span>  col.names <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Location"</span>, <span class="st">"CFR estimate"</span>, <span class="st">"Type"</span><span class="op">)</span></span>
-<span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/pkg/kableExtra/man/kable_styling.html" class="external-link">kable_styling</a></span><span class="op">(</span>full_width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<table class="table table" style="width: auto !important; margin-left: auto; margin-right: auto;">
-<thead><tr>
-<th style="text-align:center;">
-Location
-</th>
-<th style="text-align:center;">
-CFR estimate
-</th>
-<th style="text-align:center;">
-Type
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-United Kingdom
-</td>
-<td style="text-align:center;">
-3.64% (95% CI: 3.62% - 3.66%)
-</td>
-<td style="text-align:center;">
-Naive CFR
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-United Kingdom
-</td>
-<td style="text-align:center;">
-4.60% (95% CI: 4.60% - 4.70%)
-</td>
-<td style="text-align:center;">
-Corrected CFR
-</td>
-</tr>
-</tbody>
-</table>
-<div id="refs" class="references csl-bib-body">
-<div id="ref-nishiura2009early" class="csl-entry">
-<div class="csl-left-margin">1 </div>
-<div class="csl-right-inline">Nishiura H, Klinkenberg D, Roberts M, <em>et
-al.</em> Early epidemiological assessment of the virulence of emerging
-infectious diseases: A case study of an influenza pandemic. <em>PloS
-one</em> 2009;<strong>4</strong>:e6852.</div>
+<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1       0.048       0.048       0.048</span></span></code></pre></div>
+</details>
 </div>
-<div id="ref-barry2018outbreak" class="csl-entry">
-<div class="csl-left-margin">2 </div>
-<div class="csl-right-inline">Barry
-A, Ahuka-Mundeke S, Ahmed YA, <em>et al.</em> Outbreak of ebola virus
-disease in the democratic republic of the congo, april–may, 2018: An
-epidemiological study. <em>The Lancet</em>
-2018;<strong>392</strong>:213–21.</div>
+<div class="section level3">
+<h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-barry2018" class="csl-entry">
+Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et al. 2018. <span>“Outbreak of Ebola virus disease in the Democratic Republic of the Congo, April–May, 2018: an epidemiological study.”</span> <em>The Lancet</em> 392 (10143): 213–21. <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">https://doi.org/10.1016/S0140-6736(18)31387-4</a>.
 </div>
-<div id="ref-linton2020incubation" class="csl-entry">
-<div class="csl-left-margin">3 </div>
-<div class="csl-right-inline">Linton NM, Kobayashi T, Yang Y, <em>et al.</em>
-Incubation period and other epidemiological characteristics of 2019
-novel coronavirus infections with right truncation: A statistical
-analysis of publicly available case data. <em>Journal of clinical
-medicine</em> 2020;<strong>9</strong>:538.</div>
+<div id="ref-linton2020" class="csl-entry">
+Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and Hiroshi Nishiura. 2020. <span>“Incubation Period and Other Epidemiological Characteristics of 2019 Novel Coronavirus Infections with Right Truncation: A Statistical Analysis of Publicly Available Case Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
+</div>
+<div id="ref-nishiura2009" class="csl-entry">
+Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P. Heesterbeek. 2009. <span>“Early Epidemiological Assessment of the Virulence of Emerging Infectious Diseases: A Case Study of an Influenza Pandemic.”</span> <em>PLOS ONE</em> 4 (8): e6852. <a href="https://doi.org/10.1371/journal.pone.0006852" class="external-link">https://doi.org/10.1371/journal.pone.0006852</a>.
 </div>
 </div>
 </div>

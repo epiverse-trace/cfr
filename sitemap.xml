@@ -4,7 +4,13 @@
     <loc>https://epiverse-trace.github.io/datadelay/404.html</loc>
   </url>
   <url>
+    <loc>https://epiverse-trace.github.io/datadelay/CONTRIBUTING.html</loc>
+  </url>
+  <url>
     <loc>https://epiverse-trace.github.io/datadelay/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>https://epiverse-trace.github.io/datadelay/articles/datadelay.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/articles/estimate_ascertainment.html</loc>
@@ -19,16 +25,10 @@
     <loc>https://epiverse-trace.github.io/datadelay/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://epiverse-trace.github.io/datadelay/articles/setup_and_installation.html</loc>
-  </url>
-  <url>
     <loc>https://epiverse-trace.github.io/datadelay/authors.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/index.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/datadelay/reference/datadelay-package.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/reference/ebola1976.html</loc>
@@ -46,9 +46,6 @@
     <loc>https://epiverse-trace.github.io/datadelay/reference/estimate_time_varying.html</loc>
   </url>
   <url>
-    <loc>https://epiverse-trace.github.io/datadelay/reference/format_output.html</loc>
-  </url>
-  <url>
     <loc>https://epiverse-trace.github.io/datadelay/reference/get_default_burn_in.html</loc>
   </url>
   <url>
@@ -62,9 +59,6 @@
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/reference/plot_death_data.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/datadelay/reference/plot_epiparameter_distribution.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/reference/plot_known_outcomes.html</loc>

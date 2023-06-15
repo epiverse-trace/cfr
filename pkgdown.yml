@@ -2,11 +2,11 @@ pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
+  datadelay: datadelay.html
   estimate_ascertainment: estimate_ascertainment.html
   estimate_static_severity: estimate_static_severity.html
   estimate_time_varying_severity: estimate_time_varying_severity.html
-  setup_and_installation: setup_and_installation.html
-last_built: 2023-06-02T12:04Z
+last_built: 2023-06-15T13:01Z
 urls:
   reference: https://epiverse-trace.github.io/datadelay/reference
   article: https://epiverse-trace.github.io/datadelay/articles

@@ -34,16 +34,18 @@ estimate and the delay-adjusted severity estimate"><!-- mathjax --><script src="
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/datadelay.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcome during an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
-    <a class="dropdown-item" href="../articles/setup_and_installation.html">Setup and Installation</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -79,21 +81,21 @@ estimate and the delay-adjusted severity estimate</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_reporting</span><span class="op">(</span></span>
-<span>  <span class="va">df_in</span>,</span>
-<span>  <span class="va">epi_dist</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"static"</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  epi_dist <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"static"</span>, <span class="st">"varying"</span><span class="op">)</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span>
 <span>  burn_in_value <span class="op">=</span> <span class="fu"><a href="get_default_burn_in.html">get_default_burn_in</a></span><span class="op">(</span><span class="va">epi_dist</span><span class="op">)</span>,</span>
-<span>  smooth_inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_date <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  location <span class="op">=</span> <span class="st">"country"</span></span>
+<span>  smooth_inputs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  smoothing_window <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  max_date <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>df_in</dt>
+    <dl><dt>data</dt>
 <dd><p>A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point.
@@ -101,7 +103,8 @@ Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
 Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between.
+with no missing dates in between. The "date" column must be of the class
+<code>Date</code> (see <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code>).
 Note also that the total number of cases must be greater than the total
 number of reported deaths.</p></dd>
 
@@ -129,19 +132,28 @@ used in the final ratio to estimate the overall ascertainment rate</p></dd>
 <dt>burn_in_value</dt>
 <dd><p>The number of time-points (typically days) to disregard
 at the start of the time-series, if a burn-in period is desired.
-The default value is set to the mean of the central spread of the <code>epidist</code>
+The default value is set to the mean of the central spread of the <code>&lt;epidist&gt;</code>
 object passed to the function, assuming the temporal resolution is daily.
 Alternatively, a sensible value might be 7, to disregard the first week of
 cases and deaths.
 To consider all case data including the start of the time-series, set this
-argument to 0.</p></dd>
+argument to 1.</p></dd>
 
 
 <dt>smooth_inputs</dt>
 <dd><p>A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
-before calculating the time-varying severity. Useful for noisey time-series
+before calculating the time-varying severity. Useful for noisy time-series
 or time-series with strong reporting (e.g., weekend) effects</p></dd>
+
+
+<dt>smoothing_window</dt>
+<dd><p>An <em>odd</em> number determining the smoothing window size
+to use when smoothing the case and death time-series, using a moving average
+procedure before calculating the time-varying severity.
+Useful for noisy time-series or time-series with strong reporting
+(e.g., weekend) effects.
+The default value is 1 for <em>no smoothing</em>. Values &gt; 1 apply smoothing.</p></dd>
 
 
 <dt>correct_for_delays</dt>
@@ -156,12 +168,6 @@ calculating a corrected severity</p></dd>
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
 time-period</p></dd>
-
-
-<dt>location</dt>
-<dd><p>Column name as a string by which to disaggregate data for
-estimates. This is usually a column indicating the region or country to which
-the estimate applies.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -196,24 +202,18 @@ of the corrected severity</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Using Linton et al. (2020) &lt;10.3390/jcm9020538&gt; PMID: 32079150. </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> To retrieve the short citation use the 'get_citation' function</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_reporting_varying</span> <span class="op">&lt;-</span> <span class="fu">estimate_reporting</span><span class="op">(</span><span class="va">df_covid_uk</span>,</span></span>
+<span class="r-in"><span><span class="fu">estimate_reporting</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span></span>
 <span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span></span>
 <span class="r-in"><span>  type <span class="op">=</span> <span class="st">"varying"</span>,</span></span>
 <span class="r-in"><span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span></span>
 <span class="r-in"><span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  burn_in_value <span class="op">=</span> <span class="fl">7L</span>,</span></span>
 <span class="r-in"><span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span>,</span></span>
-<span class="r-in"><span>  location <span class="op">=</span> <span class="st">"U.K."</span></span></span>
+<span class="r-in"><span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="format_output.html">format_output</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">df_reporting_varying</span>,</span></span>
-<span class="r-in"><span>  estimate_type <span class="op">=</span> <span class="st">"reporting"</span>,</span></span>
-<span class="r-in"><span>  type <span class="op">=</span> <span class="st">"Under-reporting"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Location                         Estimate            Type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     &lt;NA&gt; 21.76% (95% CI: 27.43% - 17.52%) Under-reporting</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   reporting_me reporting_lo reporting_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.2226    0.1776723    0.2836716</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -24,16 +24,18 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/datadelay.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcome during an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
-    <a class="dropdown-item" href="../articles/setup_and_installation.html">Setup and Installation</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -63,7 +65,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_default_burn_in</span><span class="op">(</span><span class="va">epi_dist</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_default_burn_in</span><span class="op">(</span>epi_dist <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">

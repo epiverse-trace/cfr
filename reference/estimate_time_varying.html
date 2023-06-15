@@ -30,16 +30,18 @@ a case fatality ratio over time is estimated"><!-- mathjax --><script src="https
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item">
+      <ul class="navbar-nav me-auto"><li class="nav-item">
+  <a class="nav-link" href="../articles/datadelay.html">Get started</a>
+</li>
+<li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcome during an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
-    <a class="dropdown-item" href="../articles/setup_and_installation.html">Setup and Installation</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -73,18 +75,18 @@ a case fatality ratio over time is estimated</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_time_varying</span><span class="op">(</span></span>
-<span>  <span class="va">df_in</span>,</span>
-<span>  <span class="va">epi_dist</span>,</span>
+<span>  <span class="va">data</span>,</span>
+<span>  epi_dist <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  burn_in_value <span class="op">=</span> <span class="fu"><a href="get_default_burn_in.html">get_default_burn_in</a></span><span class="op">(</span><span class="va">epi_dist</span><span class="op">)</span>,</span>
 <span>  smooth_inputs <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  smoothing_window <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  smoothing_window <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>df_in</dt>
+    <dl><dt>data</dt>
 <dd><p>A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
 the numbers of new cases and new deaths at each time point.
@@ -92,7 +94,8 @@ Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
 Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between.
+with no missing dates in between. The "date" column must be of the class
+<code>Date</code> (see <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code>).
 Note also that the total number of cases must be greater than the total
 number of reported deaths.</p></dd>
 
@@ -109,24 +112,24 @@ A typical example would be a symptom onset to death delay distribution.</p></dd>
 <dt>burn_in_value</dt>
 <dd><p>The number of time-points (typically days) to disregard
 at the start of the time-series, if a burn-in period is desired.
-The default value is set to the mean of the central spread of the <code>epidist</code>
+The default value is set to the mean of the central spread of the <code>&lt;epidist&gt;</code>
 object passed to the function, assuming the temporal resolution is daily.
 Alternatively, a sensible value might be 7, to disregard the first week of
 cases and deaths.
 To consider all case data including the start of the time-series, set this
-argument to 0.</p></dd>
+argument to 1.</p></dd>
 
 
 <dt>smooth_inputs</dt>
 <dd><p>A boolean flag determining whether the user wishes to
 smooth the case and death time-series, using a moving average procedure
-before calculating the time-varying severity. Useful for noisey time-series
+before calculating the time-varying severity. Useful for noisy time-series
 or time-series with strong reporting (e.g., weekend) effects</p></dd>
 
 
 <dt>smoothing_window</dt>
-<dd><p>A number determining the smoothing window size to use
-when smoothing the case and death time-series, using a moving average
+<dd><p>An <em>odd</em> number determining the smoothing window size
+to use when smoothing the case and death time-series, using a moving average
 procedure before calculating the time-varying severity.
 Useful for noisy time-series or time-series with strong reporting
 (e.g., weekend) effects.
@@ -150,54 +153,182 @@ of the corrected severity</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/datadelay" class="external-link">datadelay</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://epiforecasts.io/covidregionaldata/" class="external-link">covidregionaldata</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># load package data</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiforecasts.io/covidregionaldata/reference/get_national_data.html" class="external-link">get_national_data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  countries <span class="op">=</span> <span class="st">"united kingdom"</span>, source <span class="op">=</span> <span class="st">"who"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">df_covid_uk</span>,</span></span>
-<span class="r-in"><span>  cases <span class="op">=</span> <span class="va">cases_new</span>, deaths <span class="op">=</span> <span class="va">deaths_new</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-12-31"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">onset_to_death_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  disease <span class="op">=</span> <span class="st">"COVID-19"</span>,</span></span>
+<span class="r-in"><span><span class="co"># get an onset to death distribution from the {epiparameter} package</span></span></span>
+<span class="r-in"><span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu">epiparameter</span><span class="fu">::</span><span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  disease <span class="op">=</span> <span class="st">"Ebola Virus Disease"</span>,</span></span>
 <span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span></span>
-<span class="r-in"><span>  author <span class="op">=</span> <span class="st">"Linton_etal"</span></span></span>
+<span class="r-in"><span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>More than one study found. Selecting first one. Please report an issue with duplicated studies.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using Linton et al. (2020) &lt;10.3390/jcm9020538&gt; PMID: 32079150. </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Using Barry et al. (2018) &lt;10.1016/S0140-6736(18)31387-4&gt; PMID: 30047375. </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> To retrieve the short citation use the 'get_citation' function</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_covid_cfr_uk_naive</span> <span class="op">&lt;-</span> <span class="fu">estimate_time_varying</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">df_covid_uk_subset</span>,</span></span>
-<span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span></span>
+<span class="r-in"><span><span class="co"># estimate time varying severity without correcting for delays</span></span></span>
+<span class="r-in"><span><span class="fu">estimate_time_varying</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span></span>
 <span class="r-in"><span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  burn_in_value <span class="op">=</span> <span class="fl">7L</span>,</span></span>
 <span class="r-in"><span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date cases deaths severity_me severity_lo severity_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1976-08-25     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1976-08-26     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1976-08-27     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1976-08-28     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1976-08-29     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1976-08-30     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1976-08-31     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1976-09-01     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1976-09-02     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1976-09-03     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1976-09-04     4      0   0.0000000 0.000000000   0.6023646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1976-09-05     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1976-09-06     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1976-09-07     3      0   0.0000000 0.000000000   0.7075982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1976-09-08     2      1   0.5000000 0.012579117   0.9874209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1976-09-09     7      2   0.2857143 0.036692566   0.7095791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1976-09-10     9      1   0.1111111 0.002809137   0.4824965</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1976-09-11     4      3   0.7500000 0.194120450   0.9936905</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1976-09-12     8      1   0.1250000 0.003159724   0.5265097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1976-09-13     9      2   0.2222222 0.028144973   0.6000936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 1976-09-14     8      1   0.1250000 0.003159724   0.5265097</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 1976-09-15     9      8   0.8888889 0.517503485   0.9971909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 1976-09-16     6      4   0.6666667 0.222778096   0.9567281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 1976-09-17     6      3   0.5000000 0.118117249   0.8818828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 1976-09-18     3      5          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 1976-09-19     8      8   1.0000000 0.630583352   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 1976-09-20    10      6   0.6000000 0.262378077   0.8784477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 1976-09-21     5      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 1976-09-22    16     10   0.6250000 0.354346094   0.8480163</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 1976-09-23    12      3   0.2500000 0.054860645   0.5718585</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 1976-09-24    11      7   0.6363636 0.307904715   0.8907366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 1976-09-25    11      8   0.7272727 0.390257440   0.9397823</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 1976-09-26     7     11          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 1976-09-27     7      7   1.0000000 0.590383603   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 1976-09-28     4     13          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 1976-09-29     4     12          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 1976-09-30     3      9          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 1976-10-01     7      9          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 1976-10-02     2      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 1976-10-03     3      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41 1976-10-04     8      8   1.0000000 0.630583352   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42 1976-10-05     5      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 1976-10-06     7      2   0.2857143 0.036692566   0.7095791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 1976-10-07     5      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 1976-10-08     2      4          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 1976-10-09     3      3   1.0000000 0.292401774   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47 1976-10-10     4      2   0.5000000 0.067585986   0.9324140</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 1976-10-11     3      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49 1976-10-12     6      4   0.6666667 0.222778096   0.9567281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50 1976-10-13     2      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51 1976-10-14     1      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52 1976-10-15     0      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53 1976-10-16     0      2          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54 1976-10-17     0      4          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55 1976-10-18     1      1   1.0000000 0.025000000   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56 1976-10-19     1      1   1.0000000 0.025000000   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57 1976-10-20     2      4          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58 1976-10-21     0      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59 1976-10-22     0      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60 1976-10-23     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61 1976-10-24     1      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62 1976-10-25     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63 1976-10-26     0      2          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64 1976-10-27     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65 1976-10-28     0      2          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66 1976-10-29     0      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67 1976-10-30     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68 1976-10-31     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69 1976-11-01     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70 1976-11-02     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71 1976-11-03     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72 1976-11-04     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73 1976-11-05     0      1          NA          NA          NA</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_covid_cfr_uk_corrected</span> <span class="op">&lt;-</span> <span class="fu">estimate_time_varying</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">df_covid_uk_subset</span>,</span></span>
-<span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span></span>
+<span class="r-in"><span><span class="co"># estimate time varying severity while correcting for delays</span></span></span>
+<span class="r-in"><span><span class="fu">estimate_time_varying</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span></span>
+<span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span></span>
 <span class="r-in"><span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  burn_in_value <span class="op">=</span> <span class="fl">7L</span>,</span></span>
 <span class="r-in"><span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          date cases deaths severity_me severity_lo severity_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  1976-08-25     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  1976-08-26     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  1976-08-27     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  1976-08-28     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  1976-08-29     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  1976-08-30     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  1976-08-31     0      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  1976-09-01     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  1976-09-02     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 1976-09-03     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 1976-09-04     4      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 1976-09-05     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 1976-09-06     1      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14 1976-09-07     3      0          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15 1976-09-08     2      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16 1976-09-09     7      2          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17 1976-09-10     9      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18 1976-09-11     4      3          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19 1976-09-12     8      1          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20 1976-09-13     9      2          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21 1976-09-14     8      1   1.0000000 0.025000000   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22 1976-09-15     9      8          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23 1976-09-16     6      4          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24 1976-09-17     6      3          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25 1976-09-18     3      5          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26 1976-09-19     8      8          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27 1976-09-20    10      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28 1976-09-21     5      6          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 29 1976-09-22    16     10          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 30 1976-09-23    12      3   0.6000000 0.146632800   0.9472550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 31 1976-09-24    11      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 32 1976-09-25    11      8          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 33 1976-09-26     7     11          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 34 1976-09-27     7      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 35 1976-09-28     4     13          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 36 1976-09-29     4     12          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 37 1976-09-30     3      9          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 38 1976-10-01     7      9          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 39 1976-10-02     2      7   0.8750000 0.473490329   0.9968403</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 40 1976-10-03     3      6   0.7500000 0.349144206   0.9681460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 41 1976-10-04     8      8   0.8888889 0.517503485   0.9971909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 42 1976-10-05     5      6   0.6666667 0.299295056   0.9251454</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 43 1976-10-06     7      2   0.2222222 0.028144973   0.6000936</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 44 1976-10-07     5      6   0.7500000 0.349144206   0.9681460</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 45 1976-10-08     2      4   0.5000000 0.157012770   0.8429872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 46 1976-10-09     3      3   0.3750000 0.085233414   0.7551368</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 47 1976-10-10     4      2   0.2857143 0.036692566   0.7095791</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 48 1976-10-11     3      6   0.8571429 0.421276803   0.9963897</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 49 1976-10-12     6      4   0.6666667 0.222778096   0.9567281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50 1976-10-13     2      6   1.0000000 0.540741874   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 51 1976-10-14     1      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 52 1976-10-15     0      7          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 53 1976-10-16     0      2   0.3333333 0.043271868   0.7772219</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54 1976-10-17     0      4   0.8000000 0.283582064   0.9949492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 55 1976-10-18     1      1   0.2000000 0.005050763   0.7164179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 56 1976-10-19     1      1   0.2000000 0.005050763   0.7164179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 57 1976-10-20     2      4   0.8000000 0.283582064   0.9949492</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58 1976-10-21     0      1   0.2000000 0.005050763   0.7164179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 59 1976-10-22     0      1   0.2500000 0.006309463   0.8058796</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 60 1976-10-23     0      0   0.0000000 0.000000000   0.6023646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 61 1976-10-24     1      0   0.0000000 0.000000000   0.6023646</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 62 1976-10-25     0      0   0.0000000 0.000000000   0.7075982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 63 1976-10-26     0      2   0.6666667 0.094299324   0.9915962</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 64 1976-10-27     0      0   0.0000000 0.000000000   0.8418861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 65 1976-10-28     0      2   1.0000000 0.158113883   1.0000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 66 1976-10-29     0      1   0.5000000 0.012579117   0.9874209</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 67 1976-10-30     0      0   0.0000000 0.000000000   0.8418861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 68 1976-10-31     0      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 69 1976-11-01     0      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 70 1976-11-02     0      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 71 1976-11-03     0      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 72 1976-11-04     0      0   0.0000000 0.000000000   0.9750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 73 1976-11-05     0      1          NA          NA          NA</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
