@@ -81,31 +81,89 @@ estimate_static(
 )
 ```
 
-### Change in disease severity over the 1976 Ebola outbreak
+### Change in overall severity estimate over the 1976 Ebola outbreak
 
-Calculate the time-varying CFR estimates up to a given point in time.
+In this example we show how the severity estimate can change as more data on the outbreak becomes available, using the function `estimate_rolling()`.
+
+This example shows how the rolling estimate converges to the overall static estimate towards the end of the outbreak.
 
 ```{r example-ebola-plot}
 # Calculate the CFR without correcting for delays on each day of the outbreak
-head(
-  estimate_time_varying(
-    data = ebola1976, correct_for_delays = FALSE,
-    burn_in_value = 7
-  )
+rolling_cfr_naive <- estimate_rolling(
+  data = ebola1976,
 )
 
-# Calculate the daily CFR while correcting for delays
-head(
-  estimate_time_varying(
-    ebola1976,
-    correct_for_delays = TRUE,
-    epi_dist = onset_to_death_ebola,
-    burn_in_value = 7
-  )
+# add the date from the outbreak
+rolling_cfr_naive <- cbind(date = ebola1976[, "date"], rolling_cfr_naive)
+
+# see the first few rows
+head(rolling_cfr_naive)
+
+# Calculate the rolling daily CFR while correcting for delays
+rolling_cfr_corrected <- estimate_rolling(
+  data = ebola1976, correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola
 )
 
-# plots to be added later
+# add the date from the outbreak
+rolling_cfr_corrected <- cbind(date = ebola1976[, "date"], rolling_cfr_corrected)
+
+head(rolling_cfr_corrected)
 ```
+
+We plot the rolling CFR to visualise how severity changes over time, using the [_ggplot2_ package](https://ggplot2.tidyverse.org/). The plotting code is hidden here.
+
+```{r echo=FALSE, fig.cap="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown."}
+library(ggplot2)
+
+# visualise both corrected and uncorrected rolling estimates
+ggplot() +
+  geom_ribbon(
+    data = rolling_cfr_naive,
+    aes(
+      date,
+      ymin = severity_lo, ymax = severity_hi,
+      fill = "naive"
+    ),
+    alpha = 0.2, show.legend = FALSE
+  ) +
+  geom_ribbon(
+    data = rolling_cfr_corrected,
+    aes(
+      date,
+      ymin = severity_lo, ymax = severity_hi,
+      fill = "corrected"
+    ),
+    alpha = 0.2, show.legend = FALSE
+  ) +
+  geom_line(
+    data = rolling_cfr_naive,
+    aes(date, severity_me, colour = "naive")
+  ) +
+  geom_line(
+    data = rolling_cfr_corrected,
+    aes(date, severity_me, colour = "corrected")
+  ) +
+  scale_colour_brewer(
+    palette = "Dark2",
+    labels = c("Naive CFR", "Corrected CFR"),
+    name = NULL
+  ) +
+  scale_fill_brewer(
+    palette = "Dark2"
+  ) +
+  scale_x_date(
+    date_labels = "%d-%b-%Y",
+    name = "Date"
+  ) +
+  labs(
+    y = "Disease severity"
+  ) +
+  theme(
+    legend.position = "top"
+  )
+```
+
 
 ## Package vignettes
 
