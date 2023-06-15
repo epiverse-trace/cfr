@@ -91,45 +91,68 @@ estimate_static(
 #> 1       0.959       0.842           1
 ```
 
-### Change in disease severity over the 1976 Ebola outbreak
+### Change in overall severity estimate over the 1976 Ebola outbreak
 
-Calculate the time-varying CFR estimates up to a given point in time.
+In this example we show how the severity estimate can change as more
+data on the outbreak becomes available, using the function
+`estimate_rolling()`.
+
+This example shows how the rolling estimate converges to the overall
+static estimate towards the end of the outbreak.
 
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
-head(
-  estimate_time_varying(
-    data = ebola1976, correct_for_delays = FALSE,
-    burn_in_value = 7
-  )
+rolling_cfr_naive <- estimate_rolling(
+  data = ebola1976,
 )
-#>         date cases deaths severity_me severity_lo severity_hi
-#> 1 1976-08-25     1      0          NA          NA          NA
-#> 2 1976-08-26     0      0          NA          NA          NA
-#> 3 1976-08-27     0      0          NA          NA          NA
-#> 4 1976-08-28     0      0          NA          NA          NA
-#> 5 1976-08-29     0      0          NA          NA          NA
-#> 6 1976-08-30     0      0          NA          NA          NA
 
-# Calculate the daily CFR while correcting for delays
-head(
-  estimate_time_varying(
-    ebola1976,
-    correct_for_delays = TRUE,
-    epi_dist = onset_to_death_ebola,
-    burn_in_value = 7
-  )
+# add the date from the outbreak
+rolling_cfr_naive <- cbind(date = ebola1976[, "date"], rolling_cfr_naive)
+
+# see the first few rows
+head(rolling_cfr_naive)
+#>         date severity_me severity_lo severity_hi
+#> 1 1976-08-25           0           0       0.975
+#> 2 1976-08-26           0           0       0.975
+#> 3 1976-08-27           0           0       0.975
+#> 4 1976-08-28           0           0       0.975
+#> 5 1976-08-29           0           0       0.975
+#> 6 1976-08-30           0           0       0.975
+
+# Calculate the rolling daily CFR while correcting for delays
+rolling_cfr_corrected <- estimate_rolling(
+  data = ebola1976, correct_for_delays = TRUE,
+  epi_dist = onset_to_death_ebola
 )
-#>         date cases deaths severity_me severity_lo severity_hi
-#> 1 1976-08-25     1      0          NA          NA          NA
-#> 2 1976-08-26     0      0          NA          NA          NA
-#> 3 1976-08-27     0      0          NA          NA          NA
-#> 4 1976-08-28     0      0          NA          NA          NA
-#> 5 1976-08-29     0      0          NA          NA          NA
-#> 6 1976-08-30     0      0          NA          NA          NA
 
-# plots to be added later
+# add the date from the outbreak
+rolling_cfr_corrected <- cbind(date = ebola1976[, "date"], rolling_cfr_corrected)
+
+head(rolling_cfr_corrected)
+#>         date severity_me severity_lo severity_hi
+#> 1 1976-08-25       0.001          NA          NA
+#> 2 1976-08-26       0.001       0.001       0.999
+#> 3 1976-08-27       0.001       0.001       0.999
+#> 4 1976-08-28       0.001       0.001       0.999
+#> 5 1976-08-29       0.001       0.001       0.999
+#> 6 1976-08-30       0.001       0.001       0.994
 ```
+
+We plot the rolling CFR to visualise how severity changes over time,
+using the [*ggplot2* package](https://ggplot2.tidyverse.org/). The
+plotting code is hidden here.
+
+<div class="figure">
+
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%" />
+<p class="caption">
+Disease severity of ebola in the 1976 outbreak estimated on each day of
+the epidemic. The rolling CFR value converges to the static value
+towards the end of the outbreak. Both corrected and uncorrected
+estimates are shown.
+</p>
+
+</div>
 
 ## Package vignettes
 
