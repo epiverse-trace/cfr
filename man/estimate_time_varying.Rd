@@ -10,7 +10,7 @@ estimate_time_varying(
   burn_in_value = get_default_burn_in(epi_dist),
   smooth_inputs = FALSE,
   smoothing_window = 1,
-  correct_for_delays = TRUE
+  correct_for_delays = FALSE
 )
 }
 \arguments{
