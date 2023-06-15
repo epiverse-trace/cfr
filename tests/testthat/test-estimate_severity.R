@@ -22,11 +22,13 @@ df_corrected <- known_outcomes(
 
 # run estimate_severity
 severity_estimate <- estimate_severity(
-  data = df_corrected,
+  total_cases = sum(df_corrected$cases),
+  total_deaths = sum(df_corrected$deaths),
+  total_outcomes = sum(df_corrected$known_outcomes),
   poisson_threshold = poisson_threshold
 )
 
-test_that("`estimate_severity`: Basic expectations", {
+test_that("`estimate_rolling`: Basic expectations", {
   expect_s3_class(severity_estimate, "data.frame")
   expect_named(
     severity_estimate,
@@ -54,7 +56,9 @@ test_that("`estimate_severity`: Basic expectations", {
   # check estimate_severity with higher poisson threshold
   # forcing use of an alternative calculation
   severity_estimate_lt <- estimate_severity(
-    data = df_corrected,
+    total_cases = sum(df_corrected$cases),
+    total_deaths = sum(df_corrected$deaths),
+    total_outcomes = sum(df_corrected$known_outcomes),
     poisson_threshold = 1000
   )
   # snapshot of severity estimate using alternative method
@@ -74,7 +78,9 @@ test_that("`estimate_severity`: Basic expectations", {
 
   # run estimate_severity
   severity_low_deaths <- estimate_severity(
-    data = df_corrected,
+    total_cases = sum(df_corrected$cases),
+    total_deaths = sum(df_corrected$deaths),
+    total_outcomes = sum(df_corrected$known_outcomes),
     poisson_threshold = poisson_threshold
   )
 
@@ -83,7 +89,7 @@ test_that("`estimate_severity`: Basic expectations", {
   )
 })
 
-test_that("`estimate_severity`: Messages and errors", {
+test_that("`estimate_rolling`: Messages and errors", {
   ebola1976$cases <- 0L
   df_corrected <- known_outcomes(
     data = ebola1976,
@@ -93,9 +99,11 @@ test_that("`estimate_severity`: Messages and errors", {
   # expect an error because cases are 0
   expect_error(
     estimate_severity(
-      data = df_corrected,
+      total_cases = sum(df_corrected$cases),
+      total_deaths = sum(df_corrected$deaths),
+      total_outcomes = sum(df_corrected$known_outcomes),
       poisson_threshold = poisson_threshold
     ),
-    regexp = "`total_cases` must be equal to or more than `total_deaths`"
+    regexp = "Assertion on 'total_deaths' failed: Element 1 is not <= 0"
   )
 })
