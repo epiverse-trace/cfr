@@ -244,12 +244,17 @@ plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE)
 The function `known_outcomes()` from the _datadelay_ package estimates the 
 number of cases which have a known outcome over time.
 
+The resulting data frame contains two new columns, "known_outcomes", for the number of known outcomes (deaths) expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known outcomes.
+
 ```{r}
 # calculate known outcomes
 df_known_outcomes_ebola <- known_outcomes(
   data = df_ebola_subset,
   epi_dist = onset_to_death_ebola
 )
+
+# visualise head of data frame
+head(df_known_outcomes_ebola)
 ```
 
 
