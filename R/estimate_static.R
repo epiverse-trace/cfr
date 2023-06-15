@@ -54,7 +54,7 @@
 #'   correct_for_delays = FALSE
 #' )
 #'
-#' # # estimate severity while correcting for delays
+#' # estimate severity while correcting for delays
 #' estimate_static(
 #'   ebola1976,
 #'   correct_for_delays = TRUE,
@@ -85,7 +85,7 @@ estimate_static <- function(data,
     # or other units; consider the units package
   )
   checkmate::assert_logical(correct_for_delays, len = 1L)
-  checkmate::assert_number(poisson_threshold, lower = 0, finite = FALSE)
+  checkmate::assert_count(poisson_threshold)
 
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
@@ -109,7 +109,9 @@ estimate_static <- function(data,
     # calculating the maximum likelihood estimate and 95% confidence interval
     # using the binomial likelihood function from Nishiura
     severity_estimate <- estimate_severity(
-      data = df_corrected,
+      total_cases = sum(df_corrected$cases, na.rm = TRUE),
+      total_deaths = sum(df_corrected$deaths, na.rm = TRUE),
+      total_outcomes = sum(df_corrected$known_outcomes, na.rm = TRUE),
       poisson_threshold = poisson_threshold
     )
   } else {
