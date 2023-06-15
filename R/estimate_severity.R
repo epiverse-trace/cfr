@@ -7,27 +7,30 @@
 #' approximated by a Poisson likelihood for large samples
 #'
 #' @inheritParams estimate_static
+#' @param total_cases The total number of cases observed over the period of an
+#' outbreak of interest. The total number of cases must be greater than or equal
+#' to the total number of deaths.
+#' @param total_deaths The total number of deaths observed over the period of an
+#' outbreak of interest. The total number of deaths must be less than or equal
+#' to the total number of cases.
+#' @param total_outcomes The total number of outcomes estimated observed over
+#' the period of an outbreak of interest. See [known_outcomes()].
 #' @keywords internal
 #' @return A data.frame with the MLE and 95% confidence interval of the
 #' corrected severity estimates, named "severity_me", "severity_low", and
 #' "severity_high".
-estimate_severity <- function(data, poisson_threshold = 100) {
-  # No input checking as this function is called internally by other functions
-
-  # calculating the total number of cases and deaths after correcting for
-  # the number of cases with known outcomes and using this estimate as the
-  # of deaths
-  total_cases <- sum(data$cases, na.rm = TRUE)
-  total_deaths <- sum(data$deaths, na.rm = TRUE)
-  total_outcomes <- sum(data$known_outcomes, na.rm = TRUE)
+estimate_severity <- function(total_cases,
+                              total_deaths,
+                              total_outcomes,
+                              poisson_threshold = 100) {
+  # Add input checking for single numbers
+  checkmate::assert_count(total_cases)
+  checkmate::assert_number(total_deaths, upper = total_cases, lower = 0)
+  checkmate::assert_number(total_outcomes, lower = 0, finite = TRUE)
+  checkmate::assert_count(poisson_threshold)
 
   # calculating the proportion of cases with known outcome
   u_t <- total_outcomes / total_cases
-
-  stopifnot(
-    "`total_cases` must be equal to or more than `total_deaths`" =
-      (total_cases >= total_deaths)
-  )
 
   # MLE estimation for corrected severity
   pprange <- seq(from = 1e-3, to = 1.0, by = 1e-3)
