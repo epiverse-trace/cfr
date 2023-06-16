@@ -96,13 +96,13 @@ estimate_static(
 In this example we show how the estimate of overall severity can change
 as more data on cases and deaths over time becomes available, using the
 function `estimate_rolling()`. Because there is a delay from
-onset-to-death, a simple ‘naive’ calculation that just divides
+onset-to-death, a simple “naive” calculation that just divides
 deaths-to-date by cases-to-date will underestimate severity. The
 `estimate_rolling()` function uses the `estimate_severity()` adjustment
 to account for delays, and instead compares deaths-to-date with
 cases-with-known-outcome-to-date.
 
-This example shows how the adjusted estimate converges to ‘naive’
+This example shows how the adjusted estimate converges to “naive”
 estimate as the outbreak declines, and hence a larger and large
 proportion of cases have known outcomes.
 
