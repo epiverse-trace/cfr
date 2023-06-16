@@ -77,23 +77,31 @@ approximated by a Poisson likelihood for large samples</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_severity</span><span class="op">(</span><span class="va">data</span>, poisson_threshold <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_severity</span><span class="op">(</span></span>
+<span>  <span class="va">total_cases</span>,</span>
+<span>  <span class="va">total_deaths</span>,</span>
+<span>  <span class="va">total_outcomes</span>,</span>
+<span>  poisson_threshold <span class="op">=</span> <span class="fl">100</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>data</dt>
-<dd><p>A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
-Note that the required columns are "date" (for the date), "cases" (for the
-number of reported cases), and "deaths" (for the number of reported deaths)
-on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
-<code>Date</code> (see <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code>).
-Note also that the total number of cases must be greater than the total
-number of reported deaths.</p></dd>
+    <dl><dt>total_cases</dt>
+<dd><p>The total number of cases observed over the period of an
+outbreak of interest. The total number of cases must be greater than or equal
+to the total number of deaths.</p></dd>
+
+
+<dt>total_deaths</dt>
+<dd><p>The total number of deaths observed over the period of an
+outbreak of interest. The total number of deaths must be less than or equal
+to the total number of cases.</p></dd>
+
+
+<dt>total_outcomes</dt>
+<dd><p>The total number of outcomes estimated observed over
+the period of an outbreak of interest. See <code><a href="known_outcomes.html">known_outcomes()</a></code>.</p></dd>
 
 
 <dt>poisson_threshold</dt>

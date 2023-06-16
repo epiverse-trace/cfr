@@ -132,43 +132,52 @@
 <span><span class="co">#&gt; 1       0.959       0.842           1</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="change-in-disease-severity-over-the-1976-ebola-outbreak">Change in disease severity over the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#change-in-disease-severity-over-the-1976-ebola-outbreak"></a>
+<h3 id="change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak">Change in real-time estimates of overall severity during the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak"></a>
 </h3>
-<p>Calculate the time-varying CFR estimates up to a given point in time.</p>
+<p>In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function <code><a href="reference/estimate_rolling.html">estimate_rolling()</a></code>. Because there is a delay from onset-to-death, a simple “naive” calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The <code><a href="reference/estimate_rolling.html">estimate_rolling()</a></code> function uses the <code><a href="reference/estimate_severity.html">estimate_severity()</a></code> adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.</p>
+<p>This example shows how the adjusted estimate converges to “naive” estimate as the outbreak declines, and hence a larger and large proportion of cases have known outcomes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate the CFR without correcting for delays on each day of the outbreak</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/estimate_time_varying.html">estimate_time_varying</a></span><span class="op">(</span></span>
-<span>    data <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>    burn_in_value <span class="op">=</span> <span class="fl">7</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="va">rolling_cfr_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_rolling.html">estimate_rolling</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date cases deaths severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1 1976-08-25     1      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 2 1976-08-26     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 3 1976-08-27     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 4 1976-08-28     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 5 1976-08-29     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 6 1976-08-30     0      0          NA          NA          NA</span></span>
 <span></span>
-<span><span class="co"># Calculate the daily CFR while correcting for delays</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="reference/estimate_time_varying.html">estimate_time_varying</a></span><span class="op">(</span></span>
-<span>    <span class="va">ebola1976</span>,</span>
-<span>    correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>    epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
-<span>    burn_in_value <span class="op">=</span> <span class="fl">7</span></span>
-<span>  <span class="op">)</span></span>
+<span><span class="co"># add the date from the outbreak</span></span>
+<span><span class="va">rolling_cfr_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">ebola1976</span><span class="op">[</span>, <span class="st">"date"</span><span class="op">]</span>, <span class="va">rolling_cfr_naive</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># see the first few rows</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_naive</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         date severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1 1976-08-25           0           0       0.975</span></span>
+<span><span class="co">#&gt; 2 1976-08-26           0           0       0.975</span></span>
+<span><span class="co">#&gt; 3 1976-08-27           0           0       0.975</span></span>
+<span><span class="co">#&gt; 4 1976-08-28           0           0       0.975</span></span>
+<span><span class="co">#&gt; 5 1976-08-29           0           0       0.975</span></span>
+<span><span class="co">#&gt; 6 1976-08-30           0           0       0.975</span></span>
+<span></span>
+<span><span class="co"># Calculate the rolling daily CFR while correcting for delays</span></span>
+<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_rolling.html">estimate_rolling</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date cases deaths severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1 1976-08-25     1      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 2 1976-08-26     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 3 1976-08-27     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 4 1976-08-28     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 5 1976-08-29     0      0          NA          NA          NA</span></span>
-<span><span class="co">#&gt; 6 1976-08-30     0      0          NA          NA          NA</span></span>
 <span></span>
-<span><span class="co"># plots to be added later</span></span></code></pre></div>
+<span><span class="co"># add the date from the outbreak</span></span>
+<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">ebola1976</span><span class="op">[</span>, <span class="st">"date"</span><span class="op">]</span>, <span class="va">rolling_cfr_corrected</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_corrected</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         date severity_me severity_lo severity_hi</span></span>
+<span><span class="co">#&gt; 1 1976-08-25       0.001          NA          NA</span></span>
+<span><span class="co">#&gt; 2 1976-08-26       0.001       0.001       0.999</span></span>
+<span><span class="co">#&gt; 3 1976-08-27       0.001       0.001       0.999</span></span>
+<span><span class="co">#&gt; 4 1976-08-28       0.001       0.001       0.999</span></span>
+<span><span class="co">#&gt; 5 1976-08-29       0.001       0.001       0.999</span></span>
+<span><span class="co">#&gt; 6 1976-08-30       0.001       0.001       0.994</span></span></code></pre></div>
+<p>We plot the rolling CFR to visualise how severity changes over time, using the <a href="https://ggplot2.tidyverse.org/" class="external-link"><em>ggplot2</em> package</a>. The plotting code is hidden here.</p>
+<div class="figure">
+<img src="reference/figures/README-unnamed-chunk-2-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%"><p class="caption">
+Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown.
+</p>
+</div>
 </div>
 </div>
 <div class="section level2">
