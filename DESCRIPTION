@@ -50,7 +50,8 @@ Suggests:
     bookdown,
     rmarkdown,
     spelling,
-    epiparameter
+    epiparameter,
+    incidence2
 Remotes:
     epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
