@@ -1,0 +1,56 @@
+---
+title: "Handling data from {incidence2}"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Handling data from {incidence2}}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datadelay)
+
+# load {incidence2}
+library(incidence2)
+
+# functions to wrangle data
+library(dplyr)
+library(tidyr)
+```
+
+Load some data provided with the _incidence2_ package.
+
+```{r}
+covid_uk <- covidregionaldataUK
+```
+
+The columns in this dataset need to be renamed to be compatible with functions in _datadelay_. We also subset the columns in the data to keep only the relevant columns.
+
+```{r}
+# view the data
+head(covid_uk)
+
+# convert to incidence2 object
+covid_uk_incidence <- incidence(
+  covid_uk,
+  date_index = "date",
+  counts = c("cases_new", "deaths_new"),
+  count_names_to = "count_variable"
+)
+
+head(
+  prepare_data(
+    covid_uk_incidence,
+    cases_variable = "cases_new",
+    deaths_variable = "deaths_new"
+  )
+)
+```
+
