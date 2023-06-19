@@ -20,31 +20,107 @@ library(datadelay)
 # load {incidence2}
 library(incidence2)
 
-# functions to wrangle data
+# load {outbreaks} for ebola data
+library(outbreaks) #nolint
+
+# load {epiparameter} for delay distributions
+library(epiparameter)
+
+# packages to wrangle data
 library(dplyr)
-library(tidyr)
 ```
 
-Load some data provided with the _incidence2_ package.
+# `<incidence2>` objects from linelists
+
+Load some linelist data for the 2014 Ebola outbreak provided with the _outbreaks_ package. Create _incidence2_ object and view it.
 
 ```{r}
+# load ebola dataset from outbreak
+data("ebola_sim_clean")
+ebola <- ebola_sim_clean$linelist
+
+# view ebola
+head(ebola)
+```
+
+We then prepare an `<incidence2>` object using the `date_of_onset` and `date_of_outcome` columns as the date indices, and grouping by outcome.
+
+These steps use a combination of functions from _incidence2_ as well as common data science packages such as _dplyr_.
+
+```{r}
+# create incidence2 object of ebola deaths
+ebola <- incidence(
+  x = ebola,
+  date_index = c(
+    onset = "date_of_onset",
+    outcome = "date_of_outcome"
+  ),
+  groups = "outcome"
+)
+
+# filter for outcomes that are deaths
+ebola <- filter(
+  ebola,
+  (outcome == "Death" & count_variable == "outcome") |
+    (count_variable == "onset")
+)
+
+# remove groups using incidence2::regroup()
+ebola <- regroup(ebola)
+
+# prepare data
+ebola <- prepare_data(
+  ebola,
+  cases_variable = "onset",
+  deaths_variable = "outcome"
+)
+```
+
+Load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
+
+```{r}
+onset_to_death_ebola <- epidist_db(
+  disease = "Ebola Virus Disease",
+  epi_dist = "onset_to_death",
+  author = "Barry_etal"
+)
+```
+
+```{r}
+# estimate static CFR as a sanity check
+estimate_static(
+  ebola,
+  correct_for_delays = TRUE, epi_dist = onset_to_death_ebola
+)
+```
+
+## `<incidence2>` objects from aggregated case data
+
+The columns in this dataset are already in a format that can be converted into an `<incidence2>` object using `incidence2::incidence()`, and then handled by `prepare_data()`.
+The code chunks below show how this is to be done.
+
+```{r}
+# get data bundled with the {incidence2} package
 covid_uk <- covidregionaldataUK
-```
 
-The columns in this dataset need to be renamed to be compatible with functions in _datadelay_. We also subset the columns in the data to keep only the relevant columns.
-
-```{r}
 # view the data
 head(covid_uk)
+```
 
+Note that the grouping structure of this dataset is overridden to provide a single dataset with cases and deaths summed across regions by date.
+This functionality is currently under development and might change in future.
+
+```{r}
 # convert to incidence2 object
 covid_uk_incidence <- incidence(
   covid_uk,
   date_index = "date",
   counts = c("cases_new", "deaths_new"),
-  count_names_to = "count_variable"
+  count_names_to = "count_variable",
+  groups = "region"
 )
 
+# View head of prepared data
 head(
   prepare_data(
     covid_uk_incidence,
@@ -53,4 +129,3 @@ head(
   )
 )
 ```
-
