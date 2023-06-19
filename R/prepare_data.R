@@ -1,13 +1,67 @@
 
 #' Prepare data for CFR estimation
+#'
+#' @description
+#' This S3 generic has no default method. Rather, it has methods for classes
+#' commonly found in epidemiological data, such as `<incidence2>` from the
+#' `{incidence2}` package. See [incidence2::incidence()].
+#'
+#' @param data A `data.frame`-like object.
+#'
+#' @param ... Other arguments passed to methods.
+#'
 #' @export
 prepare_data <- function(data, ...) {
   UseMethod("prepare_data", data)
 }
 
-#' Prepare data from <incidence2> objects
+#' Prepare data from `<incidence2>` objects
+#'
+#' @description
+#' Prepares `<incidence2>` objects for disease severity estimates. This function
+#' does not currently support grouped `<incidence2>` data. Case and death counts
+#' are aggregated by date for the overall dataset.
+#'
+#'
+#' @param data An `<incidence2>` object.
+#' @param cases_variable A string for the name of the cases variable in the
+#' "count_variable" column of `data`.
+#' @param deaths_variable A string for the name of the deaths variable in the
+#' "count_variable" column of `data`.
+#' @param fill_NA A logical indicating whether `NA`s in the cases and deaths
+#' data should be replaced by 0-s. The default value is `TRUE`. Note that this
+#' may not be the behaviour expected for some kinds of linelist data.
+#' @param ... Other arguments.
 #'
 #' @export
+#' @return A data.frame suitable for disease severity estimation functions
+#' provided in `{datadelay}`, with the columns "date", "cases", and "deaths".
+#' Note that groups in `<incidence2>` are not retained, and cases and deaths
+#' are summed by date.
+#' The result has a continuous sequence of dates between the start and end date
+#' of `data`; this is required if the data is to be passed to functions such as
+#' [estimate_static()].
+#' @examples
+#' # load Covid-19 data from incidence2
+#' covid_uk <- incidence2::covidregionaldataUK
+#'
+#' # convert to incidence2 object
+#' covid_uk_incidence <- incidence2::incidence(
+#'   covid_uk,
+#'   date_index = "date",
+#'   counts = c("cases_new", "deaths_new"),
+#'   count_names_to = "count_variable",
+#'   groups = "region"
+#' )
+#'
+#' # View head of prepared data
+#' head(
+#'   prepare_data(
+#'     covid_uk_incidence,
+#'     cases_variable = "cases_new",
+#'     deaths_variable = "deaths_new"
+#'   )
+#' )
 prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     deaths_variable = "deaths",
                                     fill_NA = TRUE,
