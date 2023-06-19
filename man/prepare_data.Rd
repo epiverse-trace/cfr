@@ -6,6 +6,13 @@
 \usage{
 prepare_data(data, ...)
 }
+\arguments{
+\item{data}{A \code{data.frame}-like object.}
+
+\item{...}{Other arguments passed to methods.}
+}
 \description{
-Prepare data for CFR estimation
+This S3 generic has no default method. Rather, it has methods for classes
+commonly found in epidemiological data, such as \verb{<incidence2>} from the
+\code{{incidence2}} package. See \code{\link[incidence2:incidence]{incidence2::incidence()}}.
 }

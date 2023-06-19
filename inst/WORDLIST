@@ -22,6 +22,7 @@ codecov
 com
 covidregionaldata
 doi
+dplyr
 ebolavirus
 epiday
 epiparameter
@@ -33,6 +34,8 @@ gh
 github
 infty
 io
+linelist
+linelists
 lockdown
 md
 org

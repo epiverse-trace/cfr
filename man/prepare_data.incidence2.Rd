@@ -2,10 +2,64 @@
 % Please edit documentation in R/prepare_data.R
 \name{prepare_data.incidence2}
 \alias{prepare_data.incidence2}
-\title{Prepare data from \if{html}{\out{<incidence2>}} objects}
+\title{Prepare data from \verb{<incidence2>} objects}
 \usage{
-\method{prepare_data}{incidence2}(data, cases_variable = "cases", deaths_variable = "deaths")
+\method{prepare_data}{incidence2}(
+  data,
+  cases_variable = "cases",
+  deaths_variable = "deaths",
+  fill_NA = TRUE,
+  ...
+)
+}
+\arguments{
+\item{data}{An \verb{<incidence2>} object.}
+
+\item{cases_variable}{A string for the name of the cases variable in the
+"count_variable" column of \code{data}.}
+
+\item{deaths_variable}{A string for the name of the deaths variable in the
+"count_variable" column of \code{data}.}
+
+\item{fill_NA}{A logical indicating whether \code{NA}s in the cases and deaths
+data should be replaced by 0-s. The default value is \code{TRUE}. Note that this
+may not be the behaviour expected for some kinds of linelist data.}
+
+\item{...}{Other arguments.}
+}
+\value{
+A data.frame suitable for disease severity estimation functions
+provided in \code{{datadelay}}, with the columns "date", "cases", and "deaths".
+Note that groups in \verb{<incidence2>} are not retained, and cases and deaths
+are summed by date.
+The result has a continuous sequence of dates between the start and end date
+of \code{data}; this is required if the data is to be passed to functions such as
+\code{\link[=estimate_static]{estimate_static()}}.
 }
 \description{
-Prepare data from \if{html}{\out{<incidence2>}} objects
+Prepares \verb{<incidence2>} objects for disease severity estimates. This function
+does not currently support grouped \verb{<incidence2>} data. Case and death counts
+are aggregated by date for the overall dataset.
+}
+\examples{
+# load Covid-19 data from incidence2
+covid_uk <- incidence2::covidregionaldataUK
+
+# convert to incidence2 object
+covid_uk_incidence <- incidence2::incidence(
+  covid_uk,
+  date_index = "date",
+  counts = c("cases_new", "deaths_new"),
+  count_names_to = "count_variable",
+  groups = "region"
+)
+
+# View head of prepared data
+head(
+  prepare_data(
+    covid_uk_incidence,
+    cases_variable = "cases_new",
+    deaths_variable = "deaths_new"
+  )
+)
 }

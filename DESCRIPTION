@@ -51,7 +51,8 @@ Suggests:
     rmarkdown,
     spelling,
     epiparameter,
-    incidence2
+    incidence2,
+    outbreaks
 Remotes:
     epiverse-trace/epiparameter,
     epiforecasts/covidregionaldata
