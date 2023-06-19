@@ -1,11 +1,20 @@
 ---
 title: "Handling data from {incidence2}"
-output: rmarkdown::html_vignette
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
 vignette: >
   %\VignetteIndexEntry{Handling data from {incidence2}}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+This vignette shows how to prepare `<incidence2>` objects from the [_incidence2_ package](https://www.reconverse.org/incidence2/) for use with _datadelay_, using the `prepare_data()` method for the `<incidence2>` class.
+
+We first load the libraries we require, including _datadelay_, _incidence2_, [_outbreaks_](https://www.reconverse.org/outbreaks/) for linelist data from a simulated ebola outbreak, and [_epiparameter_](https://epiverse-trace.github.io/epiparameter/) for delay distribution data.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -21,7 +30,7 @@ library(datadelay)
 library(incidence2)
 
 # load {outbreaks} for ebola data
-library(outbreaks) #nolint
+library(outbreaks) # nolint
 
 # load {epiparameter} for delay distributions
 library(epiparameter)
@@ -32,7 +41,7 @@ library(dplyr)
 
 # `<incidence2>` objects from linelists
 
-Load some linelist data for the 2014 Ebola outbreak provided with the _outbreaks_ package. Create _incidence2_ object and view it.
+We first load some linelist data for the 2014 Ebola outbreak provided with the _outbreaks_ package, and create an _incidence2_ object and view it.
 
 ```{r}
 # load ebola dataset from outbreak
@@ -45,7 +54,7 @@ head(ebola)
 
 We then prepare an `<incidence2>` object using the `date_of_onset` and `date_of_outcome` columns as the date indices, and grouping by outcome.
 
-These steps use a combination of functions from _incidence2_ as well as common data science packages such as _dplyr_.
+These steps use a combination of functions from _incidence2_ as well as common data science packages such as [_dplyr_](https://dplyr.tidyverse.org/).
 
 ```{r}
 # create incidence2 object of ebola deaths
@@ -58,7 +67,8 @@ ebola <- incidence(
   groups = "outcome"
 )
 
-# filter for outcomes that are deaths
+# filter for outcomes that are deaths using dplyr::filter --- death counts
+# also filter for all onsets --- these are the case counts
 ebola <- filter(
   ebola,
   (outcome == "Death" & count_variable == "outcome") |
@@ -76,7 +86,7 @@ ebola <- prepare_data(
 )
 ```
 
-Load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
+We then load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
 
 ```{r}
 onset_to_death_ebola <- epidist_db(
@@ -85,6 +95,8 @@ onset_to_death_ebola <- epidist_db(
   author = "Barry_etal"
 )
 ```
+
+Finally, we estimate the static case fatality rate while correcting for delays suing the `estimate_static()` function.
 
 ```{r}
 # estimate static CFR as a sanity check
@@ -95,6 +107,12 @@ estimate_static(
 ```
 
 ## `<incidence2>` objects from aggregated case data
+
+Aggregated case data such as that provided by the package [_covidregionaldata_](https://epiforecasts.io/covidregionaldata/) can be used with _datadelay_ directly.
+
+Such usage is shown in other vignettes such as the [vignette on estimating time-varying severity](estimate_time_varying_severity.html).
+
+Here we show how to transform such data into `<incidence2>` objects, and then prepare them for _datadelay_.
 
 The columns in this dataset are already in a format that can be converted into an `<incidence2>` object using `incidence2::incidence()`, and then handled by `prepare_data()`.
 The code chunks below show how this is to be done.
@@ -107,7 +125,7 @@ covid_uk <- covidregionaldataUK
 head(covid_uk)
 ```
 
-Note that the grouping structure of this dataset is overridden to provide a single dataset with cases and deaths summed across regions by date.
+Note that the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object, but is overridden to provide a single dataset with cases and deaths summed across regions by date by `prepare_data()`.
 This functionality is currently under development and might change in future.
 
 ```{r}
