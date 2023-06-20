@@ -50,8 +50,7 @@ covid_uk_incidence <- incidence2::incidence(
   covid_uk,
   date_index = "date",
   counts = c("cases_new", "deaths_new"),
-  count_names_to = "count_variable",
-  groups = "region"
+  count_names_to = "count_variable"
 )
 
 # View head of prepared data
