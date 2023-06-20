@@ -50,8 +50,7 @@ prepare_data <- function(data, ...) {
 #'   covid_uk,
 #'   date_index = "date",
 #'   counts = c("cases_new", "deaths_new"),
-#'   count_names_to = "count_variable",
-#'   groups = "region"
+#'   count_names_to = "count_variable"
 #' )
 #'
 #' # View head of prepared data
@@ -66,30 +65,38 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     deaths_variable = "deaths",
                                     fill_NA = TRUE,
                                     ...) {
+  # check for {incidence2} and error if not available
+  if (!requireNamespace("incidence2", quietly = TRUE)) {
+    stop(
+      "Package 'incidence2' is required to prepare <incidence2> class data ",
+      "but is not installed."
+    )
+  }
+
   # assert that cases and deaths variable are different
   checkmate::assert_string(cases_variable)
   checkmate::assert_string(deaths_variable)
   checkmate::assert_logical(fill_NA, len = 1L, any.missing = FALSE)
+
+  # get column names from incidence2 class members
+  count_var_col <- incidence2::get_count_variable_name(data)
+  dates_variable <- incidence2::get_date_index_name(data)
+  group_variables <- incidence2::get_group_names(data)
 
   stopifnot(
     "`cases_variable` and `deaths_variable` should be in \
     `count_variable` column of <incidence2> object `data`" =
       all(
         c(cases_variable, deaths_variable) %in%
-          unique(data[[attr(data, "count_variable")]])
+          unique(data[[count_var_col]])
       )
   )
 
-  # get column names from incidence2 class members
-  count_var_col <- attr(data, "count_variable")
-  dates_variable <- attr(data, "date_index")
-  group_variables <- attr(data, "groups")
-
   if (length(group_variables) > 0) {
-    message(
+    stop(
       "`data` has groups defined - this function does not currently ",
-      "support grouped `<incidence2>` objects. Cases and deaths will be ",
-      "aggregated for the whole data."
+      "support grouped `<incidence2>` objects. Use `incidence2::regroup()` ",
+      "to ungroup the data."
     )
   }
 
