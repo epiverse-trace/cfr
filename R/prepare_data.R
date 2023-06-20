@@ -80,6 +80,7 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
 
   # get column names from incidence2 class members
   count_var_col <- incidence2::get_count_variable_name(data)
+  count_col <- incidence2::get_count_value_name(data)
   dates_variable <- incidence2::get_date_index_name(data)
   group_variables <- incidence2::get_group_names(data)
 
@@ -100,6 +101,11 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
     )
   }
 
+  # fill NA if required
+  if (fill_NA) {
+    data[is.na(data)] <- 0
+  }
+
   # get the unique dates - this is used to reconstruct data
   # in cases where there are dates with no cases or deaths
   # since these dates may simply be missing in the data (e.g. due to filtering)
@@ -115,7 +121,7 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
     data[c(cases_variable, deaths_variable)], c("cases", "deaths"),
     f = function(df, colname) {
       # select the date and the count
-      df <- df[, c(dates_variable, "count")]
+      df <- df[, c(dates_variable, count_col)]
 
       # rename the count to cases or deaths
       colnames(df) <- c("date", colname)
@@ -131,14 +137,6 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   )
   # merge the two dataframes
   data <- Reduce(x = data, f = merge)
-
-  # fill NA if required
-  if (fill_NA) {
-    data[is.na(data)] <- 0
-  }
-
-  # aggregate data to remove grouping structure if any
-  data <- stats::aggregate(. ~ date, data = data, FUN = sum)
 
   # return data
   data
