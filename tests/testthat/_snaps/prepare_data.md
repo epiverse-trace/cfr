@@ -1,13 +1,13 @@
 # `prepare_data()`: Basic expectations for incidence2 method
 
     Code
-      head(data)
+      tail(data)
     Output
-              date cases deaths
-      1 2020-01-30    39      0
-      2 2020-01-31     0      0
-      3 2020-02-01     0      0
-      4 2020-02-02     0      0
-      5 2020-02-03     0      0
-      6 2020-02-04     0      0
+                date cases deaths
+      485 2021-05-28  6205      6
+      486 2021-05-29  5146      5
+      487 2021-05-30  5395      8
+      488 2021-05-31  6251      6
+      489 2021-06-01  3346      4
+      490 2021-06-02     0      0
 

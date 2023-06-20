@@ -5,8 +5,7 @@ covid_uk_incidence <- incidence2::incidence(
   incidence2::covidregionaldataUK,
   date_index = "date",
   counts = c("cases_new", "deaths_new"),
-  count_names_to = "count_variable",
-  groups = "region"
+  count_names_to = "count_variable"
 )
 
 # View head of prepared data
@@ -25,17 +24,24 @@ test_that("`prepare_data()`: Basic expectations for incidence2 method", {
   expect_vector(data[["cases"]], ptype = numeric())
   expect_vector(data[["deaths"]], ptype = numeric())
 
+  # snapshot of tail as head has zeros
   expect_snapshot(
-    head(data)
+    tail(data)
   )
 
-  expect_message(
+  expect_error(
     prepare_data(
-      covid_uk_incidence,
+      data = incidence2::incidence(
+        incidence2::covidregionaldataUK,
+        date_index = "date",
+        counts = c("cases_new", "deaths_new"),
+        count_names_to = "count_variable",
+        groups = "region"
+      ),
       cases_variable = "cases_new",
       deaths_variable = "deaths_new"
     ),
-    regexp = "(`data` has groups defined)*(aggregated for the whole data)"
+    regexp = "(`data` has groups defined)*(does not currently support grouped)"
   )
 })
 
