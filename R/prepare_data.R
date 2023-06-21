@@ -19,9 +19,21 @@ prepare_data <- function(data, ...) {
 #'
 #' @description
 #' Prepares `<incidence2>` objects for disease severity estimates. This function
-#' does not currently support grouped `<incidence2>` data. Case and death counts
-#' are aggregated by date for the overall dataset.
+#' does not currently support grouped `<incidence2>` data.
 #'
+#' @details
+#' This function can replace `NA`s in the case and death data with 0-s if so
+#' requested by the user using the `fill_NA` argument, which is `FALSE` by
+#' default, meaning that `NA`s are retained.
+#'
+#' This issue could arise if the dataset has non-sequential dates, as the
+#' function fills in missing dates between the range of dates in the input data.
+#' This is because downstream functions require data with a continuous sequence
+#' of dates.
+#'
+#' Keeping `NA`s will cause downstream issues when calling functions such as
+#' [estimate_static()] on the data, as they cannot handle `NA`s.
+#' Setting `fill_NA = TRUE` resolves this issue, but must be a conscious choice.
 #'
 #' @param data An `<incidence2>` object.
 #' @param cases_variable A string for the name of the cases variable in the
@@ -29,8 +41,9 @@ prepare_data <- function(data, ...) {
 #' @param deaths_variable A string for the name of the deaths variable in the
 #' "count_variable" column of `data`.
 #' @param fill_NA A logical indicating whether `NA`s in the cases and deaths
-#' data should be replaced by 0-s. The default value is `TRUE`. Note that this
-#' may not be the behaviour expected for some kinds of linelist data.
+#' data should be replaced by 0-s. The default value is `FALSE`. The function
+#' will error if `fill_NA = FALSE` but `NA`s are detected in the case or death
+#' data.
 #' @param ... Other arguments.
 #'
 #' @export
@@ -58,12 +71,13 @@ prepare_data <- function(data, ...) {
 #'   prepare_data(
 #'     covid_uk_incidence,
 #'     cases_variable = "cases_new",
-#'     deaths_variable = "deaths_new"
+#'     deaths_variable = "deaths_new",
+#'     fill_NA = TRUE
 #'   )
 #' )
 prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     deaths_variable = "deaths",
-                                    fill_NA = TRUE,
+                                    fill_NA = FALSE,
                                     ...) {
   # check for {incidence2} and error if not available
   if (!requireNamespace("incidence2", quietly = TRUE)) {
@@ -101,11 +115,6 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
     )
   }
 
-  # fill NA if required
-  if (fill_NA) {
-    data[is.na(data)] <- 0
-  }
-
   # get the unique dates - this is used to reconstruct data
   # in cases where there are dates with no cases or deaths
   # since these dates may simply be missing in the data (e.g. due to filtering)
@@ -131,6 +140,20 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
         unique_dates, df,
         by = "date", all.x = TRUE
       )
+
+      # fill NA if required
+      if (fill_NA) {
+        df[is.na(df)] <- 0
+      } else {
+        if (anyNA(df[[colname]])) {
+          stop(
+            sprintf(
+              "`NA`s present in the '%s' count. Set `fill_NA = TRUE` to use 0s",
+              colname
+            )
+          )
+        }
+      }
       # return df from this scope
       df
     }

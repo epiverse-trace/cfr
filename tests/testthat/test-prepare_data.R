@@ -12,7 +12,8 @@ covid_uk_incidence <- incidence2::incidence(
 data <- prepare_data(
   covid_uk_incidence,
   cases_variable = "cases_new",
-  deaths_variable = "deaths_new"
+  deaths_variable = "deaths_new",
+  fill_NA = TRUE
 )
 
 test_that("`prepare_data()`: Basic expectations for incidence2 method", {
@@ -39,7 +40,8 @@ test_that("`prepare_data()`: Basic expectations for incidence2 method", {
         groups = "region"
       ),
       cases_variable = "cases_new",
-      deaths_variable = "deaths_new"
+      deaths_variable = "deaths_new",
+      fill_NA = TRUE
     ),
     regexp = "(`data` has groups defined)*(does not currently support grouped)"
   )
