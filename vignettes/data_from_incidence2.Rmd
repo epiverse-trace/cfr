@@ -82,9 +82,14 @@ ebola <- regroup(ebola)
 ebola <- prepare_data(
   ebola,
   cases_variable = "onset",
-  deaths_variable = "outcome"
+  deaths_variable = "outcome",
+  fill_NA = TRUE
 )
 ```
+
+In this example, we used the `fill_NA` argument and set it to `TRUE`; this replaces missing case and death counts in the data with `0`s.
+The default value of this argument is `FALSE`, however, keeping `NA`s in the data causes downstream issues with functions such as `estimate_static()`.
+We recommend that users should carefully consider whether they can safely fill `NA`s with zeros for the purposes of their analysis.
 
 We then load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
 
@@ -142,7 +147,8 @@ head(
   prepare_data(
     covid_uk_incidence,
     cases_variable = "cases_new",
-    deaths_variable = "deaths_new"
+    deaths_variable = "deaths_new",
+    fill_NA = TRUE
   )
 )
 ```

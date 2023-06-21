@@ -8,7 +8,7 @@
   data,
   cases_variable = "cases",
   deaths_variable = "deaths",
-  fill_NA = TRUE,
+  fill_NA = FALSE,
   ...
 )
 }
@@ -22,8 +22,9 @@
 "count_variable" column of \code{data}.}
 
 \item{fill_NA}{A logical indicating whether \code{NA}s in the cases and deaths
-data should be replaced by 0-s. The default value is \code{TRUE}. Note that this
-may not be the behaviour expected for some kinds of linelist data.}
+data should be replaced by 0-s. The default value is \code{FALSE}. The function
+will error if \code{fill_NA = FALSE} but \code{NA}s are detected in the case or death
+data.}
 
 \item{...}{Other arguments.}
 }
@@ -38,8 +39,21 @@ of \code{data}; this is required if the data is to be passed to functions such a
 }
 \description{
 Prepares \verb{<incidence2>} objects for disease severity estimates. This function
-does not currently support grouped \verb{<incidence2>} data. Case and death counts
-are aggregated by date for the overall dataset.
+does not currently support grouped \verb{<incidence2>} data.
+}
+\details{
+This function can replace \code{NA}s in the case and death data with 0-s if so
+requested by the user using the \code{fill_NA} argument, which is \code{FALSE} by
+default, meaning that \code{NA}s are retained.
+
+This issue could arise if the dataset has non-sequential dates, as the
+function fills in missing dates between the range of dates in the input data.
+This is because downstream functions require data with a continuous sequence
+of dates.
+
+Keeping \code{NA}s will cause downstream issues when calling functions such as
+\code{\link[=estimate_static]{estimate_static()}} on the data, as they cannot handle \code{NA}s.
+Setting \code{fill_NA = TRUE} resolves this issue, but must be a conscious choice.
 }
 \examples{
 # load Covid-19 data from incidence2
@@ -58,7 +72,8 @@ head(
   prepare_data(
     covid_uk_incidence,
     cases_variable = "cases_new",
-    deaths_variable = "deaths_new"
+    deaths_variable = "deaths_new",
+    fill_NA = TRUE
   )
 )
 }
