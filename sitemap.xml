@@ -10,6 +10,9 @@
     <loc>https://epiverse-trace.github.io/datadelay/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>https://epiverse-trace.github.io/datadelay/articles/data_from_incidence2.html</loc>
+  </url>
+  <url>
     <loc>https://epiverse-trace.github.io/datadelay/articles/datadelay.html</loc>
   </url>
   <url>
@@ -56,5 +59,11 @@
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/datadelay/reference/known_outcomes.html</loc>
+  </url>
+  <url>
+    <loc>https://epiverse-trace.github.io/datadelay/reference/prepare_data.html</loc>
+  </url>
+  <url>
+    <loc>https://epiverse-trace.github.io/datadelay/reference/prepare_data.incidence2.html</loc>
   </url>
 </urlset>
