@@ -3,25 +3,39 @@ Title: Estimate Disease Severity and Under-reporting
 Version: 0.1
 Authors@R: c(
     person(
+        given = "Pratik",
+        family = "Gupte",
+        role = c("aut", "cre", "cph"),
+        email = "pratik.gupte@lshtm.ac.uk",
+        comment = c(ORCID = "0000-0001-5294-7819")
+        ),
+    person(
         given = "Adam",
         family = "Kucharski",
         email = "adam.kucharski@lshtm.ac.uk", 
-        role = c("aut", "cre"),
+        role = c("aut", "cph"),
         comment = c(ORCID = "0000-0001-8814-9421")
         ),
     person(
-          given = "Tim",
-          family = "Russell",
-          email = "timothy.russell@lshtm.ac.uk", 
-          role = c("aut"),
-          comment = c(ORCID = "0000-0001-5610-6080")
+        given = "Tim",
+        family = "Russell",
+        email = "timothy.russell@lshtm.ac.uk", 
+        role = c("aut", "cph"),
+        comment = c(ORCID = "0000-0001-5610-6080")
         ),
     person(
-          given = "Pratik",
-          family = "Gupte",
-          role = c("aut"),
-          email = "pratik.gupte@lshtm.ac.uk",
-          comment = c(ORCID = "0000-0001-5294-7819")
+        given = "Joshua W.",
+        family = "Lambert",
+        role = c("rev"),
+        email = "joshua.lambert@lshtm.ac.uk",
+        comment = c(ORCID = "https://orcid.org/0000-0001-5218-3046")
+        ),
+    person(
+        given = "Hugo",
+        family = "Gruson",
+        role = c("rev"),
+        email = "hugo.gruson@data.org",
+        comment = c(ORCID = "https://orcid.org/0000-0002-4094-1476")
         )
     )
 Description: Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
