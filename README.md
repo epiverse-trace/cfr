@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# *datadelay*: Estimating disease severity and under-reporting
+# *cfr*: Estimating disease severity and under-reporting
 
 <!-- badges: start -->
 
@@ -16,24 +16,23 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 has not yet been a stable, usable release suitable for the
 public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/datadelay)](https://CRAN.R-project.org/package=datadelay)
+status](https://www.r-pkg.org/badges/version/cfr)](https://CRAN.R-project.org/package=cfr)
 <!-- badges: end -->
 
-*datadelay* is an R package to estimate disease severity and
-under-reporting in real-time, accounting for delays in epidemic
-time-series.
+*cfr* is an R package to estimate disease severity and under-reporting
+in real-time, accounting for delays in epidemic time-series.
 
-*datadelay* provides simple, fast methods to calculate the overall or
-static case fatality ratio (CFR) of an outbreak up to a given time
-point, as well as how the CFR changes over the course of the outbreak.
-*datadelay* can help estimate disease under-reporting in real-time,
-accounting for delays reporting the outcomes of cases.
+*cfr* provides simple, fast methods to calculate the overall or static
+case fatality ratio (CFR) of an outbreak up to a given time point, as
+well as how the CFR changes over the course of the outbreak. *cfr* can
+help estimate disease under-reporting in real-time, accounting for
+delays reporting the outcomes of cases.
 
-*datadelay* implements methods outlined in Nishiura et al.
+*cfr* implements methods outlined in Nishiura et al.
 ([2009](#ref-nishiura2009)), and CFR estimates based on more methods are
 likely to be added.
 
-*datadelay* uses the [*epiparameter*
+*cfr* uses the [*epiparameter*
 package](https://epiverse-trace.github.io/epiparameter/) for
 delay-corrected CFR estimates, and both packages are developed at the
 [Centre for the Mathematical Modelling of Infectious
@@ -43,7 +42,7 @@ at the London School of Hygiene and Tropical Medicine as part of the
 
 ## Installation
 
-The current development version of *datadelay* can be installed from
+The current development version of *cfr* can be installed from
 [GitHub](https://github.com/) using the `pak` package.
 
 ``` r
@@ -58,12 +57,12 @@ pak::pak("epiverse-trace/epiparameter")
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example of basic usage shows how to use *datadelay* to estimate the
+This example of basic usage shows how to use *cfr* to estimate the
 overall case fatality ratios from the 1976 Ebola outbreak.
 
 ``` r
 # Load package
-library(datadelay)
+library(cfr)
 
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
@@ -162,10 +161,9 @@ estimates are shown.
 
 ## Package vignettes
 
-More details on how to use *datadelay* can be found in the [online
+More details on how to use *cfr* can be found in the [online
 documentation as package
-vignettes](https://epiverse-trace.github.io/datadelay/), under
-“Articles”.
+vignettes](https://epiverse-trace.github.io/cfr/), under “Articles”.
 
 ## Help
 
@@ -174,14 +172,14 @@ To report a bug please open an
 
 ## Contribute
 
-Contributions to *datadelay* are welcomed. Please follow the [package
+Contributions to *cfr* are welcomed. Please follow the [package
 contributing
 guide](https://github.com/epiverse-trace/datadelay/blob/main/.github/CONTRIBUTING.md).
 
 ## Code of conduct
 
-Please note that the *datadelay* project is released with a [Contributor
-Code of
+Please note that the *cfr* project is released with a [Contributor Code
+of
 Conduct](https://github.com/epiverse-trace/.github/blob/main/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.
 
