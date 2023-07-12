@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#' library(datadelay)
+#' library(cfr)
 #' library(epiparameter)
 #' library(covidregionaldata)
 #'

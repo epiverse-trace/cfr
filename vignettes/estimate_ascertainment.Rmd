@@ -29,13 +29,13 @@ knitr::opts_chunk$set(
 
 # Overview
 
-This vignette outlines the function within _datadelay_ used to estimate the
+This vignette outlines the function within _cfr_ used to estimate the
 proportion of cases, infections or hospitalisations ascertained.
 
 First, we load the key packages required for this vignette:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
-library(datadelay)
+library(cfr)
 library(epiparameter)
 library(covidregionaldata)
 ```
@@ -76,7 +76,7 @@ within this vignette, as it illustrates the use for this analysis pipeline well.
 ## Data required
 
 The data required to estimate how the severity of a disease changes over time
-using the _datadelay_ package includes:
+using the _cfr_ package includes:
 
 * A time-series of cases, hospitalisations or some other proxy for infections 
 over time;
@@ -96,7 +96,7 @@ here comes from the _epiparameter_ package.
 
 ## Estimating the proportion of cases or infections that have been ascertained
 
-The function `estimate_reporting()` from the _datadelay_ package estimates the 
+The function `estimate_reporting()` from the _cfr_ package estimates the 
 proportion of cases, infections, hospitalisations --- or whichever proxy for 
 infections is provide --- which have been ascertained. The method used within 
 this function extends the methods outlined in the previous vignettes about 
@@ -111,7 +111,7 @@ severity estimates can be calculated using either the `estimate_static()` or the
 
 # Example with data from the ongoing COVID-19 pandemic in the U.K.
 
-We outline how the time-varying severity estimation works in *datadelay* using 
+We outline how the time-varying severity estimation works in *cfr* using 
 a number of examples. The data for all of the examples is from the ongoing 
 COVID-19 epidemic. Firstly, we analyse the U.K. data, then we pick three other 
 countries with large outbreaks to analyse. 
@@ -206,7 +206,7 @@ plot(onset_to_death_covid, day_range = seq_len(30))
 
 ## Estimating the proportion of cases that have been ascertained
 
-We use the `estimate_reporting()` function within the _datadelay_ package to 
+We use the `estimate_reporting()` function within the _cfr_ package to 
 calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
 ```{r }

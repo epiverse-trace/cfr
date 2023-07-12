@@ -87,7 +87,7 @@ ascertainment estimate is calculated as the ratio of the baseline severity
 estimate and the delay-adjusted severity estimate
 }
 \examples{
-library(datadelay)
+library(cfr)
 library(epiparameter)
 library(covidregionaldata)
 

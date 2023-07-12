@@ -57,7 +57,7 @@ This example of basic usage shows how to use _{{ packagename }}_ to estimate the
 
 ```{r example-ebola-calc}
 # Load package
-library(datadelay)
+library(cfr)
 
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
