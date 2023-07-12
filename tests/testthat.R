@@ -8,7 +8,7 @@
 
 # nolint start
 library(testthat)
-library(datadelay)
+library(cfr)
 # nolint end
 
-test_check("datadelay")
+test_check("cfr")

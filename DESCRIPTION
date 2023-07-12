@@ -1,4 +1,4 @@
-Package: datadelay
+Package: cfr
 Title: Estimate Disease Severity and Under-reporting
 Version: 0.1
 Authors@R: c(
@@ -26,9 +26,8 @@ Authors@R: c(
     )
 Description: Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
 License: MIT + file LICENSE
-URL: https://github.com/epiverse-trace/datadelay,
-    https://epiverse-trace.github.io/datadelay/
-BugReports: https://github.com/epiverse-trace/datadelay/issues
+URL: https://github.com/epiverse-trace/cfr, https://epiverse-trace.github.io/cfr/
+BugReports: https://github.com/epiverse-trace/cfr/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3

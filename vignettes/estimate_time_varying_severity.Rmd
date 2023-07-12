@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 # Overview
 
-This vignette outlines how to use _datadelay_ to estimate how the severity of a
+This vignette outlines how to use _cfr_ to estimate how the severity of a
 disease changes over the course of an ongoing outbreak. We wish to estimate 
 how common severity quantities change over time: 
 the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or 
@@ -42,7 +42,7 @@ distribution. The methods used here are documented in @nishiura2009.
 First, we load the five essential packages needed for this vignette:
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
-library(datadelay)
+library(cfr)
 library(epiparameter)
 library(covidregionaldata)
 ```
@@ -82,7 +82,7 @@ approach is to use the function demonstrated in this vignette:
 ## Data required
 
 The data required to estimate how the severity of a disease changes over time
-using the _datadelay_ package includes:
+using the _cfr_ package includes:
 
 * A time-series of cases, hospitalisations or some other proxy for infections 
 over time;
@@ -102,7 +102,7 @@ here comes from the _epiparameter_ package.
 
 ## Adjusting for delays between the two time series 
 
-The function `estimate_time_varying()` from the _datadelay_ package estimates
+The function `estimate_time_varying()` from the _cfr_ package estimates
 the number of cases which have a known outcome over time. The method used 
 within this function follows @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, 
@@ -144,7 +144,7 @@ Hospitalisation Fatality Risk (HFR) estimate.
 
 # Changing severity of the COVID-19 pandemic in the U.K.
 
-We outline how the time-varying severity estimation works in *datadelay* using a
+We outline how the time-varying severity estimation works in *cfr* using a
 number of examples. The data for all of the examples is from the ongoing 
 COVID-19 epidemic. Firstly, we analyse the U.K. data, then we pick three other
 countries with large outbreaks to analyse. 
@@ -240,7 +240,7 @@ plot(onset_to_death_covid, day_range = seq(30))
 
 ## Estimating the naive and corrected CFR
 
-We use the `estimate_time_varying()` function within the _datadelay_ package 
+We use the `estimate_time_varying()` function within the _cfr_ package 
 to calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
 
 ```{r}

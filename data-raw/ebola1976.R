@@ -3,7 +3,7 @@
 ebola1976 <- read.csv(
   system.file(
     "extdata", "ebola_1976.csv",
-    package = "datadelay",
+    package = "cfr",
     mustWork = TRUE
   )
 )

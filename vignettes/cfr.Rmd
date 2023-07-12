@@ -17,7 +17,7 @@ vignette: >
 It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
 During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
-The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in @nishiura2009, and which are implemented in the _datadelay_ package.
+The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in @nishiura2009, and which are implemented in the _cfr_ package.
 
 ::: {.alert .alert-primary}
 ## Use case {-}
@@ -44,8 +44,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-# load datadelay
-library(datadelay)
+# load cfr
+library(cfr)
 ```
 
 ## Case and death data
@@ -54,10 +54,10 @@ Data on cases and deaths may be obtained from a number of publicly accessible so
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
 
-The _datadelay_ package requires only a data frame with three columns, "date", "cases", and "deaths", giving the daily number of reported cases and deaths.
+The _cfr_ package requires only a data frame with three columns, "date", "cases", and "deaths", giving the daily number of reported cases and deaths.
 
 ::: {.alert .alert-warning}
-Datasets with columns that contain this information under different names can be handled by common data science tools, such as [packages in the Tidyverse](https://www.tidyverse.org/), to prepare data for _datadelay_.
+Datasets with columns that contain this information under different names can be handled by common data science tools, such as [packages in the Tidyverse](https://www.tidyverse.org/), to prepare data for _cfr_.
 
 See examples of this in the [vignette on obtaining a static severity estimate](estimate_static_severity.html).
 :::
@@ -89,7 +89,7 @@ onset_to_death_ebola <- epidist_db(
 onset_to_death_ebola
 ```
 
-This `<epidist>` object can be passed to the functions in _datadelay_ to help correct for reporting delays.
+This `<epidist>` object can be passed to the functions in _cfr_ to help correct for reporting delays.
 
 ## Estimate disease severity
 

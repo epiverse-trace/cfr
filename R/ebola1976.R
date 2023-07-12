@@ -1,6 +1,6 @@
 #' Ebola 1976 outbreak case data
 #'
-#' An example epidemic outbreak dataset for use with the `datadelay` package.
+#' An example epidemic outbreak dataset for use with the `cfr` package.
 #' This dataset comes from the first Ebola outbreak in Zaire in 1976 as analysed
 #' in Camacho et al. (2014).
 #'
