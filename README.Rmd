@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# _{{ packagename }}_: Estimating disease severity and under-reporting
+# _{{ packagename }}_: Estimate disease severity and under-reporting <img src="man/figures/logo.svg" align="right" width="130"/>
 
 <!-- badges: start -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
