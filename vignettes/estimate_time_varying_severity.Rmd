@@ -330,7 +330,6 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   )
 ```
 
-::: {.alert .alert-info}
 ## Details: Adjusting for delays between two time series {-}
 
 The function `estimate_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
@@ -352,6 +351,5 @@ We use maximum-likelihood techniques to determine the value of $\theta_t$ for
 each $t$, whereby $\theta$ represents the severity measure of interest.
 
 The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
-:::
 
 ## References
