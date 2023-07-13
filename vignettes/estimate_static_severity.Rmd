@@ -20,10 +20,8 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.align = "left",
-  fig.width = 700 / 80,
-  fig.height = 400 / 80,
-  dpi = 80
+  dpi = 300,
+  fig.width = 5, fig.height = 3
 )
 ```
 
@@ -40,8 +38,12 @@ distribution. The methods used here originate from @nishiura2009.
 This vignette demonstrates how to implement the core functions within
 _cfr_. Specifically, we will cover
 
-1. Why naive estimates of CFR or HFR generated during an ongoing outbreak 
-require adjusting, given out of sync time series are often being compared. 
+::: {.alert .alert-warning}
+New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
+:::
+
+::: {.alert .alert-primary}
+## Use case {-}
 
 2. Arrive at estimates over time for the number of symptomatic individuals 
 that will likely be known to have had an outcome $t$ days after symptom onset
@@ -52,7 +54,26 @@ that will likely be known to have had an outcome $t$ days after symptom onset
 maximum likelihood estimation to arrive at central estimates of the CFR or HFR,
 along with a confidence interval.
 
-Now we load the three packages we need using the following commands:
+This vignette outlines how to use _cfr_ to calculate disease severity in terms of CFR during an ongoing outbreak, using methods from @nishiura2009, using the the core functions within _cfr_.
+
+::: {.alert .alert-info}
+## Concept: Correcting for delays in CFR estimation {-}
+
+Simply dividing the number of deaths by the number of cases would obtain a CFR that is a _naive estimator_ of the true CFR.
+Consider the example below to understand why.
+
+Suppose 10 people start showing symptoms of a specific disease on a given day and the end of that day all remain alive.
+Suppose that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5.
+However, suppose that by day 5, all infected individuals remain alive.
+
+The naive estimate of the CFR calculated at the end of the first 5 days would be _zero_, because there would have been zero deaths in total --- _at that point_.
+That is to say, the _outcomes_ of cases (infections) would not be known.
+
+Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
+Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.
+:::
+
+First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
@@ -199,7 +220,7 @@ ggplot(ebola1976) +
     aes(
       x = date, y = deaths
     ),
-    colour = "red"
+    colour = "darkred"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -236,7 +257,7 @@ To visualise this distribution, we evaluate it between 0 and 30 days, and plot
 the results over time using the appropriate plot method from the _epiparameter_ package.
 
 ```{r, fig.cap = "Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)."}
-plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE)
+plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
 ```
 
 ## Estimating incidence of cases (or similar time-series) with a known outcome
@@ -378,7 +399,7 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = deaths
     ),
-    colour = "red"
+    colour = "darkred"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -393,7 +414,7 @@ ggplot(df_covid_uk_subset) +
 
 ## The delay distribution
 
-We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the _epiparameter_ package, using the following command.
+We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the _epiparameter_ package.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 onset_to_death_covid <- epidist_db(
@@ -403,8 +424,7 @@ onset_to_death_covid <- epidist_db(
 )
 ```
 
-To visualise this distribution, we evaluate it between 0 and 30 days, and plot
-the results over time. We do so using the following command:
+To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time.
 
 ```{r fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)."}
 plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE)
@@ -412,8 +432,7 @@ plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE)
 
 ## Estimating incidence of cases with a known outcome
 
-We use the same method and implementation as in the Ebola example to calculate
-the number of known outcomes over time, using the following command:
+We use the same method and implementation as in the Ebola example to calculate the number of known outcomes over time.
 
 ```{r}
 df_known_outcomes_covid <- known_outcomes(
@@ -476,5 +495,37 @@ estimate_static(
   epi_dist = onset_to_death_covid
 )
 ```
+
+## Details: Adjusting for delays between two time series {-}
+
+The method used in `estimate_static()` function follows @nishiura2009.
+The function calculates a quantity $u_t$ for each day within the input data, which represents the proportion of cases with a known outcome, on day $t$.
+Following Nishiura et al., $u_t$ is calculated in the following way:
+
+\begin{equation}
+  u_t = \frac{\sum_{i = 0}^t
+        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
+\end{equation}
+
+where $f_t$ is the value of the probability mass function at time $t$ and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$, (respectively).
+We then use $u_t$ at the end of the outbreak in the following likelihood function to estimate the severity of the disease in question.
+
+\begin{equation}
+  L(\theta | y) = \log{\binom{u_tC}{D}} + D \log{\theta} +
+  (u_tC - D)\log{(1.0 - \theta)},
+\end{equation}
+
+$C$ and $D$ are the cumulative number of cases and deaths (respectively) up until time $t$.
+Lastly, $\theta$ is the parameter we wish to estimate, the severity of the disease.
+We estimate $\theta$ using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.
+
+The precise severity measure — CFR, IFR, HFR, etc — that \theta represents depends upon the input data given by the user.
+For complete clarity, here are the most common time series that users might calculate severity from and the resulting severity estimate from such data.
+
+ - Case and death incidence data, with a case-to-death delay distribution (or close approximation, such as onset-to-death) — Case Fatality Risk (CFR).
+
+ - Infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).
+
+ - Hospitalisation Fatality Risk (HFR) --- Hospitalisation and death incidence data, delay distribution (or close approximation).
 
 ## References
