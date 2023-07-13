@@ -20,128 +20,100 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.align = "left",
-  fig.width = 600 / 80,
-  fig.height = 400 / 80,
-  dpi = 80
+  dpi = 300,
+  fig.width = 5, fig.height = 3
 )
 ```
 
-# Overview
+Cases, infections or hospitalisations and deaths might be under-ascertained during an outbreak of an infectious disease for reasons including testing capacity, criteria not being sufficient to identify all infections, or symptom-based testing rather than random sampling, or changes in case definition over time.
 
-This vignette outlines the function within _cfr_ used to estimate the
-proportion of cases, infections or hospitalisations ascertained.
+::: {.alert .alert-warning}
+New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
+:::
 
-First, we load the key packages required for this vignette:
+::: {.alert .alert-primary}
+## Use case {-}
+
+We wish to estimate one of the typical severity quantities used in epidemiology -- the *case fatality risk (CFR)*, *infection hospitality risk (IFR)* or  *hospitalisation fatality risk (HFR)* -- using a method that uses a time series of cases, infections or hospitalisations (respectively) and deaths, _while correcting for the delay in reporting the outcomes of cases_.
+:::
+
+::: {.alert .alert-secondary}
+## What we have {-}
+
+* A time-series of cases, hospitalisations or some other proxy for infections over time;
+* A time-series of deaths;
+* A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+:::
+
+<!-- This can lead to biases due to some infections either being asymptomatic or having a pre-symptomatic phase.
+
+For example, during the recent COVID-19 pandemic, the U.K. did not roll out widespread testing until around May 2020.
+This means that during March and April, infections were heavily under-ascertained.
+We focus on this period within this vignette, as it illustrates the use for this analysis pipeline well. -->
+
+This vignette shows how to use the `estimate_reporting()` function in _cfr_ to estimate the proportion of cases, infections or hospitalisations ascertained, and consequently, the extent of under-ascertainment or under-reporting.
+
+First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
+# load {cfr} and data packages
 library(cfr)
 library(epiparameter)
 library(covidregionaldata)
-```
 
-and the four optional packages, to run the multiple examples in the last 
-section of this vignette:
-
-```{r}
+# packages to wrangle and plot data
 library(dplyr)
 library(tidyr)
 library(purrr)
 library(scales)
-library(ggplot2)
 library(forcats)
+library(ggplot2)
 ```
 
-# Motivation
+## Ascertainment for the Covid-19 pandemic in the U.K.
 
-There are several reasons why cases, infections or hospitalisations and 
-deaths might be under-ascertained during an outbreak of an infectious disease. 
-Some examples include:
+The function `estimate_reporting()` from the _cfr_ package estimates the proportion of cases, infections, hospitalisations -- or whichever proxy for infections is provided -- which have been ascertained.
 
-* Testing capacity or criteria is not sufficient to identify all infections.
+<!-- The method used within this function extends the methods outlined in the previous vignettes about estimating the severity during an ongoing outbreak and measuring how the severity changes over time. -->
 
-* Symptom-based testing rather than sampling at random in the 
-population. This can lead to biases due to some infections either being 
-asymptomatic or having a pre-symptomatic phase.
+The methods are based on the @nishiura2009 to estimate severity, and are extended by combining the resulting severity estimates with an assumed baseline severity estimate.
 
-* Changes in case definition over time.
+The proportion of cases, infections or other quantity provided that have been ascertained is given by the ratio of the (assumed) true baseline severity estimate, to the delay-adjusted severity estimate.
 
-For example, during the recent COVID-19 pandemic, the U.K. did not roll
-out widespread testing until around May 2020. This means that during March and 
-April, infections were heavily under-ascertained. We focus on this period
-within this vignette, as it illustrates the use for this analysis pipeline well.
+The delay-adjusted severity estimates can be calculated using either the `estimate_static()` or the `estimate_time_varying()` functions. 
 
-# Methods
+<!-- # Example with data from the ongoing COVID-19 pandemic in the U.K.
 
-## Data required
+We outline how the time-varying severity estimation works in *cfr* using a number of examples.
+The data for all of the examples is from the ongoing COVID-19 epidemic.
+Firstly, we analyse the U.K. data, then we pick three other countries with large outbreaks to analyse. -->
 
-The data required to estimate how the severity of a disease changes over time
-using the _cfr_ package includes:
+### Preparing the raw data
 
-* A time-series of cases, hospitalisations or some other proxy for infections 
-over time;
-* A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ 
-days after they were initially exposed. Such distributions come from the
-literature, where studies have typically fit distributions to data describing 
-the process. 
+First we subset the data so that we focus on just the first few months of the COVID-19 outbreak in the U.K.
+During this period test availability changed dramatically as a result of the vaccine campaign.
 
-In practice, the time-series of cases and deaths will already be together, given
-that they usually originate from sources that will have typically collated them
-into a single data file.
-
-The package requires a `data.frame` of input data --- typically case and death 
-time series data --- and a delay distribution. The delay distribution we use 
-here comes from the _epiparameter_ package.
-
-## Estimating the proportion of cases or infections that have been ascertained
-
-The function `estimate_reporting()` from the _cfr_ package estimates the 
-proportion of cases, infections, hospitalisations --- or whichever proxy for 
-infections is provide --- which have been ascertained. The method used within 
-this function extends the methods outlined in the previous vignettes about 
-estimating the severity during an ongoing outbreak and measuring how the 
-severity changes over time. Both methods are based on the @nishiura2009 methods to estimate severity. We extend this by 
-combining the resulting severity estimates with an assumed baseline severity 
-estimate. The proportion of cases, infections or other quantity provided that 
-have been ascertained is given by the ratio of the assumed to be true baseline 
-severity estimate to the delay-adjusted severity estimate. The delay-adjusted 
-severity estimates can be calculated using either the `estimate_static()` or the
-`estimate_time_varying()` functions. 
-
-# Example with data from the ongoing COVID-19 pandemic in the U.K.
-
-We outline how the time-varying severity estimation works in *cfr* using 
-a number of examples. The data for all of the examples is from the ongoing 
-COVID-19 epidemic. Firstly, we analyse the U.K. data, then we pick three other 
-countries with large outbreaks to analyse. 
-
-## Downloading the raw data
-
-First of all, we subset the data so that we focus on just the first few months 
-of the COVID-19 outbreak in the U.K. We do so, as test availability changed 
-dramatically as a result of the vaccine campaign. We download the data — 
-using the `covidregionaldata` package — with the following 
-command:
+We download the data from the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata).
 
 ```{r}
+# get Covid data from {covidregionaldata}
 df_covid_uk <- get_national_data(
   countries = "united kingdom", source = "who", verbose = FALSE
 )
 
+# rename columns wth {dplyr}
 df_covid_uk <- rename(df_covid_uk, cases = cases_new, deaths = deaths_new)
 ```
 
-We then subset the data to focus on just the first few months of the outbreak 
-with the following command:
+We then subset the data to focus on just the first few months of the outbreak.
 
 ```{r}
+# the first few months of the pandemic
 df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 ```
 
-## Plotting the raw data
-
-First, we plot case incidence data with following command:
+Then, we plot case incidence data with following command.
+Further plotting commands are hidden for brevity.
 
 ```{r fig.cap="Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
@@ -152,7 +124,7 @@ ggplot(df_covid_uk_subset) +
     colour = "darkblue"
   ) +
   scale_x_date(
-    date_labels = "%d-%b-%Y"
+    date_labels = "%b-%Y"
   ) +
   scale_y_continuous(
     labels = comma
@@ -170,10 +142,10 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = deaths
     ),
-    colour = "red"
+    colour = "darkred"
   ) +
   scale_x_date(
-    date_labels = "%d-%b-%Y"
+    date_labels = "%b-%Y"
   ) +
   scale_y_continuous(
     labels = comma
@@ -183,11 +155,9 @@ ggplot(df_covid_uk_subset) +
   )
 ```
 
-## The delay distribution
+### Onset-to-death distribution for Covid-19
 
-We again retrieve the appropriate distribution — reported in @linton2020 — using the
-`epidist_db()` function from the _epiparameter_ package, using the following
-command:
+We retrieve the appropriate distribution reported in @linton2020 using the `epidist_db()` function from the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
 ```{r}
 onset_to_death_covid <- epidist_db(
@@ -197,17 +167,16 @@ onset_to_death_covid <- epidist_db(
 )
 ```
 
-To visualise this distribution, we evaluate it between 0 and 30 days, and plot
-the results over time. We do so using the following command:
+### Estimating the proportion of cases that have been ascertained
 
-```{r fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K.We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in https://doi.org/10.3390/jcm9020538."}
-plot(onset_to_death_covid, day_range = seq_len(30))
-```
+We use the `estimate_reporting()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
 
-## Estimating the proportion of cases that have been ascertained
+The function includes a `type` argument, which determines whether `estimate_static()` or `estimate_time_varying()` is used to estimate the delay-adjusted severity of the disease.
 
-We use the `estimate_reporting()` function within the _cfr_ package to 
-calculate the time-varying CFR for the COVID-19 epidemic in the U.K:
+The `severity_baseline` argument in the `estimate_reporting()` determines the denominator in the resulting under-ascertainment calculation.
+We assume that the 'true' CFR of Covid-19 is 0.014.
+
+The other arguments are the same as those found in the `estimate_time_varying()`. 
 
 ```{r }
 df_reporting_static <- estimate_reporting(
@@ -218,14 +187,6 @@ df_reporting_static <- estimate_reporting(
   correct_for_delays = TRUE
 )
 ```
-
-The function includes a `type` argument, which determines whether
-`estimate_static()` or `estimate_time_varying()` is used to estimate the 
-delay-adjusted severity of the disease used as the numerator in the
-under-ascertainment calculation. The `severity_baseline` argument in the
-`estimate_reporting()` determines the denominator in the resulting 
-under-ascertainment calculation. The other arguments are the same as those 
-found in the `estimate_time_varying()`. 
 
 ```{r }
 df_reporting_varying <- estimate_reporting(
@@ -250,7 +211,14 @@ df_reporting_static
 df_reporting_varying
 ```
 
-# Example with all countries with large early COVID-19 outbreaks
+## Ascertainment in countries with large early COVID-19 outbreaks
+
+Finally, we estimate ascertainment for all countries with large early outbreaks of Covid-19.
+
+We define a large outbreak as one which has caused at least 100,000 deaths, and focus on the period between the start of each outbreak to the 1st June 2020.
+
+We do so as it was this period where under-ascertainment of cases and infections was likely the highest, as tests were still being developed and had not been made widely available in many countries.
+
 
 ```{r}
 df_covid <- get_national_data(
@@ -261,20 +229,9 @@ df_covid <- get_national_data(
 df_covid_subset <- filter(df_covid, date <= "2020-05-31")
 ```
 
-Finally, we put the ascertainment estimates for all countries with large 
-outbreaks in a single table and summarise the results in a single figure. We 
-define a large outbreak as one which has caused at least 100,000 deaths. We 
-focus on these countries as the resulting table and figure become unwieldy if
-they are made any larger. We focus on the period between the start of each 
-outbreak to the 1st June 2020. We do so as it was this period where 
-under-ascertainment of cases and infections was likely the highest, as tests
-were still being developed and had not been made widely available in many 
-countries.
+We adopt a data science approach to apply the `estimate_reporting()` function across data grouped by country.
+We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
-To calculate all ascertainment estimates for all countries with
-large COVID-19 outbreaks up to the 1st June 2020, we use the following command —
-this codeblock depends on the package `dplyr`, for ease with manipulating
-large data.frames which are structured by group:
 
 ```{r}
 # calculate the total number deaths by country and filter for countries
@@ -308,11 +265,9 @@ df_reporting <- unnest(df_reporting, cols = "reporting")
 head(df_reporting)
 ```
 
-Then, to plot all of these results on a single figure, we use the following 
-command — this codeblock depends on the commonly used package `ggplot2`, for
-ease with plotting large data.frames:
+Plot the ascertainment for each country.
 
-```{r fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in United States, corrected for delays.", class.source = 'fold-hide'}
+```{r fig.cap = "Example plot of the ascertainment rate by country during the early stages of the Covid-19 pandemic.", class.source = 'fold-hide'}
 df_reporting %>%
   ggplot() +
   geom_pointrange(
@@ -320,8 +275,7 @@ df_reporting %>%
       x = fct_reorder(country, reporting_me),
       y = reporting_me,
       ymin = reporting_lo,
-      ymax = reporting_hi,
-      colour = country
+      ymax = reporting_hi
     )
   ) +
   coord_flip() +
