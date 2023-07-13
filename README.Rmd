@@ -53,7 +53,7 @@ pak::pak("epiverse-trace/epiparameter")
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example of basic usage shows how to use _{{ packagename }}_ to estimate the overall case fatality ratios from the 1976 Ebola outbreak.
+This example of basic usage shows how to use _{{ packagename }}_ to estimate the overall case fatality ratios from the 1976 Ebola outbreak [@camacho2014].
 
 ```{r example-ebola-calc}
 # Load package
