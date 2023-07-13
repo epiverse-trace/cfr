@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# *cfr*: Estimating disease severity and under-reporting
+# *cfr*: Estimate disease severity and under-reporting <img src="man/figures/logo.svg" align="right" width="130"/>
 
 <!-- badges: start -->
 
 [![License:
 MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![R-CMD-check](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/datadelay/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/epiverse-trace/datadelay/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/datadelay?branch=main)
+coverage](https://codecov.io/gh/epiverse-trace/cfr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/cfr?branch=main)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![Project Status: WIP – Initial development is in progress, but there
@@ -47,7 +47,7 @@ The current development version of *cfr* can be installed from
 
 ``` r
 if(!require("pak")) install.packages("pak")
-pak::pak("epiverse-trace/datadelay")
+pak::pak("epiverse-trace/cfr")
 
 # Also install R package {epiparameter} for epidemiological parameter values
 pak::pak("epiverse-trace/epiparameter")
@@ -58,7 +58,8 @@ pak::pak("epiverse-trace/epiparameter")
 ### Overall severity of the 1976 Ebola outbreak
 
 This example of basic usage shows how to use *cfr* to estimate the
-overall case fatality ratios from the 1976 Ebola outbreak.
+overall case fatality ratios from the 1976 Ebola outbreak ([Camacho et
+al. 2014](#ref-camacho2014)).
 
 ``` r
 # Load package
@@ -168,13 +169,13 @@ vignettes](https://epiverse-trace.github.io/cfr/), under “Articles”.
 ## Help
 
 To report a bug please open an
-[issue](https://github.com/epiverse-trace/datadelay/issues/new/choose).
+[issue](https://github.com/epiverse-trace/cfr/issues/new/choose).
 
 ## Contribute
 
 Contributions to *cfr* are welcomed. Please follow the [package
 contributing
-guide](https://github.com/epiverse-trace/datadelay/blob/main/.github/CONTRIBUTING.md).
+guide](https://github.com/epiverse-trace/cfr/blob/main/.github/CONTRIBUTING.md).
 
 ## Code of conduct
 
@@ -186,6 +187,15 @@ By contributing to this project, you agree to abide by its terms.
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-camacho2014" class="csl-entry">
+
+Camacho, A., A. J. Kucharski, S. Funk, J. Breman, P. Piot, and W. J.
+Edmunds. 2014. “Potential for Large Outbreaks of Ebola Virus Disease.”
+*Epidemics* 9 (December): 70–78.
+<https://doi.org/10.1016/j.epidem.2014.09.003>.
+
+</div>
 
 <div id="ref-nishiura2009" class="csl-entry">
 
