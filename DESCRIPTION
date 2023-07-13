@@ -36,6 +36,13 @@ Authors@R: c(
         role = c("rev"),
         email = "hugo.gruson@data.org",
         comment = c(ORCID = "https://orcid.org/0000-0002-4094-1476")
+        ),
+    person(
+        given = "Tim",
+        family = "Taylor",
+        role = c("rev"),
+        email = "tim.taylor@hiddenelephants.co.uk",
+        comment = c(ORCID = "https://orcid.org/0000-0002-8587-7113")
         )
     )
 Description: Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
