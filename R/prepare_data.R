@@ -67,7 +67,7 @@ prepare_data <- function(data, ...) {
 #' )
 #'
 #' # View head of prepared data
-#' head(
+#' tail(
 #'   prepare_data(
 #'     covid_uk_incidence,
 #'     cases_variable = "cases_new",
