@@ -30,7 +30,7 @@ data.}
 }
 \value{
 A data.frame suitable for disease severity estimation functions
-provided in \code{{cfr}}, with the columns "date", "cases", and "deaths".
+provided in \pkg{cfr}, with the columns "date", "cases", and "deaths".
 Note that groups in \verb{<incidence2>} are not retained, and cases and deaths
 are summed by date.
 The result has a continuous sequence of dates between the start and end date
