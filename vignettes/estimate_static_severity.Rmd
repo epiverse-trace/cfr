@@ -314,16 +314,11 @@ ggplot(df_known_outcomes_ebola) +
 
 ## Estimating the naive and corrected CFR
 
-Once we calculate the proportion of cases with known outcomes, we apply the
-proportion to the number of cases to correct for the delay between
-onset-to-death. We do so by using the function `estimate_static()` from the
-_cfr_ package. This function estimates the proportion of known outcomes
-over time, and uses the estimate to correct the naive severity estimate. This is
-controlled using the `correct_for_delays` boolean flag argument in the
-`estimate_static()` function. Otherwise, it calculates a naive severity estimate, 
-which does not adjust for delays and is simply the total number of deaths in the
-dataset divided by the total number of cases. We run this function for the naive
-and corrected estimates using the following two commands (respectively):
+Once we calculate the proportion of cases with known outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
+We do so by using the function `estimate_static()` from the _cfr_ package.
+This function estimates the proportion of known outcomes over time, and uses the estimate to correct the naive severity estimate.
+This is controlled using the `correct_for_delays` boolean flag argument in the `estimate_static()` function.
+Otherwise, it calculates a naive severity estimate, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
@@ -342,20 +337,18 @@ estimate_static(
 
 # Severity of the COVID-19 pandemic in the U.K.
 
-We now perform a similar analysis with all of the same steps, with data taken 
-from the ongoing COVID-19 epidemic in the U.K. For brevity, we describe the
-steps without methodological explanations throughout this example.
+We now perform a similar analysis with all of the same steps, with data taken from the ongoing COVID-19 epidemic in the U.K.
+For brevity, we describe the steps without methodological explanations throughout this example.
+
+We get the data from the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) (but note that _covidregionaldata_ is no longer available on CRAN).
 
 ## Plotting the raw data
 
-First of all, we subset the data so that we focus on just the first year of the
-COVID-19 outbreak in the U.K. We do so, as the CFR changed dramatically as a 
-result of the vaccine campaign. The static severity calculations we are 
-performing in this vignette are not able to deal with changes in severity over
-time. We download the data --- using the `covidregionaldata` package --- 
-change some default column names to match those required by _cfr_ and
-subset the data.frame to focus on the first year of the pandemic in the U.K.,
-with the following commands:
+We subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
+We do so, as the CFR changed dramatically as a result of the vaccination campaign.
+The static severity calculations we are performing in this vignette are not able to deal with changes in severity over time.
+
+We change some default column names to match those required by _cfr_ and subset the data.frame to focus on the first year of the pandemic in the U.K.
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_covid_uk <- get_national_data(
@@ -370,7 +363,7 @@ df_covid_uk <- rename(
 df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-12-31")
 ```
 
-Then, we plot the subsetted case data with following command:
+Then, we plot the subsetted case data.
 
 ```{r, fig.cap = "Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
@@ -391,7 +384,7 @@ ggplot(df_covid_uk_subset) +
   )
 ```
 
-Then, we plot the subsetted death data with following command:
+Then, we plot the subsetted death data.
 
 ```{r, fig.cap = "Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
