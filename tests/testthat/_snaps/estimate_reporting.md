@@ -43,6 +43,6 @@
     Code
       reporting_estimate
     Output
-         reporting_me reporting_lo reporting_hi
-      73        0.014        0.014         0.56
+        reporting_me reporting_lo reporting_hi
+      1        0.014        0.014         0.56
 
