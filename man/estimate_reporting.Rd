@@ -87,23 +87,24 @@ ascertainment estimate is calculated as the ratio of the baseline severity
 estimate and the delay-adjusted severity estimate
 }
 \examples{
-library(cfr)
-library(epiparameter)
-
+# get data pre-loaded with {incidence2}
 df_covid_uk <- incidence2::covidregionaldataUK
+
 # aggregate the covid data for the UK as a whole
 df_covid_uk <- aggregate(
   data = df_covid_uk,
   x = cbind(cases_new, deaths_new) ~ date,
   FUN = function(x) sum(x, na.rm = TRUE)
 )
+
 # rename columns
 colnames(df_covid_uk)[colnames(df_covid_uk) == "cases_new"] <- "cases"
 colnames(df_covid_uk)[colnames(df_covid_uk) == "deaths_new"] <- "deaths"
 
 df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 
-onset_to_death_covid <- epidist_db(
+# load epidist object from {epiparameter}
+onset_to_death_covid <- epiparameter::epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
   author = "Linton_etal"

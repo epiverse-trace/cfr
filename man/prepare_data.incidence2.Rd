@@ -68,7 +68,7 @@ covid_uk_incidence <- incidence2::incidence(
 )
 
 # View head of prepared data
-head(
+tail(
   prepare_data(
     covid_uk_incidence,
     cases_variable = "cases_new",
