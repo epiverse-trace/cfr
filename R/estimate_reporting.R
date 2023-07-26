@@ -27,10 +27,13 @@
 #' @examples
 #' library(cfr)
 #' library(epiparameter)
-#' library(covidregionaldata)
 #'
-#' df_covid_uk <- get_national_data(
-#'   countries = "united kingdom", source = "who", verbose = FALSE
+#' df_covid_uk <- incidence2::covidregionaldataUK
+#' # aggregate the covid data for the UK as a whole
+#' df_covid_uk <- aggregate(
+#'   data = df_covid_uk,
+#'   x = cbind(cases_new, deaths_new) ~ date,
+#'   FUN = function(x) sum(x, na.rm = TRUE)
 #' )
 #' # rename columns
 #' colnames(df_covid_uk)[colnames(df_covid_uk) == "cases_new"] <- "cases"
