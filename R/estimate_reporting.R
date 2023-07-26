@@ -142,12 +142,11 @@ estimate_reporting <- function(data,
   # here, the estimate called "severity_me" translates to "reporting_me"
   # and the estimate "severity_hi" translates to "reporting_lo"
   # TODO: check if this is correct
-  df_out <- data.frame(
-    reporting_me = df_out$severity_me,
-    reporting_lo = df_out$severity_hi,
-    reporting_hi = df_out$severity_lo
+  df_out <- as.data.frame(df_out,
+    row.names = NULL,
+    col.names = c("reporting_me", "reporting_hi", "reporting_lo")
   )
 
-  # return data
-  df_out
+  # return data with columns in correct order
+  df_out[, c("reporting_me", "reporting_lo", "reporting_hi")]
 }
