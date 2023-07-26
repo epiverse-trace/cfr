@@ -181,20 +181,24 @@ of the corrected severity</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://epiforecasts.io/covidregionaldata/" class="external-link">covidregionaldata</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># get data pre-loaded with {incidence2}</span></span></span>
+<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu">incidence2</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/incidence2/man/covidregionaldataUK.html" class="external-link">covidregionaldataUK</a></span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiforecasts.io/covidregionaldata/reference/get_national_data.html" class="external-link">get_national_data</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  countries <span class="op">=</span> <span class="st">"united kingdom"</span>, source <span class="op">=</span> <span class="st">"who"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="co"># aggregate the covid data for the UK as a whole</span></span></span>
+<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">cases_new</span>, <span class="va">deaths_new</span><span class="op">)</span> <span class="op">~</span> <span class="va">date</span>,</span></span>
+<span class="r-in"><span>  FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># rename columns</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"cases_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"cases"</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"deaths_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"deaths"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-05-31"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">onset_to_death_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="co"># load epidist object from {epiparameter}</span></span></span>
+<span class="r-in"><span><span class="va">onset_to_death_covid</span> <span class="op">&lt;-</span> <span class="fu">epiparameter</span><span class="fu">::</span><span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  disease <span class="op">=</span> <span class="st">"COVID-19"</span>,</span></span>
 <span class="r-in"><span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span></span>
 <span class="r-in"><span>  author <span class="op">=</span> <span class="st">"Linton_etal"</span></span></span>
@@ -214,7 +218,7 @@ of the corrected severity</p>
 <span class="r-in"><span>  max_date <span class="op">=</span> <span class="st">"2020-06-30"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   reporting_me reporting_lo reporting_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1       0.2346    0.1871687    0.2990665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.329    0.2689813    0.4075196</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
