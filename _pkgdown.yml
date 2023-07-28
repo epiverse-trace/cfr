@@ -1,3 +1,14 @@
 url: https://epiverse-trace.github.io/cfr/
 template:
   package: epiversetheme
+articles:
+- title: Package vignettes
+  navbar: Package vignettes
+  contents:
+  - estimate_static_severity
+  - estimate_time_varying_severity
+  - estimate_ascertainment
+- title: Handling data from other packages
+  navbar: Handling data from other packages
+  contents:
+  - data_from_incidence2
