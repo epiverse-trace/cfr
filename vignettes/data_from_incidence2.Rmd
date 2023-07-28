@@ -113,7 +113,7 @@ estimate_static(
 
 ## `<incidence2>` objects from aggregated case data
 
-Aggregated case data such as that provided by the package [_covidregionaldata_](https://epiforecasts.io/covidregionaldata/) can be used with _cfr_ directly.
+Aggregated case data such as the Covid-19 dataset provided by _incidence2_ can be used with _cfr_ directly.
 
 Such usage is shown in other vignettes such as the [vignette on estimating time-varying severity](estimate_time_varying_severity.html).
 

@@ -54,7 +54,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
     checkmate,
-    stats,
+    stats
 Suggests: 
     dplyr,
     tidyr,
@@ -63,8 +63,8 @@ Suggests:
     forcats,
     ggplot2,
     pak,
+    owidR,
     testthat (>= 3.0.0),
-    covidregionaldata,
     usethis,
     knitr,
     bookdown,
@@ -74,8 +74,7 @@ Suggests:
     incidence2,
     outbreaks
 Remotes:
-    epiverse-trace/epiparameter,
-    epiforecasts/covidregionaldata
+    epiverse-trace/epiparameter
 Config/testthat/edition: 3
 Config/Needs/website:
     epiverse-trace/epiversetheme
