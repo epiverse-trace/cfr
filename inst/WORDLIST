@@ -18,7 +18,6 @@ Poisson
 Tidyverse
 WIP
 binom
-codeblock
 codecov
 com
 covidregionaldata
@@ -42,6 +41,7 @@ linelists
 lockdown
 md
 org
+owidR
 packagename
 parameterised
 pkg

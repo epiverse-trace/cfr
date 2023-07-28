@@ -58,7 +58,7 @@ library(cfr)
 
 # packages to access delay data and case data
 library(epiparameter)
-library(covidregionaldata)
+library(owidR)
 
 # packages to wrangle and plot data
 library(dplyr)
@@ -82,16 +82,22 @@ Firstly, we analyse the U.K. data, then we pick three other countries with large
 First we subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
 During this period, the CFR changed dramatically as a result of a number of changes in policy, such as implementation and relaxation of lockdown; rollout of the vaccine; new variants emerging, etc.
 
-We download the data from the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata).
+We load the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), and provided through the [_owidR_ package](https://cran.r-project.org/package=owidR).
+
+We introduce this dataset here, rather than its more U.K. focused equivalent from the _incidence2_ package, because we are going to use it further on for other countries.
 
 ```{r}
-# get Covid data from {covidregionaldata}
-df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE
-)
+# get Covid data from {owidR}
+df_covid <- owid_covid()
 
-# rename columns wth {dplyr}
-df_covid_uk <- rename(df_covid_uk, cases = cases_new, deaths = deaths_new)
+# filter for the U.K
+df_covid_uk <- filter(df_covid, location == "United Kingdom")
+
+# select and rename columns wth {dplyr}
+df_covid_uk <- select(
+  df_covid_uk, date,
+  cases = new_cases, deaths = new_deaths
+)
 ```
 
 We then subset the data to focus on just the first few months of the outbreak.
@@ -109,7 +115,7 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = cases
     ),
-    colour = "darkblue"
+    colour = "steelblue"
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
@@ -130,7 +136,7 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = deaths
     ),
-    colour = "darkred"
+    colour = "brown"
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
@@ -199,7 +205,7 @@ ggplot(df_covid_cfr_uk_naive) +
     aes(
       x = date, y = severity_me
     ),
-    colour = "darkred"
+    colour = "brown"
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
@@ -226,7 +232,7 @@ ggplot(df_covid_cfr_uk_corrected) +
     aes(
       x = date, y = severity_me
     ),
-    colour = "darkred"
+    colour = "brown"
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
@@ -245,16 +251,23 @@ We now show how to calculate the time-varying CFR for Covid-19 in multiple count
 To do this, we adopt a data science approach to apply the `estimate_time_varying()` function across data grouped by country.
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
-First we retrieve daily case and death data for COVID-19 for all countries using the `covidregionaldata` package.
+First we retrieve daily case and death data for COVID-19 for all countries and locations from the `owidR` package.
 
 ```{r}
-# get data from {covidregionaldata}
-df_covid <- get_national_data(
-  source = "who", verbose = FALSE
+# get data from {owidR}
+df_covid <- owid_covid()
+
+# filter out whole continents
+df_covid <- filter(
+  df_covid, location != continent
 )
 
 # rename the cases and deaths columns using {dplyr}
-df_covid <- rename(df_covid, cases = cases_new, deaths = deaths_new)
+df_covid <- select(
+  df_covid, iso_code, location, continent, date,
+  cases = new_cases, deaths = new_deaths,
+  total_deaths
+)
 ```
 
 Next, we group the data by country and apply the `estimate_time_varying()` function across each group (country).
@@ -264,8 +277,8 @@ This code takes a few moments to run.
 # get the total number of deaths in each country with more than 100,000 deaths
 df_covid_cfr <- df_covid %>%
   group_by(iso_code) %>%
-  mutate(total_deaths = max(deaths_total)) %>%
-  filter(total_deaths > 100000 & !is.na(country)) %>%
+  mutate(total_deaths = max(total_deaths, na.rm = TRUE)) %>%
+  filter(total_deaths > 100000 & !is.na(location)) %>%
   ungroup()
 
 # for each country, get the time-varying severity estimate,
@@ -274,9 +287,11 @@ df_covid_cfr <- df_covid %>%
 # first nest the data; nest() from {tidyr}
 df_covid_cfr <- nest(
   df_covid_cfr,
-  .by = country
+  .by = location
 )
+```
 
+```{r}
 # to each nested data frame, apply the function `estimate_time_varying`
 # overwrite the `data` column, as all data will be preserved
 df_covid_cfr <- mutate(
@@ -299,22 +314,19 @@ For simplicity, we use the same delay distribution between onset and death for a
 Finally we plot the time-varying CFR for a selection of three more countries with large outbreaks of COVID-19: Brazil, India, and the United States.
 
 ```{r, fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays.", class.source = 'fold-hide', fig.width=8}
-filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
+filter(df_covid_cfr, location %in% c("Brazil", "India", "United States")) %>%
   ggplot() +
   geom_ribbon(
     aes(
-      x = date, ymin = severity_lo, ymax = severity_hi
+      x = date, ymin = severity_lo, ymax = severity_hi,
+      group = location
     ),
-    fill = "grey75"
+    fill = "grey"
   ) +
   geom_line(
     aes(
-      x = date, y = severity_me
-    ),
-    colour = "darkred"
-  ) +
-  facet_grid(
-    cols = vars(country)
+      x = date, y = severity_me, colour = location
+    )
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
@@ -322,11 +334,18 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   scale_y_continuous(
     labels = percent
   ) +
-  lims(
-    y = c(0, 0.2)
+  scale_colour_brewer(
+    palette = "Dark2"
+  ) +
+  coord_cartesian(
+    ylim = c(0, 0.2),
+    expand = FALSE
   ) +
   labs(
     x = "Date", y = "CFR (%)"
+  ) +
+  theme(
+    legend.position = "top"
   )
 ```
 

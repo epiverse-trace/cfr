@@ -340,7 +340,7 @@ estimate_static(
 We now perform a similar analysis with all of the same steps, with data taken from the ongoing COVID-19 epidemic in the U.K.
 For brevity, we describe the steps without methodological explanations throughout this example.
 
-We get the data from the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) (but note that _covidregionaldata_ is no longer available on CRAN).
+We get the data from the [_incidence2_ package](https://cran.r-project.org/package=incidence2) (but note that it was originally made available in the  [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) package which is no longer available on CRAN).
 
 ## Plotting the raw data
 
@@ -351,8 +351,12 @@ The static severity calculations we are performing in this vignette are not able
 We change some default column names to match those required by _cfr_ and subset the data.frame to focus on the first year of the pandemic in the U.K.
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_covid_uk <- get_national_data(
-  countries = "united kingdom", source = "who", verbose = FALSE
+df_covid_uk <- covidregionaldataUK
+
+df_covid_uk <- aggregate(
+  data = df_covid_uk,
+  x = cbind(cases_new, deaths_new) ~ date,
+  FUN = function(x) sum(x, na.rm = TRUE)
 )
 
 df_covid_uk <- rename(
@@ -371,7 +375,7 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = cases
     ),
-    colour = "darkblue"
+    colour = "steelblue"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -392,7 +396,7 @@ ggplot(df_covid_uk_subset) +
     aes(
       x = date, y = deaths
     ),
-    colour = "darkred"
+    colour = "brown"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -450,7 +454,7 @@ ggplot(df_known_outcomes_covid) +
   ) +
   scale_colour_manual(
     values = c(
-      "Cases" = "darkblue",
+      "Cases" = "steelblue",
       "Known outcomes" = "darkgreen"
     ),
     name = NULL
