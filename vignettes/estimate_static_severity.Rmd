@@ -25,18 +25,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Overview
+It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
+During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
+Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
 
-This vignette outlines how to use _cfr_ to calculate disease severity
-during an ongoing outbreak. We wish to estimate one of the typical severity 
-quantities used in epidemiology: the *case fatality risk (CFR)*, 
-*infection hospitality risk (IFR)* or  *hospitalisation fatality risk (HFR)*. We
-do so using a method that uses a time series of cases, infections of
-hospitalisations (respectively) and deaths with an appropriate delay 
-distribution. The methods used here originate from @nishiura2009.
-
-This vignette demonstrates how to implement the core functions within
-_cfr_. Specifically, we will cover
+This vignette demonstrates how to calculate a static estimate of the severity of an outbreak using methods outlined @nishiura2009, and implemented in _cfr_.
 
 ::: {.alert .alert-warning}
 New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
@@ -44,17 +37,16 @@ New to calculating disease severity using _cfr_? You might want to see the ["Get
 
 ::: {.alert .alert-primary}
 ## Use case {-}
+We want a static estimate of the severity of an outbreak, using a method that uses a time series of cases, infections or hospitalisations (as appropriate) and deaths, _while correcting for the delay in reporting the outcomes of cases_.
+:::
 
-2. Arrive at estimates over time for the number of symptomatic individuals 
-that will likely be known to have had an outcome $t$ days after symptom onset
+::: {.alert .alert-secondary}
+## What we have {-}
 
-3. Define an unbiased estimator to estimate the CFR or HFR from @nishiura2009
-
-4. Numerically implement the unbiased estimator numerically using
-maximum likelihood estimation to arrive at central estimates of the CFR or HFR,
-along with a confidence interval.
-
-This vignette outlines how to use _cfr_ to calculate disease severity in terms of CFR during an ongoing outbreak, using methods from @nishiura2009, using the the core functions within _cfr_.
+* A time-series of cases, hospitalisations or some other proxy for infections over time;
+* A time-series of deaths;
+* A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+:::
 
 ::: {.alert .alert-info}
 ## Concept: Correcting for delays in CFR estimation {-}
@@ -78,113 +70,15 @@ First load _cfr_ and packages to access and plot data.
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
 library(epiparameter)
-library(covidregionaldata)
+library(incidence2)
 library(dplyr)
 library(scales)
 library(ggplot2)
 ```
 
-# Motivation
-
-Key epidemiological quantities estimated in real-time often suffer from biases.
-In particular, dividing deaths-to-date by cases-to-date, infections-to-date or 
-hospitalisations-to-date leads to biased estimates of the CFR, IFR or 
-HFR (respectively). This is because this calculation does not account 
-for delays from confirmation of a case, infection or hospitalisation-to-death. 
-
-If we had perfectly synchronised case and death incidence data, the basic
-versions of the CFR, IFR and HFR — defined as either the ratio of the 
-total number of deaths and the total number of cases, infections or 
-hospitalisations — would be accurate. These basic estimates are referred to as
-naive estimators. However, due to delays between onset or hospitalisation and 
-death for all known diseases, this synchronisation is never true.
-
-For example, suppose 10 people start showing symptoms of a specific disease on 
-a given day and the end of that day all remain alive. Suppose that for the next 
-5 days, the numbers of new cases continue to rise until they reach 100 new cases
-on day 5. However, suppose that by day 5, all infected individuals remain alive.
-The naive estimate of the CFR would be zero calculated at the end of the first 5
-days would be zero, because there would have been zero deaths in total. 
-Even after deaths begin to occur, this lag between the ascertainment of a case
-or hospitalisation and outcome leads to a consistently biased estimate. Hence,
-adjusting for such delays using an appropriate delay distribution 
-is essential for accurate estimates of severity.
-
-# Methods
-
-## Data required
-
-The data required to estimate the severity of a disease during an ongoing 
-outbreak using the _cfr_ package includes:
-
-* A time-series of cases, hospitalisations or some other proxy for infections 
-over time;
-* A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ 
-days after they were initially exposed. Such distributions come from the
-literature, where studies have typically fit distributions to data describing 
-the process. 
-
-In practice, the time-series of cases and deaths will already be together, given
-that they usually originate from sources that will have typically collated them
-into a single data file.
-
-The function within _cfr_ used to estimate the severity of a disease at a
-single time-point — `estimate_static()` — requires a `data.frame` of input data
---- typically case and death  time series data --- and a delay distribution. The
-delay distribution we use here comes from the _epiparameter_ package.
-
-## Adjusting for delays between the two time series 
-
-The method used by this function follows @nishiura2009.
-The function calculates a quantity $u_t$ for each day within the input data,
-which represents the proportion of cases with a known outcome, on day $t$.
-Following Nishiura et al., $u_t$ is calculated in the following way:
-
-\begin{equation}
-  u_t = \frac{\sum_{i = 0}^t
-        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
-\end{equation}
-
-where $f_t$ is the value of the probability mass function at time $t$ and $c_t$,
-$d_t$ are the number of new cases and new deaths at time $t$, (respectively). We
-then use $u_t$ at the end of the outbreak in the following likelihood 
-function to estimate the severity of the disease in question.
-
-\begin{equation}
-  L(\theta | y) = \log{\binom{u_tC}{D}} + D \log{\theta} +
-  (u_tC - D)\log{(1.0 - \theta)},
-\end{equation}
-
-$C$ and $D$ are the cumulative number of cases and deaths (respectively) up
-until time $t$. Lastly, $\theta$ is the parameter we wish to estimate, the
-severity of the disease. We estimate $\theta$ using simple maximum-likelihood 
-methods, allowing the functions within this package to be quick and easy tools 
-to use.
-
-## Interpreting the estimates
-
-The precise severity measure — CFR, IFR, HFR, etc — that \theta represents
-depends upon the input data given by the user. For complete clarity, here are
-the most common time series that users might calculate severity from and the 
-resulting severity estimate from such data:
-
-:Case and death incidence data, with a case-to-death delay distribution (or close approximation, such as onset-to-death) — Case Fatality Risk (CFR).
-
-:Infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).
-
-:Hospitalisation Fatality Risk (HFR) --- Hospitalisation and death incidence data, delay distribution (or close approximation).
-
 # Severity of the 1976 Ebola Outbreak
 
-We use case and death incidence data from the 1976 Ebola outbreak in the Democratic the overall severity of Ebola. We do so as though we were roughly half way
-through the outbreak, emulating when the methods presented in this package are 
-arguably their most useful. 
-
-First of all, we plot the data from the entire outbreak. Then we subset the 
-data, keeping only the first half of each time series, in order to emulate
-attempting to calculate the severity of the disease when the effects of long
-lag-times between case detection and death are most serious.
+We use case and death incidence data from the 1976 Ebola outbreak in the Democratic the overall severity of Ebola. We do so as though we were roughly half way through the outbreak, emulating when the methods presented in this package are arguably their most useful. 
 
 ## Plotting the raw data
 
@@ -202,7 +96,7 @@ ggplot(ebola1976) +
     aes(
       x = date, y = cases
     ),
-    colour = "darkblue"
+    colour = "steelblue"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -220,7 +114,7 @@ ggplot(ebola1976) +
     aes(
       x = date, y = deaths
     ),
-    colour = "darkred"
+    colour = "brown"
   ) +
   scale_x_date(
     date_labels = "%d-%b-%Y"
@@ -235,15 +129,14 @@ subsetting the data so that we only include days before the 30th September 1976,
 using `dplyr::filter()`.
 
 ```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_ebola_subset <- dplyr::filter(ebola1976, date <= "1976-09-30")
+df_ebola_subset <- filter(ebola1976, date <= "1976-09-30")
 ```
 
 ## The delay distribution
 
-For this example, given that we are using case data and detection of a case is
-well-approximated by symptom onset, we use the distribution describing the delay
-between onset-to-death. As such, we retrieve such a distribution from the
-literature [@barry2018] using the `epidist_db()` function from the _epiparameter_ package with the following command:
+For this example, given that we are using case data and detection of a case is well-approximated by symptom onset, we use the distribution describing the delay between onset-to-death.
+
+As such, we retrieve such a distribution from the literature [@barry2018] using the `epidist_db()` function from the _epiparameter_ package with the following command:
 
 ```{r}
 onset_to_death_ebola <- epidist_db(
@@ -262,8 +155,7 @@ plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
 
 ## Estimating incidence of cases (or similar time-series) with a known outcome
 
-The function `known_outcomes()` from the _cfr_ package estimates the 
-number of cases which have a known outcome over time.
+The function `known_outcomes()` from the _cfr_ package estimates the number of cases which have a known outcome over time.
 
 The resulting data frame contains two new columns, "known_outcomes", for the number of known outcomes (deaths) expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known outcomes.
 
@@ -296,7 +188,7 @@ ggplot(df_known_outcomes_ebola) +
   ) +
   scale_colour_manual(
     values = c(
-      "Cases" = "darkblue",
+      "Cases" = "steelblue",
       "Known outcomes" = "darkgreen"
     ),
     name = NULL
