@@ -199,19 +199,19 @@ During an outbreak there is often a delay between cases being reported, and the 
 <p>It is important to know what proportion of cases in an outbreak are being ascertained to muster the appropriate response, and to estimate the overall burden of the outbreak.</p>
 <p><strong>Note</strong> that the ascertainment rate may be affected by a number of factors.
 When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.</p>
-<p>The <code><a href="../reference/estimate_reporting.html">estimate_reporting()</a></code> function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.</p>
+<p>The <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.</p>
 <p>Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate reporting with a baseline severity of 70%</span></span>
-<span><span class="fu"><a href="../reference/estimate_reporting.html">estimate_reporting</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"static"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   reporting_me reporting_lo reporting_hi</span></span>
-<span><span class="co">#&gt; 1     0.729927          0.7    0.8313539</span></span></code></pre></div>
+<span><span class="co">#&gt;   ascertainment_me ascertainment_lo ascertainment_hi</span></span>
+<span><span class="co">#&gt; 1         0.729927              0.7        0.8313539</span></span></code></pre></div>
 </details><p>This analysis suggests that between 70% and 83% of cases were reported in this outbreak.</p>
 <p>More details can be found in the <a href="estimate_ascertainment.html">vignette on estimating the proportion of cases that are reported during an outbreak</a>.</p>
 </div>
