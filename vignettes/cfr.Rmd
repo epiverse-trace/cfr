@@ -117,13 +117,13 @@ It is important to know what proportion of cases in an outbreak are being ascert
 **Note** that the ascertainment rate may be affected by a number of factors.
 When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.
 
-The `estimate_reporting()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
+The `estimate_ascertainment()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
 
 Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).
 
 ```{r}
 # estimate reporting with a baseline severity of 70%
-estimate_reporting(
+estimate_ascertainment(
   data = ebola1976,
   epi_dist = onset_to_death_ebola,
   type = "static",

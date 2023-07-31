@@ -49,11 +49,11 @@ The first two elements are expected be included in a dataframe with the columns 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
-This vignette shows how to use the `estimate_reporting()` function in _cfr_ to estimate the proportion of cases, infections or hospitalisations ascertained, and consequently, the extent of under-ascertainment or under-reporting.
+This vignette shows how to use the `estimate_ascertainment()` function in _cfr_ to estimate the proportion of cases, infections or hospitalisations ascertained, and consequently, the extent of under-ascertainment or under-reporting.
 Note that under-ascertainment may be due to a number of reasons (see above), while under-reporting is due to cases not being reported (such as due to a lack of testing capacity).
 Users should take care to use the correct terminology for their specific situation.
 
-However, we have named the function `estimate_reporting()` as we expect that users will be most interested in situations where testing capacity is itself the limiting factor in ascertainment.
+However, we have named the function `estimate_ascertainment()` as we expect that users will be most interested in situations where testing capacity is itself the limiting factor in ascertainment.
 This was the case during the Covid-19 pandemic before testing capacity was substantially increased, and is expected to be the case for a future pandemic caused by a novel pathogen.
 
 First load _cfr_ and packages to access and plot data.
@@ -75,7 +75,7 @@ library(ggplot2)
 
 ## Ascertainment for the Covid-19 pandemic in the U.K.
 
-The function `estimate_reporting()` from the _cfr_ package estimates the proportion of cases, infections, hospitalisations -- or whichever proxy for infections is provided -- which have been ascertained.
+The function `estimate_ascertainment()` from the _cfr_ package estimates the proportion of cases, infections, hospitalisations -- or whichever proxy for infections is provided -- which have been ascertained.
 
 The methods are based on @nishiura2009 to estimate severity, and are extended by combining the resulting severity estimates with an assumed baseline severity estimate.
 
@@ -174,20 +174,20 @@ onset_to_death_covid <- epidist_db(
 
 ### Estimating the proportion of cases that have been ascertained
 
-We use the `estimate_reporting()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
+We use the `estimate_ascertainment()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
 
 The function includes a `type` argument, which determines whether `estimate_static()` or `estimate_time_varying()` is used to estimate the delay-adjusted severity of the disease.
 
 The ascertainment rate is calculated as the disease severity calculated from the data, divided by the 'known' disease severity; this is expected to be known or assumed from our best knowledge of the pathology of the disease.
 
-This known disease severity is passed to the `severity_baseline` argument in `estimate_reporting()`, and forms the denominator in the resulting under-ascertainment calculation.
+This known disease severity is passed to the `severity_baseline` argument in `estimate_ascertainment()`, and forms the denominator in the resulting under-ascertainment calculation.
 
 We assume that the 'true' CFR of Covid-19 is 0.014.
 
 The other arguments are the same as those found in `estimate_time_varying()`. 
 
 ```{r }
-df_reporting_static <- estimate_reporting(
+df_reporting_static <- estimate_ascertainment(
   data = df_covid_uk_subset,
   epi_dist = onset_to_death_covid,
   type = "static",
@@ -197,7 +197,7 @@ df_reporting_static <- estimate_reporting(
 ```
 
 ```{r }
-df_reporting_varying <- estimate_reporting(
+df_reporting_varying <- estimate_ascertainment(
   data = df_covid_uk,
   epi_dist = onset_to_death_covid,
   type = "varying",
@@ -246,7 +246,7 @@ df_covid <- select(
 )
 ```
 
-We adopt data science tools to iteratively apply the `estimate_reporting()` function across data grouped by country.
+We adopt data science tools to iteratively apply the `estimate_ascertainment()` function across data grouped by country.
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
 
@@ -268,7 +268,7 @@ df_reporting <- nest(df_reporting, .by = location)
 df_reporting <- mutate(
   df_reporting,
   reporting = map(
-    .x = data, .f = estimate_reporting,
+    .x = data, .f = estimate_ascertainment,
     # arguments to function
     epi_dist = onset_to_death_covid, type = "varying",
     burn_in_value = 7, smooth_inputs = TRUE, correct_for_delays = TRUE
@@ -289,10 +289,10 @@ df_reporting %>%
   ggplot() +
   geom_pointrange(
     aes(
-      x = fct_reorder(location, reporting_me),
-      y = reporting_me,
-      ymin = reporting_lo,
-      ymax = reporting_hi
+      x = fct_reorder(location, ascertainment_me),
+      y = ascertainment_me,
+      ymin = ascertainment_lo,
+      ymax = ascertainment_hi
     )
   ) +
   coord_flip() +
