@@ -21,7 +21,9 @@
 #' time-period
 #'
 #' @return A data.frame containing the MLE estimate and 95% confidence interval
-#' of the corrected severity
+#' of the corrected severity, named "ascertainment_me" (for the central estimate
+#' ), and "ascertainment_lo" and "ascertainment_hi" for the lower and upper
+#' interval limits.
 #' @export
 #'
 #' @examples
@@ -48,7 +50,7 @@
 #'   author = "Linton_etal"
 #' )
 #'
-#' estimate_reporting(
+#' estimate_ascertainment(
 #'   data = df_covid_uk,
 #'   epi_dist = onset_to_death_covid,
 #'   type = "varying",
@@ -59,15 +61,17 @@
 #'   max_date = "2020-06-30"
 #' )
 #'
-estimate_reporting <- function(data,
-                               epi_dist = NULL,
-                               type = c("static", "varying"),
-                               severity_baseline = 0.014,
-                               burn_in_value = get_default_burn_in(epi_dist),
-                               smooth_inputs = FALSE,
-                               smoothing_window = 1,
-                               correct_for_delays = FALSE,
-                               max_date = NULL) {
+estimate_ascertainment <- function(data,
+                                   epi_dist = NULL,
+                                   type = c("static", "varying"),
+                                   severity_baseline = 0.014,
+                                   burn_in_value = get_default_burn_in(
+                                     epi_dist
+                                   ),
+                                   smooth_inputs = FALSE,
+                                   smoothing_window = 1,
+                                   correct_for_delays = FALSE,
+                                   max_date = NULL) {
   # input checking
   checkmate::assert_data_frame(data)
   checkmate::assert_names(
@@ -140,14 +144,14 @@ estimate_reporting <- function(data,
   )
 
   # re-convert to data.frame from list
-  # here, the estimate called "severity_me" translates to "reporting_me"
-  # and the estimate "severity_hi" translates to "reporting_lo"
+  # here, the estimate called "severity_me" translates to "ascertainment_me"
+  # and the estimate "severity_hi" translates to "ascertainment_lo"
   # TODO: check if this is correct
   df_out <- as.data.frame(df_out,
     row.names = NULL,
-    col.names = c("reporting_me", "reporting_hi", "reporting_lo")
+    col.names = c("ascertainment_me", "ascertainment_hi", "ascertainment_lo")
   )
 
   # return data with columns in correct order
-  df_out[, c("reporting_me", "reporting_lo", "reporting_hi")]
+  df_out[, c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")]
 }
