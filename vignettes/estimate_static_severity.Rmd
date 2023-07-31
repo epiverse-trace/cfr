@@ -1,5 +1,5 @@
 ---
-title: "Calculating disease severity by adjusting for delays between onset and outcomes"
+title: "Calculating a static, delay-adjusted estimate of disease severity"
 output:
   bookdown::html_vignette2:
     fig_caption: yes
@@ -9,7 +9,7 @@ pkgdown:
 bibliography: resources/library.json
 link-citations: true
 vignette: >
-  %\VignetteIndexEntry{Calculating disease severity by adjusting for delays between onset and outcomes}
+  %\VignetteIndexEntry{Calculating a static, delay-adjusted estimate of disease severity}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -27,9 +27,10 @@ knitr::opts_chunk$set(
 
 It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
 During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
+
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
 
-This vignette demonstrates how to calculate a static estimate of the severity of an outbreak using methods outlined @nishiura2009, and implemented in _cfr_.
+This vignette demonstrates how to calculate a static estimate of the severity of an outbreak using methods outlined in @nishiura2009, and implemented in _cfr_.
 
 ::: {.alert .alert-warning}
 New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
@@ -37,6 +38,7 @@ New to calculating disease severity using _cfr_? You might want to see the ["Get
 
 ::: {.alert .alert-primary}
 ## Use case {-}
+
 We want a static estimate of the severity of an outbreak, using a method that uses a time series of cases, infections or hospitalisations (as appropriate) and deaths, _while correcting for the delay in reporting the outcomes of cases_.
 :::
 
@@ -46,6 +48,10 @@ We want a static estimate of the severity of an outbreak, using a method that us
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
 * A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+
+The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
+
+The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
 ::: {.alert .alert-info}
