@@ -57,10 +57,13 @@
 <li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
-    <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
+    <h6 class="dropdown-header" data-toc-skip>Package vignettes</h6>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6>
+    <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
   </div>
 </li>
       </ul>
@@ -201,7 +204,7 @@ We recommend that users should carefully consider whether they can safely fill <
 <h3 id="incidence2-objects-from-aggregated-case-data">
 <code>&lt;incidence2&gt;</code> objects from aggregated case data<a class="anchor" aria-label="anchor" href="#incidence2-objects-from-aggregated-case-data"></a>
 </h3>
-<p>Aggregated case data such as that provided by the package <a href="https://epiforecasts.io/covidregionaldata/" class="external-link"><em>covidregionaldata</em></a> can be used with <em>cfr</em> directly.</p>
+<p>Aggregated case data such as the Covid-19 dataset provided by <em>incidence2</em> can be used with <em>cfr</em> directly.</p>
 <p>Such usage is shown in other vignettes such as the <a href="estimate_time_varying_severity.html">vignette on estimating time-varying severity</a>.</p>
 <p>Here we show how to transform such data into <code>&lt;incidence2&gt;</code> objects, and then prepare them for <em>cfr</em>.</p>
 <p>The columns in this dataset are already in a format that can be converted into an <code>&lt;incidence2&gt;</code> object using <code><a href="https://rdrr.io/pkg/incidence2/man/incidence.html" class="external-link">incidence2::incidence()</a></code>, and then handled by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.

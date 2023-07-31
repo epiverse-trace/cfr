@@ -57,10 +57,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
-    <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are reported during an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating disease severity by adjusting for delays between onset and outcomes</a>
+    <h6 class="dropdown-header" data-toc-skip>Package vignettes</h6>
+    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
+    <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6>
+    <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
   </div>
 </li>
       </ul>
@@ -95,9 +98,9 @@
     
     
 <p>It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
-During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
-Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
-The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>, and which are implemented in the <em>cfr</em> package.</p>
+During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.</p>
+<p>Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.</p>
+<p>The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>, and which are implemented in the <em>cfr</em> package.</p>
 <div class="section level2 unnumbered alert alert-primary">
 <h2 id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
 </h2>
@@ -126,7 +129,7 @@ The severity of a disease can be estimated while correcting for delays in report
 </details><div class="section level2">
 <h2 id="case-and-death-data">Case and death data<a class="anchor" aria-label="anchor" href="#case-and-death-data"></a>
 </h2>
-<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://epiforecasts.io/covidregionaldata/" class="external-link"><em>covidregionaldata</em> package for data on the Covid-19 outbreak</a>.</p>
+<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset collected by Our World in Data</a>, and provided through the <a href="https://cran.r-project.org/package=owidR" class="external-link"><em>owidR</em> package</a>.</p>
 <p>In an outbreak response scenario, such data may also be compiled and shared locally.</p>
 <p>The <em>cfr</em> package requires only a data frame with three columns, “date”, “cases”, and “deaths”, giving the daily number of reported cases and deaths.</p>
 <div class="alert alert-warning">
@@ -135,7 +138,17 @@ The severity of a disease can be estimated while correcting for delays in report
 </div>
 <p>Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with the package <span class="citation">(<a href="#ref-camacho2014" role="doc-biblioref">Camacho et al. 2014</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># view ebola dataset</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span>
+<span><span class="co">#&gt;         date cases deaths</span></span>
+<span><span class="co">#&gt; 1 1976-08-25     1      0</span></span>
+<span><span class="co">#&gt; 2 1976-08-26     0      0</span></span>
+<span><span class="co">#&gt; 3 1976-08-27     0      0</span></span>
+<span><span class="co">#&gt; 4 1976-08-28     0      0</span></span>
+<span><span class="co">#&gt; 5 1976-08-29     0      0</span></span>
+<span><span class="co">#&gt; 6 1976-08-30     0      0</span></span></code></pre></div>
 </details>
 </div>
 <div class="section level2">
@@ -181,9 +194,11 @@ The severity of a disease can be estimated while correcting for delays in report
 </details><p>The <code><a href="../reference/estimate_static.html">estimate_static()</a></code> function is well suited to small outbreaks. For larger outbreaks where it may be useful to know how severity has changed over time, the function <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> is available. This function is however not well suited to small outbreaks. More on this can be found on the <a href="estimate_time_varying_severity.html">vignette on estimating how disease severity varies over the course of an outbreak</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="estimate-reporting-rate">Estimate reporting rate<a class="anchor" aria-label="anchor" href="#estimate-reporting-rate"></a>
+<h2 id="estimate-ascertainment-rate">Estimate ascertainment rate<a class="anchor" aria-label="anchor" href="#estimate-ascertainment-rate"></a>
 </h2>
-<p>It is important to know what proportion of cases in an outbreak are being reported to muster the appropriate response, and to estimate the overall burden of the outbreak.</p>
+<p>It is important to know what proportion of cases in an outbreak are being ascertained to muster the appropriate response, and to estimate the overall burden of the outbreak.</p>
+<p><strong>Note</strong> that the ascertainment rate may be affected by a number of factors.
+When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.</p>
 <p>The <code><a href="../reference/estimate_reporting.html">estimate_reporting()</a></code> function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.</p>
 <p>Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
