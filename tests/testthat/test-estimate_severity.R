@@ -17,7 +17,7 @@ poisson_threshold <- 100
 # get the corrected dataframe
 df_corrected <- known_outcomes(
   data = ebola1976,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 # run estimate_severity
@@ -73,7 +73,7 @@ test_that("`estimate_rolling`: Basic expectations", {
   # get the corrected dataframe
   df_corrected <- known_outcomes(
     data = ebola1976,
-    epi_dist = onset_to_death_ebola
+    epidist = onset_to_death_ebola
   )
 
   # run estimate_severity
@@ -93,7 +93,7 @@ test_that("`estimate_rolling`: Messages and errors", {
   ebola1976$cases <- 0L
   df_corrected <- known_outcomes(
     data = ebola1976,
-    epi_dist = onset_to_death_ebola
+    epidist = onset_to_death_ebola
   )
 
   # expect an error because cases are 0

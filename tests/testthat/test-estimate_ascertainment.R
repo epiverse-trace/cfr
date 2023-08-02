@@ -49,7 +49,7 @@ test_that("`estimate_ascertainment`: Basic expectations for static method", {
 test_that("`estimate_ascertainment`: Correct for delays for static method", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = TRUE, epi_dist = onset_to_death_ebola,
+    correct_for_delays = TRUE, epidist = onset_to_death_ebola,
     smooth_inputs = FALSE,
     burn_in_value = 1, smoothing_window = 1,
     type = "static"
@@ -82,7 +82,7 @@ test_that("`estimate_ascertainment`: Correct for delays for static method", {
 test_that("`estimate_ascertainment`: Smooth inputs for static method", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE, epi_dist = onset_to_death_ebola,
+    correct_for_delays = FALSE, epidist = onset_to_death_ebola,
     smooth_inputs = TRUE,
     burn_in_value = 1, smoothing_window = 7,
     type = "static"
@@ -115,7 +115,7 @@ test_that("`estimate_ascertainment`: Smooth inputs for static method", {
 test_that("`estimate_ascertainment`: Automatic burn-in value", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE, epi_dist = onset_to_death_ebola,
+    correct_for_delays = FALSE, epidist = onset_to_death_ebola,
     smooth_inputs = TRUE,
     smoothing_window = 7,
     type = "static"
@@ -148,7 +148,7 @@ test_that("`estimate_ascertainment`: Automatic burn-in value", {
 test_that("`estimate_ascertainment`: Automatic burn-in value for static", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE, epi_dist = onset_to_death_ebola,
+    correct_for_delays = FALSE, epidist = onset_to_death_ebola,
     smooth_inputs = TRUE,
     smoothing_window = 7,
     type = "static"
@@ -182,7 +182,7 @@ test_that("`estimate_ascertainment`: Basic expectations for time-varying", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
     correct_for_delays = TRUE,
-    epi_dist = onset_to_death_ebola,
+    epidist = onset_to_death_ebola,
     smooth_inputs = FALSE,
     type = "varying"
   )

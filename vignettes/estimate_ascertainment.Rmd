@@ -189,7 +189,7 @@ The other arguments are the same as those found in `estimate_time_varying()`.
 ```{r }
 df_reporting_static <- estimate_ascertainment(
   data = df_covid_uk_subset,
-  epi_dist = onset_to_death_covid,
+  epidist = onset_to_death_covid,
   type = "static",
   severity_baseline = 0.014,
   correct_for_delays = TRUE
@@ -199,7 +199,7 @@ df_reporting_static <- estimate_ascertainment(
 ```{r }
 df_reporting_varying <- estimate_ascertainment(
   data = df_covid_uk,
-  epi_dist = onset_to_death_covid,
+  epidist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
   smooth_inputs = TRUE,
@@ -270,7 +270,7 @@ df_reporting <- mutate(
   reporting = map(
     .x = data, .f = estimate_ascertainment,
     # arguments to function
-    epi_dist = onset_to_death_covid, type = "varying",
+    epidist = onset_to_death_covid, type = "varying",
     burn_in_value = 7, smooth_inputs = TRUE, correct_for_delays = TRUE
   )
 )

@@ -52,7 +52,7 @@
 #'
 #' estimate_ascertainment(
 #'   data = df_covid_uk,
-#'   epi_dist = onset_to_death_covid,
+#'   epidist = onset_to_death_covid,
 #'   type = "varying",
 #'   severity_baseline = 0.014,
 #'   smooth_inputs = TRUE,
@@ -62,11 +62,11 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   epi_dist = NULL,
+                                   epidist = NULL,
                                    type = c("static", "varying"),
                                    severity_baseline = 0.014,
                                    burn_in_value = get_default_burn_in(
-                                     epi_dist
+                                     epidist
                                    ),
                                    smooth_inputs = FALSE,
                                    smoothing_window = 1,
@@ -95,7 +95,7 @@ estimate_ascertainment <- function(data,
   )
   checkmate::assert_string(max_date, null.ok = TRUE)
   if (correct_for_delays) {
-    checkmate::assert_class(epi_dist, "epidist")
+    checkmate::assert_class(epidist, "epidist")
   }
 
   # match argument for type
@@ -107,13 +107,13 @@ estimate_ascertainment <- function(data,
   if (type == "static") {
     df_severity <- estimate_static(
       data,
-      epi_dist = epi_dist,
+      epidist = epidist,
       correct_for_delays = correct_for_delays
     )
   } else if (type == "varying") {
     df_severity <- estimate_time_varying(
       data,
-      epi_dist = epi_dist,
+      epidist = epidist,
       smooth_inputs = smooth_inputs,
       smoothing_window = smoothing_window,
       burn_in_value = burn_in_value,

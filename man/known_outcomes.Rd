@@ -4,7 +4,7 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(data, epi_dist = NULL)
+known_outcomes(data, epidist = NULL)
 }
 \arguments{
 \item{data}{A data.frame containing the outbreak data. A daily time series
@@ -13,7 +13,7 @@ the numbers of new cases at each time point. This function does not require
 data on daily deaths, but this column (and any others) will be retained if
 present.}
 
-\item{epi_dist}{The delay distribution used, in the form of an
+\item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},

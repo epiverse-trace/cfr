@@ -7,7 +7,7 @@
 estimate_static(
   data,
   correct_for_delays = FALSE,
-  epi_dist = NULL,
+  epidist = NULL,
   poisson_threshold = 100
 )
 }
@@ -29,7 +29,7 @@ to correct for the delay between case detection and death. FALSE corresponds
 to a naive severity being calculated, TRUE corresponds to the user
 calculating a corrected severity}
 
-\item{epi_dist}{The delay distribution used, in the form of an
+\item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},
@@ -70,7 +70,7 @@ estimate_static(
 estimate_static(
   ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 }

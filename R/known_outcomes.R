@@ -15,7 +15,7 @@
 #' data on daily deaths, but this column (and any others) will be retained if
 #' present.
 #'
-#' @param epi_dist The delay distribution used, in the form of an
+#' @param epidist The delay distribution used, in the form of an
 #' [epiparameter::epidist()] object. This is used to obtain a probability
 #' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 #' probability a case has a known outcomes (i.e. death) at time \eqn{t},
@@ -48,7 +48,7 @@
 #'   known_outcomes(data = ebola1976, onset_to_death_ebola)
 #' )
 known_outcomes <- function(data,
-                           epi_dist = NULL) {
+                           epidist = NULL) {
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =
@@ -56,10 +56,10 @@ known_outcomes <- function(data,
     "Case data must contain columns `cases`" =
       "cases" %in% colnames(data)
   )
-  checkmate::assert_class(epi_dist, "epidist")
+  checkmate::assert_class(epidist, "epidist")
 
   pmf_vals <- stats::density(
-    epi_dist,
+    epidist,
     at = seq(from = 0, to = nrow(data) - 1L)
   )
 

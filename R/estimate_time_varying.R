@@ -69,7 +69,7 @@
 #' # estimate time varying severity while correcting for delays
 #' cfr_time_varying <- estimate_time_varying(
 #'   data = df_covid_uk_subset,
-#'   epi_dist = onset_to_death_covid,
+#'   epidist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
 #'   burn_in_value = 7L,
 #'   correct_for_delays = TRUE
@@ -77,8 +77,8 @@
 #' tail(cfr_time_varying)
 #'
 estimate_time_varying <- function(data,
-                                  epi_dist = NULL,
-                                  burn_in_value = get_default_burn_in(epi_dist),
+                                  epidist = NULL,
+                                  burn_in_value = get_default_burn_in(epidist),
                                   smooth_inputs = FALSE,
                                   smoothing_window = 1,
                                   correct_for_delays = FALSE) {
@@ -89,7 +89,7 @@ estimate_time_varying <- function(data,
   checkmate::assert_data_frame(data)
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_integerish(smoothing_window, lower = 1, len = 1L)
-  checkmate::assert_class(epi_dist, "epidist", null.ok = TRUE) # optional arg.
+  checkmate::assert_class(epidist, "epidist", null.ok = TRUE) # optional arg.
 
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
@@ -98,7 +98,7 @@ estimate_time_varying <- function(data,
       (smoothing_window %% 2 != 0)
   )
   if (correct_for_delays) {
-    checkmate::assert_class(epi_dist, "epidist")
+    checkmate::assert_class(epidist, "epidist")
   }
 
   # prepare a new dataframe with smoothed columns if requested
@@ -143,7 +143,7 @@ estimate_time_varying <- function(data,
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
   if (correct_for_delays) {
     pmf_vals <- stats::density(
-      epi_dist,
+      epidist,
       at = seq(from = 0, to = nrow(data) - 1L)
     )
     df_temp[indices, "known_outcomes"] <- vapply(
@@ -189,10 +189,10 @@ estimate_time_varying <- function(data,
 #'
 #' @return A single integer, the burn-in value.
 #' @keywords internal
-get_default_burn_in <- function(epi_dist = NULL) {
-  if (is.null(epi_dist)) {
+get_default_burn_in <- function(epidist = NULL) {
+  if (is.null(epidist)) {
     7
   } else {
-    as.integer(round(epi_dist$summary_stats$centre_spread$mean))
+    as.integer(round(epidist$summary_stats$centre_spread$mean))
   }
 }

@@ -39,13 +39,13 @@
 #'   estimate_rolling(
 #'     ebola1976,
 #'     correct_for_delays = TRUE,
-#'     epi_dist = onset_to_death_ebola
+#'     epidist = onset_to_death_ebola
 #'   )
 #' )
 #'
 estimate_rolling <- function(data,
                              correct_for_delays = FALSE,
-                             epi_dist = NULL,
+                             epidist = NULL,
                              poisson_threshold = 100) {
 
   # input checking
@@ -79,7 +79,7 @@ estimate_rolling <- function(data,
     # of deaths
     data <- known_outcomes(
       data = data,
-      epi_dist = epi_dist
+      epidist = epidist
     )
 
     # prepare cumulative sums
