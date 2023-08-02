@@ -7,10 +7,10 @@ true) severity estimate}
 \usage{
 estimate_ascertainment(
   data,
-  epi_dist = NULL,
+  epidist = NULL,
   type = c("static", "varying"),
   severity_baseline = 0.014,
-  burn_in_value = get_default_burn_in(epi_dist),
+  burn_in_value = get_default_burn_in(epidist),
   smooth_inputs = FALSE,
   smoothing_window = 1,
   correct_for_delays = FALSE,
@@ -30,7 +30,7 @@ with no missing dates in between. The "date" column must be of the class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{epi_dist}{The delay distribution used, in the form of an
+\item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},
@@ -114,7 +114,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 
 estimate_ascertainment(
   data = df_covid_uk,
-  epi_dist = onset_to_death_covid,
+  epidist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
   smooth_inputs = TRUE,

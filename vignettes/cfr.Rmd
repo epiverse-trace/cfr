@@ -104,7 +104,7 @@ We use the function `estimate_static()` to calculate overall disease severity at
 estimate_static(
   data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 ```
 
@@ -125,7 +125,7 @@ Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming th
 # estimate reporting with a baseline severity of 70%
 estimate_ascertainment(
   data = ebola1976,
-  epi_dist = onset_to_death_ebola,
+  epidist = onset_to_death_ebola,
   type = "static",
   severity_baseline = 0.7,
   correct_for_delays = TRUE

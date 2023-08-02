@@ -22,7 +22,7 @@ tvcfr_naive <- estimate_time_varying(
 # Calculate corrected time-varying
 tvcfr_corrected <- estimate_time_varying(
   ebola1976,
-  epi_dist = onset_to_death_ebola,
+  epidist = onset_to_death_ebola,
   smooth_inputs = FALSE,
   burn_in_value = 1,
   correct_for_delays = TRUE
@@ -85,7 +85,7 @@ tvcfr_naive_smoothed <- estimate_time_varying(
 # Calculate corrected time-varying
 tvcfr_corrected <- estimate_time_varying(
   ebola1976,
-  epi_dist = onset_to_death_ebola,
+  epidist = onset_to_death_ebola,
   smooth_inputs = FALSE,
   smoothing_window = 3,
   burn_in_value = 1,

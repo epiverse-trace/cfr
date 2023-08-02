@@ -4,10 +4,10 @@
 \alias{get_default_burn_in}
 \title{Get a default burn-in value from a delay distribution}
 \usage{
-get_default_burn_in(epi_dist = NULL)
+get_default_burn_in(epidist = NULL)
 }
 \arguments{
-\item{epi_dist}{The delay distribution used, in the form of an
+\item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 probability a case has a known outcomes (i.e. death) at time \eqn{t},

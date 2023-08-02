@@ -169,7 +169,7 @@ The resulting data frame contains two new columns, "known_outcomes", for the num
 # calculate known outcomes
 df_known_outcomes_ebola <- known_outcomes(
   data = df_ebola_subset,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 # visualise head of data frame
@@ -229,7 +229,7 @@ estimate_static(
 estimate_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 ```
 
@@ -332,7 +332,7 @@ We use the same method and implementation as in the Ebola example to calculate t
 ```{r}
 df_known_outcomes_covid <- known_outcomes(
   data = df_covid_uk_subset,
-  epi_dist = onset_to_death_covid
+  epidist = onset_to_death_covid
 )
 ```
 
@@ -387,7 +387,7 @@ estimate_static(
 estimate_static(
   df_covid_uk_subset,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_covid
+  epidist = onset_to_death_covid
 )
 ```
 

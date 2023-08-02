@@ -22,7 +22,7 @@
 #' to a naive severity being calculated, TRUE corresponds to the user
 #' calculating a corrected severity
 #'
-#' @param epi_dist The delay distribution used, in the form of an
+#' @param epidist The delay distribution used, in the form of an
 #' [epiparameter::epidist()] object. This is used to obtain a probability
 #' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
 #' probability a case has a known outcomes (i.e. death) at time \eqn{t},
@@ -58,12 +58,12 @@
 #' estimate_static(
 #'   ebola1976,
 #'   correct_for_delays = TRUE,
-#'   epi_dist = onset_to_death_ebola
+#'   epidist = onset_to_death_ebola
 #' )
 #'
 estimate_static <- function(data,
                             correct_for_delays = FALSE,
-                            epi_dist = NULL,
+                            epidist = NULL,
                             poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(data)
@@ -90,7 +90,7 @@ estimate_static <- function(data,
   # returns error message if no delay distribution is supplied, but correction
   # for delays was requested
   if (correct_for_delays) {
-    checkmate::assert_class(epi_dist, "epidist")
+    checkmate::assert_class(epidist, "epidist")
   }
 
   # calculating the naive severity: (total deaths) / (total cases)
@@ -103,7 +103,7 @@ estimate_static <- function(data,
     # used as a replacement for total deaths in the original severity formula
     df_corrected <- known_outcomes(
       data = data,
-      epi_dist = epi_dist
+      epidist = epidist
     )
 
     # calculating the maximum likelihood estimate and 95% confidence interval

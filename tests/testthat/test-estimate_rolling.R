@@ -20,7 +20,7 @@ rolling_scfr_naive <- estimate_rolling(
 rolling_scfr_corrected <- estimate_rolling(
   data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 # Basic expectations
@@ -87,7 +87,7 @@ test_that("`estimate_rolling`: Comparison with `estimate_static()`", {
     estimate_static(
       ebola1976,
       correct_for_delays = TRUE,
-      epi_dist = onset_to_death_ebola
+      epidist = onset_to_death_ebola
     ),
     ignore_attr = TRUE
   )

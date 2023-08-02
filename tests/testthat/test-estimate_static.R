@@ -18,7 +18,7 @@ scfr_naive <- estimate_static(data = ebola1976, correct_for_delays = FALSE)
 scfr_corrected <- estimate_static(
   data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 # Basic expectations
