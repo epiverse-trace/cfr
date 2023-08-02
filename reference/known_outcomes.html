@@ -87,7 +87,7 @@ distribution from the literature for the disease in question.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">known_outcomes</span><span class="op">(</span><span class="va">data</span>, epi_dist <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">known_outcomes</span><span class="op">(</span><span class="va">data</span>, epidist <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -100,7 +100,7 @@ data on daily deaths, but this column (and any others) will be retained if
 present.</p></dd>
 
 
-<dt>epi_dist</dt>
+<dt>epidist</dt>
 <dd><p>The delay distribution used, in the form of an
 <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist.html" class="external-link">epiparameter::epidist()</a></code> object. This is used to obtain a probability
 mass function parameterised by time; i.e. \(f(t)\) which gives the

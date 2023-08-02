@@ -139,7 +139,7 @@
 <span><span class="fu"><a href="reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
 <span><span class="co">#&gt; 1       0.959       0.842           1</span></span></code></pre></div>
@@ -171,7 +171,7 @@
 <span><span class="co"># Calculate the rolling daily CFR while correcting for delays</span></span>
 <span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_rolling.html">estimate_rolling</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># add the date from the outbreak</span></span>

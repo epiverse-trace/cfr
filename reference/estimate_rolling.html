@@ -84,7 +84,7 @@ iteration.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_rolling</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  epidist <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  poisson_threshold <span class="op">=</span> <span class="fl">100</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -112,7 +112,7 @@ to a naive severity being calculated, TRUE corresponds to the user
 calculating a corrected severity</p></dd>
 
 
-<dt>epi_dist</dt>
+<dt>epidist</dt>
 <dd><p>The delay distribution used, in the form of an
 <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist.html" class="external-link">epiparameter::epidist()</a></code> object. This is used to obtain a probability
 mass function parameterised by time; i.e. \(f(t)\) which gives the
@@ -168,7 +168,7 @@ daily severity estimates, named "severity_me", "severity_lo", and
 <span class="r-in"><span>  <span class="fu">estimate_rolling</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">ebola1976</span>,</span></span>
 <span class="r-in"><span>    correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>    epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span></span>
+<span class="r-in"><span>    epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   severity_me severity_lo severity_hi</span>

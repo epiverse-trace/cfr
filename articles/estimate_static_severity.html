@@ -233,7 +233,7 @@ Figure 3: Example plot of the appropriate delay distribution for the 1976 Ebola 
 <code class="sourceCode R"><span><span class="co"># calculate known outcomes</span></span>
 <span><span class="va">df_known_outcomes_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/known_outcomes.html">known_outcomes</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_ebola_subset</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># visualise head of data frame</span></span>
@@ -304,7 +304,7 @@ Otherwise, it calculates a naive severity estimate, which does not adjust for de
 <span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_ebola_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
 <span><span class="co">#&gt; 1           1        0.87           1</span></span></code></pre></div>
@@ -415,7 +415,7 @@ Figure 7: Example plot of the appropriate delay distribution for the COVID-19 ep
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_known_outcomes_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/known_outcomes.html">known_outcomes</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_covid_uk_subset</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_known_outcomes_covid</span><span class="op">)</span> <span class="op">+</span></span>
@@ -475,7 +475,7 @@ the U.K.</p>
 <span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
 <span><span class="co">#&gt; 1       0.038       0.038       0.038</span></span></code></pre></div>

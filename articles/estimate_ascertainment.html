@@ -262,7 +262,7 @@ Figure 2: Incidence of deaths over time for the ongoing COVID-19 outbreak in the
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_reporting_static</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_covid_uk_subset</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"static"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span>
 <span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -270,7 +270,7 @@ Figure 2: Incidence of deaths over time for the ongoing COVID-19 outbreak in the
 </details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_reporting_varying</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"varying"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span>
 <span>  smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -343,7 +343,7 @@ We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-
 <span>  reporting <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>    .x <span class="op">=</span> <span class="va">data</span>, .f <span class="op">=</span> <span class="va">estimate_ascertainment</span>,</span>
 <span>    <span class="co"># arguments to function</span></span>
-<span>    epi_dist <span class="op">=</span> <span class="va">onset_to_death_covid</span>, type <span class="op">=</span> <span class="st">"varying"</span>,</span>
+<span>    epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>, type <span class="op">=</span> <span class="st">"varying"</span>,</span>
 <span>    burn_in_value <span class="op">=</span> <span class="fl">7</span>, smooth_inputs <span class="op">=</span> <span class="cn">TRUE</span>, correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
