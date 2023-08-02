@@ -85,7 +85,7 @@ estimate_static(data = ebola1976)
 estimate_static(
   data = ebola1976,
   correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 #>   severity_me severity_lo severity_hi
 #> 1       0.959       0.842           1
@@ -128,7 +128,7 @@ head(rolling_cfr_naive)
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- estimate_rolling(
   data = ebola1976, correct_for_delays = TRUE,
-  epi_dist = onset_to_death_ebola
+  epidist = onset_to_death_ebola
 )
 
 # add the date from the outbreak
