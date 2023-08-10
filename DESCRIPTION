@@ -1,5 +1,5 @@
 Package: cfr
-Title: Estimate Disease Severity and Under-reporting
+Title: Estimate Disease Severity and Under-Reporting
 Version: 0.1
 Authors@R: c(
     person(
