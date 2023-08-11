@@ -52,7 +52,7 @@ library(cfr)
 
 ## Case and death data
 
-Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), and provided through the [_owidR_ package](https://cran.r-project.org/package=owidR).
+Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus).
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
 
