@@ -7,7 +7,7 @@
 \format{
 \subsection{\code{ebola1976}}{
 
-A data frame with 73 rows and 60 columns:
+A data frame with 73 rows and 3 columns:
 \describe{
 \item{date}{Calendar date}
 \item{cases}{Number of cases reported}

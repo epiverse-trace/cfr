@@ -62,7 +62,6 @@ First load _cfr_ and packages to access and plot data.
 # load {cfr} and data packages
 library(cfr)
 library(epiparameter)
-library(owidR)
 
 # packages to wrangle and plot data
 library(dplyr)
@@ -89,28 +88,22 @@ See the vignettes on [estimating a static measure of disease severity](estimate_
 First we subset the data so that we focus on just the first few months of the COVID-19 outbreak in the U.K.
 During this period test availability changed dramatically as a result of the vaccine campaign.
 
-We load the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), and provided through the [_owidR_ package](https://cran.r-project.org/package=owidR).
+We load data provided with the _cfr_ package and initially made available using the _covidregionaldata_ package [@palmer2021].
 
-We introduce this dataset here, rather than its more U.K. focused equivalent from the _incidence2_ package, because we are going to use it further on for other countries.
+We filter for data from the United Kingdom here, while later examples will use more of the data.
 
 ```{r}
-# get Covid data from {owidR}
-df_covid <- owid_covid()
+# get Covid data provided with the package
+data("covid_data")
 
 # filter for the U.K
-df_covid_uk <- filter(df_covid, location == "United Kingdom")
-
-# select and rename columns wth {dplyr}
-df_covid_uk <- select(
-  df_covid_uk, date,
-  cases = new_cases, deaths = new_deaths
-)
+df_covid_uk <- filter(covid_data, country == "United Kingdom")
 
 # view the data format
 df_covid_uk
 ```
 
-We then subset the data to focus on just the first few months of the outbreak.
+We then subset the data to focus on just the first few months of the outbreak in the United Kingdom.
 
 ```{r}
 # the first few months of the pandemic
@@ -223,45 +216,18 @@ df_reporting_varying
 
 Finally, we estimate ascertainment for all countries with large early outbreaks of Covid-19.
 
-We define a large outbreak as one which has caused at least 100,000 deaths, and focus on the period between the start of each outbreak to the 1st June 2020.
+We define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st June 2020.
 
 We do so as it was this period where under-ascertainment of cases and infections was likely the highest, as tests were still being developed and had not been made widely available in many countries.
 
-We load the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), and provided through the [_owidR_ package](https://cran.r-project.org/package=owidR).
-
-```{r}
-# get data from {owidR}
-df_covid <- owid_covid()
-
-# filter out whole continents
-df_covid <- filter(
-  df_covid, location != continent
-)
-
-# rename the cases and deaths columns using {dplyr}
-df_covid <- select(
-  df_covid, iso_code, location, continent, date,
-  cases = new_cases, deaths = new_deaths,
-  total_deaths
-)
-```
+We now use the larger dataset `covid_data` made available with the _cfr_ package, and initially made available via the _covidregionaldata_ package [@palmer2021].
 
 We adopt data science tools to iteratively apply the `estimate_ascertainment()` function across data grouped by country.
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
-
 ```{r}
-# calculate the total number deaths by country and filter for countries
-# with 100,000 deaths, and then filter for the first six months of 2020
-df_reporting <- df_covid %>%
-  group_by(iso_code) %>%
-  mutate(total_deaths = max(total_deaths, na.rm = TRUE)) %>%
-  filter(total_deaths > 100000 & !is.na(location)) %>%
-  filter(date < "2020-06-01") %>%
-  ungroup()
-
 # nest the data
-df_reporting <- nest(df_reporting, .by = location)
+df_reporting <- nest(covid_data, .by = country)
 
 # calculate the reporting rate in each country using
 # map on nested dataframes
@@ -289,7 +255,7 @@ df_reporting %>%
   ggplot() +
   geom_pointrange(
     aes(
-      x = fct_reorder(location, ascertainment_me),
+      x = fct_reorder(country, ascertainment_me),
       y = ascertainment_me,
       ymin = ascertainment_lo,
       ymax = ascertainment_hi
