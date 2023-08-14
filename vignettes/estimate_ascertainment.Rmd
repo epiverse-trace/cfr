@@ -216,9 +216,9 @@ df_reporting_varying
 
 Finally, we estimate ascertainment for all countries with large early outbreaks of Covid-19.
 
-We define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st June 2020.
+For illustrative purposes, we define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st June 2020.
 
-We do so as it was this period where under-ascertainment of cases and infections was likely the highest, as tests were still being developed and had not been made widely available in many countries.
+We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic, because testing of symptomatic cases was still being scale up and had not been made widely available in many countries.
 
 We now use the larger dataset `covid_data` made available with the _cfr_ package, and initially made available via the _covidregionaldata_ package [@palmer2021].
 
