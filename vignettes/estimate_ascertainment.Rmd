@@ -100,7 +100,7 @@ data("covid_data")
 df_covid_uk <- filter(covid_data, country == "United Kingdom")
 
 # view the data format
-df_covid_uk
+tail(df_covid_uk)
 ```
 
 We then subset the data to focus on just the first few months of the outbreak in the United Kingdom.
@@ -216,7 +216,7 @@ df_reporting_varying
 
 Finally, we estimate ascertainment for all countries with large early outbreaks of Covid-19.
 
-For illustrative purposes, we define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st June 2020.
+For illustrative purposes, we define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st of June 2020.
 
 We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic, because testing of symptomatic cases was still being scale up and had not been made widely available in many countries.
 
@@ -226,8 +226,11 @@ We adopt data science tools to iteratively apply the `estimate_ascertainment()` 
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
 ```{r}
+# subset for early covid outbreaks
+covid_data_early <- filter(covid_data, date < "2020-06-01")
+
 # nest the data
-df_reporting <- nest(covid_data, .by = country)
+df_reporting <- nest(covid_data_early, .by = country)
 
 # calculate the reporting rate in each country using
 # map on nested dataframes
