@@ -157,19 +157,9 @@ of the corrected severity</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># get data pre-loaded with {incidence2}</span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu">incidence2</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/incidence2/man/covidregionaldataUK.html" class="external-link">covidregionaldataUK</a></span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># aggregate the covid data for the UK as a whole</span></span></span>
-<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span></span>
-<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">cases_new</span>, <span class="va">deaths_new</span><span class="op">)</span> <span class="op">~</span> <span class="va">date</span>,</span></span>
-<span class="r-in"><span>  FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># rename columns</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"cases_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"cases"</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span> <span class="op">==</span> <span class="st">"deaths_new"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"deaths"</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># get data pre-loaded with the package</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"covid_data"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="va">covid_data</span><span class="op">[</span><span class="va">covid_data</span><span class="op">$</span><span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-05-31"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -192,13 +182,13 @@ of the corrected severity</p>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># View</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">cfr_time_varying</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          date cases deaths severity_me severity_lo severity_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86 2020-05-26  3081    400   0.1298280  0.11815300   0.1422106</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87 2020-05-27  3424    364   0.1063084  0.09617755   0.1171170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88 2020-05-28  3303    399   0.1207993  0.10987325   0.1324015</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89 2020-05-29  2874    348   0.1210856  0.10937510   0.1335735</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90 2020-05-30  2104    306   0.1454373  0.13063762   0.1612319</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91 2020-05-31  2066    238          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            date        country cases deaths severity_me severity_lo severity_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2754 2020-05-26 United Kingdom  1373    281   0.2046613   0.1836066   0.2269878</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2773 2020-05-27 United Kingdom  1625    279   0.1716923   0.1536549   0.1909240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2792 2020-05-28 United Kingdom  2070    299   0.1444444   0.1295706   0.1603328</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2811 2020-05-29 United Kingdom  1825    281   0.1539726   0.1377060   0.1713597</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2830 2020-05-30 United Kingdom  1757    288   0.1639158   0.1468934   0.1820684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2849 2020-05-31 United Kingdom  1531    254          NA          NA          NA</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate time varying severity while correcting for delays</span></span></span>
 <span class="r-in"><span><span class="va">cfr_time_varying</span> <span class="op">&lt;-</span> <span class="fu">estimate_time_varying</span><span class="op">(</span></span></span>
@@ -209,13 +199,13 @@ of the corrected severity</p>
 <span class="r-in"><span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">cfr_time_varying</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          date cases deaths severity_me severity_lo severity_hi</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 86 2020-05-26  3081    400  0.06091061  0.05524600  0.06696890</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 87 2020-05-27  3424    364  0.05680400  0.05126142  0.06275410</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 88 2020-05-28  3303    399  0.06393206  0.05798762  0.07028790</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 89 2020-05-29  2874    348  0.05738786  0.05166557  0.06354039</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 90 2020-05-30  2104    306  0.05197011  0.04643878  0.05795048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 91 2020-05-31  2066    238          NA          NA          NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            date        country cases deaths severity_me severity_lo severity_hi</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2754 2020-05-26 United Kingdom  1373    281  0.07443709  0.06626346  0.08327659</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2773 2020-05-27 United Kingdom  1625    279  0.07581522  0.06746658  0.08484477</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2792 2020-05-28 United Kingdom  2070    299  0.08324053  0.07440936  0.09275666</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2811 2020-05-29 United Kingdom  1825    281  0.08019406  0.07141187  0.08968396</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2830 2020-05-30 United Kingdom  1757    288  0.08438324  0.07527045  0.09421520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2849 2020-05-31 United Kingdom  1531    254          NA          NA          NA</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

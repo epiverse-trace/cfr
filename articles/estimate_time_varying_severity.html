@@ -126,7 +126,6 @@ This could be useful, but a more detailed and easier to interpret approach is to
 <span></span>
 <span><span class="co"># packages to access delay data and case data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/piersyork/owidR" class="external-link">owidR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># packages to wrangle and plot data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -147,20 +146,13 @@ Firstly, we analyse the U.K. data, then we pick three other countries with large
 </h3>
 <p>First we subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
 During this period, the CFR changed dramatically as a result of a number of changes in policy, such as implementation and relaxation of lockdown; rollout of the vaccine; new variants emerging, etc.</p>
-<p>We load the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset collected by Our World in Data</a>, and provided through the <a href="https://cran.r-project.org/package=owidR" class="external-link"><em>owidR</em> package</a>.</p>
-<p>We introduce this dataset here, rather than its more U.K. focused equivalent from the <em>incidence2</em> package, because we are going to use it further on for other countries.</p>
+<p>We load Covid-19 daily case and death data for 19 countries with ≥ 100,000 deaths between 2020 and 2023 — this data is provided with the <em>cfr</em> package as <code>covid_data</code>, and was initially made available from the <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em> package</a> <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># get Covid data from {owidR}</span></span>
-<span><span class="va">df_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/owidR/man/owid_covid.html" class="external-link">owid_covid</a></span><span class="op">(</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># get Covid data loaded with the package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"covid_data"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># filter for the U.K</span></span>
-<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid</span>, <span class="va">location</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># select and rename columns wth {dplyr}</span></span>
-<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
-<span>  <span class="va">df_covid_uk</span>, <span class="va">date</span>,</span>
-<span>  cases <span class="op">=</span> <span class="va">new_cases</span>, deaths <span class="op">=</span> <span class="va">new_deaths</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">covid_data</span>, <span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">)</span></span></code></pre></div>
 </details><p>We then subset the data to focus on just the first few months of the outbreak.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-12-31"</span><span class="op">)</span></span></code></pre></div>
@@ -326,48 +318,19 @@ Figure 5: Example plot of the corrected time-varying CFR.** We calculate the tim
 <p>We now show how to calculate the time-varying CFR for Covid-19 in multiple countries with large outbreaks.
 To do this, we adopt a data science approach to apply the <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> function across data grouped by country.
 We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-link">R for Data Science</a> for a better explanation of some of the code used here, including from the packages in <a href="https://www.tidyverse.org/" class="external-link">the Tidyverse</a>.</p>
-<p>First we retrieve daily case and death data for COVID-19 for all countries and locations from the <code>owidR</code> package.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># get data from {owidR}</span></span>
-<span><span class="va">df_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/owidR/man/owid_covid.html" class="external-link">owid_covid</a></span><span class="op">(</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># filter out whole continents</span></span>
-<span><span class="va">df_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
-<span>  <span class="va">df_covid</span>, <span class="va">location</span> <span class="op">!=</span> <span class="va">continent</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># rename the cases and deaths columns using {dplyr}</span></span>
-<span><span class="va">df_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
-<span>  <span class="va">df_covid</span>, <span class="va">iso_code</span>, <span class="va">location</span>, <span class="va">continent</span>, <span class="va">date</span>,</span>
-<span>  cases <span class="op">=</span> <span class="va">new_cases</span>, deaths <span class="op">=</span> <span class="va">new_deaths</span>,</span>
-<span>  <span class="va">total_deaths</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details><p>Next, we group the data by country and apply the <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> function across each group (country).
+<p>We use the larger Covid-19 cases and deaths data provided with the package as <code>covid_data</code>.</p>
+<p>Next, we group the data by country and apply the <code><a href="../reference/estimate_time_varying.html">estimate_time_varying()</a></code> function across each group (country).
 This code takes a few moments to run.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># get the total number of deaths in each country with more than 100,000 deaths</span></span>
-<span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="va">df_covid</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">iso_code</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>total_deaths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">total_deaths</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">total_deaths</span> <span class="op">&gt;</span> <span class="fl">100000</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">location</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There were 17 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `total_deaths = max(total_deaths, na.rm = TRUE)`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In group 63: `iso_code = "ESH"`.</span></span>
-<span><span class="co">#&gt; Caused by warning in `max()`:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> no non-missing arguments to max; returning -Inf</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 16 remaining warnings.</span></span>
-<span></span>
-<span><span class="co"># for each country, get the time-varying severity estimate,</span></span>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># for each country, get the time-varying severity estimate,</span></span>
 <span><span class="co"># correcting for delays and smoothing the case and death data</span></span>
 <span></span>
 <span><span class="co"># first nest the data; nest() from {tidyr}</span></span>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">nest</a></span><span class="op">(</span></span>
-<span>  <span class="va">df_covid_cfr</span>,</span>
-<span>  .by <span class="op">=</span> <span class="va">location</span></span>
+<span>  <span class="va">covid_data</span>,</span>
+<span>  .by <span class="op">=</span> <span class="va">country</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># to each nested data frame, apply the function `estimate_time_varying`</span></span>
 <span><span class="co"># overwrite the `data` column, as all data will be preserved</span></span>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -383,21 +346,21 @@ This code takes a few moments to run.</p>
 <span></span>
 <span><span class="co"># unnest the cfr data; unnest() from {tidyr}</span></span>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, cols <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span></code></pre></div>
-</details><p>For simplicity, we use the same delay distribution between onset and death for all locations.</p>
+</details><p>For simplicity, we use the same delay distribution between onset and death for all countries.</p>
 <p>Finally we plot the time-varying CFR for a selection of three more countries with large outbreaks of COVID-19: Brazil, India, and the United States.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, <span class="va">location</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Brazil"</span>, <span class="st">"India"</span>, <span class="st">"United States"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, <span class="va">country</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Brazil"</span>, <span class="st">"India"</span>, <span class="st">"United States"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
 <span>      x <span class="op">=</span> <span class="va">date</span>, ymin <span class="op">=</span> <span class="va">severity_lo</span>, ymax <span class="op">=</span> <span class="va">severity_hi</span>,</span>
-<span>      group <span class="op">=</span> <span class="va">location</span></span>
+<span>      group <span class="op">=</span> <span class="va">country</span></span>
 <span>    <span class="op">)</span>,</span>
 <span>    fill <span class="op">=</span> <span class="st">"grey"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">severity_me</span>, colour <span class="op">=</span> <span class="va">location</span></span>
+<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">severity_me</span>, colour <span class="op">=</span> <span class="va">country</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
@@ -419,10 +382,10 @@ This code takes a few moments to run.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
 <span>    legend.position <span class="op">=</span> <span class="st">"top"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 547 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 206 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-15"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-15-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
+<span style="display:block;" id="fig:unnamed-chunk-14"></span>
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-14-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
 Figure 6: Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays.
 </p>
 </div>
@@ -454,6 +417,9 @@ Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Ak
 </div>
 <div id="ref-nishiura2009" class="csl-entry">
 Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P. Heesterbeek. 2009. <span>“Early Epidemiological Assessment of the Virulence of Emerging Infectious Diseases: A Case Study of an Influenza Pandemic.”</span> <em>PLOS ONE</em> 4 (8): e6852. <a href="https://doi.org/10.1371/journal.pone.0006852" class="external-link">https://doi.org/10.1371/journal.pone.0006852</a>.
+</div>
+<div id="ref-palmer2021" class="csl-entry">
+Palmer, Joseph, Katharine Sherratt, Richard Martin-Nielsen, Jonnie Bevan, Hamish Gibbs, Cmmid Group, Sebastian Funk, and Sam Abbott. 2021. <span>“Covidregionaldata: Subnational Data for COVID-19 Epidemiology.”</span> <em>Journal of Open Source Software</em> 6 (63): 3290. <a href="https://doi.org/10.21105/joss.03290" class="external-link">https://doi.org/10.21105/joss.03290</a>.
 </div>
 </div>
 </div>
