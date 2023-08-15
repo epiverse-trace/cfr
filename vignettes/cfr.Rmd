@@ -18,6 +18,7 @@ It is important to understand the severity of a disease in terms of the case fat
 During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
 
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
+See the **Concept** section at the end of this vignette for more on how reporting delays bias CFR estimates.
 
 The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in @nishiura2009, and which are implemented in the _cfr_ package.
 
@@ -45,14 +46,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+First we load the _cfr_ package.
+
 ```{r setup}
 # load cfr
 library(cfr)
 ```
 
-## Case and death data
+## Case and death data {-}
 
-Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus).
+Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/web/packages/outbreaks/index.html).
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
 
@@ -135,5 +138,22 @@ estimate_ascertainment(
 This analysis suggests that between 70% and 83% of cases were reported in this outbreak.
 
 More details can be found in the [vignette on estimating the proportion of cases that are reported during an outbreak](estimate_ascertainment.html).
+
+---
+
+## Concept: How delays bias CFR estimates
+
+Simply dividing the number of deaths by the number of cases would obtain a CFR that is a _naive estimator_ of the true CFR.
+Consider the example below to understand why.
+
+Suppose 10 people start showing symptoms of a specific disease on a given day and the end of that day all remain alive.
+Suppose that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5.
+However, suppose that by day 5, all infected individuals remain alive.
+
+The naive estimate of the CFR calculated at the end of the first 5 days would be _zero_, because there would have been zero deaths in total --- _at that point_.
+That is to say, the _outcomes_ of cases (infections) would not be known.
+
+Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
+Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.
 
 ## References
