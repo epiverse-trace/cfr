@@ -54,23 +54,6 @@ The first two elements are expected be included in a dataframe with the columns 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
-::: {.alert .alert-info}
-## Concept: Correcting for delays in CFR estimation {-}
-
-Simply dividing the number of deaths by the number of cases would obtain a CFR that is a _naive estimator_ of the true CFR.
-Consider the example below to understand why.
-
-Suppose 10 people start showing symptoms of a specific disease on a given day and the end of that day all remain alive.
-Suppose that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5.
-However, suppose that by day 5, all infected individuals remain alive.
-
-The naive estimate of the CFR calculated at the end of the first 5 days would be _zero_, because there would have been zero deaths in total --- _at that point_.
-That is to say, the _outcomes_ of cases (infections) would not be known.
-
-Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
-Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.
-:::
-
 First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
