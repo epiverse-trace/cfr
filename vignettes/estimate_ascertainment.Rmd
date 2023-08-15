@@ -129,7 +129,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Cases"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 Then, we plot the death incidence data with following command:
@@ -150,7 +155,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Deaths"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ### Onset-to-death distribution for Covid-19
@@ -276,7 +286,9 @@ df_reporting %>%
   theme(legend.position = "none") +
   scale_y_continuous(
     labels = percent, limits = c(0, 1)
-  )
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ## References
