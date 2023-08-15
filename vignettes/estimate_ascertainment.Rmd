@@ -221,13 +221,20 @@ For illustrative purposes, we define a large outbreak as one which has caused at
 We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic, because testing of symptomatic cases was still being scale up and had not been made widely available in many countries.
 
 We now use the larger dataset `covid_data` made available with the _cfr_ package, and initially made available via the _covidregionaldata_ package [@palmer2021].
+We exclude four countries which only provide weekly data (with zeros for dates in between) --- France, Germany, Spain and Ukraine.
 
 We adopt data science tools to iteratively apply the `estimate_ascertainment()` function across data grouped by country.
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
 ```{r}
+# countries with weekly reporting
+weekly_reporting <- c("France", "Germany", "Spain", "Ukraine")
+
 # subset for early covid outbreaks
-covid_data_early <- filter(covid_data, date < "2020-06-01")
+covid_data_early <- filter(
+  covid_data, date < "2020-06-01",
+  !country %in% weekly_reporting
+)
 
 # nest the data
 df_reporting <- nest(covid_data_early, .by = country)

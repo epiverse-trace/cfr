@@ -171,7 +171,7 @@ df_covid_cfr_uk_naive <- estimate_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
   smooth_inputs = TRUE,
-  burn_in = 7,
+  burn_in_value = 7,
   correct_for_delays = FALSE
 )
 
@@ -180,7 +180,7 @@ df_covid_cfr_uk_corrected <- estimate_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
   smooth_inputs = TRUE,
-  burn_in = 7,
+  burn_in_value = 7,
   correct_for_delays = TRUE
 )
 ```
@@ -246,11 +246,16 @@ To do this, we adopt a data science approach to apply the `estimate_time_varying
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
 We use the larger Covid-19 cases and deaths data provided with the package as `covid_data`.
+We exclude four countries which only provide weekly data (with zeros for dates in between) --- France, Germany, Spain and Ukraine.
 
 Next, we group the data by country and apply the `estimate_time_varying()` function across each group (country).
 This code takes a few moments to run.
 
 ```{r}
+# countries with weekly reporting
+weekly_reporting <- c("France", "Germany", "Spain", "Ukraine")
+covid_data <- filter(covid_data, !country %in% weekly_reporting)
+
 # for each country, get the time-varying severity estimate,
 # correcting for delays and smoothing the case and death data
 
@@ -271,7 +276,7 @@ df_covid_cfr <- mutate(
     .x = data, .f = estimate_time_varying,
     # arguments to the function
     epidist = onset_to_death_covid, smooth_inputs = TRUE,
-    smoothing_window = 7, burn_in = 7
+    smoothing_window = 7, burn_in_value = 7
   )
 )
 
