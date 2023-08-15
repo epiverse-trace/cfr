@@ -38,7 +38,7 @@ We wish to estimate one of the typical severity quantities used in epidemiology 
 :::
 
 ::: {.alert .alert-secondary}
-## What we have {-}
+### What we have {-}
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
@@ -88,7 +88,7 @@ See the vignettes on [estimating a static measure of disease severity](estimate_
 First we subset the data so that we focus on just the first few months of the COVID-19 outbreak in the U.K.
 During this period test availability changed dramatically as a result of the vaccine campaign.
 
-We load data provided with the _cfr_ package and initially made available using the _covidregionaldata_ package [@palmer2021].
+We load data provided with the _cfr_ package and initially made available using the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) [@palmer2021].
 
 We filter for data from the United Kingdom here, while later examples will use more of the data.
 

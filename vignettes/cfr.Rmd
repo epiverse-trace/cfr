@@ -141,7 +141,7 @@ More details can be found in the [vignette on estimating the proportion of cases
 
 ---
 
-## Concept: How delays bias CFR estimates
+## Concept: How reporting delays bias CFR estimates
 
 Simply dividing the number of deaths by the number of cases would obtain a CFR that is a _naive estimator_ of the true CFR.
 Consider the example below to understand why.

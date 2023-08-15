@@ -43,7 +43,7 @@ We wish to estimate how common severity quantities _change over time_ --- such a
 :::
 
 ::: {.alert .alert-secondary}
-## What we have {-}
+### What we have {-}
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
@@ -324,7 +324,9 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   )
 ```
 
-## Details: Adjusting for delays between two time series {-}
+---
+
+## Details: Adjusting for delays between two time series 
 
 The function `estimate_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, which represents the number of cases with a known outcome, on day $t$.
@@ -345,5 +347,7 @@ We use maximum-likelihood techniques to determine the value of $\theta_t$ for
 each $t$, whereby $\theta$ represents the severity measure of interest.
 
 The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
+
+---
 
 ## References
