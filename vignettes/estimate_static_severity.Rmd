@@ -16,7 +16,7 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -43,7 +43,7 @@ We want a static estimate of the severity of an outbreak, using a method that us
 :::
 
 ::: {.alert .alert-secondary}
-## What we have {-}
+### What we have {-}
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
@@ -65,11 +65,11 @@ library(scales)
 library(ggplot2)
 ```
 
-# Severity of the 1976 Ebola Outbreak
+## Severity of the 1976 Ebola Outbreak
 
 We use case and death incidence data from the 1976 Ebola outbreak in the Democratic the overall severity of Ebola. We do so as though we were roughly half way through the outbreak, emulating when the methods presented in this package are arguably their most useful. 
 
-## Plotting the raw data
+### Plotting the raw data
 
 First of all, we load the raw data.
 
@@ -121,7 +121,7 @@ using `dplyr::filter()`.
 df_ebola_subset <- filter(ebola1976, date <= "1976-09-30")
 ```
 
-## The delay distribution
+### The delay distribution
 
 For this example, given that we are using case data and detection of a case is well-approximated by symptom onset, we use the distribution describing the delay between onset-to-death.
 
@@ -142,7 +142,7 @@ the results over time using the appropriate plot method from the _epiparameter_ 
 plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
 ```
 
-## Estimating incidence of cases (or similar time-series) with a known outcome
+### Estimating incidence of cases (or similar time-series) with a known outcome
 
 The function `known_outcomes()` from the _cfr_ package estimates the number of cases which have a known outcome over time.
 
@@ -193,7 +193,7 @@ ggplot(df_known_outcomes_ebola) +
   )
 ```
 
-## Estimating the naive and corrected CFR
+### Estimating the naive and corrected CFR
 
 Once we calculate the proportion of cases with known outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
 We do so by using the function `estimate_static()` from the _cfr_ package.
@@ -216,14 +216,14 @@ estimate_static(
 )
 ```
 
-# Severity of the COVID-19 pandemic in the U.K.
+## Severity of the COVID-19 pandemic in the U.K.
 
 We now perform a similar analysis with all of the same steps, with data taken from the ongoing COVID-19 epidemic in the U.K.
 For brevity, we describe the steps without methodological explanations throughout this example.
 
-We get the data from the [_incidence2_ package](https://cran.r-project.org/package=incidence2) (but note that it was originally made available in the  [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) package which is no longer available on CRAN).
+We get the data from the [_incidence2_ package](https://cran.r-project.org/package=incidence2) (but note that it was originally made available in the  [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) package which is no longer available on CRAN; see @palmer2021).
 
-## Plotting the raw data
+### Plotting the raw data
 
 We subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
 We do so, as the CFR changed dramatically as a result of the vaccination campaign.
@@ -290,7 +290,7 @@ ggplot(df_covid_uk_subset) +
   )
 ```
 
-## The delay distribution
+### The delay distribution
 
 We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the _epiparameter_ package.
 
@@ -308,7 +308,7 @@ To visualise this distribution, we evaluate it between 0 and 30 days, and plot t
 plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE)
 ```
 
-## Estimating incidence of cases with a known outcome
+### Estimating incidence of cases with a known outcome
 
 We use the same method and implementation as in the Ebola example to calculate the number of known outcomes over time.
 
@@ -354,7 +354,7 @@ ggplot(df_known_outcomes_covid) +
   )
 ```
 
-## Estimating the naive and corrected CFR
+### Estimating the naive and corrected CFR
 
 Finally, we calculate the naive and corrected CFRs for the COVID-19 epidemic in
 the U.K.
@@ -374,7 +374,9 @@ estimate_static(
 )
 ```
 
-## Details: Adjusting for delays between two time series {-}
+---
+
+## Details: Adjusting for delays between two time series
 
 The method used in `estimate_static()` function follows @nishiura2009.
 The function calculates a quantity $u_t$ for each day within the input data, which represents the proportion of cases with a known outcome, on day $t$.
@@ -405,5 +407,7 @@ For complete clarity, here are the most common time series that users might calc
  - Infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).
 
  - Hospitalisation Fatality Risk (HFR) --- Hospitalisation and death incidence data, delay distribution (or close approximation).
+
+---
 
 ## References
