@@ -119,7 +119,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Cases"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 We also plot the death incidence data over time.
@@ -140,7 +145,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Deaths"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ### Onset-to-death distribution for Covid-19
@@ -209,7 +219,12 @@ ggplot(df_covid_cfr_uk_naive) +
   ) +
   labs(
     x = "Date", y = "CFR (%)"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 Lastly, we plot the estimate corrected for reporting delays.
@@ -236,7 +251,12 @@ ggplot(df_covid_cfr_uk_corrected) +
   ) +
   labs(
     x = "Date", y = "CFR (%)"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ## Severity of COVID-19 in multiple countries
@@ -312,16 +332,15 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   scale_colour_brewer(
     palette = "Dark2"
   ) +
-  coord_cartesian(
-    ylim = c(0, 0.2),
-    expand = FALSE
-  ) +
   labs(
     x = "Date", y = "CFR (%)"
   ) +
-  theme(
-    legend.position = "top"
-  )
+  coord_cartesian(
+    ylim = c(0, 0.15),
+    expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ---

@@ -92,7 +92,12 @@ ggplot(ebola1976) +
   ) +
   labs(
     x = "Date", y = "Cases"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 Lastly, we plot the death incidence data with the following command:
@@ -110,7 +115,12 @@ ggplot(ebola1976) +
   ) +
   labs(
     x = "Date", y = "Deaths"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 We will focus on the roughly the first half of this dataset. We do so by
@@ -190,7 +200,12 @@ ggplot(df_known_outcomes_ebola) +
   ) +
   labs(
     x = "Date", y = "No. of individuals"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ### Estimating the naive and corrected CFR
@@ -266,7 +281,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Cases"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 Then, we plot the subsetted death data.
@@ -287,7 +307,12 @@ ggplot(df_covid_uk_subset) +
   ) +
   labs(
     x = "Date", y = "Deaths"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ### The delay distribution
@@ -305,7 +330,7 @@ onset_to_death_covid <- epidist_db(
 To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time.
 
 ```{r fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)."}
-plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE)
+plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
 ```
 
 ### Estimating incidence of cases with a known outcome
@@ -351,7 +376,12 @@ ggplot(df_known_outcomes_covid) +
   ) +
   labs(
     x = "Date", y = "No. of individuals"
-  )
+  ) +
+  coord_cartesian(
+      expand = FALSE
+  ) +
+  theme_classic() +
+  theme(legend.position = "top")
 ```
 
 ### Estimating the naive and corrected CFR

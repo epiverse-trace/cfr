@@ -156,4 +156,6 @@ That is to say, the _outcomes_ of cases (infections) would not be known.
 Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
 Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.
 
+---
+
 ## References
