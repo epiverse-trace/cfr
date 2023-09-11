@@ -4,14 +4,20 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes from case and death time-series data}
 \usage{
-known_outcomes(data, epidist = NULL)
+known_outcomes(data, epidist)
 }
 \arguments{
 \item{data}{A data.frame containing the outbreak data. A daily time series
 with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases at each time point. This function does not require
-data on daily deaths, but this column (and any others) will be retained if
-present.}
+the numbers of new cases and new deaths at each time point.
+Note that the required columns are "date" (for the date), "cases" (for the
+number of reported cases), and "deaths" (for the number of reported deaths)
+on each day of the outbreak.
+Note that the data.frame is required to have an unbroken sequence of dates
+with no missing dates in between. The "date" column must be of the class
+\code{Date} (see \code{\link[=as.Date]{as.Date()}}).
+Note also that the total number of cases must be greater than the total
+number of reported deaths.}
 
 \item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
@@ -52,7 +58,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # examine the first few rows of the output
-head(
-  known_outcomes(data = ebola1976, onset_to_death_ebola)
-)
+outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+
+head(outcomes)
 }

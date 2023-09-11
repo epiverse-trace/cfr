@@ -78,8 +78,6 @@ estimate_static <- function(data,
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
   stopifnot(
-    "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(data))),
     "Input data must have sequential dates with none missing or duplicated" =
       identical(unique(diff(data$date)), 1) # use numeric 1, not integer
     # this solution works when df$date is `Date`

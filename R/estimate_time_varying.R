@@ -1,4 +1,4 @@
-#' Estimate known outcomes from case and death time-series data
+#' Estimate a severity measure that varies over time
 #'
 #' @description Calculates how the severity of a disease changes over time,
 #' corrected for a user-specified delay. If cases are supplied, and the delay
@@ -80,7 +80,6 @@ estimate_time_varying <- function(data,
   checkmate::assert_data_frame(data)
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_integerish(smoothing_window, lower = 1, len = 1L)
-  checkmate::assert_class(epidist, "epidist", null.ok = TRUE) # optional arg.
 
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =

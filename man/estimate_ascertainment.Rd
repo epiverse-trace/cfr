@@ -2,18 +2,18 @@
 % Please edit documentation in R/estimate_ascertainment.R
 \name{estimate_ascertainment}
 \alias{estimate_ascertainment}
-\title{Estimate the ascertainment rate of a disease given a baseline (assumed to be
+\title{Estimate the ascertainment ratio of a disease given a baseline (assumed to be
 true) severity estimate}
 \usage{
 estimate_ascertainment(
   data,
-  epidist = NULL,
+  epidist,
   type = c("static", "varying"),
   severity_baseline = 0.014,
   burn_in_value = get_default_burn_in(epidist),
   smooth_inputs = FALSE,
   smoothing_window = 1,
-  correct_for_delays = FALSE,
+  correct_for_delays = TRUE,
   max_date = NULL
 )
 }
@@ -39,10 +39,10 @@ A typical example would be a symptom onset to death delay distribution.}
 
 \item{type}{A string, either \code{"static"} or \code{"varying"} which determines
 whether \code{\link[=estimate_static]{estimate_static()}} or \code{\link[=estimate_time_varying]{estimate_time_varying()}} is used to calculate
-the resulting ascertainment rate}
+the resulting ascertainment ratio}
 
 \item{severity_baseline}{The assumed to be true baseline severity estimate
-used in the final ratio to estimate the overall ascertainment rate}
+used in the final ratio to estimate the overall ascertainment ratio}
 
 \item{burn_in_value}{The number of time-points (typically days) to disregard
 at the start of the time-series, if a burn-in period is desired.

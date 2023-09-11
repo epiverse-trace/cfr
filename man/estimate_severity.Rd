@@ -2,7 +2,7 @@
 % Please edit documentation in R/estimate_severity.R
 \name{estimate_severity}
 \alias{estimate_severity}
-\title{Estimate the corrected case fatality rate}
+\title{Estimate the corrected case fatality risk}
 \usage{
 estimate_severity(
   total_cases,
@@ -24,11 +24,11 @@ to the total number of cases.}
 the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 200 by default.}
+approximation. Set to 100 by default.}
 }
 \value{
 A data.frame with the MLE and 95\% confidence interval of the
-corrected severity estimates, named "severity_me", "severity_low", and
+corrected severity estimates, named "severity_mean", "severity_low", and
 "severity_high".
 }
 \description{
