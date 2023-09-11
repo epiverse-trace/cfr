@@ -92,9 +92,6 @@ estimate_ascertainment <- function(data,
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)
 
-  # create empty data frame
-  df_severity <- data.frame()
-
   if (type == "static") {
     df_severity <- estimate_static(
       data,
