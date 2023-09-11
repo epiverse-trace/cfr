@@ -202,13 +202,13 @@ Once we have calculated both severity quantities over time, we plot the results;
 ggplot(df_covid_cfr_uk_naive) +
   geom_ribbon(
     aes(
-      x = date, ymin = severity_lo, ymax = severity_hi
+      x = date, ymin = severity_low, ymax = severity_high
     ),
     fill = "grey75"
   ) +
   geom_line(
     aes(
-      x = date, y = severity_me
+      x = date, y = severity_mean
     ),
     colour = "brown"
   ) +
@@ -234,13 +234,13 @@ Lastly, we plot the estimate corrected for reporting delays.
 ggplot(df_covid_cfr_uk_corrected) +
   geom_ribbon(
     aes(
-      x = date, ymin = severity_lo, ymax = severity_hi
+      x = date, ymin = severity_low, ymax = severity_high
     ),
     fill = "grey75"
   ) +
   geom_line(
     aes(
-      x = date, y = severity_me
+      x = date, y = severity_mean
     ),
     colour = "brown"
   ) +
@@ -314,14 +314,14 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   ggplot() +
   geom_ribbon(
     aes(
-      x = date, ymin = severity_lo, ymax = severity_hi,
+      x = date, ymin = severity_low, ymax = severity_high,
       group = country
     ),
     fill = "grey"
   ) +
   geom_line(
     aes(
-      x = date, y = severity_me, colour = country
+      x = date, y = severity_mean, colour = country
     )
   ) +
   scale_x_date(

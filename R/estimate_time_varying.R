@@ -126,9 +126,9 @@ estimate_time_varying <- function(data,
   df_temp$known_outcomes <- df_temp$cases
 
   # assign columns for severity estimate and intervals
-  data$severity_me <- NA_real_
-  data$severity_lo <- NA_real_
-  data$severity_hi <- NA_real_
+  data$severity_mean <- NA_real_
+  data$severity_low <- NA_real_
+  data$severity_high <- NA_real_
 
   # calculation of indices to modify seems questionable
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
@@ -161,9 +161,9 @@ estimate_time_varying <- function(data,
         df_temp$known_outcomes[i]
       )
 
-      data$severity_me[i] <- severity_current_estimate$estimate[[1]]
-      data$severity_lo[i] <- severity_current_estimate$conf.int[[1]]
-      data$severity_hi[i] <- severity_current_estimate$conf.int[[2]]
+      data$severity_mean[i] <- severity_current_estimate$estimate[[1]]
+      data$severity_low[i] <- severity_current_estimate$conf.int[[1]]
+      data$severity_high[i] <- severity_current_estimate$conf.int[[2]]
     }
   }
 

@@ -38,7 +38,7 @@ test_that("`estimate_time_varying`: Basic expectations", {
   # expected names
   expected_names <- c(
     "date", "cases", "deaths",
-    "severity_me", "severity_lo", "severity_hi"
+    "severity_mean", "severity_low", "severity_high"
   )
   # expect named columns
   expect_named(

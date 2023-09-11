@@ -26,7 +26,7 @@ test_that("`estimate_ascertainment`: Basic expectations for static method", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -35,10 +35,10 @@ test_that("`estimate_ascertainment`: Basic expectations for static method", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test
@@ -59,7 +59,7 @@ test_that("`estimate_ascertainment`: Correct for delays for static method", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -68,10 +68,10 @@ test_that("`estimate_ascertainment`: Correct for delays for static method", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test
@@ -92,7 +92,7 @@ test_that("`estimate_ascertainment`: Smooth inputs for static method", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -101,10 +101,10 @@ test_that("`estimate_ascertainment`: Smooth inputs for static method", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test
@@ -125,7 +125,7 @@ test_that("`estimate_ascertainment`: Automatic burn-in value", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -134,10 +134,10 @@ test_that("`estimate_ascertainment`: Automatic burn-in value", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test
@@ -158,7 +158,7 @@ test_that("`estimate_ascertainment`: Automatic burn-in value for static", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -167,10 +167,10 @@ test_that("`estimate_ascertainment`: Automatic burn-in value for static", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test
@@ -191,7 +191,7 @@ test_that("`estimate_ascertainment`: Basic expectations for time-varying", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")
+    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -200,10 +200,10 @@ test_that("`estimate_ascertainment`: Basic expectations for time-varying", {
   )
   expect_true(
     all(
-      ascertainment_estimate$ascertainment_lo <=
-        ascertainment_estimate$ascertainment_me &&
-        ascertainment_estimate$ascertainment_me <=
-          ascertainment_estimate$ascertainment_hi
+      ascertainment_estimate$ascertainment_low <=
+        ascertainment_estimate$ascertainment_mean &&
+        ascertainment_estimate$ascertainment_mean <=
+          ascertainment_estimate$ascertainment_high
     )
   )
   # snapshot test

@@ -33,7 +33,7 @@ test_that("`estimate_rolling`: Basic expectations", {
   expect_s3_class(severity_estimate, "data.frame")
   expect_named(
     severity_estimate,
-    sprintf("severity_%s", c("me", "lo", "hi"))
+    sprintf("severity_%s", c("mean", "low", "high"))
   )
   # expect within values
   # TODO: account for potential NA values or vectors
@@ -45,8 +45,8 @@ test_that("`estimate_rolling`: Basic expectations", {
   # expect that lo, me, and hi are in roughly ascending order
   expect_true(
     all(
-      severity_estimate$severity_lo < severity_estimate$severity_me &&
-        severity_estimate$severity_me < severity_estimate$severity_hi
+      severity_estimate$severity_low < severity_estimate$severity_mean &&
+        severity_estimate$severity_mean < severity_estimate$severity_high
     )
   )
   # also check for a snapshot

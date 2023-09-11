@@ -108,7 +108,7 @@ estimate_ascertainment <- function(data,
       correct_for_delays = correct_for_delays
     )
 
-    df_severity <- df_severity[!is.na(df_severity$severity_me), ]
+    df_severity <- df_severity[!is.na(df_severity$severity_mean), ]
 
     # collect the severity at the last date, or the date specified by
     # the user in `max_date`
@@ -132,14 +132,16 @@ estimate_ascertainment <- function(data,
   )
 
   # re-convert to data.frame from list
-  # here, the estimate called "severity_me" translates to "ascertainment_me"
-  # and the estimate "severity_hi" translates to "ascertainment_lo"
+  # here, the estimate called "severity_mean" translates to "ascertainment_me"
+  # and the estimate "severity_high" translates to "ascertainment_lo"
   # TODO: check if this is correct
   df_out <- as.data.frame(df_out,
     row.names = NULL,
-    col.names = c("ascertainment_me", "ascertainment_hi", "ascertainment_lo")
+    col.names = c(
+      "ascertainment_mean", "ascertainment_high", "ascertainment_low"
+    )
   )
 
   # return data with columns in correct order
-  df_out[, c("ascertainment_me", "ascertainment_lo", "ascertainment_hi")]
+  df_out[, c("ascertainment_mean", "ascertainment_low", "ascertainment_high")]
 }

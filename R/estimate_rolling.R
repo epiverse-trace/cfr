@@ -12,8 +12,8 @@
 #' @inheritParams estimate_static
 #'
 #' @return A data.frame with the MLE and 95% confidence interval of the
-#' daily severity estimates, named "severity_me", "severity_lo", and
-#' "severity_hi", with one row for each day in the original data.frame.
+#' daily severity estimates, named "severity_mean", "severity_low", and
+#' "severity_high", with one row for each day in the original data.frame.
 #' @export
 #'
 #' @examples
@@ -117,7 +117,9 @@ estimate_rolling <- function(data,
     # matrix is returned from correct_for_delays FALSE
     cfr_estimate <- as.data.frame(cfr_estimate)
     # fix column names in the case where correct_for_delays is FALSE
-    colnames(cfr_estimate) <- c("severity_me", "severity_lo", "severity_hi")
+    colnames(cfr_estimate) <- c(
+      "severity_mean", "severity_low", "severity_high"
+    )
   }
 
   # return cfr estimate
