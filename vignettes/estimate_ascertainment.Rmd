@@ -53,7 +53,7 @@ This vignette shows how to use the `estimate_ascertainment()` function in _cfr_ 
 Note that under-ascertainment may be due to a number of reasons (see above), while under-reporting is due to cases not being reported (such as due to a lack of testing capacity).
 Users should take care to use the correct terminology for their specific situation.
 
-However, we have named the function `estimate_ascertainment()` as we expect that users will be most interested in situations where testing capacity is itself the limiting factor in ascertainment.
+We have named the function `estimate_ascertainment()` as we expect that users will be most interested in situations where testing capacity is itself the limiting factor in ascertainment.
 This was the case during the Covid-19 pandemic before testing capacity was substantially increased, and is expected to be the case for a future pandemic caused by a novel pathogen.
 
 First load _cfr_ and packages to access and plot data.
@@ -86,7 +86,7 @@ See the vignettes on [estimating a static measure of disease severity](estimate_
 ### Preparing the raw data
 
 First we subset the data so that we focus on just the first few months of the COVID-19 outbreak in the U.K.
-During this period test availability changed dramatically as a result of the vaccine campaign.
+During this period test availability changed dramatically as a result of the vaccination campaign.
 
 We load data provided with the _cfr_ package and initially made available using the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) [@palmer2021].
 
@@ -177,7 +177,7 @@ onset_to_death_covid <- epidist_db(
 
 ### Estimating the proportion of cases that have been ascertained
 
-We use the `estimate_ascertainment()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
+We use the `estimate_ascertainment()` function to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
 
 The function includes a `type` argument, which determines whether `estimate_static()` or `estimate_time_varying()` is used to estimate the delay-adjusted severity of the disease.
 
@@ -185,7 +185,7 @@ The ascertainment rate is calculated as the disease severity calculated from the
 
 This known disease severity is passed to the `severity_baseline` argument in `estimate_ascertainment()`, and forms the denominator in the resulting under-ascertainment calculation.
 
-We assume that the 'true' CFR of Covid-19 is 0.014.
+We assume that the 'true' CFR of Covid-19 is 0.014 (i.e. 1.4%). Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating underascertainment.
 
 The other arguments are the same as those found in `estimate_time_varying()`. 
 
@@ -228,7 +228,7 @@ Finally, we estimate ascertainment for all countries with large early outbreaks 
 
 For illustrative purposes, we define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st of June 2020.
 
-We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic, because testing of symptomatic cases was still being scale up and had not been made widely available in many countries.
+We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic because testing of symptomatic cases was still being scaled up and had not been made widely available in many countries.
 
 We now use the larger dataset `covid_data` made available with the _cfr_ package, and initially made available via the _covidregionaldata_ package [@palmer2021].
 We exclude four countries which only provide weekly data (with zeros for dates in between) --- France, Germany, Spain and Ukraine.

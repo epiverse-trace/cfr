@@ -15,9 +15,9 @@ vignette: >
 ---
 
 It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
-During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
+However, during an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known. As a result, simply dividing total deaths to date by total cases to date may lead to an underestimate of the fatality rate in real-time, because many cases have outcomes that are not yet known.
 
-Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
+Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can therefore help ensure less biased estimates of disease severity.
 See the **Concept** section at the end of this vignette for more on how reporting delays bias CFR estimates.
 
 The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in @nishiura2009, and which are implemented in the _cfr_ package.
@@ -32,7 +32,7 @@ A disease outbreak is underway. We want to know **how severe the disease is**, t
 ### What we have {-}
 
   1. A dataset of daily cases and deaths reported;
-  2. Data on the distribution of reporting delays from past outbreaks of similar diseases.
+  2. Data on the distribution of reporting delays from past outbreaks of the same disease.
 
 ### What we assume {-}
 
@@ -55,7 +55,7 @@ library(cfr)
 
 ## Case and death data {-}
 
-Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset collected by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/web/packages/outbreaks/index.html).
+Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset curated by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/web/packages/outbreaks/index.html).
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
 
@@ -111,7 +111,7 @@ estimate_static(
 )
 ```
 
-The `estimate_static()` function is well suited to small outbreaks. For larger outbreaks where it may be useful to know how severity has changed over time, the function `estimate_time_varying()` is available. This function is however not well suited to small outbreaks. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
+The `estimate_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time. For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `estimate_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
 
 ## Estimate ascertainment rate
 
@@ -122,7 +122,7 @@ When the main factor in low ascertainment is the lack of (access to) testing cap
 
 The `estimate_ascertainment()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
 
-Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that ebolavirus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths).
+Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that Ebola virus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths), based on CFR values estimated in later, larger datasets.
 
 ```{r}
 # estimate reporting with a baseline severity of 70%
