@@ -71,9 +71,6 @@ estimate_rolling <- function(data,
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_count(poisson_threshold)
 
-  # empty list for results
-  cfr_estimate <- list()
-
   if (correct_for_delays) {
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
