@@ -22,7 +22,7 @@ prepare_data <- function(data, ...) {
 #' does not currently support grouped `<incidence2>` data.
 #'
 #' @details
-#' This function can replace `NA`s in the case and death data with 0-s if so
+#' This function can replace `NA`s in the case and death data with 0's if so
 #' requested by the user using the `fill_NA` argument, which is `FALSE` by
 #' default, meaning that `NA`s are retained.
 #'
