@@ -9,18 +9,7 @@
 #' case detection and death, typically approximated by a symptom onset to death
 #' distribution from the literature for the disease in question.
 #'
-#' @param data A data.frame containing the outbreak data. A daily time series
-#' with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-#' the numbers of new cases at each time point. This function does not require
-#' data on daily deaths, but this column (and any others) will be retained if
-#' present.
-#'
-#' @param epidist The delay distribution used, in the form of an
-#' [epiparameter::epidist()] object. This is used to obtain a probability
-#' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-#' probability a case has a known outcomes (i.e. death) at time \eqn{t},
-#' parameterised with disease-specific parameters before it is supplied here.
-#' A typical example would be a symptom onset to death delay distribution.
+#' @inheritParams estimate_static
 #'
 #' @return A data.frame with the columns in `data`, and with two additional
 #' columns,
@@ -45,9 +34,9 @@
 #' )
 #'
 #' # examine the first few rows of the output
-#' head(
-#'   known_outcomes(data = ebola1976, onset_to_death_ebola)
-#' )
+#' outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+#'
+#' head(outcomes)
 known_outcomes <- function(data,
                            epidist) {
   # some input checking

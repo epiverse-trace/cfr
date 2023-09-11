@@ -2,15 +2,15 @@
 % Please edit documentation in R/estimate_time_varying.R
 \name{estimate_time_varying}
 \alias{estimate_time_varying}
-\title{Estimate known outcomes from case and death time-series data}
+\title{Estimate a severity measure that varies over time}
 \usage{
 estimate_time_varying(
   data,
-  epidist = NULL,
+  epidist,
   burn_in_value = get_default_burn_in(epidist),
   smooth_inputs = FALSE,
   smoothing_window = 1,
-  correct_for_delays = FALSE
+  correct_for_delays = TRUE
 )
 }
 \arguments{
@@ -67,7 +67,7 @@ of the corrected severity
 Calculates how the severity of a disease changes over time,
 corrected for a user-specified delay. If cases are supplied, and the delay
 distribution representing the delay between case detection and death, then
-a case fatality ratio over time is estimated
+a case fatality risk over time is estimated
 }
 \examples{
 # get data pre-loaded with the package

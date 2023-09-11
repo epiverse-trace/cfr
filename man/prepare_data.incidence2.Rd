@@ -42,7 +42,7 @@ Prepares \verb{<incidence2>} objects for disease severity estimates. This functi
 does not currently support grouped \verb{<incidence2>} data.
 }
 \details{
-This function can replace \code{NA}s in the case and death data with 0-s if so
+This function can replace \code{NA}s in the case and death data with 0's if so
 requested by the user using the \code{fill_NA} argument, which is \code{FALSE} by
 default, meaning that \code{NA}s are retained.
 

@@ -6,8 +6,8 @@
 \usage{
 estimate_rolling(
   data,
-  correct_for_delays = FALSE,
-  epidist = NULL,
+  epidist,
+  correct_for_delays = TRUE,
   poisson_threshold = 100
 )
 }
@@ -24,11 +24,6 @@ with no missing dates in between. The "date" column must be of the class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{correct_for_delays}{A boolean flag indicating whether the user wishes
-to correct for the delay between case detection and death. FALSE corresponds
-to a naive severity being calculated, TRUE corresponds to the user
-calculating a corrected severity}
-
 \item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
 mass function parameterised by time; i.e. \eqn{f(t)} which gives the
@@ -36,13 +31,18 @@ probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
+\item{correct_for_delays}{A boolean flag indicating whether the user wishes
+to correct for the delay between case detection and death. FALSE corresponds
+to a naive severity being calculated, TRUE corresponds to the user
+calculating a corrected severity}
+
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 200 by default.}
+approximation. Set to 100 by default.}
 }
 \value{
 A data.frame with the MLE and 95\% confidence interval of the
-daily severity estimates, named "severity_me", "severity_lo", and
-"severity_hi", with one row for each day in the original data.frame.
+daily severity estimates, named "severity_mean", "severity_low", and
+"severity_high", with one row for each day in the original data.frame.
 }
 \description{
 Calculates the CFR at each time point in the case and death time
@@ -75,12 +75,12 @@ estimate_static(
 
 # estimate severity for each day while correcting for delays
 # view only the first values
-head(
-  estimate_rolling(
-    ebola1976,
-    correct_for_delays = TRUE,
-    epidist = onset_to_death_ebola
-  )
+estimate <- estimate_rolling(
+  ebola1976,
+  correct_for_delays = TRUE,
+  epidist = onset_to_death_ebola
 )
+
+head(estimate)
 
 }
