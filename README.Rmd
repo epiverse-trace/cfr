@@ -72,7 +72,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # Calculate the static CFR without correcting for delays
-estimate_static(data = ebola1976)
+estimate_static(data = ebola1976, correct_for_delays = FALSE)
 
 # Calculate the static CFR while correcting for delays
 estimate_static(
@@ -91,7 +91,7 @@ This example shows how the adjusted estimate converges to "naive" estimate as th
 ```{r example-ebola-plot}
 # Calculate the CFR without correcting for delays on each day of the outbreak
 rolling_cfr_naive <- estimate_rolling(
-  data = ebola1976,
+  data = ebola1976, correct_for_delays = FALSE
 )
 
 # add the date from the outbreak
@@ -126,7 +126,7 @@ ggplot() +
     data = rolling_cfr_naive,
     aes(
       date,
-      ymin = severity_lo, ymax = severity_hi,
+      ymin = severity_low, ymax = severity_high,
       fill = "naive"
     ),
     alpha = 0.2, show.legend = FALSE
@@ -135,18 +135,18 @@ ggplot() +
     data = rolling_cfr_corrected,
     aes(
       date,
-      ymin = severity_lo, ymax = severity_hi,
+      ymin = severity_low, ymax = severity_high,
       fill = "corrected"
     ),
     alpha = 0.2, show.legend = FALSE
   ) +
   geom_line(
     data = rolling_cfr_naive,
-    aes(date, severity_me, colour = "naive")
+    aes(date, severity_mean, colour = "naive")
   ) +
   geom_line(
     data = rolling_cfr_corrected,
-    aes(date, severity_me, colour = "corrected")
+    aes(date, severity_mean, colour = "corrected")
   ) +
   scale_colour_brewer(
     palette = "Dark2",
