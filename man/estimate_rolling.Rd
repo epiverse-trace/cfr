@@ -63,7 +63,8 @@ data("ebola1976")
 onset_to_death_ebola <- epiparameter::epidist_db(
   disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Barry_etal"
+  author = "Barry_etal",
+  single_epidist = TRUE
 )
 
 # estimate severity without correcting for delays

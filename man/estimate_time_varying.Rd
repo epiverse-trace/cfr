@@ -80,7 +80,8 @@ df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 onset_to_death_covid <- epiparameter::epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal"
+  author = "Linton_etal",
+  single_epidist = TRUE
 )
 
 # estimate time varying severity without correcting for delays
