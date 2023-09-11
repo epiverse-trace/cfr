@@ -23,7 +23,7 @@ status](https://www.r-pkg.org/badges/version/cfr)](https://CRAN.R-project.org/pa
 in real-time, accounting for delays in epidemic time-series.
 
 *cfr* provides simple, fast methods to calculate the overall or static
-case fatality ratio (CFR) of an outbreak up to a given time point, as
+case fatality risk (CFR) of an outbreak up to a given time point, as
 well as how the CFR changes over the course of the outbreak. *cfr* can
 help estimate disease under-reporting in real-time, accounting for
 delays reporting the outcomes of cases.
@@ -33,7 +33,8 @@ delays reporting the outcomes of cases.
 other methods.
 
 *cfr* uses the [*epiparameter*
-package](https://epiverse-trace.github.io/epiparameter/) for
+package](https://epiverse-trace.github.io/epiparameter/) to access a
+library of epidemiological delay distributions, in order to calculate
 delay-corrected CFR estimates, and both packages are developed at the
 [Centre for the Mathematical Modelling of Infectious
 Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases)
@@ -58,7 +59,7 @@ pak::pak("epiverse-trace/epiparameter")
 ### Overall severity of the 1976 Ebola outbreak
 
 This example shows how to use *cfr* to estimate the overall case
-fatality ratios from the 1976 Ebola outbreak ([Camacho et al.
+fatality risks from the 1976 Ebola outbreak ([Camacho et al.
 2014](#ref-camacho2014)).
 
 ``` r
@@ -73,13 +74,14 @@ data("ebola1976")
 onset_to_death_ebola <- epiparameter::epidist_db(
   disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Barry_etal"
+  author = "Barry_etal",
+  single_epidist = TRUE
 )
 
 # Calculate the static CFR without correcting for delays
-estimate_static(data = ebola1976)
-#>   severity_me severity_lo severity_hi
-#> 1    0.955102   0.9210866   0.9773771
+estimate_static(data = ebola1976, correct_for_delays = FALSE)
+#>   severity_mean severity_low severity_high
+#> 1      0.955102    0.9210866     0.9773771
 
 # Calculate the static CFR while correcting for delays
 estimate_static(
@@ -87,8 +89,8 @@ estimate_static(
   correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
-#>   severity_me severity_lo severity_hi
-#> 1       0.959       0.842           1
+#>   severity_mean severity_low severity_high
+#> 1         0.959        0.842             1
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
@@ -109,7 +111,7 @@ proportion of cases have known outcomes.
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
 rolling_cfr_naive <- estimate_rolling(
-  data = ebola1976,
+  data = ebola1976, correct_for_delays = FALSE
 )
 
 # add the date from the outbreak
@@ -117,13 +119,13 @@ rolling_cfr_naive <- cbind(date = ebola1976[, "date"], rolling_cfr_naive)
 
 # see the first few rows
 head(rolling_cfr_naive)
-#>         date severity_me severity_lo severity_hi
-#> 1 1976-08-25           0           0       0.975
-#> 2 1976-08-26           0           0       0.975
-#> 3 1976-08-27           0           0       0.975
-#> 4 1976-08-28           0           0       0.975
-#> 5 1976-08-29           0           0       0.975
-#> 6 1976-08-30           0           0       0.975
+#>         date severity_mean severity_low severity_high
+#> 1 1976-08-25             0            0         0.975
+#> 2 1976-08-26             0            0         0.975
+#> 3 1976-08-27             0            0         0.975
+#> 4 1976-08-28             0            0         0.975
+#> 5 1976-08-29             0            0         0.975
+#> 6 1976-08-30             0            0         0.975
 
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- estimate_rolling(
@@ -132,16 +134,19 @@ rolling_cfr_corrected <- estimate_rolling(
 )
 
 # add the date from the outbreak
-rolling_cfr_corrected <- cbind(date = ebola1976[, "date"], rolling_cfr_corrected)
+rolling_cfr_corrected <- cbind(
+  date = ebola1976[, "date"],
+  rolling_cfr_corrected
+)
 
 head(rolling_cfr_corrected)
-#>         date severity_me severity_lo severity_hi
-#> 1 1976-08-25       0.001          NA          NA
-#> 2 1976-08-26       0.001       0.001       0.999
-#> 3 1976-08-27       0.001       0.001       0.999
-#> 4 1976-08-28       0.001       0.001       0.999
-#> 5 1976-08-29       0.001       0.001       0.999
-#> 6 1976-08-30       0.001       0.001       0.994
+#>         date severity_mean severity_low severity_high
+#> 1 1976-08-25         0.001           NA            NA
+#> 2 1976-08-26         0.001        0.001         0.999
+#> 3 1976-08-27         0.001        0.001         0.999
+#> 4 1976-08-28         0.001        0.001         0.999
+#> 5 1976-08-29         0.001        0.001         0.999
+#> 6 1976-08-30         0.001        0.001         0.994
 ```
 
 We plot the rolling CFR to visualise how severity changes over time,
