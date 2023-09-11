@@ -131,7 +131,7 @@ ggplot(df_covid_uk_subset) +
     x = "Date", y = "Cases"
   ) +
   coord_cartesian(
-      expand = FALSE
+    expand = FALSE
   ) +
   theme_classic() +
   theme(legend.position = "top")
@@ -157,7 +157,7 @@ ggplot(df_covid_uk_subset) +
     x = "Date", y = "Deaths"
   ) +
   coord_cartesian(
-      expand = FALSE
+    expand = FALSE
   ) +
   theme_classic() +
   theme(legend.position = "top")
@@ -171,7 +171,8 @@ We retrieve the appropriate distribution reported in @linton2020 using the `epid
 onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal"
+  author = "Linton_etal",
+  single_epidist = TRUE
 )
 ```
 
