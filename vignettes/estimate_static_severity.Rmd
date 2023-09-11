@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
+It is important to understand the severity of a disease in terms of the case fatality risk in order to respond appropriately to an outbreak.
 During an outbreak there is often a delay between cases being reported, and the outcomes (hospitalisation, death, etc.) of those cases being known.
 
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.

@@ -1,4 +1,4 @@
-#' Estimate the ascertainment rate of a disease given a baseline (assumed to be
+#' Estimate the ascertainment ratio of a disease given a baseline (assumed to be
 #' true) severity estimate
 #'
 #' @description Estimates the proportion of cases or infections that have been
@@ -12,9 +12,9 @@
 #'
 #' @param type A string, either `"static"` or `"varying"` which determines
 #' whether [estimate_static()] or [estimate_time_varying()] is used to calculate
-#' the resulting ascertainment rate
+#' the resulting ascertainment ratio
 #' @param severity_baseline The assumed to be true baseline severity estimate
-#' used in the final ratio to estimate the overall ascertainment rate
+#' used in the final ratio to estimate the overall ascertainment ratio
 #' @param max_date A string representing a user supplied maximum date, up to
 #' which the time-varying severity estimate will be calculated. Useful in the
 #' case of long time-series, where the user wishes to focus on a specific

@@ -14,7 +14,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
+It is important to understand the severity of a disease in terms of the case fatality risk in order to respond appropriately to an outbreak.
 However, during an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known. As a result, simply dividing total deaths to date by total cases to date may lead to an underestimate of the fatality rate in real-time, because many cases have outcomes that are not yet known.
 
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can therefore help ensure less biased estimates of disease severity.
@@ -25,7 +25,7 @@ The severity of a disease can be estimated while correcting for delays in report
 ::: {.alert .alert-primary}
 ## Use case {-}
 
-A disease outbreak is underway. We want to know **how severe the disease is**, that is, the case fatality ratio, but there is a delay between cases being reported, and the outcomes of those cases --- whether recovery or death --- being known. This is the _reporting delay_, and can be accounted for by knowing the reporting delay from past outbreaks.
+A disease outbreak is underway. We want to know **how severe the disease is**, that is, the case fatality risk, but there is a delay between cases being reported, and the outcomes of those cases --- whether recovery or death --- being known. This is the _reporting delay_, and can be accounted for by knowing the reporting delay from past outbreaks.
 :::
 
 ::: {.alert .alert-secondary}
@@ -114,11 +114,11 @@ estimate_static(
 
 The `estimate_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time. For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `estimate_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
 
-## Estimate ascertainment rate
+## Estimate ascertainment ratio
 
 It is important to know what proportion of cases in an outbreak are being ascertained to muster the appropriate response, and to estimate the overall burden of the outbreak.
 
-**Note** that the ascertainment rate may be affected by a number of factors.
+**Note** that the ascertainment ratio may be affected by a number of factors.
 When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.
 
 The `estimate_ascertainment()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.

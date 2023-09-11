@@ -3,7 +3,7 @@
 #' @description Calculates how the severity of a disease changes over time,
 #' corrected for a user-specified delay. If cases are supplied, and the delay
 #' distribution representing the delay between case detection and death, then
-#' a case fatality ratio over time is estimated
+#' a case fatality risk over time is estimated
 #'
 #' @inheritParams estimate_static
 #' @param burn_in_value The number of time-points (typically days) to disregard

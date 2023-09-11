@@ -182,7 +182,7 @@ We use the `estimate_ascertainment()` function to calculate the time-varying CFR
 
 The function includes a `type` argument, which determines whether `estimate_static()` or `estimate_time_varying()` is used to estimate the delay-adjusted severity of the disease.
 
-The ascertainment rate is calculated as the disease severity calculated from the data, divided by the 'known' disease severity; this is expected to be known or assumed from our best knowledge of the pathology of the disease.
+The ascertainment ratio is calculated as the disease severity calculated from the data, divided by the 'known' disease severity; this is expected to be known or assumed from our best knowledge of the pathology of the disease.
 
 This known disease severity is passed to the `severity_baseline` argument in `estimate_ascertainment()`, and forms the denominator in the resulting under-ascertainment calculation.
 
@@ -271,7 +271,7 @@ head(df_reporting)
 
 Plot the ascertainment for each country.
 
-```{r fig.cap = "Example plot of the ascertainment rate by country during the early stages of the Covid-19 pandemic.", class.source = 'fold-hide'}
+```{r fig.cap = "Example plot of the ascertainment ratio by country during the early stages of the Covid-19 pandemic.", class.source = 'fold-hide'}
 df_reporting %>%
   ggplot() +
   geom_pointrange(
@@ -283,7 +283,7 @@ df_reporting %>%
     )
   ) +
   coord_flip() +
-  labs(x = NULL, y = "Ascertainment Rate") +
+  labs(x = NULL, y = "Ascertainment ratio") +
   theme(legend.position = "none") +
   scale_y_continuous(
     labels = percent, limits = c(0, 1)
