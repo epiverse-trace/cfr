@@ -68,11 +68,11 @@
 #' tail(cfr_time_varying)
 #'
 estimate_time_varying <- function(data,
-                                  epidist = NULL,
+                                  epidist,
                                   burn_in_value = get_default_burn_in(epidist),
                                   smooth_inputs = FALSE,
                                   smoothing_window = 1,
-                                  correct_for_delays = FALSE) {
+                                  correct_for_delays = TRUE) {
   # TODO input checking
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
