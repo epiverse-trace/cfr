@@ -107,7 +107,10 @@ rolling_cfr_corrected <- estimate_rolling(
 )
 
 # add the date from the outbreak
-rolling_cfr_corrected <- cbind(date = ebola1976[, "date"], rolling_cfr_corrected)
+rolling_cfr_corrected <- cbind(
+  date = ebola1976[, "date"],
+  rolling_cfr_corrected
+)
 
 head(rolling_cfr_corrected)
 ```
@@ -161,7 +164,7 @@ ggplot() +
     y = "Disease severity"
   ) +
   coord_cartesian(
-      expand = FALSE
+    expand = FALSE
   ) +
   theme_classic() +
   theme(legend.position = "top")
