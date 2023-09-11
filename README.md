@@ -29,8 +29,8 @@ help estimate disease under-reporting in real-time, accounting for
 delays reporting the outcomes of cases.
 
 *cfr* implements methods outlined in Nishiura et al.
-([2009](#ref-nishiura2009)), and CFR estimates based on more methods are
-likely to be added.
+([2009](#ref-nishiura2009)). There are plans to add estimates based on
+other methods.
 
 *cfr* uses the [*epiparameter*
 package](https://epiverse-trace.github.io/epiparameter/) for
@@ -57,9 +57,9 @@ pak::pak("epiverse-trace/epiparameter")
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example of basic usage shows how to use *cfr* to estimate the
-overall case fatality ratios from the 1976 Ebola outbreak ([Camacho et
-al. 2014](#ref-camacho2014)).
+This example shows how to use *cfr* to estimate the overall case
+fatality ratios from the 1976 Ebola outbreak ([Camacho et al.
+2014](#ref-camacho2014)).
 
 ``` r
 # Load package
