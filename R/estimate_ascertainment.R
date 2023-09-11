@@ -53,7 +53,7 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   epidist = NULL,
+                                   epidist,
                                    type = c("static", "varying"),
                                    severity_baseline = 0.014,
                                    burn_in_value = get_default_burn_in(
@@ -61,7 +61,7 @@ estimate_ascertainment <- function(data,
                                    ),
                                    smooth_inputs = FALSE,
                                    smoothing_window = 1,
-                                   correct_for_delays = FALSE,
+                                   correct_for_delays = TRUE,
                                    max_date = NULL) {
   # input checking
   checkmate::assert_data_frame(data)

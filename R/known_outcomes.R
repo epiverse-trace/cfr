@@ -49,7 +49,7 @@
 #'   known_outcomes(data = ebola1976, onset_to_death_ebola)
 #' )
 known_outcomes <- function(data,
-                           epidist = NULL) {
+                           epidist) {
   # some input checking
   stopifnot(
     "Case data must be a data.frame" =

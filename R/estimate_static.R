@@ -63,8 +63,8 @@
 #' )
 #'
 estimate_static <- function(data,
-                            correct_for_delays = FALSE,
-                            epidist = NULL,
+                            epidist,
+                            correct_for_delays = TRUE,
                             poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(data)

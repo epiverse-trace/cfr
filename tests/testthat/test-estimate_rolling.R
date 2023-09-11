@@ -78,7 +78,8 @@ test_that("`estimate_rolling`: Comparison with `estimate_static()`", {
   expect_equal(
     tail(rolling_scfr_naive, 1),
     estimate_static(
-      ebola1976
+      ebola1976,
+      correct_for_delays = FALSE
     ),
     ignore_attr = TRUE
   )
