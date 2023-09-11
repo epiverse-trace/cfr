@@ -12,7 +12,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette shows how to prepare `<incidence2>` objects from the [_incidence2_ package](https://www.reconverse.org/incidence2/) for use with _cfr_, using the `prepare_data()` method for the `<incidence2>` class. If detailed individual-level data are available that include deaths and recoveries, then alternative methods for severity estimation could be used (e.g. directly calculating CFR from the subset cases with a known outcome). However, there may be situations where only deaths are recorded, in which case the methods described below would provide an option for CFR calculation.
+This vignette shows how to prepare `<incidence2>` objects from the [_incidence2_ package](https://www.reconverse.org/incidence2/) for use with _cfr_, using the `prepare_data()` method for the `<incidence2>` class. If detailed individual-level data are available that include deaths and recoveries, then alternative methods for severity estimation could be used (e.g. directly calculating CFR from the subset cases with a known death outcome). However, there may be situations where only deaths are recorded, in which case the methods described here would provide an option for CFR calculation.
 
 We first load the libraries we require, including _cfr_, _incidence2_, [_outbreaks_](https://www.reconverse.org/outbreaks/) for linelist data from a simulated ebola outbreak, and [_epiparameter_](https://epiverse-trace.github.io/epiparameter/) for delay distribution data.
 
@@ -121,7 +121,6 @@ Such usage is shown in other vignettes such as the [vignette on estimating time-
 Here we show how to transform such data into `<incidence2>` objects, and then prepare them for _cfr_.
 
 The columns in this dataset are already in a format that can be converted into an `<incidence2>` object using `incidence2::incidence()`, and then handled by `prepare_data()`.
-The code chunks below show how this is to be done.
 
 ```{r}
 # get data bundled with the {incidence2} package

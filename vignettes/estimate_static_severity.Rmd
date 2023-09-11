@@ -49,7 +49,7 @@ We want a static estimate of the severity of an outbreak, using a method that us
 * A time-series of deaths;
 * A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
 
-The first two elements are expected to be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
+The first two elements are expected to be included in a dataframe with the columns "dates", "cases", and "deaths".
 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
@@ -146,21 +146,14 @@ onset_to_death_ebola <- epidist_db(
 )
 ```
 
-To visualise this distribution, we evaluate it between 0 and 30 days, and plot
-the results over time using the appropriate plot method from the _epiparameter_ package.
+### Estimating incidence of cases (or similar time-series) with a known death outcome
 
-```{r, fig.cap = "Example plot of the appropriate delay distribution for the 1976 Ebola dataset.** We plot the onset-to-death distribution we use throughout this example for Ebola Virus Disease (EVD), reported [here](https://doi.org/10.1016/S0140-6736(18)31387-4)."}
-plot(onset_to_death_ebola, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
-```
+The function `known_outcomes()` from the _cfr_ package can estimate the number of cases which have a known death outcome over time.
 
-### Estimating incidence of cases (or similar time-series) with a known outcome
-
-The function `known_outcomes()` from the _cfr_ package estimates the number of cases which have a known outcome over time.
-
-The resulting data frame contains two new columns, "known_outcomes", for the number of known outcomes (deaths) expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known outcomes.
+The resulting data frame contains two new columns, "known_outcomes", for the number of known death outcomes expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known death outcomes.
 
 ```{r}
-# calculate known outcomes
+# calculate known death outcomes
 df_known_outcomes_ebola <- known_outcomes(
   data = df_ebola_subset,
   epidist = onset_to_death_ebola
@@ -171,8 +164,8 @@ head(df_known_outcomes_ebola)
 ```
 
 
-```{r fig.cap = "The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known outcomes included.", class.source = 'fold-hide'}
-# plot cases and known outcomes as separate layers
+```{r fig.cap = "The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known death outcomes included.", class.source = 'fold-hide'}
+# plot cases and known death outcomes as separate layers
 ggplot(df_known_outcomes_ebola) +
   geom_step(
     aes(
@@ -183,13 +176,13 @@ ggplot(df_known_outcomes_ebola) +
   geom_step(
     aes(
       x = date, y = known_outcomes,
-      colour = "Known outcomes"
+      colour = "Known death outcomes"
     )
   ) +
   scale_colour_manual(
     values = c(
       "Cases" = "steelblue",
-      "Known outcomes" = "darkgreen"
+      "Known death outcomes" = "darkgreen"
     ),
     name = NULL
   ) +
@@ -211,9 +204,9 @@ ggplot(df_known_outcomes_ebola) +
 
 ### Estimating the naive and corrected CFR
 
-Once we calculate the proportion of cases with known outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
+Once we calculate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
 We do so by using the function `estimate_static()` from the _cfr_ package.
-This function estimates the proportion of known outcomes over time, and uses the estimate to correct the naive severity estimate.
+This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
 This is controlled using the `correct_for_delays` boolean flag argument in the `estimate_static()` function.
 Otherwise, it calculates a naive severity estimate, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
 
@@ -329,15 +322,9 @@ onset_to_death_covid <- epidist_db(
 )
 ```
 
-To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time.
+### Estimating incidence of cases with a known death outcome
 
-```{r fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported [here](https://doi.org/10.3390/jcm9020538)."}
-plot(onset_to_death_covid, day_range = seq_len(30), vb = FALSE, cex.main = 0.5)
-```
-
-### Estimating incidence of cases with a known outcome
-
-We use the same method and implementation as in the Ebola example to calculate the number of known outcomes over time.
+We use the same method and implementation as in the Ebola example to calculate the number of known death outcomes over time.
 
 ```{r}
 df_known_outcomes_covid <- known_outcomes(
@@ -346,7 +333,7 @@ df_known_outcomes_covid <- known_outcomes(
 )
 ```
 
-```{r fig.cap = "The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known outcomes included.", class.source = 'fold-hide'}
+```{r fig.cap = "The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known death outcomes included.", class.source = 'fold-hide'}
 ggplot(df_known_outcomes_covid) +
   geom_step(
     aes(
@@ -357,13 +344,13 @@ ggplot(df_known_outcomes_covid) +
   geom_step(
     aes(
       x = date, y = known_outcomes,
-      colour = "Known outcomes"
+      colour = "Known death outcomes"
     )
   ) +
   scale_colour_manual(
     values = c(
       "Cases" = "steelblue",
-      "Known outcomes" = "darkgreen"
+      "Known death outcomes" = "darkgreen"
     ),
     name = NULL
   ) +
@@ -412,6 +399,7 @@ estimate_static(
 
 The method used in `estimate_static()` function follows @nishiura2009.
 The function calculates a quantity $u_t$ for each day within the input data, which represents the proportion of cases with a known outcome, on day $t$.
+This may be a known death outcome, as shown earlier in this vignette.
 Following Nishiura et al., $u_t$ is calculated in the following way:
 
 \begin{equation}
