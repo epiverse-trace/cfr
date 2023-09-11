@@ -181,9 +181,25 @@ estimate_time_varying <- function(data,
 #' @return A single integer, the burn-in value.
 #' @keywords internal
 get_default_burn_in <- function(epidist = NULL) {
-  if (is.null(epidist)) {
-    7
+  default_value <- 7L
+  if (!is.null(epidist)) {
+    # hardcoded access to mean as epiparameter::get_parameter()
+    # returns distr-specific params (e.g. meanlog, shape)
+    x <- do.call(
+      epiparameter::convert_params_to_summary_stats,
+      append(
+        list(stats::family(epidist)),
+        epiparameter::get_parameters(epidist)
+      )
+    )[["mean"]]
+    x <- as.integer(round(x))
+    if (is.na(x)) {
+      x <- default_value
+    }
   } else {
-    as.integer(round(epidist$summary_stats$centre_spread$mean))
+    x <- default_value
   }
+
+  # return x
+  x
 }
