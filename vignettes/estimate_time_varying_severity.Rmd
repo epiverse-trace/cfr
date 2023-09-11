@@ -82,9 +82,9 @@ Firstly, we analyse the U.K. data, then we pick three other countries with large
 ### Preparing the raw data
 
 First we subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
-During this period, the CFR changed dramatically as a result of a number of changes in policy, such as implementation and relaxation of lockdown; rollout of the vaccine; new variants emerging, etc.
+During this period, the CFR changed dramatically as a result of a number of changes in policy, such as implementation and relaxation of lockdown, rollout of the vaccine, new variants emerging, etc.
 
-We load Covid-19 daily case and death data for 19 countries with ≥ 100,000 deaths between 2020 and 2023 --- this data is provided with the _cfr_ package as `covid_data`, and was initially made available from the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) [@palmer2021].
+We load Covid-19 daily case and death data for 19 countries with ≥ 100,000 deaths between 2020 and 2023 --- this data is provided with the _cfr_ package as `covid_data`, and was initially made available in the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], which is no longer available on CRAN.
 
 ```{r}
 # get Covid data loaded with the package
@@ -100,7 +100,7 @@ We then subset the data to focus on just the first few months of the outbreak.
 df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-12-31")
 ```
 
-Then, we plot case incidence data with following command.
+Then, we plot case incidence data.
 Further plotting commands are hidden for brevity.
 
 ```{r, fig.cap = "Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."}
@@ -356,14 +356,14 @@ Following @nishiura2009, $k_t$ is calculated in the following way:
 \end{equation}
 
 We then assume that the severity measure, for example CFR, of interest is
-Binomially-distributed, in the following way 
+binomially distributed, in the following way 
 
 \begin{equation}
   d_t \sim \text{Binomial}(k_t, \theta_t). 
 \end{equation}
 
-We use maximum-likelihood techniques to determine the value of $\theta_t$ for 
-each $t$, whereby $\theta$ represents the severity measure of interest.
+We use maximum likelihood estimation to determine the value of $\theta_t$ for 
+each $t$, where $\theta$ represents the severity measure of interest.
 
 The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
 

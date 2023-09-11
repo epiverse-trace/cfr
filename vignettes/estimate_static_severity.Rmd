@@ -26,11 +26,11 @@ knitr::opts_chunk$set(
 ```
 
 It is important to understand the severity of a disease in terms of the case fatality rate in order to respond appropriately to an outbreak.
-During an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known.
+During an outbreak there is often a delay between cases being reported, and the outcomes (hospitalisation, death, etc.) of those cases being known.
 
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
 
-This vignette demonstrates how to calculate a static estimate of the severity of an outbreak using methods outlined in @nishiura2009, and implemented in _cfr_.
+This vignette demonstrates how to calculate a static (not time-varying) estimate of the severity of an outbreak using methods outlined in @nishiura2009, and implemented in _cfr_.
 
 ::: {.alert .alert-warning}
 New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
@@ -49,7 +49,7 @@ We want a static estimate of the severity of an outbreak, using a method that us
 * A time-series of deaths;
 * A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
 
-The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
+The first two elements are expected to be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
@@ -77,7 +77,7 @@ First of all, we load the raw data.
 data("ebola1976")
 ```
 
-Then, we plot the case incidence data with the following command:
+Then, we plot the case incidence data.
 
 ```{r fig.cap ="Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the *cfr* package.", class.source = 'fold-hide'}
 ggplot(ebola1976) +
@@ -100,7 +100,7 @@ ggplot(ebola1976) +
   theme(legend.position = "top")
 ```
 
-Lastly, we plot the death incidence data with the following command:
+Lastly, we plot the death data.
 
 ```{r fig.cap = "Incidence of deaths over time from the same dataset as Figure 1.", class.source = 'fold-hide'}
 ggplot(ebola1976) +
