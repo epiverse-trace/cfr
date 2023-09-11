@@ -17,7 +17,7 @@
 #' the period of an outbreak of interest. See [known_outcomes()].
 #' @keywords internal
 #' @return A data.frame with the MLE and 95% confidence interval of the
-#' corrected severity estimates, named "severity_me", "severity_low", and
+#' corrected severity estimates, named "severity_mean", "severity_low", and
 #' "severity_high".
 estimate_severity <- function(total_cases,
                               total_deaths,
@@ -47,15 +47,15 @@ estimate_severity <- function(total_cases,
   }
 
   # MLE estimate
-  severity_me <- pprange[which.max(lik)]
+  severity_mean <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood
   severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
   severity_estimate <- data.frame(
-    "severity_me" = severity_me,
-    "severity_lo" = severity_lims[[1]],
-    "severity_hi" = severity_lims[[2]]
+    "severity_mean" = severity_mean,
+    "severity_low" = severity_lims[[1]],
+    "severity_high" = severity_lims[[2]]
   )
 
   # returning vector with corrected estimates

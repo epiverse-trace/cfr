@@ -30,10 +30,11 @@
 #' A typical example would be a symptom onset to death delay distribution.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
-#' approximation. Set to 200 by default.
+#' approximation. Set to 100 by default.
 #'
 #' @return A data.frame with the MLE and 95% confidence interval of the
-#' severity estimates, named "severity_me", "severity_lo", and "severity_hi".
+#' severity estimates, named "severity_mean", "severity_low", and
+#' "severity_high".
 #'
 #' @export
 #'
@@ -121,7 +122,7 @@ estimate_static <- function(data,
     total_deaths <- sum(data$deaths, na.rm = TRUE)
 
     # calculating the central estimate
-    severity_me <- total_deaths / total_cases
+    severity_mean <- total_deaths / total_cases
 
     # calculating the lower and upper 95% confidence interval using the exact
     # binomial test
@@ -131,9 +132,9 @@ estimate_static <- function(data,
     severity_lims <- severity_conf$conf.int
 
     severity_estimate <- data.frame(
-      "severity_me" = severity_me,
-      "severity_lo" = severity_lims[[1]],
-      "severity_hi" = severity_lims[[2]]
+      "severity_mean" = severity_mean,
+      "severity_low" = severity_lims[[1]],
+      "severity_high" = severity_lims[[2]]
     )
   }
 

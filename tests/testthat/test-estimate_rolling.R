@@ -41,7 +41,7 @@ test_that("`estimate_static`: Basic expectations", {
   )
 
   # expected names
-  expected_names <- c("severity_me", "severity_lo", "severity_hi")
+  expected_names <- c("severity_mean", "severity_low", "severity_high")
   # expect named columns
   expect_named(
     rolling_scfr_naive,
