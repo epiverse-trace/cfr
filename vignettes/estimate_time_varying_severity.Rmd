@@ -49,7 +49,7 @@ We wish to estimate how common severity quantities _change over time_ --- such a
 * A time-series of deaths;
 * A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
 
-The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
+The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths".
 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
@@ -166,12 +166,6 @@ onset_to_death_covid <- epidist_db(
 )
 ```
 
-To visualise this distribution, we evaluate it between 0 and 30 days, and plot the results over time.
-
-```{r message=FALSE, warning=FALSE, eval=TRUE, fig.cap = "Example plot of the appropriate delay distribution for the COVID-19 epidemic in the U.K. We plot the onset-to-death distribution we use throughout this example for COVID-19, reported in @linton2020."}
-plot(onset_to_death_covid, day_range = seq(30), cex.main = 0.5)
-```
-
 ### Estimating the naive and corrected CFR
 
 We use the `estimate_time_varying()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
@@ -198,7 +192,7 @@ df_covid_cfr_uk_corrected <- estimate_time_varying(
 
 Once we have calculated both severity quantities over time, we plot the results; first the naive estimate.
 
-```{r, fig.cap = "Example plot of the naive time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays.", class.source = 'fold-hide'}
+```{r, fig.cap = "Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.", class.source = 'fold-hide'}
 ggplot(df_covid_cfr_uk_naive) +
   geom_ribbon(
     aes(
@@ -230,7 +224,7 @@ ggplot(df_covid_cfr_uk_naive) +
 
 Lastly, we plot the estimate corrected for reporting delays.
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays.", class.source = 'fold-hide'}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.", class.source = 'fold-hide'}
 ggplot(df_covid_cfr_uk_corrected) +
   geom_ribbon(
     aes(
@@ -350,6 +344,7 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
 
 The function `estimate_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, which represents the number of cases with a known outcome, on day $t$.
+This may be a known death outcome, as shown earlier in this vignette.
 Following @nishiura2009, $k_t$ is calculated in the following way:
 
 \begin{equation}

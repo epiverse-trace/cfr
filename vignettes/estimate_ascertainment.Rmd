@@ -44,7 +44,7 @@ We wish to estimate one of the typical severity quantities used in epidemiology 
 * A time-series of deaths;
 * A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
 
-The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths"; see below for examples.
+The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths".
 
 The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
@@ -186,7 +186,7 @@ The ascertainment ratio is calculated as the disease severity calculated from th
 
 This known disease severity is passed to the `severity_baseline` argument in `estimate_ascertainment()`, and forms the denominator in the resulting under-ascertainment calculation.
 
-We assume that the 'true' CFR of Covid-19 is 0.014 (i.e. 1.4%). Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating underascertainment.
+We assume that the 'true' CFR of Covid-19 is 0.014 (i.e. 1.4%). Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating under-ascertainment.
 
 The other arguments are the same as those found in `estimate_time_varying()`. 
 
