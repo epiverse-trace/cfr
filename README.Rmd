@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 
 _{{ packagename }}_ is an R package to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.
 
-_{{ packagename }}_ provides simple, fast methods to calculate the overall or static case fatality ratio (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak.
+_{{ packagename }}_ provides simple, fast methods to calculate the overall or static case fatality risk (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak.
 _{{ packagename }}_ can help estimate disease under-reporting in real-time, accounting for delays reporting the outcomes of cases.
 
 _{{ packagename }}_ implements methods outlined in @nishiura2009. There are plans to add estimates based on other methods.
@@ -53,7 +53,7 @@ pak::pak("epiverse-trace/epiparameter")
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example shows how to use _{{ packagename }}_ to estimate the overall case fatality ratios from the 1976 Ebola outbreak [@camacho2014].
+This example shows how to use _{{ packagename }}_ to estimate the overall case fatality risks from the 1976 Ebola outbreak [@camacho2014].
 
 ```{r example-ebola-calc}
 # Load package

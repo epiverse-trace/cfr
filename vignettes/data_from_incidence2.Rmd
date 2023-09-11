@@ -102,7 +102,7 @@ onset_to_death_ebola <- epidist_db(
 )
 ```
 
-Finally, we estimate the static case fatality rate while correcting for delays using the `estimate_static()` function.
+Finally, we estimate the static case fatality risk while correcting for delays using the `estimate_static()` function.
 
 ```{r}
 # estimate static CFR as a sanity check

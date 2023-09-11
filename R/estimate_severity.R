@@ -1,4 +1,4 @@
-#' Estimate the corrected case fatality rate
+#' Estimate the corrected case fatality risk
 #'
 #' @description Estimate the maximum likelihood estimate and 95% confidence
 #' interval of a corrected severity, using the total cases and total cases with
