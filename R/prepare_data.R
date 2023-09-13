@@ -1,32 +1,34 @@
 
-#' Prepare data for CFR estimation
+#' @title Prepare common epidemiological data formats for CFR estimation
+#'
+#' @name prepare_data
+#' @rdname prepare_data
 #'
 #' @description
-#' This S3 generic has no default method. Rather, it has methods for classes
-#' commonly found in epidemiological data, such as `<incidence2>` from the
-#' `{incidence2}` package. See [incidence2::incidence()].
+#' This S3 generic has methods for classes commonly used for epidemiological
+#' data.
 #'
-#' @param data A `data.frame`-like object.
+#' Currently, the only supported data format is `<incidence2>` from the
+#' \pkg{incidence2} package. See [incidence2::incidence()].
+#' This function does not currently support grouped `<incidence2>` data.
 #'
-#' @param ... Other arguments passed to methods.
-#'
-#' @export
-prepare_data <- function(data, ...) {
-  UseMethod("prepare_data", data)
-}
-
-#' Prepare data from `<incidence2>` objects
-#'
-#' @description
-#' Prepares `<incidence2>` objects for disease severity estimates. This function
-#' does not currently support grouped `<incidence2>` data.
+#' @param data A `<data.frame>`-like object. Currently, only `<incidence2>`
+#' objects are supported.
+#' @param cases_variable A string for the name of the cases variable in the
+#' "count_variable" column of `data`.
+#' @param deaths_variable A string for the name of the deaths variable in the
+#' "count_variable" column of `data`.
+#' @param fill_NA A logical indicating whether `NA`s in the cases and deaths
+#' data should be replaced by 0s. The default value is `FALSE`. The function
+#' will error if `fill_NA = FALSE` but `NA`s are detected in the case or death
+#' data.
+#' @param ... Currently unused. Passing extra arguments will throw a warning.
 #'
 #' @details
-#' This function can replace `NA`s in the case and death data with 0's if so
-#' requested by the user using the `fill_NA` argument, which is `FALSE` by
-#' default, meaning that `NA`s are retained.
-#'
-#' This issue could arise if the dataset has non-sequential dates, as the
+#' The method for `<incidence2>` data can replace `NA`s in the case and death
+#' data with 0s using the `fill_NA` argument, which is `FALSE` by default,
+#' meaning that `NA`s are retained.
+#' `NA`s could arise if the dataset has non-sequential dates, as the
 #' function fills in missing dates between the range of dates in the input data.
 #' This is because downstream functions require data with a continuous sequence
 #' of dates.
@@ -35,26 +37,18 @@ prepare_data <- function(data, ...) {
 #' [estimate_static()] on the data, as they cannot handle `NA`s.
 #' Setting `fill_NA = TRUE` resolves this issue, but must be a conscious choice.
 #'
-#' @param data An `<incidence2>` object.
-#' @param cases_variable A string for the name of the cases variable in the
-#' "count_variable" column of `data`.
-#' @param deaths_variable A string for the name of the deaths variable in the
-#' "count_variable" column of `data`.
-#' @param fill_NA A logical indicating whether `NA`s in the cases and deaths
-#' data should be replaced by 0-s. The default value is `FALSE`. The function
-#' will error if `fill_NA = FALSE` but `NA`s are detected in the case or death
-#' data.
-#' @param ... Other arguments.
-#'
-#' @export
-#' @return A data.frame suitable for disease severity estimation functions
+#' @return A `<data.frame>` suitable for disease severity estimation functions
 #' provided in \pkg{cfr}, with the columns "date", "cases", and "deaths".
+#'
 #' Note that groups in `<incidence2>` are not retained, and cases and deaths
 #' are summed by date.
+#'
 #' The result has a continuous sequence of dates between the start and end date
 #' of `data`; this is required if the data is to be passed to functions such as
 #' [estimate_static()].
+#' @export
 #' @examples
+#' #### For <incidence2> data ####
 #' # load Covid-19 data from incidence2
 #' covid_uk <- incidence2::covidregionaldataUK
 #'
@@ -66,15 +60,25 @@ prepare_data <- function(data, ...) {
 #'   count_names_to = "count_variable"
 #' )
 #'
-#' # View head of prepared data
-#' tail(
-#'   prepare_data(
-#'     covid_uk_incidence,
-#'     cases_variable = "cases_new",
-#'     deaths_variable = "deaths_new",
-#'     fill_NA = TRUE
-#'   )
+#' # View tail of prepared data
+#' data <- prepare_data(
+#'   covid_uk_incidence,
+#'   cases_variable = "cases_new",
+#'   deaths_variable = "deaths_new",
+#'   fill_NA = TRUE
 #' )
+#'
+#' tail(data)
+prepare_data <- function(data, ...) {
+  UseMethod("prepare_data", data)
+}
+
+#' Prepare `<incidence2>` objects for severity estimation
+#'
+#' @name prepare_data
+#' @rdname prepare_data
+#'
+#' @export
 prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     deaths_variable = "deaths",
                                     fill_NA = FALSE,
@@ -92,6 +96,9 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   checkmate::assert_string(deaths_variable)
   checkmate::assert_logical(fill_NA, len = 1L, any.missing = FALSE)
 
+  # check dots for extra arguments
+  chkDots(...)
+
   # get column names from incidence2 class members
   count_var_col <- incidence2::get_count_variable_name(data)
   count_col <- incidence2::get_count_value_name(data)
@@ -104,16 +111,11 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
       all(
         c(cases_variable, deaths_variable) %in%
           unique(data[[count_var_col]])
-      )
+      ),
+    "Grouped `<incidence2>` objects are not supported. \
+     Use `incidence2::regroup()` to ungroup the data." =
+      length(group_variables) == 0
   )
-
-  if (length(group_variables) > 0) {
-    stop(
-      "`data` has groups defined - this function does not currently ",
-      "support grouped `<incidence2>` objects. Use `incidence2::regroup()` ",
-      "to ungroup the data."
-    )
-  }
 
   # get the unique dates - this is used to reconstruct data
   # in cases where there are dates with no cases or deaths
