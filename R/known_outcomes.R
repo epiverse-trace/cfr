@@ -1,23 +1,21 @@
-#' Estimate known outcomes from case and death time-series data
+#' @title Estimate known outcomes of cases using a delay distribution
 #'
 #' @description Estimates the expected number of individuals with known outcomes
-#' from a case and death time series of data of an outbreak, up to the time
-#' point supplied.
-#' Calculates the daily new number of known outcomes.
-#'
-#' Uses the probability mass function representing the delay between
-#' case detection and death, typically approximated by a symptom onset to death
-#' distribution from the literature for the disease in question.
+#' from a case and outcome time series of outbreak data, and an epidemiological
+#' delay distribution of symptom onset to outcome.
+#' When calculating a case fatality risk, the outcomes must be deaths, the delay
+#' distribution must be an onset-to-death distribution, and the function returns
+#' estimates of the known death outcomes.
 #'
 #' @inheritParams estimate_static
 #'
-#' @return A data.frame with the columns in `data`, and with two additional
-#' columns,
+#' @return A `<data.frame>` with the columns in `data`, and with two additional
+#' columns:
 #'
-#'  - "known_outcomes" for the total number of known outcomes on that day
+#'  - `"known_outcomes"` for the total number of known outcomes on that day
 #' of the outbreak, and
 #'
-#'  - "u_t" for the under-reporting factor.
+#'  - `"u_t"` for the under-reporting factor.
 #'
 #' @export
 #'
@@ -39,12 +37,16 @@
 #' head(outcomes)
 known_outcomes <- function(data,
                            epidist) {
-  # some input checking
-  stopifnot(
-    "Case data must be a data.frame" =
-      (is.data.frame(data)),
-    "Case data must contain columns `cases`" =
-      "cases" %in% colnames(data)
+  # some input checking; this function is mainly called internally
+  # but currently exported
+  # input checking is a candidate for removal
+  checkmate::assert_data_frame(
+    data,
+    min.rows = 1, min.cols = 2
+  )
+  checkmate::assert_names(
+    names(data),
+    must.include = c("cases", "date")
   )
   checkmate::assert_class(epidist, "epidist")
 
@@ -67,7 +69,7 @@ known_outcomes <- function(data,
 
   # declaring the outputs of the main loop as vectors within the main
   # data.frame
-  data$known_outcomes <- numeric(case_length)
+  kn_out <- numeric(case_length)
 
   # main calculation loop
   for (i in rev(seq_len(case_length))) {
@@ -80,11 +82,12 @@ known_outcomes <- function(data,
 
     # Collecting all current known onset estimates in a new
     # column of the original data.frame
-    data$known_outcomes[i] <- sum(known_onsets_current)
+    kn_out[i] <- sum(known_onsets_current)
   }
   # Calculating the proportion of cases with known onset,
   # for use in the simple likelihood function
-  data$u_t <- cumsum(data$known_outcomes) / cumsum(cases)
+  data$known_outcomes <- kn_out
+  data$u_t <- cumsum(kn_out) / cumsum(cases)
 
   # return dataframe with added columns
   data
