@@ -16,7 +16,7 @@ data <- prepare_data(
   fill_NA = TRUE
 )
 
-test_that("`prepare_data()`: Basic expectations for incidence2 method", {
+test_that("Prepare `<incidence2>` data, basic expectations", {
   expect_s3_class(data, "data.frame")
   expect_named(
     data, c("date", "cases", "deaths")
@@ -43,7 +43,25 @@ test_that("`prepare_data()`: Basic expectations for incidence2 method", {
       deaths_variable = "deaths_new",
       fill_NA = TRUE
     ),
-    regexp = "(`data` has groups defined)*(does not currently support grouped)"
+    regexp = "(Grouped `<incidence2>` objects are not supported.)"
+  )
+})
+
+# test for errors when NAs are present and `fill_NA` is FALSE
+test_that("Prepare data from `<incidence2>` errors on unfilled NAs", {
+  expect_error(
+    prepare_data(
+      data = incidence2::incidence(
+        incidence2::covidregionaldataUK,
+        date_index = "date",
+        counts = c("cases_new", "deaths_new"),
+        count_names_to = "count_variable"
+      ),
+      cases_variable = "cases_new",
+      deaths_variable = "deaths_new",
+      fill_NA = FALSE
+    ),
+    regexp = "(`NA`s present in the)*(count)*(Set `fill_NA = TRUE` to use 0s)"
   )
 })
 
