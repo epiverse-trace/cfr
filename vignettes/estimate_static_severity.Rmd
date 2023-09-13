@@ -419,7 +419,7 @@ $C$ and $D$ are the cumulative number of cases and deaths (respectively) up unti
 Lastly, $\theta$ is the parameter we wish to estimate, the severity of the disease.
 We estimate $\theta$ using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.
 
-The precise severity measure — CFR, IFR, HFR, etc — that \theta represents depends upon the input data given by the user.
+The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
 For complete clarity, here are the most common time series that users might calculate severity from and the resulting severity estimate from such data.
 
  - Case and death incidence data, with a case-to-death delay distribution (or close approximation, such as onset-to-death) — Case Fatality Risk (CFR).

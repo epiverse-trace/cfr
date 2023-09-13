@@ -30,7 +30,7 @@ library(cfr)
 library(incidence2)
 
 # load {outbreaks} for ebola data
-library(outbreaks) # nolint
+library(outbreaks)
 
 # load {epiparameter} for delay distributions
 library(epiparameter)
