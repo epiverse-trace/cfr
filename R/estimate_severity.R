@@ -1,10 +1,10 @@
-#' Estimate the corrected case fatality risk
+#' @title Estimate the corrected case fatality risk
 #'
-#' @description Estimate the maximum likelihood estimate and 95% confidence
+#' @description Estimates the maximum likelihood estimate and 95% confidence
 #' interval of a corrected severity, using the total cases and total cases with
 #' known outcomes, where the latter replaces the total number of deaths in the
 #' standard (naive) severity definition. We use a binomial likelihood,
-#' approximated by a Poisson likelihood for large samples
+#' approximated by a Poisson likelihood for large samples.
 #'
 #' @inheritParams estimate_static
 #' @param total_cases The total number of cases observed over the period of an
