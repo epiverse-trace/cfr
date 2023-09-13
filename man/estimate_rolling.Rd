@@ -12,15 +12,17 @@ estimate_rolling(
 )
 }
 \arguments{
-\item{data}{A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
+\item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
+series with dates or some other absolute indicator of time (e.g. epiday or
+epiweek) and the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
+
+Note that the \verb{<data.frame>} is required to have an unbroken sequence of
+dates with no missing dates in between. The "date" column must be of class
 \code{Date} (see \code{\link[=as.Date]{as.Date()}}).
+
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
@@ -31,16 +33,16 @@ probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
-\item{correct_for_delays}{A boolean flag indicating whether the user wishes
-to correct for the delay between case detection and death. FALSE corresponds
-to a naive severity being calculated, TRUE corresponds to the user
-calculating a corrected severity}
+\item{correct_for_delays}{A single logical value indicating whether
+to correct for the delay between case detection and death using an
+epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
+while \code{FALSE} corresponds to a naive severity being calculated.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
 }
 \value{
-A data.frame with the MLE and 95\% confidence interval of the
+A \verb{<data.frame>} with the MLE and 95\% confidence interval of the
 daily severity estimates, named "severity_mean", "severity_low", and
 "severity_high", with one row for each day in the original data.frame.
 }

@@ -2,20 +2,22 @@
 % Please edit documentation in R/known_outcomes.R
 \name{known_outcomes}
 \alias{known_outcomes}
-\title{Estimate known outcomes from case and death time-series data}
+\title{Estimate known outcomes of cases using a delay distribution}
 \usage{
 known_outcomes(data, epidist)
 }
 \arguments{
-\item{data}{A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
+\item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
+series with dates or some other absolute indicator of time (e.g. epiday or
+epiweek) and the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
+
+Note that the \verb{<data.frame>} is required to have an unbroken sequence of
+dates with no missing dates in between. The "date" column must be of class
 \code{Date} (see \code{\link[=as.Date]{as.Date()}}).
+
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
@@ -27,23 +29,21 @@ parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 }
 \value{
-A data.frame with the columns in \code{data}, and with two additional
-columns,
+A \verb{<data.frame>} with the columns in \code{data}, and with two additional
+columns:
 \itemize{
-\item "known_outcomes" for the total number of known outcomes on that day
+\item \code{"known_outcomes"} for the total number of known outcomes on that day
 of the outbreak, and
-\item "u_t" for the under-reporting factor.
+\item \code{"u_t"} for the under-reporting factor.
 }
 }
 \description{
 Estimates the expected number of individuals with known outcomes
-from a case and death time series of data of an outbreak, up to the time
-point supplied.
-Calculates the daily new number of known outcomes.
-
-Uses the probability mass function representing the delay between
-case detection and death, typically approximated by a symptom onset to death
-distribution from the literature for the disease in question.
+from a case and outcome time series of outbreak data, and an epidemiological
+delay distribution of symptom onset to outcome.
+When calculating a case fatality risk, the outcomes must be deaths, the delay
+distribution must be an onset-to-death distribution, and the function returns
+estimates of the known death outcomes.
 }
 \examples{
 # Load Ebola 1976 outbreak data

@@ -2,27 +2,34 @@
 % Please edit documentation in R/estimate_static.R
 \name{estimate_static}
 \alias{estimate_static}
-\title{Estimate a static (in time) severity measure}
+\title{Estimate a static disease severity measure}
 \usage{
 estimate_static(
   data,
-  epidist,
   correct_for_delays = TRUE,
+  epidist,
   poisson_threshold = 100
 )
 }
 \arguments{
-\item{data}{A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
+\item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
+series with dates or some other absolute indicator of time (e.g. epiday or
+epiweek) and the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
+
+Note that the \verb{<data.frame>} is required to have an unbroken sequence of
+dates with no missing dates in between. The "date" column must be of class
 \code{Date} (see \code{\link[=as.Date]{as.Date()}}).
+
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
+
+\item{correct_for_delays}{A single logical value indicating whether
+to correct for the delay between case detection and death using an
+epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
+while \code{FALSE} corresponds to a naive severity being calculated.}
 
 \item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
@@ -31,25 +38,52 @@ probability a case has a known outcomes (i.e. death) at time \eqn{t},
 parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
-\item{correct_for_delays}{A boolean flag indicating whether the user wishes
-to correct for the delay between case detection and death. FALSE corresponds
-to a naive severity being calculated, TRUE corresponds to the user
-calculating a corrected severity}
-
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
 }
 \value{
-A data.frame with the MLE and 95\% confidence interval of the
+A \verb{<data.frame>} with the MLE and 95\% confidence interval of the
 severity estimates, named "severity_mean", "severity_low", and
 "severity_high".
 }
 \description{
-Calculates the severity of a disease, corrected for a
-user-specified delay. If cases are supplied, and the delay distribution
-representing the delay between case detection and death, then a case
-fatality ratio over time is estimated
+Calculates the severity of a disease, while correcting for a
+user-specified reporting delay. If cases are supplied, and the delay
+distribution represents the delay between case detection and death, then a
+case fatality ratio is estimated.
 }
+\section{Details: Adjusting for delays between two time series}{
+The method used in \code{estimate_static()} function follows Nishiura et al.
+(2009).
+The function calculates a quantity \eqn{u_t} for each day within the input
+data, which represents the proportion of cases with a known outcome on day
+\eqn{t}.
+Following Nishiura et al., \eqn{u_t} is calculated as:
+\deqn{
+
+u_t = \frac{\sum_{i = 0}^t
+        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}
+
+}
+where \eqn{f_t} is the value of the probability mass function at time \eqn{t}
+and \eqn{c_t}, \eqn{d_t} are the number of new cases and new deaths at time
+\eqn{t}, (respectively).
+We then use \eqn{u_t} at the end of the outbreak in the following likelihood
+function to estimate the severity of the disease in question.
+\deqn{
+  L( \theta | y) = \log{\binom{u_tC}{D}} + D \log{ \theta } +
+  (u_tC - D)\log{(1.0 - \theta)}
+}
+\eqn{C} and \eqn{D} are the cumulative number of cases and deaths
+(respectively) up until time \eqn{t}.
+\eqn{\theta} is the parameter we wish to estimate, the severity of the
+disease. We estimate \eqn{\theta} using simple maximum-likelihood methods,
+allowing the functions within this package to be quick and easy tools to use.
+
+The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
+represents depends upon the input data given by the user.
+}
+
 \examples{
 # load package data
 data("ebola1976")
@@ -75,4 +109,10 @@ estimate_static(
   epidist = onset_to_death_ebola
 )
 
+}
+\references{
+Nishiura, H., Klinkenberg, D., Roberts, M., & Heesterbeek, J. A. P. (2009).
+Early Epidemiological Assessment of the Virulence of Emerging Infectious
+Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
+\doi{10.1371/journal.pone.0006852}
 }

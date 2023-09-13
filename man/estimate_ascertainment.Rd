@@ -2,33 +2,39 @@
 % Please edit documentation in R/estimate_ascertainment.R
 \name{estimate_ascertainment}
 \alias{estimate_ascertainment}
-\title{Estimate the ascertainment ratio of a disease given a baseline (assumed to be
-true) severity estimate}
+\title{Estimate the ascertainment ratio of a disease}
 \usage{
 estimate_ascertainment(
   data,
+  correct_for_delays = TRUE,
   epidist,
   type = c("static", "varying"),
-  severity_baseline = 0.014,
+  severity_baseline,
   burn_in_value = get_default_burn_in(epidist),
   smooth_inputs = FALSE,
   smoothing_window = 1,
-  correct_for_delays = TRUE,
   max_date = NULL
 )
 }
 \arguments{
-\item{data}{A data.frame containing the outbreak data. A daily time series
-with dates or some other absolute indicator of time (e.g. epiday/epiweek) and
-the numbers of new cases and new deaths at each time point.
+\item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
+series with dates or some other absolute indicator of time (e.g. epiday or
+epiweek) and the numbers of new cases and new deaths at each time point.
 Note that the required columns are "date" (for the date), "cases" (for the
 number of reported cases), and "deaths" (for the number of reported deaths)
 on each day of the outbreak.
-Note that the data.frame is required to have an unbroken sequence of dates
-with no missing dates in between. The "date" column must be of the class
+
+Note that the \verb{<data.frame>} is required to have an unbroken sequence of
+dates with no missing dates in between. The "date" column must be of class
 \code{Date} (see \code{\link[=as.Date]{as.Date()}}).
+
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
+
+\item{correct_for_delays}{A single logical value indicating whether
+to correct for the delay between case detection and death using an
+epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
+while \code{FALSE} corresponds to a naive severity being calculated.}
 
 \item{epidist}{The delay distribution used, in the form of an
 \code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
@@ -39,54 +45,56 @@ A typical example would be a symptom onset to death delay distribution.}
 
 \item{type}{A string, either \code{"static"} or \code{"varying"} which determines
 whether \code{\link[=estimate_static]{estimate_static()}} or \code{\link[=estimate_time_varying]{estimate_time_varying()}} is used to calculate
-the resulting ascertainment ratio}
+the resulting ascertainment ratio. Defaults to \code{"static"} if this argument is
+missing.}
 
-\item{severity_baseline}{The assumed to be true baseline severity estimate
-used in the final ratio to estimate the overall ascertainment ratio}
+\item{severity_baseline}{A single number in the range 0.0 -- 1.0 for the
+assumed true baseline severity estimate used to estimate the overall
+ascertainment ratio. Missing by default, which causes the function to error;
+must be supplied by the user.}
 
-\item{burn_in_value}{The number of time-points (typically days) to disregard
-at the start of the time-series, if a burn-in period is desired.
-The default value is set to the mean of the central spread of the \verb{<epidist>}
-object passed to the function, assuming the temporal resolution is daily.
-Alternatively, a sensible value might be 7, to disregard the first week of
-cases and deaths.
+\item{burn_in_value}{A single integer value for the number of time-points
+(typically days) to disregard at the start of the time-series, if a burn-in
+period is desired.
+The default value is set to the mean of the distribution passed to the
+\code{epidist} argument. This assumes that the temporal resolution is daily, and
+the \verb{<epidist>} passed is parameterised
+(see \code{\link[epiparameter:is_parameterised]{epiparameter::is_parameterised()}}).
+Defaults to 7 if no \verb{<epidist>} is provided, or if the \verb{<epidist>} is not
+parameterised. This is a sensible default value that disregards the first
+week of cases and deaths, assuming daily data.
+
 To consider all case data including the start of the time-series, set this
 argument to 1.}
 
-\item{smooth_inputs}{A boolean flag determining whether the user wishes to
-smooth the case and death time-series, using a moving average procedure
-before calculating the time-varying severity. Useful for noisy time-series
-or time-series with strong reporting (e.g., weekend) effects}
+\item{smooth_inputs}{A single logical value for whether the case and death
+time-series data should be smoothed, using a rolling median procedure
+before calculating the time-varying severity. This may be useful for noisy
+time-series or time-series with strong reporting (e.g., weekend) effects.}
 
 \item{smoothing_window}{An \emph{odd} number determining the smoothing window size
-to use when smoothing the case and death time-series, using a moving average
-procedure before calculating the time-varying severity.
-Useful for noisy time-series or time-series with strong reporting
-(e.g., weekend) effects.
+to use when smoothing the case and death time-series, using a rolling median
+procedure (as the \code{k} argument to \code{\link[stats:runmed]{stats::runmed()}}) before calculating the
+time-varying severity.
 The default value is 1 for \emph{no smoothing}. Values > 1 apply smoothing.}
 
-\item{correct_for_delays}{A boolean flag indicating whether the user wishes
-to correct for the delay between case detection and death. FALSE corresponds
-to a naive severity being calculated, TRUE corresponds to the user
-calculating a corrected severity}
-
-\item{max_date}{A string representing a user supplied maximum date, up to
+\item{max_date}{A \code{Date} representing a user supplied maximum date, up to
 which the time-varying severity estimate will be calculated. Useful in the
 case of long time-series, where the user wishes to focus on a specific
-time-period}
+time-period. See \code{\link[=as.Date]{as.Date()}} for converting a string to a \code{Date}.}
 }
 \value{
-A data.frame containing the MLE estimate and 95\% confidence interval
-of the corrected severity, named "ascertainment_me" (for the central estimate
-), and "ascertainment_lo" and "ascertainment_hi" for the lower and upper
-interval limits.
+A \verb{<data.frame>} containing the MLE estimate and 95\% confidence
+interval of the corrected severity, named "ascertainment_mean" (for the
+central estimate), and "ascertainment_low" and "ascertainment_high" for the
+lower and upper interval limits.
 }
 \description{
 Estimates the proportion of cases or infections that have been
-ascertained (declared as official cases), given a time-series of cases and
-deaths, a delay distribution and a baseline severity estimate. The resulting
-ascertainment estimate is calculated as the ratio of the baseline severity
-estimate and the delay-adjusted severity estimate
+ascertained, given a time-series of cases and deaths, a delay distribution
+and a baseline severity estimate. The resulting ascertainment estimate is
+calculated as the ratio of the baseline severity estimate, which is assumed
+to be the 'true' disease severity, and the delay-adjusted severity estimate.
 }
 \examples{
 # get data pre-loaded with the package
@@ -111,7 +119,7 @@ estimate_ascertainment(
   smooth_inputs = TRUE,
   burn_in_value = 7L,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30"
+  max_date = as.Date("2020-06-30")
 )
 
 }
