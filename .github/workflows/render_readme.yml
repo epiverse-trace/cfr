@@ -1,8 +1,7 @@
-# Name of the workflow
 name: render-readme
 
 # Controls when the action will run. Triggers include:
-# 
+#
 # - button trigger from github action page
 # - on changes to readme.Rmd
 
@@ -34,12 +33,12 @@ jobs:
 
       - name: Setup pandoc
         uses: r-lib/actions/setup-pandoc@v2
-    
+
       - name: Install dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rmarkdown, local::.
- 
+
       - name: Compile the readme
         run: |
           writeLines(
@@ -56,7 +55,7 @@ jobs:
             output_dir = "."
           )
         shell: Rscript {0}
-        
+
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
