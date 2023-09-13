@@ -2,17 +2,88 @@
 % Please edit documentation in R/prepare_data.R
 \name{prepare_data}
 \alias{prepare_data}
-\title{Prepare data for CFR estimation}
+\alias{prepare_data.incidence2}
+\title{Prepare common epidemiological data formats for CFR estimation}
 \usage{
 prepare_data(data, ...)
+
+\method{prepare_data}{incidence2}(
+  data,
+  cases_variable = "cases",
+  deaths_variable = "deaths",
+  fill_NA = FALSE,
+  ...
+)
 }
 \arguments{
-\item{data}{A \code{data.frame}-like object.}
+\item{data}{A \verb{<data.frame>}-like object. Currently, only \verb{<incidence2>}
+objects are supported.}
 
-\item{...}{Other arguments passed to methods.}
+\item{...}{Currently unused. Passing extra arguments will throw a warning.}
+
+\item{cases_variable}{A string for the name of the cases variable in the
+"count_variable" column of \code{data}.}
+
+\item{deaths_variable}{A string for the name of the deaths variable in the
+"count_variable" column of \code{data}.}
+
+\item{fill_NA}{A logical indicating whether \code{NA}s in the cases and deaths
+data should be replaced by 0s. The default value is \code{FALSE}. The function
+will error if \code{fill_NA = FALSE} but \code{NA}s are detected in the case or death
+data.}
+}
+\value{
+A \verb{<data.frame>} suitable for disease severity estimation functions
+provided in \pkg{cfr}, with the columns "date", "cases", and "deaths".
+
+Note that groups in \verb{<incidence2>} are not retained, and cases and deaths
+are summed by date.
+
+The result has a continuous sequence of dates between the start and end date
+of \code{data}; this is required if the data is to be passed to functions such as
+\code{\link[=estimate_static]{estimate_static()}}.
 }
 \description{
-This S3 generic has no default method. Rather, it has methods for classes
-commonly found in epidemiological data, such as \verb{<incidence2>} from the
-\code{{incidence2}} package. See \code{\link[incidence2:incidence]{incidence2::incidence()}}.
+This S3 generic has methods for classes commonly used for epidemiological
+data.
+
+Currently, the only supported data format is \verb{<incidence2>} from the
+\pkg{incidence2} package. See \code{\link[incidence2:incidence]{incidence2::incidence()}}.
+This function does not currently support grouped \verb{<incidence2>} data.
+}
+\details{
+The method for \verb{<incidence2>} data can replace \code{NA}s in the case and death
+data with 0s using the \code{fill_NA} argument, which is \code{FALSE} by default,
+meaning that \code{NA}s are retained.
+\code{NA}s could arise if the dataset has non-sequential dates, as the
+function fills in missing dates between the range of dates in the input data.
+This is because downstream functions require data with a continuous sequence
+of dates.
+
+Keeping \code{NA}s will cause downstream issues when calling functions such as
+\code{\link[=estimate_static]{estimate_static()}} on the data, as they cannot handle \code{NA}s.
+Setting \code{fill_NA = TRUE} resolves this issue, but must be a conscious choice.
+}
+\examples{
+#### For <incidence2> data ####
+# load Covid-19 data from incidence2
+covid_uk <- incidence2::covidregionaldataUK
+
+# convert to incidence2 object
+covid_uk_incidence <- incidence2::incidence(
+  covid_uk,
+  date_index = "date",
+  counts = c("cases_new", "deaths_new"),
+  count_names_to = "count_variable"
+)
+
+# View tail of prepared data
+data <- prepare_data(
+  covid_uk_incidence,
+  cases_variable = "cases_new",
+  deaths_variable = "deaths_new",
+  fill_NA = TRUE
+)
+
+tail(data)
 }
