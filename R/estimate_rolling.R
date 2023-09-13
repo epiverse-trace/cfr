@@ -11,7 +11,7 @@
 #'
 #' @inheritParams estimate_static
 #'
-#' @return A data.frame with the MLE and 95% confidence interval of the
+#' @return A `<data.frame>` with the MLE and 95% confidence interval of the
 #' daily severity estimates, named "severity_mean", "severity_low", and
 #' "severity_high", with one row for each day in the original data.frame.
 #' @export
@@ -51,7 +51,7 @@ estimate_rolling <- function(data,
 
   # input checking
   checkmate::assert_data_frame(data)
-  # check that input data frame has columns date, cases, and deaths
+  # check that input data.frame has columns date, cases, and deaths
   checkmate::assert_names(
     colnames(data),
     must.include = c("date", "cases", "deaths")
@@ -69,6 +69,10 @@ estimate_rolling <- function(data,
   checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_count(poisson_threshold)
 
+  # prepare cumulative sums
+  cumulative_cases <- cumsum(data$cases)
+  cumulative_deaths <- cumsum(data$deaths)
+
   if (correct_for_delays) {
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
@@ -78,9 +82,6 @@ estimate_rolling <- function(data,
       epidist = epidist
     )
 
-    # prepare cumulative sums
-    cumulative_cases <- cumsum(data$cases)
-    cumulative_deaths <- cumsum(data$deaths)
     cumulative_outcomes <- cumsum(data$known_outcomes)
 
     # generate series of CFR estimates with expanding time window
@@ -89,9 +90,6 @@ estimate_rolling <- function(data,
       f = estimate_severity, poisson_threshold = poisson_threshold
     )
   } else {
-    # prepare cumulative sums
-    cumulative_cases <- cumsum(data$cases)
-    cumulative_deaths <- cumsum(data$deaths)
     # calculating the uncorrected CFR rolling over all days
     cfr_me <- cumulative_deaths / cumulative_cases
 
@@ -111,7 +109,7 @@ estimate_rolling <- function(data,
 
   if (!correct_for_delays) {
     # process into a data.frame and return
-    # bind single row data frames and return, convert to data.frame when
+    # bind single row data.frames and return, convert to data.frame when
     # matrix is returned from correct_for_delays FALSE
     cfr_estimate <- as.data.frame(cfr_estimate)
     # fix column names in the case where correct_for_delays is FALSE
