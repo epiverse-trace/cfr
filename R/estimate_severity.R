@@ -53,9 +53,9 @@ estimate_severity <- function(total_cases,
   severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
   severity_estimate <- data.frame(
-    "severity_mean" = severity_mean,
-    "severity_low" = severity_lims[[1]],
-    "severity_high" = severity_lims[[2]]
+    severity_mean = severity_mean,
+    severity_low = severity_lims[[1]],
+    severity_high = severity_lims[[2]]
   )
 
   # returning vector with corrected estimates
