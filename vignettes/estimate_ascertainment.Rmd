@@ -209,7 +209,7 @@ df_reporting_varying <- estimate_ascertainment(
   smooth_inputs = TRUE,
   burn_in_value = 7,
   correct_for_delays = TRUE,
-  max_date = "2020-06-30"
+  max_date = as.Date("2020-06-30")
 )
 ```
 
@@ -258,6 +258,7 @@ df_reporting <- mutate(
     .x = data, .f = estimate_ascertainment,
     # arguments to function
     epidist = onset_to_death_covid, type = "varying",
+    severity_baseline = 0.014,
     burn_in_value = 7, smooth_inputs = TRUE, correct_for_delays = TRUE
   )
 )
