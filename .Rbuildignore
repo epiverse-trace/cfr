@@ -15,3 +15,4 @@
 ^revdep$
 ^CRAN-SUBMISSION$
 ^_pkgdown\.yml$
+^CITATION\.cff$
