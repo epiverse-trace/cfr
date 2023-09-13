@@ -9,4 +9,4 @@ ebola1976 <- read.csv(
 )
 ebola1976$date <- as.Date(ebola1976$date)
 
-usethis::use_data(ebola1976, overwrite = TRUE, version = 3)
+usethis::use_data(ebola1976, overwrite = TRUE)

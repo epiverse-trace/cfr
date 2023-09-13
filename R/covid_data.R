@@ -1,4 +1,4 @@
-#' Daily Covid-19 case and death data for countries with ≥ 100,000 deaths
+#' Daily Covid-19 case and death data for countries with 100,000 or more deaths
 #'
 #' Data adapted from the `covidregionaldata` package of daily cases and
 #' deaths from the 19 countries with 100,000 or more deaths over the period
@@ -7,7 +7,7 @@
 #' Data are provided as a `<data.frame>`.
 #'
 #' @format ## `covid_data`
-#' A data frame with 20,786 rows and 4 columns:
+#' A `<data.frame>` with 20,786 rows and 4 columns:
 #' \describe{
 #'   \item{date}{Calendar date in the format %Y-%m-%d}
 #'   \item{country}{The country name in simple format, e.g. "United States"
@@ -19,5 +19,5 @@
 #' @references
 #' Joseph Palmer, Katharine Sherratt, Richard Martin-Nielsen, Jonnie Bevan,
 #' Hamish Gibbs, Sebastian Funk and Sam Abbott (2021). covidregionaldata:
-#' Subnational data for COVID-19 epidemiology, \doi{10.21105/joss.03290}
+#' Subnational data for COVID-19 epidemiology. \doi{10.21105/joss.03290}
 "covid_data"
