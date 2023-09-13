@@ -168,9 +168,9 @@ estimate_static <- function(data,
     severity_lims <- severity_conf$conf.int
 
     severity_estimate <- data.frame(
-      "severity_mean" = severity_mean,
-      "severity_low" = severity_lims[[1]],
-      "severity_high" = severity_lims[[2]]
+      severity_mean = severity_mean,
+      severity_low = severity_lims[[1]],
+      severity_high = severity_lims[[2]]
     )
   }
 
