@@ -1,4 +1,4 @@
-# `prepare_data()`: Basic expectations for incidence2 method
+# Prepare `<incidence2>` data, basic expectations
 
     Code
       tail(data)
