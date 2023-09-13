@@ -163,9 +163,6 @@ ggplot() +
   labs(
     y = "Disease severity"
   ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
   theme_classic() +
   theme(legend.position = "top")
 ```
