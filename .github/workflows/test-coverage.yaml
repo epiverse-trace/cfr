@@ -3,9 +3,25 @@
 on:
   push:
     branches: [main, master]
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'inst/**'
+      - 'DESCRIPTION'
+      - '.github/workflows/test-coverage.yaml'
   pull_request:
-    branches:
-      - "*"
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'inst/**'
+      - 'DESCRIPTION'
+      - '.github/workflows/test-coverage.yaml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 name: test-coverage
 
@@ -28,24 +44,5 @@ jobs:
           needs: coverage
 
       - name: Test coverage
-        run: |
-          covr::codecov(
-            quiet = FALSE,
-            clean = FALSE,
-            install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
-          )
+        run: covr::codecov(quiet = FALSE)
         shell: Rscript {0}
-
-      - name: Show testthat output
-        if: always()
-        run: |
-          ## --------------------------------------------------------------------
-          find ${{ runner.temp }}/package -name 'testthat.Rout*' -exec cat '{}' \; || true
-        shell: bash
-
-      - name: Upload test results
-        if: failure()
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-test-failures
-          path: ${{ runner.temp }}/package
