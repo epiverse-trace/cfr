@@ -209,17 +209,8 @@ estimate_time_varying <- function(data,
 #' @keywords internal
 get_default_burn_in <- function(epidist) {
   default_value <- 7L
-  if (!missing(epidist) && epiparameter::is_parameterised(epidist)) {
-    # hardcoded access to mean as epiparameter::get_parameter()
-    # returns distr-specific params (e.g. meanlog, shape)
-    x <- do.call(
-      epiparameter::convert_params_to_summary_stats,
-      append(
-        list(stats::family(epidist)),
-        epiparameter::get_parameters(epidist)
-      )
-    )[["mean"]]
-    x <- as.integer(round(x))
+  if (!missing(epidist) && !is.na(mean(epidist))) {
+    x <- as.integer(round(mean(epidist)))
   } else {
     x <- default_value
   }
