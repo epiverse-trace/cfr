@@ -70,7 +70,7 @@ library(scales)
 library(ggplot2)
 ```
 
-The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and a delay distribution.
+The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and optionally, a delay distribution as an `<epidist>` object.
 The delay distribution we use here comes from the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
 ## Changing severity of the COVID-19 pandemic in the U.K.

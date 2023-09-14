@@ -109,9 +109,9 @@ cfr_rolling <- function(data,
     cfr_estimate <- do.call(rbind, cfr_estimate)
     # process into a data.frame and return
     # bind single row data.frames and return, convert to data.frame when
-    # matrix is returned from correct_for_delays FALSE
+    # matrix is returned from no delay correction
     cfr_estimate <- as.data.frame(cfr_estimate)
-    # fix column names in the case where correct_for_delays is FALSE
+    # fix column names in the case of no delay correction
     colnames(cfr_estimate) <- c(
       "severity_mean", "severity_low", "severity_high"
     )
