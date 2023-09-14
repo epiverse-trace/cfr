@@ -79,14 +79,13 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # Calculate the static CFR without correcting for delays
-estimate_static(data = ebola1976, correct_for_delays = FALSE)
+cfr_static(data = ebola1976)
 #>   severity_mean severity_low severity_high
 #> 1      0.955102    0.9210866     0.9773771
 
 # Calculate the static CFR while correcting for delays
-estimate_static(
+cfr_static(
   data = ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 #>   severity_mean severity_low severity_high
@@ -97,12 +96,11 @@ estimate_static(
 
 In this example we show how the estimate of overall severity can change
 as more data on cases and deaths over time becomes available, using the
-function `estimate_rolling()`. Because there is a delay from
-onset-to-death, a simple “naive” calculation that just divides
-deaths-to-date by cases-to-date will underestimate severity. The
-`estimate_rolling()` function uses the `estimate_severity()` adjustment
-to account for delays, and instead compares deaths-to-date with
-cases-with-known-outcome-to-date.
+function `cfr_rolling()`. Because there is a delay from onset-to-death,
+a simple “naive” calculation that just divides deaths-to-date by
+cases-to-date will underestimate severity. The `cfr_rolling()` function
+uses the `cfr_severity()` adjustment to account for delays, and instead
+compares deaths-to-date with cases-with-known-outcome-to-date.
 
 This example shows how the adjusted estimate converges to “naive”
 estimate as the outbreak declines, and hence a larger and large
@@ -110,8 +108,8 @@ proportion of cases have known outcomes.
 
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
-rolling_cfr_naive <- estimate_rolling(
-  data = ebola1976, correct_for_delays = FALSE
+rolling_cfr_naive <- cfr_rolling(
+  data = ebola1976
 )
 
 # add the date from the outbreak
@@ -128,8 +126,8 @@ head(rolling_cfr_naive)
 #> 6 1976-08-30             0            0         0.975
 
 # Calculate the rolling daily CFR while correcting for delays
-rolling_cfr_corrected <- estimate_rolling(
-  data = ebola1976, correct_for_delays = TRUE,
+rolling_cfr_corrected <- cfr_rolling(
+  data = ebola1976,
   epidist = onset_to_death_ebola
 )
 
