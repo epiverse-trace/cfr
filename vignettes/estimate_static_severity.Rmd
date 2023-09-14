@@ -213,14 +213,12 @@ Otherwise, it calculates a naive severity estimate, which does not adjust for de
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
 cfr_static(
-  data = df_ebola_subset,
-  correct_for_delays = FALSE
+  data = df_ebola_subset
 )
 
 # calculating the corrected CFR
 cfr_static(
   df_ebola_subset,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 ```
@@ -381,14 +379,12 @@ the U.K.
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
 cfr_static(
-  df_covid_uk_subset,
-  correct_for_delays = FALSE
+  df_covid_uk_subset
 )
 
 # calculating the corrected CFR
 cfr_static(
   df_covid_uk_subset,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_covid
 )
 ```

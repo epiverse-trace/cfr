@@ -4,7 +4,7 @@
 \alias{cfr_static}
 \title{Estimate a static disease severity measure}
 \usage{
-cfr_static(data, correct_for_delays = TRUE, epidist, poisson_threshold = 100)
+cfr_static(data, epidist, poisson_threshold = 100)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,17 +21,11 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{correct_for_delays}{A single logical value indicating whether
-to correct for the delay between case detection and death using an
-epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
-while \code{FALSE} corresponds to a naive severity being calculated.}
+\item{epidist}{An optional argument for the delay distribution used, in the
+form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
 
-\item{epidist}{The delay distribution used, in the form of an
-\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
-mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-probability a case has a known outcomes (i.e. death) at time \eqn{t},
-parameterised with disease-specific parameters before it is supplied here.
-A typical example would be a symptom onset to death delay distribution.}
+Passing an \verb{<epidist>} automatically applies delay correction in the
+severity estimation.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
@@ -42,13 +36,15 @@ severity estimates, named "severity_mean", "severity_low", and
 "severity_high".
 }
 \description{
-Calculates the severity of a disease, while correcting for a
-user-specified reporting delay. If cases are supplied, and the delay
-distribution represents the delay between case detection and death, then a
-case fatality ratio is estimated.
+Calculates the severity of a disease, while optionally
+correcting for reporting delays using an epidemiological delay distribution
+of the time between symptom onset and death (onset-to-death).
+
+Other delay distributions may be passed to calculate different disease
+severity measures such as the hospitalisation fatality risk.
 }
 \section{Details: Adjusting for delays between two time series}{
-The method used in \code{cfr_static()} function follows Nishiura et al.
+The method used in \code{cfr_static()} follows Nishiura et al.
 (2009).
 The function calculates a quantity \eqn{u_t} for each day within the input
 data, which represents the proportion of cases with a known outcome on day
@@ -77,6 +73,12 @@ allowing the functions within this package to be quick and easy tools to use.
 
 The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
 represents depends upon the input data given by the user.
+
+The epidemiological delay distribution passed to \code{epidist} is used to obtain
+a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+gives the probability a case has a known outcomes (usually, death) at time
+\eqn{t}, parameterised with disease-specific parameters before it is supplied
+here.
 }
 
 \examples{
@@ -92,15 +94,11 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # estimate severity without correcting for delays
-cfr_static(
-  ebola1976,
-  correct_for_delays = FALSE
-)
+cfr_static(ebola1976)
 
 # estimate severity while correcting for delays
 cfr_static(
   ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 

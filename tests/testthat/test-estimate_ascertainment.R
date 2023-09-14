@@ -1,6 +1,4 @@
 # Tests for estimate_ascertainment()
-# Note that this is an internal function underlying cfr_static()
-# when corrected_for_delays is TRUE
 
 # load Ebola 1976 outbreak data
 data("ebola1976")
@@ -18,8 +16,7 @@ poisson_threshold <- 100
 test_that("Basic expectations for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE, smooth_inputs = FALSE,
-    burn_in_value = 1, smoothing_window = 1,
+    burn_in_value = 1,
     severity_baseline = 0.7,
     type = "static"
   )
@@ -51,9 +48,8 @@ test_that("Basic expectations for static ascertainment", {
 test_that("Correct for delays for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = TRUE, epidist = onset_to_death_ebola,
-    smooth_inputs = FALSE,
-    burn_in_value = 1, smoothing_window = 1,
+    epidist = onset_to_death_ebola,
+    burn_in_value = 1,
     severity_baseline = 0.7,
     type = "static"
   )
@@ -85,8 +81,7 @@ test_that("Correct for delays for static ascertainment", {
 test_that("Smooth inputs for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE, epidist = onset_to_death_ebola,
-    smooth_inputs = TRUE,
+    epidist = onset_to_death_ebola,
     burn_in_value = 1, smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -119,9 +114,7 @@ test_that("Smooth inputs for static ascertainment", {
 test_that("Automatic burn-in for static ascertainment with delay correction", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = TRUE,
     epidist = onset_to_death_ebola,
-    smooth_inputs = TRUE,
     smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -154,8 +147,6 @@ test_that("Automatic burn-in for static ascertainment with delay correction", {
 test_that("Automatic burn-in for static ascertainment, no delay correction", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    correct_for_delays = FALSE,
-    smooth_inputs = TRUE,
     smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -204,9 +195,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 test_that("Basic expectations for time-varying ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    correct_for_delays = TRUE,
     epidist = onset_to_death_covid,
-    smooth_inputs = FALSE,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -248,10 +237,8 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate using max_date
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    correct_for_delays = TRUE,
     epidist = onset_to_death_covid,
     max_date = max_date,
-    smooth_inputs = FALSE,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -259,9 +246,7 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate after subsetting the data
   ascertainment_estimate_2 <- estimate_ascertainment(
     data = covid_uk[covid_uk$date <= max_date, ],
-    correct_for_delays = TRUE,
     epidist = onset_to_death_covid,
-    smooth_inputs = FALSE,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -278,9 +263,7 @@ test_that("Ascertainment > 1.0 throws a warning", {
   expect_warning(
     estimate_ascertainment(
       data = ebola1976,
-      correct_for_delays = TRUE,
       epidist = onset_to_death_ebola,
-      smooth_inputs = FALSE,
       severity_baseline = 0.7,
       type = "varying"
     ),

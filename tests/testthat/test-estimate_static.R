@@ -13,17 +13,16 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 data("ebola1976")
 
 # Calculate static naive CFR
-scfr_naive <- cfr_static(data = ebola1976, correct_for_delays = FALSE)
+scfr_naive <- cfr_static(data = ebola1976)
 
 # Calculate static corrected CFRs
 scfr_corrected <- cfr_static(
   data = ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 
 # Basic expectations
-test_that("`cfr_static`: Basic expectations", {
+test_that("Static CFR estimate, basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(scfr_naive, "data.frame")
   expect_s3_class(scfr_corrected, "data.frame")
@@ -58,20 +57,11 @@ test_that("`cfr_static`: Basic expectations", {
   )
 })
 
-test_that("`cfr_static`: Errors and messages", {
-  # expect error when corrected CFR requested without delay PMF
-  expect_error(
-    cfr_static(
-      data = ebola1976,
-      correct_for_delays = TRUE
-    )
-  )
-
+test_that("Static CFR estimate, errors and messages", {
   # expect error when columns are missing
   expect_error(
     cfr_static(
-      data = ebola1976[, c("date", "cases")],
-      correct_for_delays = FALSE
+      data = ebola1976[, c("date", "cases")]
     )
   )
 
@@ -86,7 +76,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed$date <- NULL
 
   expect_error(
-    cfr_static(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_static(data = df_in_malformed)
   )
 
   # Input dataframe `date` column has wrong class; POSIXct instead of Date
@@ -94,7 +84,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed$date <- as.POSIXct(df_in_malformed$date)
 
   expect_error(
-    cfr_static(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_static(data = df_in_malformed)
   )
 
   # Input dataframe has non-sequential dates
@@ -102,7 +92,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed <- df_in_malformed[-seq(10, 30), ]
 
   expect_error(
-    cfr_static(data = df_in_malformed, correct_for_delays = FALSE),
+    cfr_static(data = df_in_malformed),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
   )
 })

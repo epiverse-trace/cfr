@@ -1,9 +1,11 @@
 #' Estimate a static disease severity measure
 #'
-#' @description Calculates the severity of a disease, while correcting for a
-#' user-specified reporting delay. If cases are supplied, and the delay
-#' distribution represents the delay between case detection and death, then a
-#' case fatality ratio is estimated.
+#' @description Calculates the severity of a disease, while optionally
+#' correcting for reporting delays using an epidemiological delay distribution
+#' of the time between symptom onset and death (onset-to-death).
+#'
+#' Other delay distributions may be passed to calculate different disease
+#' severity measures such as the hospitalisation fatality risk.
 #'
 #' @param data A `<data.frame>` containing the outbreak data. A daily time
 #' series with dates or some other absolute indicator of time (e.g. epiday or
@@ -19,17 +21,11 @@
 #' Note also that the total number of cases must be greater than the total
 #' number of reported deaths.
 #'
-#' @param correct_for_delays A single logical value indicating whether
-#' to correct for the delay between case detection and death using an
-#' epidemiological delay distribution passed to `epidist`. `TRUE` by default,
-#' while `FALSE` corresponds to a naive severity being calculated.
+#' @param epidist An optional argument for the delay distribution used, in the
+#' form of an `<epidist>` object; see [epiparameter::epidist()].
 #'
-#' @param epidist The delay distribution used, in the form of an
-#' [epiparameter::epidist()] object. This is used to obtain a probability
-#' mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-#' probability a case has a known outcomes (i.e. death) at time \eqn{t},
-#' parameterised with disease-specific parameters before it is supplied here.
-#' A typical example would be a symptom onset to death delay distribution.
+#' Passing an `<epidist>` automatically applies delay correction in the
+#' severity estimation.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 100 by default.
@@ -37,7 +33,7 @@
 #' @details
 #' # Details: Adjusting for delays between two time series
 #'
-#' The method used in `cfr_static()` function follows Nishiura et al.
+#' The method used in `cfr_static()` follows Nishiura et al.
 #' (2009).
 #' The function calculates a quantity \eqn{u_t} for each day within the input
 #' data, which represents the proportion of cases with a known outcome on day
@@ -67,6 +63,12 @@
 #' The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
 #' represents depends upon the input data given by the user.
 #'
+#' The epidemiological delay distribution passed to `epidist` is used to obtain
+#' a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+#' gives the probability a case has a known outcomes (usually, death) at time
+#' \eqn{t}, parameterised with disease-specific parameters before it is supplied
+#' here.
+#'
 #' @references
 #' Nishiura, H., Klinkenberg, D., Roberts, M., & Heesterbeek, J. A. P. (2009).
 #' Early Epidemiological Assessment of the Virulence of Emerging Infectious
@@ -92,20 +94,15 @@
 #' )
 #'
 #' # estimate severity without correcting for delays
-#' cfr_static(
-#'   ebola1976,
-#'   correct_for_delays = FALSE
-#' )
+#' cfr_static(ebola1976)
 #'
 #' # estimate severity while correcting for delays
 #' cfr_static(
 #'   ebola1976,
-#'   correct_for_delays = TRUE,
 #'   epidist = onset_to_death_ebola
 #' )
 #'
 cfr_static <- function(data,
-                            correct_for_delays = TRUE,
                        epidist,
                        poisson_threshold = 100) {
   # input checking
@@ -125,17 +122,12 @@ cfr_static <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
-  checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_count(poisson_threshold)
 
-  # returns error message if no delay distribution is supplied, but correction
-  # for delays was requested
-  if (correct_for_delays) {
+  # apply delay correction if an epidist is provided
+  if (!missing(epidist)) {
+    # check the epidist object
     checkmate::assert_class(epidist, "epidist")
-  }
-
-  # with the standard binomial
-  if (correct_for_delays) {
 
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,

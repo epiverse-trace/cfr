@@ -103,15 +103,12 @@ df_covid_uk <- filter(covid_data, country == "United Kingdom")
 tail(df_covid_uk)
 ```
 
-We then subset the data to focus on just the first few months of the outbreak in the United Kingdom.
+We then subset the data to focus on just the first few months of the outbreak in the United Kingdom, and plot the cases and deaths to explore the data.
 
 ```{r}
 # the first few months of the pandemic
 df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-05-31")
 ```
-
-Then, we plot case incidence data with following command.
-Further plotting commands are hidden for brevity.
 
 ```{r fig.cap="Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
@@ -136,8 +133,6 @@ ggplot(df_covid_uk_subset) +
   theme_classic() +
   theme(legend.position = "top")
 ```
-
-Then, we plot the death incidence data with following command:
 
 ```{r fig.cap="Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
 ggplot(df_covid_uk_subset) +
@@ -195,8 +190,7 @@ df_reporting_static <- estimate_ascertainment(
   data = df_covid_uk_subset,
   epidist = onset_to_death_covid,
   type = "static",
-  severity_baseline = 0.014,
-  correct_for_delays = TRUE
+  severity_baseline = 0.014
 )
 ```
 
@@ -206,9 +200,7 @@ df_reporting_varying <- estimate_ascertainment(
   epidist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
-  smooth_inputs = TRUE,
   burn_in_value = 7,
-  correct_for_delays = TRUE,
   max_date = as.Date("2020-06-30")
 )
 ```
@@ -259,7 +251,7 @@ df_reporting <- mutate(
     # arguments to function
     epidist = onset_to_death_covid, type = "varying",
     severity_baseline = 0.014,
-    burn_in_value = 7, smooth_inputs = TRUE, correct_for_delays = TRUE
+    burn_in_value = 7
   )
 )
 

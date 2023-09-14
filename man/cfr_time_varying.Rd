@@ -6,11 +6,9 @@
 \usage{
 cfr_time_varying(
   data,
-  correct_for_delays = TRUE,
   epidist,
   burn_in_value = get_default_burn_in(epidist),
-  smooth_inputs = FALSE,
-  smoothing_window = 1
+  smoothing_window = NULL
 )
 }
 \arguments{
@@ -28,25 +26,19 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{correct_for_delays}{A single logical value indicating whether
-to correct for the delay between case detection and death using an
-epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
-while \code{FALSE} corresponds to a naive severity being calculated.}
+\item{epidist}{An optional argument for the delay distribution used, in the
+form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
 
-\item{epidist}{The delay distribution used, in the form of an
-\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
-mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-probability a case has a known outcomes (i.e. death) at time \eqn{t},
-parameterised with disease-specific parameters before it is supplied here.
-A typical example would be a symptom onset to death delay distribution.}
+Passing an \verb{<epidist>} automatically applies delay correction in the
+severity estimation.}
 
 \item{burn_in_value}{A single integer value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
-The default value is set to the mean of the distribution passed to the
-\code{epidist} argument. This assumes that the temporal resolution is daily, and
-the \verb{<epidist>} passed is parameterised
-(see \code{\link[epiparameter:is_parameterised]{epiparameter::is_parameterised()}}).
+
+When an \verb{<epidist>} is provided and delay correction is requested, the
+default value is set to the mean of the \verb{<epidist>}.
+
 Defaults to 7 if no \verb{<epidist>} is provided, or if the \verb{<epidist>} is not
 parameterised. This is a sensible default value that disregards the first
 week of cases and deaths, assuming daily data.
@@ -54,26 +46,23 @@ week of cases and deaths, assuming daily data.
 To consider all case data including the start of the time-series, set this
 argument to 1.}
 
-\item{smooth_inputs}{A single logical value for whether the case and death
-time-series data should be smoothed, using a rolling median procedure
-before calculating the time-varying severity. This may be useful for noisy
-time-series or time-series with strong reporting (e.g., weekend) effects.}
-
 \item{smoothing_window}{An \emph{odd} number determining the smoothing window size
 to use when smoothing the case and death time-series, using a rolling median
 procedure (as the \code{k} argument to \code{\link[stats:runmed]{stats::runmed()}}) before calculating the
 time-varying severity.
-The default value is 1 for \emph{no smoothing}. Values > 1 apply smoothing.}
+
+The default behaviour is to apply no smoothing. The minimum value of this
+argument is 1.}
 }
 \value{
 A \verb{<data.frame>} containing the MLE estimate and 95\% confidence
 interval of the corrected severity.
 }
 \description{
-Calculates how the severity of a disease changes over time,
-corrected for a user-specified delay. If cases are supplied, and the delay
-distribution representing the delay between case detection and death, then
-a case fatality risk over time is estimated.
+Calculates how the severity of a disease changes over time
+while optionally correcting for reporting delays using an epidemiological
+delay distribution of the time between symptom onset and death
+(onset-to-death).
 }
 \section{Details: Adjusting for delays between two time series}{
 This function estimates the number of cases which have a known outcome over
@@ -92,6 +81,12 @@ binomially distributed, in the following way:
 We use maximum likelihood estimation to determine the value of \eqn{\theta_t}
 for each \eqn{t}, where \eqn{\theta} represents the severity measure of
 interest.
+
+The epidemiological delay distribution passed to \code{epidist} is used to obtain
+a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+gives the probability a case has a known outcomes (usually, death) at time
+\eqn{t}, parameterised with disease-specific parameters before it is supplied
+here.
 }
 
 \examples{
@@ -112,9 +107,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 # estimate time varying severity without correcting for delays
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk_subset,
-  smooth_inputs = TRUE,
-  burn_in_value = 7L,
-  correct_for_delays = FALSE
+  burn_in_value = 7L
 )
 # View
 tail(cfr_time_varying)
@@ -123,9 +116,7 @@ tail(cfr_time_varying)
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk_subset,
   epidist = onset_to_death_covid,
-  smooth_inputs = TRUE,
-  burn_in_value = 7L,
-  correct_for_delays = TRUE
+  burn_in_value = 7L
 )
 tail(cfr_time_varying)
 

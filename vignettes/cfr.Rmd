@@ -107,7 +107,6 @@ We use the function `cfr_static()` to calculate overall disease severity at the 
 ```{r}
 cfr_static(
   data = ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 ```
@@ -131,8 +130,7 @@ estimate_ascertainment(
   data = ebola1976,
   epidist = onset_to_death_ebola,
   type = "static",
-  severity_baseline = 0.7,
-  correct_for_delays = TRUE
+  severity_baseline = 0.7
 )
 ```
 

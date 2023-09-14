@@ -4,7 +4,7 @@
 \alias{cfr_rolling}
 \title{Estimate static severity for an expanding time series}
 \usage{
-cfr_rolling(data, epidist, correct_for_delays = TRUE, poisson_threshold = 100)
+cfr_rolling(data, epidist, poisson_threshold = 100)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,17 +21,11 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{epidist}{The delay distribution used, in the form of an
-\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
-mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-probability a case has a known outcomes (i.e. death) at time \eqn{t},
-parameterised with disease-specific parameters before it is supplied here.
-A typical example would be a symptom onset to death delay distribution.}
+\item{epidist}{An optional argument for the delay distribution used, in the
+form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
 
-\item{correct_for_delays}{A single logical value indicating whether
-to correct for the delay between case detection and death using an
-epidemiological delay distribution passed to \code{epidist}. \code{TRUE} by default,
-while \code{FALSE} corresponds to a naive severity being calculated.}
+Passing an \verb{<epidist>} automatically applies delay correction in the
+severity estimation.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
@@ -49,8 +43,9 @@ time point, and increasing the number of time points included by one in each
 iteration.
 }
 \details{
-When \code{correct_for_delays} is \code{TRUE}, the internal function
-\code{\link[=estimate_severity]{estimate_severity()}} is used to calculate the rolling severity.
+When delay correction is applied by passing an \verb{<epidist>}, the
+internal function \code{\link[=estimate_severity]{estimate_severity()}} is used to calculate the rolling
+severity.
 }
 \examples{
 # load package data
@@ -65,16 +60,12 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 # estimate severity without correcting for delays
-cfr_static(
-  ebola1976,
-  correct_for_delays = FALSE
-)
+cfr_static(ebola1976)
 
 # estimate severity for each day while correcting for delays
 # view only the first values
 estimate <- cfr_rolling(
   ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 
