@@ -20,7 +20,7 @@
       ascertainment_estimate
     Output
         ascertainment_mean ascertainment_low ascertainment_high
-      1           0.732906         0.7162026          0.7599719
+      1           0.729927               0.7          0.8313539
 
 # Automatic burn-in for static ascertainment with delay correction
 

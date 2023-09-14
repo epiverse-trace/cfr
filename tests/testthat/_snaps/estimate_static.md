@@ -1,4 +1,4 @@
-# `cfr_static`: Basic expectations
+# Static CFR estimate, basic expectations
 
     Code
       scfr_naive

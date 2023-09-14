@@ -21,12 +21,11 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{epidist}{The delay distribution used, in the form of an
-\code{\link[epiparameter:epidist]{epiparameter::epidist()}} object. This is used to obtain a probability
-mass function parameterised by time; i.e. \eqn{f(t)} which gives the
-probability a case has a known outcomes (i.e. death) at time \eqn{t},
-parameterised with disease-specific parameters before it is supplied here.
-A typical example would be a symptom onset to death delay distribution.}
+\item{epidist}{An optional argument for the delay distribution used, in the
+form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
+
+Passing an \verb{<epidist>} automatically applies delay correction in the
+severity estimation.}
 }
 \value{
 A \verb{<data.frame>} with the columns in \code{data}, and with two additional

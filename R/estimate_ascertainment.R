@@ -48,22 +48,18 @@
 #'   epidist = onset_to_death_covid,
 #'   type = "varying",
 #'   severity_baseline = 0.014,
-#'   smooth_inputs = TRUE,
 #'   burn_in_value = 7L,
-#'   correct_for_delays = TRUE,
 #'   max_date = as.Date("2020-06-30")
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   correct_for_delays = TRUE,
                                    epidist,
                                    type = c("static", "varying"),
                                    severity_baseline,
                                    burn_in_value = get_default_burn_in(
                                      epidist
                                    ),
-                                   smooth_inputs = FALSE,
-                                   smoothing_window = 1,
+                                   smoothing_window = NULL,
                                    max_date = NULL) {
   # input checking
   checkmate::assert_data_frame(data)
@@ -75,21 +71,8 @@ estimate_ascertainment <- function(data,
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE
   )
-  checkmate::assert_integerish(burn_in_value,
-    lower = 1, len = 1L
-  )
-  checkmate::assert_logical(
-    smooth_inputs,
-    len = 1L, any.missing = FALSE, all.missing = FALSE
-  )
-  checkmate::assert_logical(
-    correct_for_delays,
-    len = 1L, any.missing = FALSE, all.missing = FALSE
-  )
+  checkmate::assert_number(burn_in_value, lower = 1)
   checkmate::assert_date(max_date, null.ok = TRUE)
-  if (correct_for_delays) {
-    checkmate::assert_class(epidist, "epidist")
-  }
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)
@@ -98,17 +81,14 @@ estimate_ascertainment <- function(data,
   df_severity <- switch(type,
     static = cfr_static(
       data,
-      epidist = epidist,
-      correct_for_delays = correct_for_delays
+      epidist = epidist
     ),
     varying = {
       df_sev <- cfr_time_varying(
         data,
         epidist = epidist,
-        smooth_inputs = smooth_inputs,
         smoothing_window = smoothing_window,
-        burn_in_value = burn_in_value,
-        correct_for_delays = correct_for_delays
+        burn_in_value = burn_in_value
       )
 
       df_sev <- df_sev[!is.na(df_sev$severity_mean), ]

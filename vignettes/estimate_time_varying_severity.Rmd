@@ -175,18 +175,14 @@ We use the `cfr_time_varying()` function within the _cfr_ package to calculate t
 df_covid_cfr_uk_naive <- cfr_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
-  smooth_inputs = TRUE,
-  burn_in_value = 7,
-  correct_for_delays = FALSE
+  burn_in_value = 7
 )
 
 # calculating the corrected time-varying CFR
 df_covid_cfr_uk_corrected <- cfr_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
-  smooth_inputs = TRUE,
-  burn_in_value = 7,
-  correct_for_delays = TRUE
+  burn_in_value = 7
 )
 ```
 
@@ -290,7 +286,7 @@ df_covid_cfr <- mutate(
   data = map(
     .x = data, .f = cfr_time_varying,
     # arguments to the function
-    epidist = onset_to_death_covid, smooth_inputs = TRUE,
+    epidist = onset_to_death_covid,
     smoothing_window = 7, burn_in_value = 7
   )
 )

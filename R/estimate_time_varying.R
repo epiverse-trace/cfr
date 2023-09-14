@@ -1,18 +1,18 @@
 #' @title Estimate a severity measure that varies over time
 #'
-#' @description Calculates how the severity of a disease changes over time,
-#' corrected for a user-specified delay. If cases are supplied, and the delay
-#' distribution representing the delay between case detection and death, then
-#' a case fatality risk over time is estimated.
+#' @description Calculates how the severity of a disease changes over time
+#' while optionally correcting for reporting delays using an epidemiological
+#' delay distribution of the time between symptom onset and death
+#' (onset-to-death).
 #'
 #' @inheritParams cfr_static
 #' @param burn_in_value A single integer value for the number of time-points
 #' (typically days) to disregard at the start of the time-series, if a burn-in
 #' period is desired.
-#' The default value is set to the mean of the distribution passed to the
-#' `epidist` argument. This assumes that the temporal resolution is daily, and
-#' the `<epidist>` passed is parameterised
-#' (see [epiparameter::is_parameterised()]).
+#'
+#' When an `<epidist>` is provided and delay correction is requested, the
+#' default value is set to the mean of the `<epidist>`.
+#'
 #' Defaults to 7 if no `<epidist>` is provided, or if the `<epidist>` is not
 #' parameterised. This is a sensible default value that disregards the first
 #' week of cases and deaths, assuming daily data.
@@ -20,22 +20,20 @@
 #' To consider all case data including the start of the time-series, set this
 #' argument to 1.
 #'
-#' @param smooth_inputs A single logical value for whether the case and death
-#' time-series data should be smoothed, using a rolling median procedure
-#' before calculating the time-varying severity. This may be useful for noisy
-#' time-series or time-series with strong reporting (e.g., weekend) effects.
-#'
 #' @param smoothing_window An _odd_ number determining the smoothing window size
 #' to use when smoothing the case and death time-series, using a rolling median
 #' procedure (as the `k` argument to [stats::runmed()]) before calculating the
 #' time-varying severity.
-#' The default value is 1 for _no smoothing_. Values > 1 apply smoothing.
+#'
+#' The default behaviour is to apply no smoothing. The minimum value of this
+#' argument is 1.
 #'
 #' @return A `<data.frame>` containing the MLE estimate and 95% confidence
 #' interval of the corrected severity.
 #'
 #' @details
 #' # Details: Adjusting for delays between two time series
+#'
 #' This function estimates the number of cases which have a known outcome over
 #' time, following Nishiura et al. (2009).
 #' The function calculates a quantity \eqn{k_t} for each day within the input
@@ -52,6 +50,12 @@
 #' We use maximum likelihood estimation to determine the value of \eqn{\theta_t}
 #' for each \eqn{t}, where \eqn{\theta} represents the severity measure of
 #' interest.
+#'
+#' The epidemiological delay distribution passed to `epidist` is used to obtain
+#' a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+#' gives the probability a case has a known outcomes (usually, death) at time
+#' \eqn{t}, parameterised with disease-specific parameters before it is supplied
+#' here.
 #'
 #' @references
 #' Nishiura, H., Klinkenberg, D., Roberts, M., & Heesterbeek, J. A. P. (2009).
@@ -79,9 +83,7 @@
 #' # estimate time varying severity without correcting for delays
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
-#'   smooth_inputs = TRUE,
-#'   burn_in_value = 7L,
-#'   correct_for_delays = FALSE
+#'   burn_in_value = 7L
 #' )
 #' # View
 #' tail(cfr_time_varying)
@@ -90,24 +92,20 @@
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
 #'   epidist = onset_to_death_covid,
-#'   smooth_inputs = TRUE,
-#'   burn_in_value = 7L,
-#'   correct_for_delays = TRUE
+#'   burn_in_value = 7L
 #' )
 #' tail(cfr_time_varying)
 #'
 cfr_time_varying <- function(data,
-                             correct_for_delays = TRUE,
                              epidist,
                              burn_in_value = get_default_burn_in(epidist),
-                             smooth_inputs = FALSE,
-                             smoothing_window = 1) {
+                             smoothing_window = NULL) {
   # input checking
-  checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
-  checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
   checkmate::assert_integerish(burn_in_value, lower = 1, len = 1L)
-  checkmate::assert_data_frame(data)
-  checkmate::assert_integerish(smoothing_window, lower = 1, len = 1L)
+
+  # expect rows more than burn in value
+  checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in_value + 1)
+  checkmate::assert_number(smoothing_window, lower = 1, null.ok = TRUE)
 
   stopifnot(
     "Case data must contain columns `cases` and `deaths`" =
@@ -115,16 +113,17 @@ cfr_time_varying <- function(data,
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0)
   )
-  if (correct_for_delays) {
-    checkmate::assert_class(epidist, "epidist")
-  }
 
   # prepare a new dataframe with smoothed columns if requested
   # all temporary operations are performed on df_temp,
   # data is returned with only three new columns added, and no other changes
   df_temp <- data
   # smooth cases if requested
-  if (smooth_inputs) {
+  if (is.null(smoothing_window)) {
+    # set to 0 for internal use only --- see below
+    smoothing_window <- 0
+  } else {
+    # smooth data if requested
     df_temp$cases <- stats::runmed(data$cases,
       k = smoothing_window,
       endrule = "keep"
@@ -134,8 +133,6 @@ cfr_time_varying <- function(data,
       k = smoothing_window,
       endrule = "keep"
     )
-  } else {
-    smoothing_window <- 0
   }
 
   cases <- df_temp$cases
@@ -146,24 +143,29 @@ cfr_time_varying <- function(data,
 
   case_length <- length(case_times)
 
-  ##### prepare data.frame for severity estimation ####
+  ##### prepare matrix for severity estimation ####
   # create columns with NA values for later assignment
   # when not correcting for delays, set known outcomes to cases
   # this is to avoid if-else ladders
   df_temp$known_outcomes <- df_temp$cases
 
   # assign columns for severity estimate and intervals
-  data$severity_mean <- NA_real_
-  data$severity_low <- NA_real_
-  data$severity_high <- NA_real_
+  severity_estimates <- matrix(
+    data = NA_real_, nrow = nrow(data), ncol = 3,
+    dimnames = list(NULL, sprintf("severity_%s", c("mean", "low", "high")))
+  )
 
   # calculation of indices to modify seems questionable
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
-  if (correct_for_delays) {
+  if (!missing(epidist)) {
+    # check epidist object
+    checkmate::assert_class(epidist, "epidist")
+
     pmf_vals <- stats::density(
       epidist,
       at = seq(from = 0, to = nrow(data) - 1L)
     )
+
     df_temp[indices, "known_outcomes"] <- vapply(
       X = indices,
       FUN = function(x) {
@@ -188,14 +190,19 @@ cfr_time_varying <- function(data,
         df_temp$known_outcomes[i]
       )
 
-      data$severity_mean[i] <- severity_current_estimate$estimate[[1]]
-      data$severity_low[i] <- severity_current_estimate$conf.int[[1]]
-      data$severity_high[i] <- severity_current_estimate$conf.int[[2]]
+      severity_estimates[i, ] <- c(
+        severity_current_estimate$estimate[[1]],
+        severity_current_estimate$conf.int[[1]],
+        severity_current_estimate$conf.int[[2]]
+      )
     }
   }
 
   # remove known outcomes column as this is not expected as a side effect
   data$known_outcomes <- NULL
+
+  # bind estimates to data
+  data <- cbind(data, severity_estimates)
 
   # return data
   data

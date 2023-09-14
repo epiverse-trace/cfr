@@ -6,8 +6,9 @@
 #' time point, and increasing the number of time points included by one in each
 #' iteration.
 #'
-#' @details When `correct_for_delays` is `TRUE`, the internal function
-#' [estimate_severity()] is used to calculate the rolling severity.
+#' @details When delay correction is applied by passing an `<epidist>`, the
+#' internal function [estimate_severity()] is used to calculate the rolling
+#' severity.
 #'
 #' @inheritParams cfr_static
 #'
@@ -29,16 +30,12 @@
 #' )
 #'
 #' # estimate severity without correcting for delays
-#' cfr_static(
-#'   ebola1976,
-#'   correct_for_delays = FALSE
-#' )
+#' cfr_static(ebola1976)
 #'
 #' # estimate severity for each day while correcting for delays
 #' # view only the first values
 #' estimate <- cfr_rolling(
 #'   ebola1976,
-#'   correct_for_delays = TRUE,
 #'   epidist = onset_to_death_ebola
 #' )
 #'
@@ -46,7 +43,6 @@
 #'
 cfr_rolling <- function(data,
                         epidist,
-                        correct_for_delays = TRUE,
                         poisson_threshold = 100) {
 
   # input checking
@@ -66,14 +62,16 @@ cfr_rolling <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
-  checkmate::assert_logical(correct_for_delays, len = 1L)
   checkmate::assert_count(poisson_threshold)
 
   # prepare cumulative sums
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
-  if (correct_for_delays) {
+  if (!missing(epidist)) {
+    # check epidists
+    checkmate::assert_class(epidist, "epidist")
+
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
     # of deaths
@@ -89,6 +87,9 @@ cfr_rolling <- function(data,
       cumulative_cases, cumulative_deaths, cumulative_outcomes,
       f = estimate_severity, poisson_threshold = poisson_threshold
     )
+
+    # bind list elements together
+    cfr_estimate <- do.call(rbind, cfr_estimate)
   } else {
     # calculating the uncorrected CFR rolling over all days
     cfr_me <- cumulative_deaths / cumulative_cases
@@ -103,11 +104,9 @@ cfr_rolling <- function(data,
         c(me, bintest[["conf.int"]])
       }
     )
-  }
-  # bind list elements together
-  cfr_estimate <- do.call(rbind, cfr_estimate)
 
-  if (!correct_for_delays) {
+    # bind list elements together
+    cfr_estimate <- do.call(rbind, cfr_estimate)
     # process into a data.frame and return
     # bind single row data.frames and return, convert to data.frame when
     # matrix is returned from correct_for_delays FALSE

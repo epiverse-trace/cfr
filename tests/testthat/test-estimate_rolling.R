@@ -14,13 +14,12 @@ data("ebola1976")
 
 # Calculate rolling static naive CFR
 rolling_scfr_naive <- cfr_rolling(
-  data = ebola1976, correct_for_delays = FALSE
+  data = ebola1976
 )
 
 # Calculate static corrected CFRs
 rolling_scfr_corrected <- cfr_rolling(
   data = ebola1976,
-  correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 
@@ -78,8 +77,7 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
   expect_equal(
     tail(rolling_scfr_naive, 1),
     cfr_static(
-      ebola1976,
-      correct_for_delays = FALSE
+      ebola1976
     ),
     ignore_attr = TRUE
   )
@@ -88,7 +86,6 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
     tail(rolling_scfr_corrected, 1),
     cfr_static(
       ebola1976,
-      correct_for_delays = TRUE,
       epidist = onset_to_death_ebola
     ),
     ignore_attr = TRUE
@@ -96,19 +93,10 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
 })
 
 test_that("`cfr_static`: Errors and messages", {
-  # expect error when corrected CFR requested without delay PMF
-  expect_error(
-    cfr_rolling(
-      data = ebola1976,
-      correct_for_delays = TRUE
-    )
-  )
-
   # expect error when columns are missing
   expect_error(
     cfr_rolling(
-      data = ebola1976[, c("date", "cases")],
-      correct_for_delays = FALSE
+      data = ebola1976[, c("date", "cases")]
     )
   )
 
@@ -125,7 +113,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed$date <- NULL
 
   expect_error(
-    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_rolling(data = df_in_malformed)
   )
 
   # Input dataframe `date` column has wrong class; POSIXct instead of Date
@@ -133,7 +121,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed$date <- as.POSIXct(df_in_malformed$date)
 
   expect_error(
-    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_rolling(data = df_in_malformed)
   )
 
   # Input dataframe has non-sequential dates
@@ -141,7 +129,7 @@ test_that("`cfr_static`: Errors and messages", {
   df_in_malformed <- df_in_malformed[-seq(10, 30), ]
 
   expect_error(
-    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE),
+    cfr_rolling(data = df_in_malformed),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
   )
 })

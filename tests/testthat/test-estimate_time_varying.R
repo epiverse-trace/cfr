@@ -14,23 +14,18 @@ data("ebola1976")
 
 # Calculate naive time-varying CFR
 tvcfr_naive <- cfr_time_varying(
-  ebola1976,
-  smooth_inputs = FALSE,
-  burn_in_value = 1,
-  correct_for_delays = FALSE
+  ebola1976
 )
 
 # Calculate corrected time-varying
 tvcfr_corrected <- cfr_time_varying(
   ebola1976,
   epidist = onset_to_death_ebola,
-  smooth_inputs = FALSE,
-  burn_in_value = 1,
-  correct_for_delays = TRUE
+  burn_in_value = 1
 )
 
 # Basic expectations
-test_that("`cfr_time_varying`: Basic expectations", {
+test_that("`Time varying CFR, basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(tvcfr_naive, "data.frame")
   expect_s3_class(tvcfr_corrected, "data.frame")
@@ -74,21 +69,50 @@ test_that("`cfr_time_varying`: Basic expectations", {
 })
 
 # Expectations when smoothing is applied to the data
-# Calculate naive time-varying CFR
-tvcfr_naive_smoothed <- cfr_time_varying(
-  ebola1976,
-  smooth_inputs = TRUE,
-  smoothing_window = 3,
-  burn_in_value = 1,
-  correct_for_delays = FALSE
+data("covid_data")
+# subset data
+covid_uk <- covid_data[covid_data$country == "United Kingdom" &
+  covid_data$date < "2021-01-01" & covid_data$date > "2020-05-01", ]
+
+# read epidist for EVD onset to death from {epiparameter}
+onset_to_death_covid <- epiparameter::epidist_db(
+  disease = "Covid-19",
+  epi_dist = "onset_to_death",
+  author = "Linton_etal",
+  single_epidist = TRUE
 )
 
-# Calculate corrected time-varying
-tvcfr_corrected <- cfr_time_varying(
-  ebola1976,
-  epidist = onset_to_death_ebola,
-  smooth_inputs = FALSE,
+# Calculate naive time-varying CFR
+tvcfr_naive_smoothed_3 <- cfr_time_varying(
+  covid_uk,
   smoothing_window = 3,
-  burn_in_value = 1,
-  correct_for_delays = TRUE
+  burn_in_value = 1
 )
+
+tvcfr_naive_smoothed_7 <- cfr_time_varying(
+  covid_uk,
+  smoothing_window = 7,
+  burn_in_value = 1
+)
+
+test_that("Time-varying CFR with smoothing and burn in", {
+  # expect that different smoothing produces different estimates
+  expect_error(
+    expect_identical(
+      head(tvcfr_naive_smoothed_7),
+      head(tvcfr_naive_smoothed_3)
+    )
+  )
+
+  # expect that burn in gives NAs for burn_in - 1 rows
+  burn_in <- 7L
+  tvcfr_burnin_7 <- cfr_time_varying(
+    covid_uk,
+    burn_in_value = burn_in
+  )
+
+  expect_length(
+    which(is.na(tvcfr_burnin_7$severity_mean)),
+    burn_in - 1L
+  )
+})

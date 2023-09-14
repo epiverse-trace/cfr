@@ -1,10 +1,10 @@
-# `cfr_time_varying`: Basic expectations
+# `Time varying CFR, basic expectations
 
     Code
       head(tvcfr_naive, 15)
     Output
                date cases deaths severity_mean severity_low severity_high
-      1  1976-08-25     1      0           0.0   0.00000000     0.9750000
+      1  1976-08-25     1      0            NA           NA            NA
       2  1976-08-26     0      0            NA           NA            NA
       3  1976-08-27     0      0            NA           NA            NA
       4  1976-08-28     0      0            NA           NA            NA
