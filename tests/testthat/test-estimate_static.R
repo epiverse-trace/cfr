@@ -1,4 +1,4 @@
-#### Tests for the static CFR function estimate_static() ####
+#### Tests for the static CFR function cfr_static() ####
 # prepare data and common testing elements
 
 # read epidist for EVD onset to death from {epiparameter}
@@ -13,17 +13,17 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 data("ebola1976")
 
 # Calculate static naive CFR
-scfr_naive <- estimate_static(data = ebola1976, correct_for_delays = FALSE)
+scfr_naive <- cfr_static(data = ebola1976, correct_for_delays = FALSE)
 
 # Calculate static corrected CFRs
-scfr_corrected <- estimate_static(
+scfr_corrected <- cfr_static(
   data = ebola1976,
   correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 
 # Basic expectations
-test_that("`estimate_static`: Basic expectations", {
+test_that("`cfr_static`: Basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(scfr_naive, "data.frame")
   expect_s3_class(scfr_corrected, "data.frame")
@@ -58,10 +58,10 @@ test_that("`estimate_static`: Basic expectations", {
   )
 })
 
-test_that("`estimate_static`: Errors and messages", {
+test_that("`cfr_static`: Errors and messages", {
   # expect error when corrected CFR requested without delay PMF
   expect_error(
-    estimate_static(
+    cfr_static(
       data = ebola1976,
       correct_for_delays = TRUE
     )
@@ -69,7 +69,7 @@ test_that("`estimate_static`: Errors and messages", {
 
   # expect error when columns are missing
   expect_error(
-    estimate_static(
+    cfr_static(
       data = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
     )
@@ -77,7 +77,7 @@ test_that("`estimate_static`: Errors and messages", {
 
   # Input df_in is not a data.frame
   expect_error(
-    estimate_static(c("cases" = 10, "deaths" = 2, "date" = as.Date(Sys.time())))
+    cfr_static(c("cases" = 10, "deaths" = 2, "date" = as.Date(Sys.time())))
   )
 
   # Input dataframe has wrong column names
@@ -86,7 +86,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed$date <- NULL
 
   expect_error(
-    estimate_static(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_static(data = df_in_malformed, correct_for_delays = FALSE)
   )
 
   # Input dataframe `date` column has wrong class; POSIXct instead of Date
@@ -94,7 +94,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed$date <- as.POSIXct(df_in_malformed$date)
 
   expect_error(
-    estimate_static(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_static(data = df_in_malformed, correct_for_delays = FALSE)
   )
 
   # Input dataframe has non-sequential dates
@@ -102,7 +102,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed <- df_in_malformed[-seq(10, 30), ]
 
   expect_error(
-    estimate_static(data = df_in_malformed, correct_for_delays = FALSE),
+    cfr_static(data = df_in_malformed, correct_for_delays = FALSE),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
   )
 })

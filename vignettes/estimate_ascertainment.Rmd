@@ -80,8 +80,8 @@ The methods are based on @nishiura2009 to estimate severity, and are extended by
 
 The proportion of cases, infections or other quantity provided that have been ascertained is given by the ratio of the (assumed) true baseline severity estimate, to the delay-adjusted severity estimate.
 
-The delay-adjusted severity estimates can be calculated using either the `estimate_static()` or the `estimate_time_varying()` functions.
-See the vignettes on [estimating a static measure of disease severity](estimate_static_severity.html) and [estimating a time-varying measure of disease severity](estimate_time_varying_severity.html), respectively, for more details on each of these functions.
+The delay-adjusted severity estimates can be calculated using either the `cfr_static()` or the `cfr_time_varying()` functions.
+See the vignettes on [estimating a static measure of disease severity](cfr_static_severity.html) and [estimating a time-varying measure of disease severity](cfr_time_varying_severity.html), respectively, for more details on each of these functions.
 
 ### Preparing the raw data
 
@@ -180,7 +180,7 @@ onset_to_death_covid <- epidist_db(
 
 We use the `estimate_ascertainment()` function to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
 
-The function includes a `type` argument, which determines whether `estimate_static()` or `estimate_time_varying()` is used to estimate the delay-adjusted severity of the disease.
+The function includes a `type` argument, which determines whether `cfr_static()` or `cfr_time_varying()` is used to estimate the delay-adjusted severity of the disease.
 
 The ascertainment ratio is calculated as the disease severity calculated from the data, divided by the 'known' disease severity; this is expected to be known or assumed from our best knowledge of the pathology of the disease.
 
@@ -188,7 +188,7 @@ This known disease severity is passed to the `severity_baseline` argument in `es
 
 We assume that the 'true' CFR of Covid-19 is 0.014 (i.e. 1.4%). Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating under-ascertainment.
 
-The other arguments are the same as those found in `estimate_time_varying()`. 
+The other arguments are the same as those found in `cfr_time_varying()`. 
 
 ```{r }
 df_reporting_static <- estimate_ascertainment(

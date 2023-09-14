@@ -12,6 +12,10 @@ test_that("Default burn in for time-varying severity", {
   burn_in <- get_default_burn_in(onset_to_death_ebola)
 
   expect_type(burn_in, "integer")
+  expect_identical(
+    burn_in,
+    as.integer(round(mean(onset_to_death_ebola)))
+  )
 })
 
 test_that("Default burn in for unparameterised epidist", {

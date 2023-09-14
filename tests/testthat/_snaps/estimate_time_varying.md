@@ -1,4 +1,4 @@
-# `estimate_time_varying`: Basic expectations
+# `cfr_time_varying`: Basic expectations
 
     Code
       head(tvcfr_naive, 15)

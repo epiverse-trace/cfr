@@ -6,11 +6,11 @@
 #' calculated as the ratio of the baseline severity estimate, which is assumed
 #' to be the 'true' disease severity, and the delay-adjusted severity estimate.
 #'
-#' @inheritParams estimate_time_varying
-#' @inheritParams estimate_static
+#' @inheritParams cfr_time_varying
+#' @inheritParams cfr_static
 #'
 #' @param type A string, either `"static"` or `"varying"` which determines
-#' whether [estimate_static()] or [estimate_time_varying()] is used to calculate
+#' whether [cfr_static()] or [cfr_time_varying()] is used to calculate
 #' the resulting ascertainment ratio. Defaults to `"static"` if this argument is
 #' missing.
 #' @param severity_baseline A single number in the range 0.0 -- 1.0 for the
@@ -96,13 +96,13 @@ estimate_ascertainment <- function(data,
 
   # switch the output based on user specified type
   df_severity <- switch(type,
-    static = estimate_static(
+    static = cfr_static(
       data,
       epidist = epidist,
       correct_for_delays = correct_for_delays
     ),
     varying = {
-      df_sev <- estimate_time_varying(
+      df_sev <- cfr_time_varying(
         data,
         epidist = epidist,
         smooth_inputs = smooth_inputs,

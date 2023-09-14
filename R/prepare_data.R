@@ -34,7 +34,7 @@
 #' of dates.
 #'
 #' Keeping `NA`s will cause downstream issues when calling functions such as
-#' [estimate_static()] on the data, as they cannot handle `NA`s.
+#' [cfr_static()] on the data, as they cannot handle `NA`s.
 #' Setting `fill_NA = TRUE` resolves this issue, but must be a conscious choice.
 #'
 #' @return A `<data.frame>` suitable for disease severity estimation functions
@@ -45,7 +45,7 @@
 #'
 #' The result has a continuous sequence of dates between the start and end date
 #' of `data`; this is required if the data is to be passed to functions such as
-#' [estimate_static()].
+#' [cfr_static()].
 #' @export
 #' @examples
 #' #### For <incidence2> data ####

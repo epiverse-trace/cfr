@@ -205,20 +205,20 @@ ggplot(df_known_outcomes_ebola) +
 ### Estimating the naive and corrected CFR
 
 Once we calculate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
-We do so by using the function `estimate_static()` from the _cfr_ package.
+We do so by using the function `cfr_static()` from the _cfr_ package.
 This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
-This is controlled using the `correct_for_delays` boolean flag argument in the `estimate_static()` function.
+This is controlled using the `correct_for_delays` boolean flag argument in the `cfr_static()` function.
 Otherwise, it calculates a naive severity estimate, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
-estimate_static(
+cfr_static(
   data = df_ebola_subset,
   correct_for_delays = FALSE
 )
 
 # calculating the corrected CFR
-estimate_static(
+cfr_static(
   df_ebola_subset,
   correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
@@ -380,13 +380,13 @@ the U.K.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
-estimate_static(
+cfr_static(
   df_covid_uk_subset,
   correct_for_delays = FALSE
 )
 
 # calculating the corrected CFR
-estimate_static(
+cfr_static(
   df_covid_uk_subset,
   correct_for_delays = TRUE,
   epidist = onset_to_death_covid
@@ -397,7 +397,7 @@ estimate_static(
 
 ## Details: Adjusting for delays between two time series
 
-The method used in `estimate_static()` function follows @nishiura2009.
+The method used in `cfr_static()` function follows @nishiura2009.
 The function calculates a quantity $u_t$ for each day within the input data, which represents the proportion of cases with a known outcome, on day $t$.
 This may be a known death outcome, as shown earlier in this vignette.
 Following Nishiura et al., $u_t$ is calculated in the following way:

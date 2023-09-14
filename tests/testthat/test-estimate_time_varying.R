@@ -1,4 +1,4 @@
-#### Tests for the static CFR function estimate_static() ####
+#### Tests for the static CFR function cfr_static() ####
 # prepare data and common testing elements
 
 # read epidist for EVD onset to death from {epiparameter}
@@ -13,7 +13,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 data("ebola1976")
 
 # Calculate naive time-varying CFR
-tvcfr_naive <- estimate_time_varying(
+tvcfr_naive <- cfr_time_varying(
   ebola1976,
   smooth_inputs = FALSE,
   burn_in_value = 1,
@@ -21,7 +21,7 @@ tvcfr_naive <- estimate_time_varying(
 )
 
 # Calculate corrected time-varying
-tvcfr_corrected <- estimate_time_varying(
+tvcfr_corrected <- cfr_time_varying(
   ebola1976,
   epidist = onset_to_death_ebola,
   smooth_inputs = FALSE,
@@ -30,7 +30,7 @@ tvcfr_corrected <- estimate_time_varying(
 )
 
 # Basic expectations
-test_that("`estimate_time_varying`: Basic expectations", {
+test_that("`cfr_time_varying`: Basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(tvcfr_naive, "data.frame")
   expect_s3_class(tvcfr_corrected, "data.frame")
@@ -75,7 +75,7 @@ test_that("`estimate_time_varying`: Basic expectations", {
 
 # Expectations when smoothing is applied to the data
 # Calculate naive time-varying CFR
-tvcfr_naive_smoothed <- estimate_time_varying(
+tvcfr_naive_smoothed <- cfr_time_varying(
   ebola1976,
   smooth_inputs = TRUE,
   smoothing_window = 3,
@@ -84,7 +84,7 @@ tvcfr_naive_smoothed <- estimate_time_varying(
 )
 
 # Calculate corrected time-varying
-tvcfr_corrected <- estimate_time_varying(
+tvcfr_corrected <- cfr_time_varying(
   ebola1976,
   epidist = onset_to_death_ebola,
   smooth_inputs = FALSE,

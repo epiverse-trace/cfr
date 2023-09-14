@@ -1,4 +1,4 @@
-# `estimate_static`: Basic expectations
+# `cfr_static`: Basic expectations
 
     Code
       head(rolling_scfr_naive, rows)

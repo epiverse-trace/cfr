@@ -27,8 +27,8 @@ knitr::opts_chunk$set(
 
 There are many biological, epidemiological and behavioural reasons why the severity of a disease might change during the course of an outbreak, including the introduction of vaccines or therapeutics, reducing the relative risk of death, or the emergence of pathogen variants, which may alter the risk of hospitalisation or death associated with infection.
 
-Running the `estimate_static()` function on datasets corresponding to different stages of the outbreak would lead to two static estimates, which may or may not differ.
-This could be useful, but a more detailed and easier to interpret approach is to use the function demonstrated in this vignette, `estimate_time_varying()`.
+Running the `cfr_static()` function on datasets corresponding to different stages of the outbreak would lead to two static estimates, which may or may not differ.
+This could be useful, but a more detailed and easier to interpret approach is to use the function demonstrated in this vignette, `cfr_time_varying()`.
 
 This vignette outlines how to use _cfr_ to estimate how the severity of a disease changes over the course of an ongoing outbreak.
 
@@ -70,7 +70,7 @@ library(scales)
 library(ggplot2)
 ```
 
-The `estimate_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and a delay distribution.
+The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and a delay distribution.
 The delay distribution we use here comes from the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
 ## Changing severity of the COVID-19 pandemic in the U.K.
@@ -168,11 +168,11 @@ onset_to_death_covid <- epidist_db(
 
 ### Estimating the naive and corrected CFR
 
-We use the `estimate_time_varying()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
+We use the `cfr_time_varying()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
 
 ```{r}
 # calculating the naive time-varying CFR
-df_covid_cfr_uk_naive <- estimate_time_varying(
+df_covid_cfr_uk_naive <- cfr_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
   smooth_inputs = TRUE,
@@ -181,7 +181,7 @@ df_covid_cfr_uk_naive <- estimate_time_varying(
 )
 
 # calculating the corrected time-varying CFR
-df_covid_cfr_uk_corrected <- estimate_time_varying(
+df_covid_cfr_uk_corrected <- cfr_time_varying(
   df_covid_uk_subset,
   epidist = onset_to_death_covid,
   smooth_inputs = TRUE,
@@ -257,13 +257,13 @@ ggplot(df_covid_cfr_uk_corrected) +
 ## Severity of COVID-19 in multiple countries
 
 We now show how to calculate the time-varying CFR for Covid-19 in multiple countries with large outbreaks.
-To do this, we adopt a data science approach to apply the `estimate_time_varying()` function across data grouped by country.
+To do this, we adopt a data science approach to apply the `cfr_time_varying()` function across data grouped by country.
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
 
 We use the larger Covid-19 cases and deaths data provided with the package as `covid_data`.
 We exclude four countries which only provide weekly data (with zeros for dates in between) --- France, Germany, Spain and Ukraine.
 
-Next, we group the data by country and apply the `estimate_time_varying()` function across each group (country).
+Next, we group the data by country and apply the `cfr_time_varying()` function across each group (country).
 This code takes a few moments to run.
 
 ```{r}
@@ -282,13 +282,13 @@ df_covid_cfr <- nest(
 ```
 
 ```{r}
-# to each nested data frame, apply the function `estimate_time_varying`
+# to each nested data frame, apply the function `cfr_time_varying`
 # overwrite the `data` column, as all data will be preserved
 df_covid_cfr <- mutate(
   df_covid_cfr,
   # using map() from {purrr}
   data = map(
-    .x = data, .f = estimate_time_varying,
+    .x = data, .f = cfr_time_varying,
     # arguments to the function
     epidist = onset_to_death_covid, smooth_inputs = TRUE,
     smoothing_window = 7, burn_in_value = 7
@@ -342,7 +342,7 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
 
 ## Details: Adjusting for delays between two time series 
 
-The function `estimate_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
+The function `cfr_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
 The function calculates a quantity $k_t$ for each day within the input data, which represents the number of cases with a known outcome, on day $t$.
 This may be a known death outcome, as shown earlier in this vignette.
 Following @nishiura2009, $k_t$ is calculated in the following way:

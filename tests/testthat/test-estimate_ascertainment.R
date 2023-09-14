@@ -1,5 +1,5 @@
 # Tests for estimate_ascertainment()
-# Note that this is an internal function underlying estimate_static()
+# Note that this is an internal function underlying cfr_static()
 # when corrected_for_delays is TRUE
 
 # load Ebola 1976 outbreak data
