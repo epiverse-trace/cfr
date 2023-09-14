@@ -37,7 +37,7 @@
 #' @details
 #' # Details: Adjusting for delays between two time series
 #'
-#' The method used in `estimate_static()` function follows Nishiura et al.
+#' The method used in `cfr_static()` function follows Nishiura et al.
 #' (2009).
 #' The function calculates a quantity \eqn{u_t} for each day within the input
 #' data, which represents the proportion of cases with a known outcome on day
@@ -92,22 +92,22 @@
 #' )
 #'
 #' # estimate severity without correcting for delays
-#' estimate_static(
+#' cfr_static(
 #'   ebola1976,
 #'   correct_for_delays = FALSE
 #' )
 #'
 #' # estimate severity while correcting for delays
-#' estimate_static(
+#' cfr_static(
 #'   ebola1976,
 #'   correct_for_delays = TRUE,
 #'   epidist = onset_to_death_ebola
 #' )
 #'
-estimate_static <- function(data,
+cfr_static <- function(data,
                             correct_for_delays = TRUE,
-                            epidist,
-                            poisson_threshold = 100) {
+                       epidist,
+                       poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(data)
   # check that input `<data.frame>` has columns date, cases, and deaths
@@ -136,6 +136,7 @@ estimate_static <- function(data,
 
   # with the standard binomial
   if (correct_for_delays) {
+
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,
     # used as a replacement for total deaths in the original severity formula

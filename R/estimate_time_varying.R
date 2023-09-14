@@ -5,7 +5,7 @@
 #' distribution representing the delay between case detection and death, then
 #' a case fatality risk over time is estimated.
 #'
-#' @inheritParams estimate_static
+#' @inheritParams cfr_static
 #' @param burn_in_value A single integer value for the number of time-points
 #' (typically days) to disregard at the start of the time-series, if a burn-in
 #' period is desired.
@@ -77,7 +77,7 @@
 #' )
 #'
 #' # estimate time varying severity without correcting for delays
-#' cfr_time_varying <- estimate_time_varying(
+#' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
 #'   smooth_inputs = TRUE,
 #'   burn_in_value = 7L,
@@ -87,7 +87,7 @@
 #' tail(cfr_time_varying)
 #'
 #' # estimate time varying severity while correcting for delays
-#' cfr_time_varying <- estimate_time_varying(
+#' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
 #'   epidist = onset_to_death_covid,
 #'   smooth_inputs = TRUE,
@@ -96,12 +96,12 @@
 #' )
 #' tail(cfr_time_varying)
 #'
-estimate_time_varying <- function(data,
-                                  correct_for_delays = TRUE,
-                                  epidist,
-                                  burn_in_value = get_default_burn_in(epidist),
-                                  smooth_inputs = FALSE,
-                                  smoothing_window = 1) {
+cfr_time_varying <- function(data,
+                             correct_for_delays = TRUE,
+                             epidist,
+                             burn_in_value = get_default_burn_in(epidist),
+                             smooth_inputs = FALSE,
+                             smoothing_window = 1) {
   # input checking
   checkmate::assert_logical(smooth_inputs, len = 1L, any.missing = FALSE)
   checkmate::assert_logical(correct_for_delays, len = 1L, any.missing = FALSE)
@@ -203,7 +203,7 @@ estimate_time_varying <- function(data,
 
 #' Get a default burn-in value from a delay distribution
 #'
-#' @inheritParams estimate_time_varying
+#' @inheritParams cfr_time_varying
 #'
 #' @return A single integer, the burn-in value.
 #' @keywords internal

@@ -64,7 +64,7 @@ The _cfr_ package requires only a data frame with three columns, "date", "cases"
 ::: {.alert .alert-warning}
 Datasets with columns that contain this information under different names can be handled by common data science tools, such as [packages in the Tidyverse](https://www.tidyverse.org/), to prepare data for _cfr_.
 
-See examples of this in the [vignette on obtaining a static severity estimate](estimate_static_severity.html).
+See examples of this in the [vignette on obtaining a static severity estimate](cfr_static_severity.html).
 :::
 
 Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with the package [@camacho2014].
@@ -102,17 +102,17 @@ This `<epidist>` object can be passed to the functions in _cfr_ to help correct 
 
 ## Estimate disease severity
 
-We use the function `estimate_static()` to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
+We use the function `cfr_static()` to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
 
 ```{r}
-estimate_static(
+cfr_static(
   data = ebola1976,
   correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 ```
 
-The `estimate_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time. For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `estimate_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
+The `cfr_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time. For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `cfr_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
 
 ## Estimate ascertainment ratio
 

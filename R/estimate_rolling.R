@@ -9,7 +9,7 @@
 #' @details When `correct_for_delays` is `TRUE`, the internal function
 #' [estimate_severity()] is used to calculate the rolling severity.
 #'
-#' @inheritParams estimate_static
+#' @inheritParams cfr_static
 #'
 #' @return A `<data.frame>` with the MLE and 95% confidence interval of the
 #' daily severity estimates, named "severity_mean", "severity_low", and
@@ -29,14 +29,14 @@
 #' )
 #'
 #' # estimate severity without correcting for delays
-#' estimate_static(
+#' cfr_static(
 #'   ebola1976,
 #'   correct_for_delays = FALSE
 #' )
 #'
 #' # estimate severity for each day while correcting for delays
 #' # view only the first values
-#' estimate <- estimate_rolling(
+#' estimate <- cfr_rolling(
 #'   ebola1976,
 #'   correct_for_delays = TRUE,
 #'   epidist = onset_to_death_ebola
@@ -44,10 +44,10 @@
 #'
 #' head(estimate)
 #'
-estimate_rolling <- function(data,
-                             epidist,
-                             correct_for_delays = TRUE,
-                             poisson_threshold = 100) {
+cfr_rolling <- function(data,
+                        epidist,
+                        correct_for_delays = TRUE,
+                        poisson_threshold = 100) {
 
   # input checking
   checkmate::assert_data_frame(data)

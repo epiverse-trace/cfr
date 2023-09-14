@@ -1,4 +1,4 @@
-#### Tests for the rolling static CFR function estimate_rolling() ####
+#### Tests for the rolling static CFR function cfr_rolling() ####
 # prepare data and common testing elements
 
 # read epidist for EVD onset to death from {epiparameter}
@@ -13,19 +13,19 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 data("ebola1976")
 
 # Calculate rolling static naive CFR
-rolling_scfr_naive <- estimate_rolling(
+rolling_scfr_naive <- cfr_rolling(
   data = ebola1976, correct_for_delays = FALSE
 )
 
 # Calculate static corrected CFRs
-rolling_scfr_corrected <- estimate_rolling(
+rolling_scfr_corrected <- cfr_rolling(
   data = ebola1976,
   correct_for_delays = TRUE,
   epidist = onset_to_death_ebola
 )
 
 # Basic expectations
-test_that("`estimate_static`: Basic expectations", {
+test_that("`cfr_static`: Basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(rolling_scfr_naive, "data.frame")
   expect_s3_class(rolling_scfr_corrected, "data.frame")
@@ -71,13 +71,13 @@ test_that("`estimate_static`: Basic expectations", {
   )
 })
 
-# Statistical correctness of estimate_rolling()
-# the final value should be the same as estimate_static()
+# Statistical correctness of cfr_rolling()
+# the final value should be the same as cfr_static()
 # for the corresponding value of corrected_for_delays
-test_that("`estimate_rolling`: Comparison with `estimate_static()`", {
+test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
   expect_equal(
     tail(rolling_scfr_naive, 1),
-    estimate_static(
+    cfr_static(
       ebola1976,
       correct_for_delays = FALSE
     ),
@@ -86,7 +86,7 @@ test_that("`estimate_rolling`: Comparison with `estimate_static()`", {
 
   expect_equal(
     tail(rolling_scfr_corrected, 1),
-    estimate_static(
+    cfr_static(
       ebola1976,
       correct_for_delays = TRUE,
       epidist = onset_to_death_ebola
@@ -95,10 +95,10 @@ test_that("`estimate_rolling`: Comparison with `estimate_static()`", {
   )
 })
 
-test_that("`estimate_static`: Errors and messages", {
+test_that("`cfr_static`: Errors and messages", {
   # expect error when corrected CFR requested without delay PMF
   expect_error(
-    estimate_rolling(
+    cfr_rolling(
       data = ebola1976,
       correct_for_delays = TRUE
     )
@@ -106,7 +106,7 @@ test_that("`estimate_static`: Errors and messages", {
 
   # expect error when columns are missing
   expect_error(
-    estimate_rolling(
+    cfr_rolling(
       data = ebola1976[, c("date", "cases")],
       correct_for_delays = FALSE
     )
@@ -114,7 +114,7 @@ test_that("`estimate_static`: Errors and messages", {
 
   # Input df_in is not a data.frame
   expect_error(
-    estimate_rolling(
+    cfr_rolling(
       c("cases" = 10, "deaths" = 2, "date" = as.Date(Sys.time()))
     )
   )
@@ -125,7 +125,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed$date <- NULL
 
   expect_error(
-    estimate_rolling(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE)
   )
 
   # Input dataframe `date` column has wrong class; POSIXct instead of Date
@@ -133,7 +133,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed$date <- as.POSIXct(df_in_malformed$date)
 
   expect_error(
-    estimate_rolling(data = df_in_malformed, correct_for_delays = FALSE)
+    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE)
   )
 
   # Input dataframe has non-sequential dates
@@ -141,7 +141,7 @@ test_that("`estimate_static`: Errors and messages", {
   df_in_malformed <- df_in_malformed[-seq(10, 30), ]
 
   expect_error(
-    estimate_rolling(data = df_in_malformed, correct_for_delays = FALSE),
+    cfr_rolling(data = df_in_malformed, correct_for_delays = FALSE),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
   )
 })

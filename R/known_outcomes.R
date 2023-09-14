@@ -7,7 +7,7 @@
 #' distribution must be an onset-to-death distribution, and the function returns
 #' estimates of the known death outcomes.
 #'
-#' @inheritParams estimate_static
+#' @inheritParams cfr_static
 #'
 #' @return A `<data.frame>` with the columns in `data`, and with two additional
 #' columns:

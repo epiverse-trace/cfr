@@ -6,7 +6,7 @@
 #' standard (naive) severity definition. We use a binomial likelihood,
 #' approximated by a Poisson likelihood for large samples.
 #'
-#' @inheritParams estimate_static
+#' @inheritParams cfr_static
 #' @param total_cases The total number of cases observed over the period of an
 #' outbreak of interest. The total number of cases must be greater than or equal
 #' to the total number of deaths.

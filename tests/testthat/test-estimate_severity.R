@@ -1,5 +1,5 @@
 # Tests for estimate_severity()
-# Note that this is an internal function underlying estimate_static()
+# Note that this is an internal function underlying cfr_static()
 # when corrected_for_delays is TRUE
 
 # load Ebola 1976 outbreak data
@@ -29,7 +29,7 @@ severity_estimate <- estimate_severity(
   poisson_threshold = poisson_threshold
 )
 
-test_that("`estimate_rolling`: Basic expectations", {
+test_that("`cfr_rolling`: Basic expectations", {
   expect_s3_class(severity_estimate, "data.frame")
   expect_named(
     severity_estimate,
@@ -90,7 +90,7 @@ test_that("`estimate_rolling`: Basic expectations", {
   )
 })
 
-test_that("`estimate_rolling`: Messages and errors", {
+test_that("`cfr_rolling`: Messages and errors", {
   ebola1976$cases <- 0L
   df_corrected <- known_outcomes(
     data = ebola1976,

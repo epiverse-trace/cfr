@@ -88,7 +88,7 @@ ebola <- prepare_data(
 ```
 
 In this example, we used the `fill_NA` argument and set it to `TRUE`; this replaces missing case and death counts in the data with `0`s.
-The default value of this argument is `FALSE`, however, keeping `NA`s in the data causes downstream issues with functions such as `estimate_static()`.
+The default value of this argument is `FALSE`, however, keeping `NA`s in the data causes downstream issues with functions such as `cfr_static()`.
 We recommend that users should carefully consider whether they can safely fill `NA`s with zeros for the purposes of their analysis.
 
 We then load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
@@ -102,11 +102,11 @@ onset_to_death_ebola <- epidist_db(
 )
 ```
 
-Finally, we estimate the static case fatality risk while correcting for delays using the `estimate_static()` function.
+Finally, we estimate the static case fatality risk while correcting for delays using the `cfr_static()` function.
 
 ```{r}
 # estimate static CFR as a sanity check
-estimate_static(
+cfr_static(
   ebola,
   correct_for_delays = TRUE, epidist = onset_to_death_ebola
 )
@@ -116,7 +116,7 @@ estimate_static(
 
 Aggregated case data such as the Covid-19 dataset provided by _incidence2_ can be used with _cfr_ directly.
 
-Such usage is shown in other vignettes such as the [vignette on estimating time-varying severity](estimate_time_varying_severity.html).
+Such usage is shown in other vignettes such as the [vignette on estimating time-varying severity](cfr_time_varying_severity.html).
 
 Here we show how to transform such data into `<incidence2>` objects, and then prepare them for _cfr_.
 

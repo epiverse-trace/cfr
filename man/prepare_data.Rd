@@ -41,7 +41,7 @@ are summed by date.
 
 The result has a continuous sequence of dates between the start and end date
 of \code{data}; this is required if the data is to be passed to functions such as
-\code{\link[=estimate_static]{estimate_static()}}.
+\code{\link[=cfr_static]{cfr_static()}}.
 }
 \description{
 This S3 generic has methods for classes commonly used for epidemiological
@@ -61,7 +61,7 @@ This is because downstream functions require data with a continuous sequence
 of dates.
 
 Keeping \code{NA}s will cause downstream issues when calling functions such as
-\code{\link[=estimate_static]{estimate_static()}} on the data, as they cannot handle \code{NA}s.
+\code{\link[=cfr_static]{cfr_static()}} on the data, as they cannot handle \code{NA}s.
 Setting \code{fill_NA = TRUE} resolves this issue, but must be a conscious choice.
 }
 \examples{

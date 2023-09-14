@@ -44,7 +44,7 @@ parameterised with disease-specific parameters before it is supplied here.
 A typical example would be a symptom onset to death delay distribution.}
 
 \item{type}{A string, either \code{"static"} or \code{"varying"} which determines
-whether \code{\link[=estimate_static]{estimate_static()}} or \code{\link[=estimate_time_varying]{estimate_time_varying()}} is used to calculate
+whether \code{\link[=cfr_static]{cfr_static()}} or \code{\link[=cfr_time_varying]{cfr_time_varying()}} is used to calculate
 the resulting ascertainment ratio. Defaults to \code{"static"} if this argument is
 missing.}
 
