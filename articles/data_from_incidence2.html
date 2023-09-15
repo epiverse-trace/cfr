@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,7 +97,7 @@
 
     
     
-<p>This vignette shows how to prepare <code>&lt;incidence2&gt;</code> objects from the <a href="https://www.reconverse.org/incidence2/" class="external-link"><em>incidence2</em> package</a> for use with <em>cfr</em>, using the <code><a href="../reference/prepare_data.html">prepare_data()</a></code> method for the <code>&lt;incidence2&gt;</code> class.</p>
+<p>This vignette shows how to prepare <code>&lt;incidence2&gt;</code> objects from the <a href="https://www.reconverse.org/incidence2/" class="external-link"><em>incidence2</em> package</a> for use with <em>cfr</em>, using the <code><a href="../reference/prepare_data.html">prepare_data()</a></code> method for the <code>&lt;incidence2&gt;</code> class. If detailed individual-level data are available that include deaths and recoveries, then alternative methods for severity estimation could be used (e.g. directly calculating CFR from the subset cases with a known death outcome). However, there may be situations where only deaths are recorded, in which case the methods described here would provide an option for CFR calculation.</p>
 <p>We first load the libraries we require, including <em>cfr</em>, <em>incidence2</em>, <a href="https://www.reconverse.org/outbreaks/" class="external-link"><em>outbreaks</em></a> for linelist data from a simulated ebola outbreak, and <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em></a> for delay distribution data.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
@@ -107,7 +107,7 @@
 <span><span class="co">#&gt; Loading required package: grates</span></span>
 <span></span>
 <span><span class="co"># load {outbreaks} for ebola data</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/reconhub/outbreaks" class="external-link">outbreaks</a></span><span class="op">)</span> <span class="co"># nolint</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/reconhub/outbreaks" class="external-link">outbreaks</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># load {epiparameter} for delay distributions</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span>
@@ -180,35 +180,38 @@
 <span>  fill_NA <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </details><p>In this example, we used the <code>fill_NA</code> argument and set it to <code>TRUE</code>; this replaces missing case and death counts in the data with <code>0</code>s.
-The default value of this argument is <code>FALSE</code>, however, keeping <code>NA</code>s in the data causes downstream issues with functions such as <code><a href="../reference/estimate_static.html">estimate_static()</a></code>.
+The default value of this argument is <code>FALSE</code>, however, keeping <code>NA</code>s in the data causes downstream issues with functions such as <code><a href="../reference/cfr_static.html">cfr_static()</a></code>.
 We recommend that users should carefully consider whether they can safely fill <code>NA</code>s with zeros for the purposes of their analysis.</p>
 <p>We then load a delay distribution from the <em>epiparameter</em> database as an <code>&lt;epidist&gt;</code> object.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
 <span>  disease <span class="op">=</span> <span class="st">"Ebola Virus Disease"</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
-<span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span></span>
+<span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span>,</span>
+<span>  single_epidist <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Using Barry et al. (2018) &lt;10.1016/S0140-6736(18)31387-4&gt; PMID: 30047375. </span></span>
-<span><span class="co">#&gt; To retrieve the short citation use the 'get_citation' function</span></span></code></pre></div>
-</details><p>Finally, we estimate the static case fatality rate while correcting for delays suing the <code><a href="../reference/estimate_static.html">estimate_static()</a></code> function.</p>
+<span><span class="co">#&gt; Using Barry, etal (2018). "Outbreak of Ebola virus disease in the Democratic</span></span>
+<span><span class="co">#&gt; Republic of the Congo, April–May, 2018: an epidemiological study." _The</span></span>
+<span><span class="co">#&gt; Lancet_. doi:10.1016/S0140-6736(18)31387-4</span></span>
+<span><span class="co">#&gt; &lt;https://doi.org/10.1016/S0140-6736%2818%2931387-4&gt;. </span></span>
+<span><span class="co">#&gt; To retrieve the citation use the 'get_citation' function</span></span></code></pre></div>
+</details><p>Finally, we estimate the static case fatality risk while correcting for delays using the <code><a href="../reference/cfr_static.html">cfr_static()</a></code> function.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate static CFR as a sanity check</span></span>
-<span><span class="fu"><a href="../reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="../reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">ebola</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>, epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1       0.369       0.354       0.384</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1         0.369        0.354         0.384</span></span></code></pre></div>
 </details><div class="section level3">
 <h3 id="incidence2-objects-from-aggregated-case-data">
 <code>&lt;incidence2&gt;</code> objects from aggregated case data<a class="anchor" aria-label="anchor" href="#incidence2-objects-from-aggregated-case-data"></a>
 </h3>
 <p>Aggregated case data such as the Covid-19 dataset provided by <em>incidence2</em> can be used with <em>cfr</em> directly.</p>
-<p>Such usage is shown in other vignettes such as the <a href="estimate_time_varying_severity.html">vignette on estimating time-varying severity</a>.</p>
+<p>Such usage is shown in other vignettes such as the <a href="cfr_time_varying_severity.html">vignette on estimating time-varying severity</a>.</p>
 <p>Here we show how to transform such data into <code>&lt;incidence2&gt;</code> objects, and then prepare them for <em>cfr</em>.</p>
-<p>The columns in this dataset are already in a format that can be converted into an <code>&lt;incidence2&gt;</code> object using <code><a href="https://rdrr.io/pkg/incidence2/man/incidence.html" class="external-link">incidence2::incidence()</a></code>, and then handled by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.
-The code chunks below show how this is to be done.</p>
+<p>The columns in this dataset are already in a format that can be converted into an <code>&lt;incidence2&gt;</code> object using <code><a href="https://rdrr.io/pkg/incidence2/man/incidence.html" class="external-link">incidence2::incidence()</a></code>, and then handled by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get data bundled with the {incidence2} package</span></span>
 <span><span class="va">covid_uk</span> <span class="op">&lt;-</span> <span class="va">covidregionaldataUK</span></span>
@@ -236,7 +239,7 @@ The code chunks below show how this is to be done.</p>
 <span><span class="co">#&gt; 4           NA</span></span>
 <span><span class="co">#&gt; 5           NA</span></span>
 <span><span class="co">#&gt; 6           NA</span></span></code></pre></div>
-</details><p>Note that the grouping structure of this dataset given by the “region” variable is present in the <code>&lt;incidence2&gt;</code> object, but is overridden to provide a single dataset with cases and deaths summed across regions by date by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.
+</details><p>Note that the grouping structure of this dataset given by the “region” variable is present in the <code>&lt;incidence2&gt;</code> object, but in this example it is overridden to provide a single dataset with cases and deaths summed across regions by date by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.
 This functionality is currently under development and might change in future.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># convert to incidence2 object</span></span>

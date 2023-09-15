@@ -39,7 +39,7 @@
     
     <a class="navbar-brand me-2" href="index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,19 +94,19 @@
 <!-- badges: start -->
 
 <p><em>cfr</em> is an R package to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.</p>
-<p><em>cfr</em> provides simple, fast methods to calculate the overall or static case fatality ratio (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak. <em>cfr</em> can help estimate disease under-reporting in real-time, accounting for delays reporting the outcomes of cases.</p>
-<p><em>cfr</em> implements methods outlined in Nishiura et al. (<a href="#ref-nishiura2009">2009</a>), and CFR estimates based on more methods are likely to be added.</p>
-<p><em>cfr</em> uses the <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> for delay-corrected CFR estimates, and both packages are developed at the <a href="https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases" class="external-link">Centre for the Mathematical Modelling of Infectious Diseases</a> at the London School of Hygiene and Tropical Medicine as part of the <a href="https://data.org/initiatives/epiverse/" class="external-link">Epiverse-TRACE initiative</a>.</p>
+<p><em>cfr</em> provides simple, fast methods to calculate the overall or static case fatality risk (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak. <em>cfr</em> can help estimate disease under-reporting in real-time, accounting for delays reporting the outcomes of cases.</p>
+<p><em>cfr</em> implements methods outlined in Nishiura et al. (<a href="#ref-nishiura2009">2009</a>). There are plans to add estimates based on other methods.</p>
+<p><em>cfr</em> uses the <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> to access a library of epidemiological delay distributions, in order to calculate delay-corrected CFR estimates, and both packages are developed at the <a href="https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases" class="external-link">Centre for the Mathematical Modelling of Infectious Diseases</a> at the London School of Hygiene and Tropical Medicine as part of the <a href="https://data.org/initiatives/epiverse/" class="external-link">Epiverse-TRACE initiative</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>The current development version of <em>cfr</em> can be installed from <a href="https://github.com/" class="external-link">GitHub</a> using the <code>pak</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://pak.r-lib.org/" class="external-link">"pak"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/cfr"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/cfr"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Also install R package {epiparameter} for epidemiological parameter values</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="http://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/epiparameter"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/epiparameter"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -114,7 +114,7 @@
 <div class="section level3">
 <h3 id="overall-severity-of-the-1976-ebola-outbreak">Overall severity of the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#overall-severity-of-the-1976-ebola-outbreak"></a>
 </h3>
-<p>This example of basic usage shows how to use <em>cfr</em> to estimate the overall case fatality ratios from the 1976 Ebola outbreak (<a href="#ref-camacho2014">Camacho et al. 2014</a>).</p>
+<p>This example shows how to use <em>cfr</em> to estimate the overall case fatality risks from the 1976 Ebola outbreak (<a href="#ref-camacho2014">Camacho et al. 2014</a>).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
@@ -127,32 +127,32 @@
 <span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu">epiparameter</span><span class="fu">::</span><span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
 <span>  disease <span class="op">=</span> <span class="st">"Ebola Virus Disease"</span>,</span>
 <span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
-<span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span></span>
+<span>  author <span class="op">=</span> <span class="st">"Barry_etal"</span>,</span>
+<span>  single_epidist <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate the static CFR without correcting for delays</span></span>
-<span><span class="fu"><a href="reference/estimate_static.html">estimate_static</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ebola1976</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1    0.955102   0.9210866   0.9773771</span></span>
+<span><span class="fu"><a href="reference/cfr_static.html">cfr_static</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ebola1976</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1      0.955102    0.9210866     0.9773771</span></span>
 <span></span>
 <span><span class="co"># Calculate the static CFR while correcting for delays</span></span>
-<span><span class="fu"><a href="reference/estimate_static.html">estimate_static</a></span><span class="op">(</span></span>
+<span><span class="fu"><a href="reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
-<span>  correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1       0.959       0.842           1</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak">Change in real-time estimates of overall severity during the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak"></a>
 </h3>
-<p>In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function <code><a href="reference/estimate_rolling.html">estimate_rolling()</a></code>. Because there is a delay from onset-to-death, a simple “naive” calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The <code><a href="reference/estimate_rolling.html">estimate_rolling()</a></code> function uses the <code><a href="reference/estimate_severity.html">estimate_severity()</a></code> adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.</p>
+<p>In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code>. Because there is a delay from onset-to-death, a simple “naive” calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code> function uses the <code>cfr_severity()</code> adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.</p>
 <p>This example shows how the adjusted estimate converges to “naive” estimate as the outbreak declines, and hence a larger and large proportion of cases have known outcomes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate the CFR without correcting for delays on each day of the outbreak</span></span>
-<span><span class="va">rolling_cfr_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_rolling.html">estimate_rolling</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
+<span><span class="va">rolling_cfr_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cfr_rolling.html">cfr_rolling</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ebola1976</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># add the date from the outbreak</span></span>
@@ -160,31 +160,34 @@
 <span></span>
 <span><span class="co"># see the first few rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_naive</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1 1976-08-25           0           0       0.975</span></span>
-<span><span class="co">#&gt; 2 1976-08-26           0           0       0.975</span></span>
-<span><span class="co">#&gt; 3 1976-08-27           0           0       0.975</span></span>
-<span><span class="co">#&gt; 4 1976-08-28           0           0       0.975</span></span>
-<span><span class="co">#&gt; 5 1976-08-29           0           0       0.975</span></span>
-<span><span class="co">#&gt; 6 1976-08-30           0           0       0.975</span></span>
+<span><span class="co">#&gt;         date severity_mean severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1 1976-08-25             0            0         0.975</span></span>
+<span><span class="co">#&gt; 2 1976-08-26             0            0         0.975</span></span>
+<span><span class="co">#&gt; 3 1976-08-27             0            0         0.975</span></span>
+<span><span class="co">#&gt; 4 1976-08-28             0            0         0.975</span></span>
+<span><span class="co">#&gt; 5 1976-08-29             0            0         0.975</span></span>
+<span><span class="co">#&gt; 6 1976-08-30             0            0         0.975</span></span>
 <span></span>
 <span><span class="co"># Calculate the rolling daily CFR while correcting for delays</span></span>
-<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimate_rolling.html">estimate_rolling</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">ebola1976</span>, correct_for_delays <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cfr_rolling.html">cfr_rolling</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># add the date from the outbreak</span></span>
-<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>date <span class="op">=</span> <span class="va">ebola1976</span><span class="op">[</span>, <span class="st">"date"</span><span class="op">]</span>, <span class="va">rolling_cfr_corrected</span><span class="op">)</span></span>
+<span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span></span>
+<span>  date <span class="op">=</span> <span class="va">ebola1976</span><span class="op">[</span>, <span class="st">"date"</span><span class="op">]</span>,</span>
+<span>  <span class="va">rolling_cfr_corrected</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_corrected</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date severity_me severity_lo severity_hi</span></span>
-<span><span class="co">#&gt; 1 1976-08-25       0.001          NA          NA</span></span>
-<span><span class="co">#&gt; 2 1976-08-26       0.001       0.001       0.999</span></span>
-<span><span class="co">#&gt; 3 1976-08-27       0.001       0.001       0.999</span></span>
-<span><span class="co">#&gt; 4 1976-08-28       0.001       0.001       0.999</span></span>
-<span><span class="co">#&gt; 5 1976-08-29       0.001       0.001       0.999</span></span>
-<span><span class="co">#&gt; 6 1976-08-30       0.001       0.001       0.994</span></span></code></pre></div>
+<span><span class="co">#&gt;         date severity_mean severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1 1976-08-25         0.001           NA            NA</span></span>
+<span><span class="co">#&gt; 2 1976-08-26         0.001        0.001         0.999</span></span>
+<span><span class="co">#&gt; 3 1976-08-27         0.001        0.001         0.999</span></span>
+<span><span class="co">#&gt; 4 1976-08-28         0.001        0.001         0.999</span></span>
+<span><span class="co">#&gt; 5 1976-08-29         0.001        0.001         0.999</span></span>
+<span><span class="co">#&gt; 6 1976-08-30         0.001        0.001         0.994</span></span></code></pre></div>
 <p>We plot the rolling CFR to visualise how severity changes over time, using the <a href="https://ggplot2.tidyverse.org/" class="external-link"><em>ggplot2</em> package</a>. The plotting code is hidden here.</p>
 <div class="figure">
 <img src="reference/figures/README-unnamed-chunk-2-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%"><p class="caption">

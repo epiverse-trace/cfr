@@ -16,7 +16,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,12 +75,11 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>epidist</dt>
-<dd><p>The delay distribution used, in the form of an
-<code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist.html" class="external-link">epiparameter::epidist()</a></code> object. This is used to obtain a probability
-mass function parameterised by time; i.e. \(f(t)\) which gives the
-probability a case has a known outcomes (i.e. death) at time \(t\),
-parameterised with disease-specific parameters before it is supplied here.
-A typical example would be a symptom onset to death delay distribution.</p></dd>
+<dd><p>An optional argument for the delay distribution used, in the
+form of an <code>&lt;epidist&gt;</code> object.
+Defaults to <code>NULL</code>, in which case no delay correction is applied.
+Passing an <code>&lt;epidist&gt;</code> automatically applies delay correction in the
+severity estimation.</p></dd>
 
 </dl></div>
     <div class="section level2">
