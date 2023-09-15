@@ -22,8 +22,8 @@
 #' number of reported deaths.
 #'
 #' @param epidist An optional argument for the delay distribution used, in the
-#' form of an `<epidist>` object; see [epiparameter::epidist()].
-#'
+#' form of an `<epidist>` object.
+#' Defaults to `NULL`, in which case no delay correction is applied.
 #' Passing an `<epidist>` automatically applies delay correction in the
 #' severity estimation.
 #'
@@ -39,21 +39,15 @@
 #' data, which represents the proportion of cases with a known outcome on day
 #' \eqn{t}.
 #' Following Nishiura et al., \eqn{u_t} is calculated as:
-#' \deqn{
-#'
-#' u_t = \frac{\sum_{i = 0}^t
-#'         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}
-#'
-#' }
+#' \deqn{u_t = \dfrac{\sum_{i = 0}^t
+#'         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}}
 #' where \eqn{f_t} is the value of the probability mass function at time \eqn{t}
 #' and \eqn{c_t}, \eqn{d_t} are the number of new cases and new deaths at time
 #' \eqn{t}, (respectively).
 #' We then use \eqn{u_t} at the end of the outbreak in the following likelihood
 #' function to estimate the severity of the disease in question.
-#' \deqn{
-#'   L( \theta | y) = \log{\binom{u_tC}{D}} + D \log{ \theta } +
-#'   (u_tC - D)\log{(1.0 - \theta)}
-#' }
+#' \deqn{{\sf L}({\theta \mid y}) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
+#'   (u_tC - D)\log{(1.0 - \theta)}}
 #' \eqn{C} and \eqn{D} are the cumulative number of cases and deaths
 #' (respectively) up until time \eqn{t}.
 #' \eqn{\theta} is the parameter we wish to estimate, the severity of the

@@ -39,14 +39,13 @@
 #' The function calculates a quantity \eqn{k_t} for each day within the input
 #' data, which represents the number of cases with a known outcome, on day
 #' \eqn{t}. \eqn{k_t} is calculated in the following way:
-#' \deqn{
-#'  k_t = \sum_{j = 0}^t c_t f_{j - t}.
-#' }
+#' \deqn{k_t = \sum_{j = 0}^t c_t f_{j - t}}
+#'
 #' We then assume that the severity measure, for example CFR, of interest is
 #' binomially distributed, in the following way:
-#' \deqn{
-#'  d_t \sim \text{Binomial}(k_t, \theta_t)
-#' }
+#'
+#' \deqn{d_t \sim {\sf Binomial}(k_t, \theta_t)}
+#'
 #' We use maximum likelihood estimation to determine the value of \eqn{\theta_t}
 #' for each \eqn{t}, where \eqn{\theta} represents the severity measure of
 #' interest.

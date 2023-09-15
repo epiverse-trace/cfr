@@ -4,7 +4,7 @@
 \alias{cfr_static}
 \title{Estimate a static disease severity measure}
 \usage{
-cfr_static(data, epidist, poisson_threshold = 100)
+cfr_static(data, epidist = NULL, poisson_threshold = 100)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -22,8 +22,8 @@ Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
 \item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
-
+form of an \verb{<epidist>} object.
+Defaults to \code{NULL}, in which case no delay correction is applied.
 Passing an \verb{<epidist>} automatically applies delay correction in the
 severity estimation.}
 
@@ -50,21 +50,15 @@ The function calculates a quantity \eqn{u_t} for each day within the input
 data, which represents the proportion of cases with a known outcome on day
 \eqn{t}.
 Following Nishiura et al., \eqn{u_t} is calculated as:
-\deqn{
-
-u_t = \frac{\sum_{i = 0}^t
-        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}
-
-}
+\deqn{u_t = \dfrac{\sum_{i = 0}^t
+        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}}
 where \eqn{f_t} is the value of the probability mass function at time \eqn{t}
 and \eqn{c_t}, \eqn{d_t} are the number of new cases and new deaths at time
 \eqn{t}, (respectively).
 We then use \eqn{u_t} at the end of the outbreak in the following likelihood
 function to estimate the severity of the disease in question.
-\deqn{
-  L( \theta | y) = \log{\binom{u_tC}{D}} + D \log{ \theta } +
-  (u_tC - D)\log{(1.0 - \theta)}
-}
+\deqn{{\sf L}({\theta \mid y}) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
+  (u_tC - D)\log{(1.0 - \theta)}}
 \eqn{C} and \eqn{D} are the cumulative number of cases and deaths
 (respectively) up until time \eqn{t}.
 \eqn{\theta} is the parameter we wish to estimate, the severity of the

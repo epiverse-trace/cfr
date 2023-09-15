@@ -6,7 +6,7 @@
 \usage{
 cfr_time_varying(
   data,
-  epidist,
+  epidist = NULL,
   burn_in_value = get_default_burn_in(epidist),
   smoothing_window = NULL
 )
@@ -27,8 +27,8 @@ Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
 \item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
-
+form of an \verb{<epidist>} object.
+Defaults to \code{NULL}, in which case no delay correction is applied.
 Passing an \verb{<epidist>} automatically applies delay correction in the
 severity estimation.}
 
@@ -70,14 +70,13 @@ time, following Nishiura et al. (2009).
 The function calculates a quantity \eqn{k_t} for each day within the input
 data, which represents the number of cases with a known outcome, on day
 \eqn{t}. \eqn{k_t} is calculated in the following way:
-\deqn{
- k_t = \sum_{j = 0}^t c_t f_{j - t}.
-}
+\deqn{k_t = \sum_{j = 0}^t c_t f_{j - t}}
+
 We then assume that the severity measure, for example CFR, of interest is
 binomially distributed, in the following way:
-\deqn{
- d_t \sim \text{Binomial}(k_t, \theta_t)
-}
+
+\deqn{d_t \sim {\sf Binomial}(k_t, \theta_t)}
+
 We use maximum likelihood estimation to determine the value of \eqn{\theta_t}
 for each \eqn{t}, where \eqn{\theta} represents the severity measure of
 interest.
