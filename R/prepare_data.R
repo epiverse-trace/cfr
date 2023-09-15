@@ -111,58 +111,34 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
       all(
         c(cases_variable, deaths_variable) %in%
           unique(data[[count_var_col]])
-      ),
-    "Grouped `<incidence2>` objects are not supported. \
-     Use `incidence2::regroup()` to ungroup the data." =
-      length(group_variables) == 0
-  )
-
-  # get the unique dates - this is used to reconstruct data
-  # in cases where there are dates with no cases or deaths
-  # since these dates may simply be missing in the data (e.g. due to filtering)
-  range_dates <- range(data[[dates_variable]])
-  unique_dates <- data.frame(
-    date = seq(range_dates[1], range_dates[2], by = 1)
-  )
-
-  # split the dataframe, replacing "count" with the cases or deaths variable
-  data <- split(x = data, f = data[[count_var_col]])
-  # work on the split dataframe in the order of cases and then deaths
-  data <- Map(
-    data[c(cases_variable, deaths_variable)], c("cases", "deaths"),
-    f = function(df, colname) {
-      # select the date and the count
-      df <- df[, c(dates_variable, count_col)]
-
-      # rename the count to cases or deaths
-      colnames(df) <- c("date", colname)
-
-      # merge with dataframe of dates, keeping all dates
-      df <- merge(
-        unique_dates, df,
-        by = "date", all.x = TRUE
       )
-
-      # fill NA if required
-      if (fill_NA) {
-        df[is.na(df)] <- 0
-      } else {
-        if (anyNA(df[[colname]])) {
-          stop(
-            sprintf(
-              "`NA`s present in the '%s' count. Set `fill_NA = TRUE` to use 0s",
-              colname
-            )
-          )
-        }
-      }
-      # return df from this scope
-      df
-    }
   )
-  # merge the two dataframes
-  data <- Reduce(x = data, f = merge)
 
-  # return data
-  data
+  # complete dates for all groups in the data and fill any NAs per user input
+  data <- incidence2::complete_dates(
+    data,
+    fill = ifelse(fill_NA, 0, NA_integer_)
+  )
+  data.table::setDT(data)
+
+  index <- .subset2(data, count_var_col)
+  index <- index == cases_variable | index == deaths_variable
+  data <- data[index, ]
+
+  formula <- reformulate(count_var_col, "...")
+  # cast wide and fill any NAs per user input
+  data <- data.table::dcast(
+    data, formula,
+    value.var = count_col
+  )
+
+  # set cases and deaths column names
+  data.table::setnames(
+    data,
+    old = c(dates_variable, cases_variable, deaths_variable),
+    new = c("date", "cases", "deaths")
+  )
+
+  # return data.frame
+  data.table::setDF(data)[]
 }

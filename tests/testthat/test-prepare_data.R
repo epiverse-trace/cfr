@@ -29,43 +29,9 @@ test_that("Prepare `<incidence2>` data, basic expectations", {
   expect_snapshot(
     tail(data)
   )
-
-  expect_error(
-    prepare_data(
-      data = incidence2::incidence(
-        incidence2::covidregionaldataUK,
-        date_index = "date",
-        counts = c("cases_new", "deaths_new"),
-        count_names_to = "count_variable",
-        groups = "region"
-      ),
-      cases_variable = "cases_new",
-      deaths_variable = "deaths_new",
-      fill_NA = TRUE
-    ),
-    regexp = "(Grouped `<incidence2>` objects are not supported.)"
-  )
 })
 
-# test for errors when NAs are present and `fill_NA` is FALSE
-test_that("Prepare data from `<incidence2>` errors on unfilled NAs", {
-  expect_error(
-    prepare_data(
-      data = incidence2::incidence(
-        incidence2::covidregionaldataUK,
-        date_index = "date",
-        counts = c("cases_new", "deaths_new"),
-        count_names_to = "count_variable"
-      ),
-      cases_variable = "cases_new",
-      deaths_variable = "deaths_new",
-      fill_NA = FALSE
-    ),
-    regexp = "(`NA`s present in the)*(count)*(Set `fill_NA = TRUE` to use 0s)"
-  )
-})
-
-test_that("`prepare_data(): Error for data.frame method", {
+test_that("Data preparation errors for data.frame method", {
   expect_error(
     prepare_data(
       as.data.frame(incidence2::covidregionaldataUK),
@@ -73,5 +39,42 @@ test_that("`prepare_data(): Error for data.frame method", {
       deaths_variable = "deaths_new"
     ),
     regexp = '(no applicable method)*(\\"data.frame\\")'
+  )
+})
+
+test_that("Prepare grouped `<incidence2>` data", {
+  grouping_variable <- "region"
+  data <- incidence2::incidence(
+    incidence2::covidregionaldataUK,
+    date_index = "date",
+    counts = c("cases_new", "deaths_new"),
+    count_names_to = "count_variable",
+    groups = grouping_variable
+  )
+
+  expect_no_condition(
+    prepare_data(
+      data,
+      cases_variable = "cases_new", deaths_variable = "deaths_new",
+      fill_NA = TRUE
+    )
+  )
+
+  data <- prepare_data(
+    data,
+    cases_variable = "cases_new", deaths_variable = "deaths_new",
+    fill_NA = TRUE
+  )
+
+  expect_s3_class(
+    data, "data.frame"
+  )
+  expect_named(
+    data,
+    expected = c(
+      "date", "cases", "deaths",
+      grouping_variable
+    ),
+    ignore.order = TRUE
   )
 })
