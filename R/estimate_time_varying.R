@@ -97,7 +97,7 @@
 #' tail(cfr_time_varying)
 #'
 cfr_time_varying <- function(data,
-                             epidist,
+                             epidist = NULL,
                              burn_in_value = get_default_burn_in(epidist),
                              smoothing_window = NULL) {
   # input checking
@@ -113,6 +113,7 @@ cfr_time_varying <- function(data,
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0)
   )
+  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
 
   # prepare a new dataframe with smoothed columns if requested
   # all temporary operations are performed on df_temp,
@@ -157,10 +158,7 @@ cfr_time_varying <- function(data,
 
   # calculation of indices to modify seems questionable
   indices <- seq(case_length - smoothing_window, burn_in_value, -1)
-  if (!missing(epidist)) {
-    # check epidist object
-    checkmate::assert_class(epidist, "epidist")
-
+  if (!is.null(epidist)) {
     pmf_vals <- stats::density(
       epidist,
       at = seq(from = 0, to = nrow(data) - 1L)
@@ -214,9 +212,9 @@ cfr_time_varying <- function(data,
 #'
 #' @return A single integer, the burn-in value.
 #' @keywords internal
-get_default_burn_in <- function(epidist) {
+get_default_burn_in <- function(epidist = NULL) {
   default_value <- 7L
-  if (!missing(epidist) && !is.na(mean(epidist))) {
+  if (!is.null(epidist) && !is.na(mean(epidist))) {
     x <- as.integer(round(mean(epidist)))
   } else {
     x <- default_value

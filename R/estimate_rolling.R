@@ -42,7 +42,7 @@
 #' head(estimate)
 #'
 cfr_rolling <- function(data,
-                        epidist,
+                        epidist = NULL,
                         poisson_threshold = 100) {
 
   # input checking
@@ -62,15 +62,14 @@ cfr_rolling <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
+  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
   checkmate::assert_count(poisson_threshold)
 
   # prepare cumulative sums
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
-  if (!missing(epidist)) {
-    # check epidists
-    checkmate::assert_class(epidist, "epidist")
+  if (!is.null(epidist)) {
 
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
