@@ -60,7 +60,8 @@ known_outcomes <- function(data,
 
   # the times at which cases are reported, in numbers of days (or whichever
   # time units are used) since the first case was reported
-  case_times <- as.numeric(data$date - min(data$date, na.rm = TRUE),
+  case_times <- as.numeric(
+    data$date - min(data$date, na.rm = TRUE),
     units = "days"
   ) + 1
 
