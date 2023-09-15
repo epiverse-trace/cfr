@@ -181,21 +181,26 @@ cfr_time_varying <- function(data,
   }
 
   #### Get severity estimates ####
-  for (i in indices) {
-    # handle case where deaths are fewer than non-zero known outcomes
-    if (df_temp$deaths[i] <= df_temp$known_outcomes[i] &&
-      isTRUE(df_temp$known_outcomes[i] > 0)) {
-      severity_current_estimate <- stats::binom.test(
-        df_temp$deaths[i],
-        df_temp$known_outcomes[i]
-      )
+  # handle case where deaths are fewer than non-zero known outcomes
+  # and select indices which are not smoothed or excluded by burn in
+  # this reduces the number of indices over which to run the binomial test
+  # known_outcomes are not allowed to be NA
+  indices <- intersect(
+    indices,
+    which(df_temp$deaths <= df_temp$known_outcomes & df_temp$known_outcomes > 0)
+  )
 
-      severity_estimates[i, ] <- c(
-        severity_current_estimate$estimate[[1]],
-        severity_current_estimate$conf.int[[1]],
-        severity_current_estimate$conf.int[[2]]
-      )
-    }
+  for (i in indices) {
+    severity_current_estimate <- stats::binom.test(
+      df_temp$deaths[i],
+      df_temp$known_outcomes[i]
+    )
+
+    severity_estimates[i, ] <- c(
+      severity_current_estimate$estimate[[1]],
+      severity_current_estimate$conf.int[[1]],
+      severity_current_estimate$conf.int[[2]]
+    )
   }
 
   # remove known outcomes column as this is not expected as a side effect
