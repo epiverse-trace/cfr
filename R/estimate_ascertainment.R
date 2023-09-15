@@ -53,7 +53,7 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   epidist,
+                                   epidist = NULL,
                                    type = c("static", "varying"),
                                    severity_baseline,
                                    burn_in_value = get_default_burn_in(
@@ -73,6 +73,7 @@ estimate_ascertainment <- function(data,
   )
   checkmate::assert_number(burn_in_value, lower = 1)
   checkmate::assert_date(max_date, null.ok = TRUE)
+  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)

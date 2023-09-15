@@ -103,7 +103,7 @@
 #' )
 #'
 cfr_static <- function(data,
-                       epidist,
+                       epidist = NULL,
                        poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(data)
@@ -122,12 +122,11 @@ cfr_static <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
+  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
   checkmate::assert_count(poisson_threshold)
 
   # apply delay correction if an epidist is provided
-  if (!missing(epidist)) {
-    # check the epidist object
-    checkmate::assert_class(epidist, "epidist")
+  if (!is.null(epidist)) {
 
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,
