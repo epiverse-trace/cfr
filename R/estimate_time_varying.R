@@ -190,18 +190,29 @@ cfr_time_varying <- function(data,
     which(df_temp$deaths <= df_temp$known_outcomes & df_temp$known_outcomes > 0)
   )
 
-  for (i in indices) {
+  # binomial test at indices
+  estimates_tmp <- lapply(indices, FUN = function(i) {
     severity_current_estimate <- stats::binom.test(
       df_temp$deaths[i],
       df_temp$known_outcomes[i]
     )
 
-    severity_estimates[i, ] <- c(
+    # return a vector
+    c(
       severity_current_estimate$estimate[[1]],
       severity_current_estimate$conf.int[[1]],
       severity_current_estimate$conf.int[[2]]
     )
-  }
+  })
+
+  # create matrix to replace values of severity_estimates at indices
+  estimates_tmp <- matrix(
+    unlist(estimates_tmp),
+    nrow = length(indices),
+    byrow = TRUE
+  )
+  # replace the values at indices
+  severity_estimates[indices, ] <- estimates_tmp
 
   # remove known outcomes column as this is not expected as a side effect
   data$known_outcomes <- NULL
