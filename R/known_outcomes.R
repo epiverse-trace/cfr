@@ -48,6 +48,11 @@ known_outcomes <- function(data,
     names(data),
     must.include = c("cases", "date")
   )
+  # check for any NAs among data
+  checkmate::assert_data_frame(
+    data[, c("cases", "deaths")],
+    any.missing = FALSE
+  )
   checkmate::assert_class(epidist, "epidist")
 
   pmf_vals <- stats::density(
