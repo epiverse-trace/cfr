@@ -31,9 +31,9 @@ severity estimation.}
 approximation. Set to 100 by default.}
 }
 \value{
-A \verb{<data.frame>} with the MLE and 95\% confidence interval of the
-severity estimates, named "severity_mean", "severity_low", and
-"severity_high".
+A \verb{<data.frame>} with the maximum likelihood estimate and 95\%
+confidence interval of the severity estimates, named "severity_mean",
+"severity_low", and "severity_high".
 }
 \description{
 Calculates the severity of a disease, while optionally

@@ -55,8 +55,8 @@ The default behaviour is to apply no smoothing. The minimum value of this
 argument is 1.}
 }
 \value{
-A \verb{<data.frame>} containing the MLE estimate and 95\% confidence
-interval of the corrected severity.
+A \verb{<data.frame>} containing the maximum likelihood estimate estimate
+and 95\% confidence interval of the corrected severity.
 }
 \description{
 Calculates how the severity of a disease changes over time
