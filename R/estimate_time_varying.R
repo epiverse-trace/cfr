@@ -28,8 +28,8 @@
 #' The default behaviour is to apply no smoothing. The minimum value of this
 #' argument is 1.
 #'
-#' @return A `<data.frame>` containing the MLE estimate and 95% confidence
-#' interval of the corrected severity.
+#' @return A `<data.frame>` containing the maximum likelihood estimate estimate
+#' and 95% confidence interval of the corrected severity.
 #'
 #' @details
 #' # Details: Adjusting for delays between two time series
