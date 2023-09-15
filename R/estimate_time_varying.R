@@ -123,12 +123,14 @@ cfr_time_varying <- function(data,
     smoothing_window <- 0
   } else {
     # smooth data if requested
-    df_temp$cases <- stats::runmed(data$cases,
+    df_temp$cases <- stats::runmed(
+      data$cases,
       k = smoothing_window,
       endrule = "keep"
     )
 
-    df_temp$deaths <- stats::runmed(data$deaths,
+    df_temp$deaths <- stats::runmed(
+      data$deaths,
       k = smoothing_window,
       endrule = "keep"
     )
