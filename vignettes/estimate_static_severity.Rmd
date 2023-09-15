@@ -402,18 +402,18 @@ The function calculates a quantity $u_t$ for each day within the input data, whi
 This may be a known death outcome, as shown earlier in this vignette.
 Following Nishiura et al., $u_t$ is calculated in the following way:
 
-\begin{equation}
-  u_t = \frac{\sum_{i = 0}^t
+$$
+  u_t = \dfrac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
-\end{equation}
+$$
 
 where $f_t$ is the value of the probability mass function at time $t$ and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$, (respectively).
 We then use $u_t$ at the end of the outbreak in the following likelihood function to estimate the severity of the disease in question.
 
-\begin{equation}
-  L(\theta | y) = \log{\binom{u_tC}{D}} + D \log{\theta} +
+$$
+  {\sf L}(\theta | y) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
   (u_tC - D)\log{(1.0 - \theta)},
-\end{equation}
+$$
 
 $C$ and $D$ are the cumulative number of cases and deaths (respectively) up until time $t$.
 Lastly, $\theta$ is the parameter we wish to estimate, the severity of the disease.
