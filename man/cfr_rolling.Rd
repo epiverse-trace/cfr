@@ -31,9 +31,10 @@ severity estimation.}
 approximation. Set to 100 by default.}
 }
 \value{
-A \verb{<data.frame>} with the MLE and 95\% confidence interval of the
-daily severity estimates, named "severity_mean", "severity_low", and
-"severity_high", with one row for each day in the original data.frame.
+A \verb{<data.frame>} with the maximum likelihood estimate and 95\%
+confidence interval of the daily severity estimates, named
+"severity_mean", "severity_low", and "severity_high", with one row for each
+day in the original data.frame.
 }
 \description{
 Calculates the CFR at each time point in the case and death time

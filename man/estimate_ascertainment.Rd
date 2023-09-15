@@ -73,10 +73,10 @@ case of long time-series, where the user wishes to focus on a specific
 time-period. See \code{\link[=as.Date]{as.Date()}} for converting a string to a \code{Date}.}
 }
 \value{
-A \verb{<data.frame>} containing the MLE estimate and 95\% confidence
-interval of the corrected severity, named "ascertainment_mean" (for the
-central estimate), and "ascertainment_low" and "ascertainment_high" for the
-lower and upper interval limits.
+A \verb{<data.frame>} containing the maximum likelihood estimate estimate
+and 95\% confidence interval of the corrected severity, named
+"ascertainment_mean" (for the central estimate), and "ascertainment_low" and
+"ascertainment_high" for the lower and upper interval limits.
 }
 \description{
 Estimates the proportion of cases or infections that have been
@@ -99,6 +99,9 @@ onset_to_death_covid <- epiparameter::epidist_db(
   author = "Linton_etal",
   single_epidist = TRUE
 )
+
+# use a severity baseline of 1.4\% (0.014) taken from Verity et al. (2020)
+# Lancet Infectious Diseases: 10.1016/S1473-3099(20)30243-7
 
 estimate_ascertainment(
   data = df_covid_uk,

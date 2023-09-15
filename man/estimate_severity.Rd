@@ -20,16 +20,16 @@ to the total number of deaths.}
 outbreak of interest. The total number of deaths must be less than or equal
 to the total number of cases.}
 
-\item{total_outcomes}{The total number of outcomes estimated observed over
-the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}.}
+\item{total_outcomes}{The total number of outcomes expected to be observed
+over the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
 }
 \value{
-A data.frame with the MLE and 95\% confidence interval of the
-corrected severity estimates, named "severity_mean", "severity_low", and
-"severity_high".
+A data.frame with the maximum likelihood estimate and 95\% confidence
+interval of the corrected severity estimates, named "severity_mean",
+"severity_low", and "severity_high".
 }
 \description{
 Estimates the maximum likelihood estimate and 95\% confidence
