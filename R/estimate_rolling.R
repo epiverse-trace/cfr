@@ -12,9 +12,10 @@
 #'
 #' @inheritParams cfr_static
 #'
-#' @return A `<data.frame>` with the MLE and 95% confidence interval of the
-#' daily severity estimates, named "severity_mean", "severity_low", and
-#' "severity_high", with one row for each day in the original data.frame.
+#' @return A `<data.frame>` with the maximum likelihood estimate and 95%
+#' confidence interval of the daily severity estimates, named
+#' "severity_mean", "severity_low", and "severity_high", with one row for each
+#' day in the original data.frame.
 #' @export
 #'
 #' @examples

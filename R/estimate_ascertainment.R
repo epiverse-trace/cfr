@@ -22,10 +22,10 @@
 #' case of long time-series, where the user wishes to focus on a specific
 #' time-period. See [as.Date()] for converting a string to a `Date`.
 #'
-#' @return A `<data.frame>` containing the MLE estimate and 95% confidence
-#' interval of the corrected severity, named "ascertainment_mean" (for the
-#' central estimate), and "ascertainment_low" and "ascertainment_high" for the
-#' lower and upper interval limits.
+#' @return A `<data.frame>` containing the maximum likelihood estimate estimate
+#' and 95% confidence interval of the corrected severity, named
+#' "ascertainment_mean" (for the central estimate), and "ascertainment_low" and
+#' "ascertainment_high" for the lower and upper interval limits.
 #' @export
 #'
 #' @examples
