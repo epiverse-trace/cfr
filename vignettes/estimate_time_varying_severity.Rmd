@@ -343,19 +343,18 @@ The function calculates a quantity $k_t$ for each day within the input data, whi
 This may be a known death outcome, as shown earlier in this vignette.
 Following @nishiura2009, $k_t$ is calculated in the following way:
 
-\begin{equation}
+$$
   k_t = \sum_{j = 0}^t c_t f_{j - t}.
-\end{equation}
+$$
 
 We then assume that the severity measure, for example CFR, of interest is
 binomially distributed, in the following way 
 
-\begin{equation}
-  d_t \sim \text{Binomial}(k_t, \theta_t). 
-\end{equation}
+$$
+  d_t \sim {\sf Binomial}(k_t, \theta_t). 
+$$
 
-We use maximum likelihood estimation to determine the value of $\theta_t$ for 
-each $t$, where $\theta$ represents the severity measure of interest.
+We use maximum likelihood estimation to determine the value of $\theta_t$ for each $t$, where $\theta$ represents the severity measure of interest.
 
 The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
 
