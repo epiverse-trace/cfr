@@ -7,7 +7,7 @@
 cfr_time_varying(
   data,
   epidist = NULL,
-  burn_in_value = get_default_burn_in(epidist),
+  burn_in = get_default_burn_in(epidist),
   smoothing_window = NULL
 )
 }
@@ -32,7 +32,7 @@ Defaults to \code{NULL}, in which case no delay correction is applied.
 Passing an \verb{<epidist>} automatically applies delay correction in the
 severity estimation.}
 
-\item{burn_in_value}{A single integer value for the number of time-points
+\item{burn_in}{A single integer value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
 
@@ -106,7 +106,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 # estimate time varying severity without correcting for delays
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk_subset,
-  burn_in_value = 7L
+  burn_in = 7L
 )
 # View
 tail(cfr_time_varying)
@@ -115,7 +115,7 @@ tail(cfr_time_varying)
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk_subset,
   epidist = onset_to_death_covid,
-  burn_in_value = 7L
+  burn_in = 7L
 )
 tail(cfr_time_varying)
 

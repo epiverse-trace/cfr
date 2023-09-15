@@ -21,7 +21,7 @@ tvcfr_naive <- cfr_time_varying(
 tvcfr_corrected <- cfr_time_varying(
   ebola1976,
   epidist = onset_to_death_ebola,
-  burn_in_value = 1
+  burn_in = 0
 )
 
 # Basic expectations
@@ -85,14 +85,13 @@ onset_to_death_covid <- epiparameter::epidist_db(
 # Calculate naive time-varying CFR
 tvcfr_naive_smoothed_3 <- cfr_time_varying(
   covid_uk,
-  smoothing_window = 3,
-  burn_in_value = 1
+  smoothing_window = 3
 )
 
 tvcfr_naive_smoothed_7 <- cfr_time_varying(
   covid_uk,
   smoothing_window = 7,
-  burn_in_value = 1
+  burn_in = 0
 )
 
 test_that("Time-varying CFR with smoothing and burn in", {
@@ -104,15 +103,15 @@ test_that("Time-varying CFR with smoothing and burn in", {
     )
   )
 
-  # expect that burn in gives NAs for burn_in - 1 rows
+  # expect that applying burn in gives NAs for `burn_in` number of rows
   burn_in <- 7L
   tvcfr_burnin_7 <- cfr_time_varying(
     covid_uk,
-    burn_in_value = burn_in
+    burn_in = burn_in
   )
 
   expect_length(
     which(is.na(tvcfr_burnin_7$severity_mean)),
-    burn_in - 1L
+    burn_in
   )
 })
