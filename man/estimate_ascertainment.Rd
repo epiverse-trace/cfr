@@ -57,7 +57,7 @@ parameterised. This is a sensible default value that disregards the first
 week of cases and deaths, assuming daily data.
 
 To consider all case data including the start of the time-series, set this
-argument to 1.}
+argument to 0.}
 
 \item{smoothing_window}{An \emph{odd} number determining the smoothing window size
 to use when smoothing the case and death time-series, using a rolling median
