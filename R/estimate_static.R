@@ -100,11 +100,19 @@ cfr_static <- function(data,
                        epidist = NULL,
                        poisson_threshold = 100) {
   # input checking
-  checkmate::assert_data_frame(data)
+  checkmate::assert_data_frame(
+    data,
+    min.rows = 1, min.cols = 3
+  )
   # check that input `<data.frame>` has columns date, cases, and deaths
   checkmate::assert_names(
     colnames(data),
     must.include = c("date", "cases", "deaths")
+  )
+  # check for any NAs among data
+  checkmate::assert_data_frame(
+    data[, c("date", "cases", "deaths")],
+    any.missing = FALSE
   )
   # check that data$date is a date column
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)

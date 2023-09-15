@@ -65,11 +65,19 @@ estimate_ascertainment <- function(data,
                                    smoothing_window = NULL,
                                    max_date = NULL) {
   # input checking
-  checkmate::assert_data_frame(data)
+  # expect rows more than burn in value
+  checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
+  # check that input `<data.frame>` has columns date, cases, and deaths
   checkmate::assert_names(
     colnames(data),
     must.include = c("date", "cases", "deaths")
   )
+  # check for any NAs among data
+  checkmate::assert_data_frame(
+    data[, c("date", "cases", "deaths")],
+    any.missing = FALSE
+  )
+
   checkmate::assert_number(
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE

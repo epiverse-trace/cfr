@@ -103,11 +103,19 @@ cfr_time_varying <- function(data,
 
   # expect rows more than burn in value
   checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
+  # check that input `<data.frame>` has columns date, cases, and deaths
+  checkmate::assert_names(
+    colnames(data),
+    must.include = c("date", "cases", "deaths")
+  )
+  # check for any NAs among data
+  checkmate::assert_data_frame(
+    data[, c("date", "cases", "deaths")],
+    any.missing = FALSE
+  )
   checkmate::assert_number(smoothing_window, lower = 1, null.ok = TRUE)
 
   stopifnot(
-    "Case data must contain columns `cases` and `deaths`" =
-      (all(c("cases", "deaths") %in% colnames(data))),
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0)
   )
