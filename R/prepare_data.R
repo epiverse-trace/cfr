@@ -85,11 +85,9 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     ...) {
   # check for {incidence2} and error if not available
   if (!requireNamespace("incidence2", quietly = TRUE)) {
-    stop(
-      "Package 'incidence2' is required to prepare <incidence2> class data ",
-      "but is not installed."
-    )
+    stop("Install package 'incidence2' to prepare <incidence2> class data")
   }
+  # assume that installing incidence2 will also install data.table
 
   # assert that cases and deaths variable are different
   checkmate::assert_string(cases_variable)
@@ -124,7 +122,7 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   index <- index == cases_variable | index == deaths_variable
   data <- data[index, ]
 
-  formula <- reformulate(count_var_col, "...")
+  formula <- stats::reformulate(count_var_col, "...")
   # cast wide and fill any NAs per user input
   data <- data.table::dcast(
     data, formula,
