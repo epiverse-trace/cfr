@@ -9,7 +9,7 @@ estimate_ascertainment(
   epidist = NULL,
   type = c("static", "varying"),
   severity_baseline,
-  burn_in_value = get_default_burn_in(epidist),
+  burn_in = get_default_burn_in(epidist),
   smoothing_window = NULL,
   max_date = NULL
 )
@@ -45,7 +45,7 @@ assumed true baseline severity estimate used to estimate the overall
 ascertainment ratio. Missing by default, which causes the function to error;
 must be supplied by the user.}
 
-\item{burn_in_value}{A single integer value for the number of time-points
+\item{burn_in}{A single integer value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
 
@@ -105,7 +105,7 @@ estimate_ascertainment(
   epidist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
-  burn_in_value = 7L,
+  burn_in = 7L,
   max_date = as.Date("2020-06-30")
 )
 

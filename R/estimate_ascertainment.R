@@ -48,7 +48,7 @@
 #'   epidist = onset_to_death_covid,
 #'   type = "varying",
 #'   severity_baseline = 0.014,
-#'   burn_in_value = 7L,
+#'   burn_in = 7L,
 #'   max_date = as.Date("2020-06-30")
 #' )
 #'
@@ -56,7 +56,7 @@ estimate_ascertainment <- function(data,
                                    epidist = NULL,
                                    type = c("static", "varying"),
                                    severity_baseline,
-                                   burn_in_value = get_default_burn_in(
+                                   burn_in = get_default_burn_in(
                                      epidist
                                    ),
                                    smoothing_window = NULL,
@@ -71,7 +71,7 @@ estimate_ascertainment <- function(data,
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE
   )
-  checkmate::assert_number(burn_in_value, lower = 1)
+  checkmate::assert_int(burn_in, lower = 0)
   checkmate::assert_date(max_date, null.ok = TRUE)
   checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
 
@@ -89,7 +89,7 @@ estimate_ascertainment <- function(data,
         data,
         epidist = epidist,
         smoothing_window = smoothing_window,
-        burn_in_value = burn_in_value
+        burn_in = burn_in
       )
 
       df_sev <- df_sev[!is.na(df_sev$severity_mean), ]

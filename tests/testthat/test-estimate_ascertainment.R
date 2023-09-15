@@ -16,7 +16,7 @@ poisson_threshold <- 100
 test_that("Basic expectations for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    burn_in_value = 1,
+    burn_in = 0,
     severity_baseline = 0.7,
     type = "static"
   )
@@ -49,7 +49,7 @@ test_that("Correct for delays for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
     epidist = onset_to_death_ebola,
-    burn_in_value = 1,
+    burn_in = 0,
     severity_baseline = 0.7,
     type = "static"
   )
@@ -82,7 +82,7 @@ test_that("Smooth inputs for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
     epidist = onset_to_death_ebola,
-    burn_in_value = 1, smoothing_window = 7,
+    burn_in = 0, smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
   )

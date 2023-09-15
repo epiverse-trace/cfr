@@ -6,7 +6,7 @@
 #' (onset-to-death).
 #'
 #' @inheritParams cfr_static
-#' @param burn_in_value A single integer value for the number of time-points
+#' @param burn_in A single integer value for the number of time-points
 #' (typically days) to disregard at the start of the time-series, if a burn-in
 #' period is desired.
 #'
@@ -82,7 +82,7 @@
 #' # estimate time varying severity without correcting for delays
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
-#'   burn_in_value = 7L
+#'   burn_in = 7L
 #' )
 #' # View
 #' tail(cfr_time_varying)
@@ -91,19 +91,20 @@
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk_subset,
 #'   epidist = onset_to_death_covid,
-#'   burn_in_value = 7L
+#'   burn_in = 7L
 #' )
 #' tail(cfr_time_varying)
 #'
 cfr_time_varying <- function(data,
                              epidist = NULL,
-                             burn_in_value = get_default_burn_in(epidist),
+                             burn_in = get_default_burn_in(epidist),
                              smoothing_window = NULL) {
   # input checking
-  checkmate::assert_integerish(burn_in_value, lower = 1, len = 1L)
+  # expect an integer-like number
+  checkmate::assert_int(burn_in, lower = 0)
 
   # expect rows more than burn in value
-  checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in_value + 1)
+  checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
   checkmate::assert_number(smoothing_window, lower = 1, null.ok = TRUE)
 
   stopifnot(
@@ -144,7 +145,6 @@ cfr_time_varying <- function(data,
   case_length <- length(case_times)
 
   ##### prepare matrix for severity estimation ####
-  # create columns with NA values for later assignment
   # when not correcting for delays, set known outcomes to cases
   # this is to avoid if-else ladders
   df_temp$known_outcomes <- df_temp$cases
@@ -155,8 +155,11 @@ cfr_time_varying <- function(data,
     dimnames = list(NULL, sprintf("severity_%s", c("mean", "low", "high")))
   )
 
-  # calculation of indices to modify seems questionable
-  indices <- seq(case_length - smoothing_window, burn_in_value, -1)
+  # calculation of indices to modify
+  # start from the final index to be smoothed
+  # end at the first row after the burn-in number of rows (days)
+  # TODO: check if modifying start point is necessary for runmed "keep" endrule
+  indices <- seq(case_length - smoothing_window, burn_in + 1, -1)
   if (!is.null(epidist)) {
     pmf_vals <- stats::density(
       epidist,
@@ -166,8 +169,8 @@ cfr_time_varying <- function(data,
     df_temp[indices, "known_outcomes"] <- vapply(
       X = indices,
       FUN = function(x) {
-        delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in_value)]]
-        known_onsets_current <- cases[seq_len(x - burn_in_value)] *
+        delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in)]]
+        known_onsets_current <- cases[seq_len(x - burn_in)] *
           rev(delay_pmf_eval)
 
         # return rounded sum of known_onsets_current
