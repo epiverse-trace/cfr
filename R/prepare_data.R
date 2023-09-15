@@ -103,7 +103,6 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   count_var_col <- incidence2::get_count_variable_name(data)
   count_col <- incidence2::get_count_value_name(data)
   dates_variable <- incidence2::get_date_index_name(data)
-  group_variables <- incidence2::get_group_names(data)
 
   stopifnot(
     "`cases_variable` and `deaths_variable` should be in \
