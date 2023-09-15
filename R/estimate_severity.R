@@ -13,12 +13,12 @@
 #' @param total_deaths The total number of deaths observed over the period of an
 #' outbreak of interest. The total number of deaths must be less than or equal
 #' to the total number of cases.
-#' @param total_outcomes The total number of outcomes estimated observed over
-#' the period of an outbreak of interest. See [known_outcomes()].
+#' @param total_outcomes The total number of outcomes expected to be observed
+#' over the period of an outbreak of interest. See [known_outcomes()].
 #' @keywords internal
-#' @return A data.frame with the MLE and 95% confidence interval of the
-#' corrected severity estimates, named "severity_mean", "severity_low", and
-#' "severity_high".
+#' @return A data.frame with the maximum likelihood estimate and 95% confidence
+#' interval of the corrected severity estimates, named "severity_mean",
+#' "severity_low", and "severity_high".
 estimate_severity <- function(total_cases,
                               total_deaths,
                               total_outcomes,
@@ -32,7 +32,7 @@ estimate_severity <- function(total_cases,
   # calculating the proportion of cases with known outcome
   u_t <- total_outcomes / total_cases
 
-  # MLE estimation for corrected severity
+  # maximum likelihood estimation for corrected severity
   pprange <- seq(from = 1e-3, to = 1.0, by = 1e-3)
 
   # Calculate likelihood - use binomial for small samples and Poisson
@@ -45,7 +45,7 @@ estimate_severity <- function(total_cases,
     lik <- stats::dpois(total_deaths, pprange * u_t * total_cases, log = TRUE)
   }
 
-  # MLE estimate
+  # maximum likelihood estimate
   severity_mean <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood

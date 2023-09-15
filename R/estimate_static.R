@@ -69,9 +69,9 @@
 #' Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 #' \doi{10.1371/journal.pone.0006852}
 #'
-#' @return A `<data.frame>` with the MLE and 95% confidence interval of the
-#' severity estimates, named "severity_mean", "severity_low", and
-#' "severity_high".
+#' @return A `<data.frame>` with the maximum likelihood estimate and 95%
+#' confidence interval of the severity estimates, named "severity_mean",
+#' "severity_low", and "severity_high".
 #'
 #' @export
 #'
