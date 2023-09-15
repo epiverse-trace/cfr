@@ -4,12 +4,12 @@
 \alias{get_default_burn_in}
 \title{Get a default burn-in value from a delay distribution}
 \usage{
-get_default_burn_in(epidist)
+get_default_burn_in(epidist = NULL)
 }
 \arguments{
 \item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
-
+form of an \verb{<epidist>} object.
+Defaults to \code{NULL}, in which case no delay correction is applied.
 Passing an \verb{<epidist>} automatically applies delay correction in the
 severity estimation.}
 }

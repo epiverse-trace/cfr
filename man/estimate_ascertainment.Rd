@@ -6,7 +6,7 @@
 \usage{
 estimate_ascertainment(
   data,
-  epidist,
+  epidist = NULL,
   type = c("static", "varying"),
   severity_baseline,
   burn_in_value = get_default_burn_in(epidist),
@@ -30,8 +30,8 @@ Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
 \item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object; see \code{\link[epiparameter:epidist]{epiparameter::epidist()}}.
-
+form of an \verb{<epidist>} object.
+Defaults to \code{NULL}, in which case no delay correction is applied.
 Passing an \verb{<epidist>} automatically applies delay correction in the
 severity estimation.}
 
