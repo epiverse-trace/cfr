@@ -93,8 +93,6 @@ here.
 data("covid_data")
 df_covid_uk <- covid_data[covid_data$country == "United Kingdom", ]
 
-df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
-
 # load epidist object from {epiparameter}
 onset_to_death_covid <- epiparameter::epidist_db(
   disease = "COVID-19",
@@ -105,7 +103,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 
 # estimate time varying severity without correcting for delays
 cfr_time_varying <- cfr_time_varying(
-  data = df_covid_uk_subset,
+  data = df_covid_uk,
   burn_in = 7L
 )
 # View
@@ -113,7 +111,7 @@ tail(cfr_time_varying)
 
 # estimate time varying severity while correcting for delays
 cfr_time_varying <- cfr_time_varying(
-  data = df_covid_uk_subset,
+  data = df_covid_uk,
   epidist = onset_to_death_covid,
   burn_in = 7L
 )
