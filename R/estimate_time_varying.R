@@ -18,7 +18,7 @@
 #' week of cases and deaths, assuming daily data.
 #'
 #' To consider all case data including the start of the time-series, set this
-#' argument to 1.
+#' argument to 0.
 #'
 #' @param smoothing_window An _odd_ number determining the smoothing window size
 #' to use when smoothing the case and death time-series, using a rolling median
