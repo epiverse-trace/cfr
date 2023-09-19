@@ -17,7 +17,7 @@ prepare_data(data, ...)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>}-like object. Currently, only \verb{<incidence2>}
-objects are supported.}
+objects are supported. These may be grouped.}
 
 \item{...}{Currently unused. Passing extra arguments will throw a warning.}
 
@@ -36,8 +36,8 @@ data.}
 A \verb{<data.frame>} suitable for disease severity estimation functions
 provided in \pkg{cfr}, with the columns "date", "cases", and "deaths".
 
-Note that groups in \verb{<incidence2>} are not retained, and cases and deaths
-are summed by date.
+Additionally, for grouped \verb{<incidence2>} data, columns representing the
+grouping variables will also be present.
 
 The result has a continuous sequence of dates between the start and end date
 of \code{data}; this is required if the data is to be passed to functions such as
@@ -48,8 +48,8 @@ This S3 generic has methods for classes commonly used for epidemiological
 data.
 
 Currently, the only supported data format is \verb{<incidence2>} from the
-\pkg{incidence2} package. See \code{\link[incidence2:incidence]{incidence2::incidence()}}.
-This function does not currently support grouped \verb{<incidence2>} data.
+\pkg{incidence2} package. See \code{\link[incidence2:incidence]{incidence2::incidence()}}. Grouped
+\verb{<incidence2>} data are supported, see \strong{Details}.
 }
 \details{
 The method for \verb{<incidence2>} data can replace \code{NA}s in the case and death
@@ -63,6 +63,9 @@ of dates.
 Keeping \code{NA}s will cause downstream issues when calling functions such as
 \code{\link[=cfr_static]{cfr_static()}} on the data, as they cannot handle \code{NA}s.
 Setting \code{fill_NA = TRUE} resolves this issue, but must be a conscious choice.
+
+Passing a grouped \verb{<incidence2>} object to \code{data} will result in the function
+respecting the grouping and returning grouping variables in separate columns.
 }
 \examples{
 #### For <incidence2> data ####
@@ -86,4 +89,25 @@ data <- prepare_data(
 )
 
 tail(data)
+
+#### For grouped <incidence2> data ####
+# convert data to incidence2 object grouped by region
+covid_uk_incidence <- incidence2::incidence(
+  covid_uk,
+  date_index = "date",
+  counts = c("cases_new", "deaths_new"),
+  count_names_to = "count_variable",
+  groups = "region"
+)
+
+# View tail of prepared data
+data <- prepare_data(
+  covid_uk_incidence,
+  cases_variable = "cases_new",
+  deaths_variable = "deaths_new",
+  fill_NA = TRUE
+)
+
+tail(data)
+
 }
