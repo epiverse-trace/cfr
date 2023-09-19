@@ -9,11 +9,11 @@
 #' data.
 #'
 #' Currently, the only supported data format is `<incidence2>` from the
-#' \pkg{incidence2} package. See [incidence2::incidence()].
-#' This function does not currently support grouped `<incidence2>` data.
+#' \pkg{incidence2} package. See [incidence2::incidence()]. Grouped
+#' `<incidence2>` data are supported, see **Details**.
 #'
 #' @param data A `<data.frame>`-like object. Currently, only `<incidence2>`
-#' objects are supported.
+#' objects are supported. These may be grouped.
 #' @param cases_variable A string for the name of the cases variable in the
 #' "count_variable" column of `data`.
 #' @param deaths_variable A string for the name of the deaths variable in the
@@ -37,11 +37,14 @@
 #' [cfr_static()] on the data, as they cannot handle `NA`s.
 #' Setting `fill_NA = TRUE` resolves this issue, but must be a conscious choice.
 #'
+#' Passing a grouped `<incidence2>` object to `data` will result in the function
+#' respecting the grouping and returning grouping variables in separate columns.
+#'
 #' @return A `<data.frame>` suitable for disease severity estimation functions
 #' provided in \pkg{cfr}, with the columns "date", "cases", and "deaths".
 #'
-#' Note that groups in `<incidence2>` are not retained, and cases and deaths
-#' are summed by date.
+#' Additionally, for grouped `<incidence2>` data, columns representing the
+#' grouping variables will also be present.
 #'
 #' The result has a continuous sequence of dates between the start and end date
 #' of `data`; this is required if the data is to be passed to functions such as
@@ -69,6 +72,27 @@
 #' )
 #'
 #' tail(data)
+#'
+#' #### For grouped <incidence2> data ####
+#' # convert data to incidence2 object grouped by region
+#' covid_uk_incidence <- incidence2::incidence(
+#'   covid_uk,
+#'   date_index = "date",
+#'   counts = c("cases_new", "deaths_new"),
+#'   count_names_to = "count_variable",
+#'   groups = "region"
+#' )
+#'
+#' # View tail of prepared data
+#' data <- prepare_data(
+#'   covid_uk_incidence,
+#'   cases_variable = "cases_new",
+#'   deaths_variable = "deaths_new",
+#'   fill_NA = TRUE
+#' )
+#'
+#' tail(data)
+#'
 prepare_data <- function(data, ...) {
   UseMethod("prepare_data", data)
 }
