@@ -181,8 +181,8 @@ ggplot(df_known_outcomes_ebola) +
   ) +
   scale_colour_manual(
     values = c(
-      "Cases" = "steelblue",
-      "Known death outcomes" = "darkgreen"
+      Cases = "steelblue",
+      `Known death outcomes` = "darkgreen"
     ),
     name = NULL
   ) +
@@ -351,8 +351,8 @@ ggplot(df_known_outcomes_covid) +
   ) +
   scale_colour_manual(
     values = c(
-      "Cases" = "steelblue",
-      "Known death outcomes" = "darkgreen"
+      Cases = "steelblue",
+      `Known death outcomes` = "darkgreen"
     ),
     name = NULL
   ) +

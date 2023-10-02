@@ -67,7 +67,7 @@ test_that("Static CFR estimate, errors and messages", {
 
   # Input df_in is not a data.frame
   expect_error(
-    cfr_static(c("cases" = 10, "deaths" = 2, "date" = as.Date(Sys.time())))
+    cfr_static(c(cases = 10, deaths = 2, date = as.Date(Sys.time())))
   )
 
   # Input dataframe has wrong column names
