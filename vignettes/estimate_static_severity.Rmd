@@ -141,7 +141,7 @@ As such, we retrieve such a distribution from the literature [@barry2018] using 
 onset_to_death_ebola <- epidist_db(
   disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Barry_etal",
+  author = "The-Ebola-Outbreak-Epidemiology-Team",
   single_epidist = TRUE
 )
 ```
@@ -319,7 +319,7 @@ We again retrieve the appropriate distribution from @linton2020 using the `epidi
 onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal",
+  author = "Linton",
   single_epidist = TRUE
 )
 ```

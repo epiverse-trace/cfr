@@ -97,7 +97,7 @@ df_covid_uk <- covid_data[covid_data$country == "United Kingdom", ]
 onset_to_death_covid <- epiparameter::epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal",
+  author = "Linton",
   single_epidist = TRUE
 )
 

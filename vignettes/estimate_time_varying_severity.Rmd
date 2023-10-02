@@ -161,7 +161,7 @@ We retrieve the appropriate distribution reported in @linton2020 using the `epid
 onset_to_death_covid <- epidist_db(
   disease = "COVID-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal",
+  author = "Linton",
   single_epidist = TRUE
 )
 ```
