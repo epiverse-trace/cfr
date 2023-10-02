@@ -7,7 +7,7 @@ data("ebola1976")
 onset_to_death_ebola <- epiparameter::epidist_db(
   disease = "Ebola Virus Disease",
   epi_dist = "onset_to_death",
-  author = "Barry_etal",
+  author = "The-Ebola-Outbreak-Epidemiology-Team",
   single_epidist = TRUE
 )
 
@@ -188,7 +188,7 @@ covid_uk <- covid_data[covid_data$country == "United Kingdom" &
 onset_to_death_covid <- epiparameter::epidist_db(
   disease = "Covid-19",
   epi_dist = "onset_to_death",
-  author = "Linton_etal",
+  author = "Linton",
   single_epidist = TRUE
 )
 
