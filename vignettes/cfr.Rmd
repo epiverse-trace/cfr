@@ -46,11 +46,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-First we load the _cfr_ package.
+First we load the _cfr_ package, and the _epiparameter_ package for epidemiological distributions.
 
 ```{r setup}
-# load cfr
+# load cfr and epiparameter
 library(cfr)
+library(epiparameter)
 ```
 
 ## Case and death data {-}
@@ -81,10 +82,6 @@ head(ebola1976)
 We can access data on the distribution of delays between cases being reported, and deaths or recoveries from those cases being known, using the convenient [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
 We access the disease's 'onset-to-death' distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function `epiparameter::epidist_db()` [@barry2018].
-
-```{r}
-library(epiparameter)
-```
 
 ```{r}
 onset_to_death_ebola <- epidist_db(

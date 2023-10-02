@@ -103,7 +103,7 @@ test_that("`cfr_static`: Errors and messages", {
   # Input df_in is not a data.frame
   expect_error(
     cfr_rolling(
-      c("cases" = 10, "deaths" = 2, "date" = as.Date(Sys.time()))
+      c(cases = 10, deaths = 2, date = as.Date(Sys.time()))
     )
   )
 
