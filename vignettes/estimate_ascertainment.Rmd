@@ -188,7 +188,7 @@ The other arguments are the same as those found in `cfr_time_varying()`.
 ```{r }
 df_reporting_static <- estimate_ascertainment(
   data = df_covid_uk_subset,
-  epidist = onset_to_death_covid,
+  delay_dist = onset_to_death_covid,
   type = "static",
   severity_baseline = 0.014
 )
@@ -197,7 +197,7 @@ df_reporting_static <- estimate_ascertainment(
 ```{r }
 df_reporting_varying <- estimate_ascertainment(
   data = df_covid_uk,
-  epidist = onset_to_death_covid,
+  delay_dist = onset_to_death_covid,
   type = "varying",
   severity_baseline = 0.014,
   burn_in = 7,
@@ -249,7 +249,7 @@ df_reporting <- mutate(
   reporting = map(
     .x = data, .f = estimate_ascertainment,
     # arguments to function
-    epidist = onset_to_death_covid, type = "varying",
+    delay_dist = onset_to_death_covid, type = "varying",
     severity_baseline = 0.014,
     burn_in = 7
   )
