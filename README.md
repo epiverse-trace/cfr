@@ -32,9 +32,9 @@ delays reporting the outcomes of cases.
 ([2009](#ref-nishiura2009)). There are plans to add estimates based on
 other methods.
 
-*cfr* uses the [*epiparameter*
-package](https://epiverse-trace.github.io/epiparameter/) to access a
-library of epidemiological delay distributions, in order to calculate
+*cfr* supports using the [*epiparameter*
+package](https://epiverse-trace.github.io/epiparameter/) to pass
+epidemiological delay distributions in order to calculate
 delay-corrected CFR estimates, and both packages are developed at the
 [Centre for the Mathematical Modelling of Infectious
 Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases)
@@ -60,7 +60,8 @@ pak::pak("epiverse-trace/epiparameter")
 
 This example shows how to use *cfr* to estimate the overall case
 fatality risks from the 1976 Ebola outbreak ([Camacho et al.
-2014](#ref-camacho2014)).
+2014](#ref-camacho2014)), while correcting for delays using an ‘onset to
+death’ distribution from the *epiparameter* package.
 
 ``` r
 # Load package
@@ -78,6 +79,11 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   single_epidist = TRUE
 )
 
+# View distribution parameters
+epiparameter::get_parameters(onset_to_death_ebola)
+#>  shape  scale 
+#> 2.4000 3.3333
+
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
 #>   severity_mean severity_low severity_high
@@ -86,25 +92,44 @@ cfr_static(data = ebola1976)
 # Calculate the static CFR while correcting for delays
 cfr_static(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 #>   severity_mean severity_low severity_high
 #> 1         0.959        0.842             1
+```
+
+*cfr* also allows users to correct for any desired delay distribution by
+allowing `delay_dist` to optionally be a function that wraps around the
+probability density function (or probability mass function) for the
+distribution.
+
+Here, we replicate the example above but with slightly different shape
+and scale parameters.
+
+``` r
+# Replicate the example above:
+# define a probability density function for a Gamma distribution
+# with shape = 3.0, and scale = 4.0 (from the {epiparameter} library)
+dens_gamma <- function(x) {
+  stats::dgamma(shape = 3.0, scale = 4.0, x = x)
+}
+
+# calculate the static CFR for ebola
+cfr_static(
+  data = ebola1976,
+  delay_dist = dens_gamma
+)
+#>   severity_mean severity_low severity_high
+#> 1         0.967        0.848             1
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
 
 In this example we show how the estimate of overall severity can change
 as more data on cases and deaths over time becomes available, using the
-function `cfr_rolling()`. Because there is a delay from onset-to-death,
-a simple “naive” calculation that just divides deaths-to-date by
-cases-to-date will underestimate severity. The `cfr_rolling()` function
-uses the `cfr_severity()` adjustment to account for delays, and instead
-compares deaths-to-date with cases-with-known-outcome-to-date.
-
-This example shows how the adjusted estimate converges to “naive”
-estimate as the outbreak declines, and hence a larger and large
-proportion of cases have known outcomes.
+function `cfr_rolling()`. The adjusted estimate converges to the naive
+estimate as the outbreak declines and a larger proportion of cases have
+known outcomes.
 
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
@@ -128,7 +153,7 @@ head(rolling_cfr_naive)
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- cfr_rolling(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 # add the date from the outbreak
