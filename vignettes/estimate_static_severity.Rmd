@@ -156,7 +156,7 @@ The resulting data frame contains two new columns, "known_outcomes", for the num
 # calculate known death outcomes
 df_known_outcomes_ebola <- known_outcomes(
   data = df_ebola_subset,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 # visualise head of data frame
@@ -223,7 +223,7 @@ cfr_static(
 # calculating the corrected CFR
 cfr_static(
   df_ebola_subset,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 ```
 
@@ -331,7 +331,7 @@ We use the same method and implementation as in the Ebola example to calculate t
 ```{r}
 df_known_outcomes_covid <- known_outcomes(
   data = df_covid_uk_subset,
-  epidist = onset_to_death_covid
+  delay_dist = onset_to_death_covid
 )
 ```
 
@@ -389,7 +389,7 @@ cfr_static(
 # calculating the corrected CFR
 cfr_static(
   df_covid_uk_subset,
-  epidist = onset_to_death_covid
+  delay_dist = onset_to_death_covid
 )
 ```
 

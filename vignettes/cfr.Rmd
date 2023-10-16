@@ -81,7 +81,7 @@ head(ebola1976)
 
 We can access data on the distribution of delays between cases being reported, and deaths or recoveries from those cases being known, using the convenient [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
 
-We access the disease's 'onset-to-death' distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function `epiparameter::epidist_db()` [@barry2018].
+We access the disease's onset-to-death distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function `epiparameter::epidist_db()` [@barry2018].
 
 ```{r}
 onset_to_death_ebola <- epidist_db(
@@ -104,7 +104,7 @@ We use the function `cfr_static()` to calculate overall disease severity at the 
 ```{r}
 cfr_static(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 ```
 
@@ -125,7 +125,7 @@ Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming th
 # estimate reporting with a baseline severity of 70%
 estimate_ascertainment(
   data = ebola1976,
-  epidist = onset_to_death_ebola,
+  delay_dist = onset_to_death_ebola,
   type = "static",
   severity_baseline = 0.7
 )

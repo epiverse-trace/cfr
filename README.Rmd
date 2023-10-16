@@ -35,7 +35,7 @@ _{{ packagename }}_ can help estimate disease under-reporting in real-time, acco
 
 _{{ packagename }}_ implements methods outlined in @nishiura2009. There are plans to add estimates based on other methods.
 
-_{{ packagename }}_ uses the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) to access a library of epidemiological delay distributions, in order to calculate delay-corrected CFR estimates, and both packages are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
+_{{ packagename }}_ supports using the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) to pass epidemiological delay distributions in order to calculate delay-corrected CFR estimates, and both packages are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
 
@@ -53,7 +53,7 @@ pak::pak("epiverse-trace/epiparameter")
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example shows how to use _{{ packagename }}_ to estimate the overall case fatality risks from the 1976 Ebola outbreak [@camacho2014].
+This example shows how to use _{{ packagename }}_ to estimate the overall case fatality risks from the 1976 Ebola outbreak [@camacho2014], while correcting for delays using an 'onset to death' distribution from the _epiparameter_ package.
 
 ```{r example-ebola-calc}
 # Load package
@@ -71,21 +71,41 @@ onset_to_death_ebola <- epiparameter::epidist_db(
   single_epidist = TRUE
 )
 
+# View distribution parameters
+epiparameter::get_parameters(onset_to_death_ebola)
+
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
 
 # Calculate the static CFR while correcting for delays
 cfr_static(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
+)
+```
+
+_{{ packagename }}_ also allows users to correct for any desired delay distribution by allowing `delay_dist` to optionally be a function that wraps around the probability density function (or probability mass function) for the distribution.
+
+Here, we replicate the example above but with slightly different shape and scale parameters.
+
+```{r example-closure}
+# Replicate the example above:
+# define a probability density function for a Gamma distribution
+# with shape = 3.0, and scale = 4.0 (from the {epiparameter} library)
+dens_gamma <- function(x) {
+  stats::dgamma(shape = 3.0, scale = 4.0, x = x)
+}
+
+# calculate the static CFR for ebola
+cfr_static(
+  data = ebola1976,
+  delay_dist = dens_gamma
 )
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
 
-In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function `cfr_rolling()`. Because there is a delay from onset-to-death, a simple "naive" calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The `cfr_rolling()` function uses the `cfr_severity()` adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.
-
-This example shows how the adjusted estimate converges to "naive" estimate as the outbreak declines, and hence a larger and large proportion of cases have known outcomes.
+In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function `cfr_rolling()`. The adjusted estimate converges to the naive estimate as the outbreak declines and a larger proportion of cases have known outcomes.
 
 ```{r example-ebola-plot}
 # Calculate the CFR without correcting for delays on each day of the outbreak
@@ -102,7 +122,7 @@ head(rolling_cfr_naive)
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- cfr_rolling(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 # add the date from the outbreak

@@ -108,7 +108,7 @@ Finally, we estimate the static case fatality risk while correcting for delays u
 # estimate static CFR as a sanity check
 cfr_static(
   ebola,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 ```
 
