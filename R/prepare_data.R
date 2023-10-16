@@ -1,4 +1,3 @@
-
 #' @title Prepare common epidemiological data formats for CFR estimation
 #'
 #' @name prepare_data

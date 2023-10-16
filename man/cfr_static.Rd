@@ -4,7 +4,7 @@
 \alias{cfr_static}
 \title{Estimate a static disease severity measure}
 \usage{
-cfr_static(data, epidist = NULL, poisson_threshold = 100)
+cfr_static(data, delay_dist = NULL, poisson_threshold = 100)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,11 +21,20 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object.
+\item{delay_dist}{An optional argument that specifies how the duration
+between cases and outcomes is distributed.
+May be one of two types:
+\enumerate{
+\item A delay distribution in the form of an \verb{<epidist>} object, the density of
+which is evaluated by calling the \code{stats::density()} generic, or,
+\item A closure that wraps the density function of a distribution to evaluate
+density at user-specified values, e.g.
+\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}
+}
+
 Defaults to \code{NULL}, in which case no delay correction is applied.
-Passing an \verb{<epidist>} automatically applies delay correction in the
-severity estimation.}
+Passing an \verb{<epidist>} or closure automatically applies delay correction in
+the severity estimation.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
@@ -93,7 +102,7 @@ cfr_static(ebola1976)
 # estimate severity while correcting for delays
 cfr_static(
   ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 }

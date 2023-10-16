@@ -4,7 +4,7 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes of cases using a delay distribution}
 \usage{
-known_outcomes(data, epidist)
+known_outcomes(data, delay_dist)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,11 +21,20 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{epidist}{An optional argument for the delay distribution used, in the
-form of an \verb{<epidist>} object.
+\item{delay_dist}{An optional argument that specifies how the duration
+between cases and outcomes is distributed.
+May be one of two types:
+\enumerate{
+\item A delay distribution in the form of an \verb{<epidist>} object, the density of
+which is evaluated by calling the \code{stats::density()} generic, or,
+\item A closure that wraps the density function of a distribution to evaluate
+density at user-specified values, e.g.
+\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}
+}
+
 Defaults to \code{NULL}, in which case no delay correction is applied.
-Passing an \verb{<epidist>} automatically applies delay correction in the
-severity estimation.}
+Passing an \verb{<epidist>} or closure automatically applies delay correction in
+the severity estimation.}
 }
 \value{
 A \verb{<data.frame>} with the columns in \code{data}, and with two additional

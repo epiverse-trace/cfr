@@ -18,7 +18,7 @@ scfr_naive <- cfr_static(data = ebola1976)
 # Calculate static corrected CFRs
 scfr_corrected <- cfr_static(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 # Basic expectations

@@ -48,7 +48,7 @@
 #'
 #' estimate_ascertainment(
 #'   data = df_covid_uk,
-#'   epidist = onset_to_death_covid,
+#'   delay_dist = onset_to_death_covid,
 #'   type = "varying",
 #'   severity_baseline = 0.014,
 #'   burn_in = 7L,
@@ -56,11 +56,11 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   epidist = NULL,
+                                   delay_dist = NULL,
                                    type = c("static", "varying"),
                                    severity_baseline,
                                    burn_in = get_default_burn_in(
-                                     epidist
+                                     delay_dist
                                    ),
                                    smoothing_window = NULL,
                                    max_date = NULL) {
@@ -84,7 +84,13 @@ estimate_ascertainment <- function(data,
   )
   checkmate::assert_int(burn_in, lower = 0)
   checkmate::assert_date(max_date, null.ok = TRUE)
-  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
+  stopifnot(
+    "`delay_dist` must be an <epidist> or a distribution density function\\
+    evaluating density at a vector of values `x`.\\
+    E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
+      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
+        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+  )
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)
@@ -93,12 +99,12 @@ estimate_ascertainment <- function(data,
   df_severity <- switch(type,
     static = cfr_static(
       data,
-      epidist = epidist
+      delay_dist = delay_dist
     ),
     varying = {
       df_sev <- cfr_time_varying(
         data,
-        epidist = epidist,
+        delay_dist = delay_dist,
         smoothing_window = smoothing_window,
         burn_in = burn_in
       )
