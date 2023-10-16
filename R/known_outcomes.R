@@ -36,7 +36,7 @@
 #'
 #' head(outcomes)
 known_outcomes <- function(data,
-                           epidist) {
+                           delay_dist) {
   # some input checking; this function is mainly called internally
   # but currently exported
   # input checking is a candidate for removal
@@ -53,11 +53,17 @@ known_outcomes <- function(data,
     data[, c("cases", "deaths")],
     any.missing = FALSE
   )
-  checkmate::assert_class(epidist, "epidist")
+  stopifnot(
+    "`delay_dist` must be an <epidist> or a distribution density function\\
+    evaluating density at a vector of values `x`.\\
+    E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
+      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
+        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+  )
 
-  pmf_vals <- stats::density(
-    epidist,
-    at = seq(from = 0, to = nrow(data) - 1L)
+  pmf_vals <- get_density(
+    f = delay_dist,
+    x = seq(from = 0, to = nrow(data) - 1L)
   )
 
   # defining vectors to be used in the main loop

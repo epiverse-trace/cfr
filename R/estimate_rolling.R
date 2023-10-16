@@ -6,9 +6,9 @@
 #' time point, and increasing the number of time points included by one in each
 #' iteration.
 #'
-#' @details When delay correction is applied by passing an `<epidist>`, the
-#' internal function [estimate_severity()] is used to calculate the rolling
-#' severity.
+#' @details When delay correction is applied by passing an `<epidist>` or
+#' closure to `delay_dist`, the internal function [estimate_severity()] is used
+#' to calculate the rolling severity.
 #'
 #' @inheritParams cfr_static
 #'
@@ -37,15 +37,14 @@
 #' # view only the first values
 #' estimate <- cfr_rolling(
 #'   ebola1976,
-#'   epidist = onset_to_death_ebola
+#'   delay_dist = onset_to_death_ebola
 #' )
 #'
 #' head(estimate)
 #'
 cfr_rolling <- function(data,
-                        epidist = NULL,
+                        delay_dist = NULL,
                         poisson_threshold = 100) {
-
   # input checking
   # input checking
   checkmate::assert_data_frame(
@@ -65,28 +64,32 @@ cfr_rolling <- function(data,
   # check that data$date is a date column
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
+  # also check delay_dist
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
+      identical(unique(diff(data$date)), 1), # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
+    "`delay_dist` must be an <epidist> or a distribution density function\\
+    evaluating density at a vector of values `x`.\\
+    E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
+      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
+        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
   )
-  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
   checkmate::assert_count(poisson_threshold)
 
   # prepare cumulative sums
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
-  if (!is.null(epidist)) {
-
+  if (!is.null(delay_dist)) {
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
     # of deaths
     data <- known_outcomes(
       data = data,
-      epidist = epidist
+      delay_dist = delay_dist
     )
 
     cumulative_outcomes <- cumsum(data$known_outcomes)

@@ -20,7 +20,7 @@ rolling_scfr_naive <- cfr_rolling(
 # Calculate static corrected CFRs
 rolling_scfr_corrected <- cfr_rolling(
   data = ebola1976,
-  epidist = onset_to_death_ebola
+  delay_dist = onset_to_death_ebola
 )
 
 # Basic expectations
@@ -86,7 +86,7 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
     tail(rolling_scfr_corrected, 1),
     cfr_static(
       ebola1976,
-      epidist = onset_to_death_ebola
+      delay_dist = onset_to_death_ebola
     ),
     ignore_attr = TRUE
   )

@@ -20,7 +20,7 @@ tvcfr_naive <- cfr_time_varying(
 # Calculate corrected time-varying
 tvcfr_corrected <- cfr_time_varying(
   ebola1976,
-  epidist = onset_to_death_ebola,
+  delay_dist = onset_to_death_ebola,
   burn_in = 0
 )
 

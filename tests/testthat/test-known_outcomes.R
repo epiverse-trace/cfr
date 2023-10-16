@@ -12,7 +12,7 @@ onset_to_death_ebola <- epiparameter::epidist_db(
 )
 
 df_known_outcomes <- known_outcomes(
-  data = ebola1976, epidist = onset_to_death_ebola
+  data = ebola1976, delay_dist = onset_to_death_ebola
 )
 
 test_that("`known_outcomes` basic functionality", {

@@ -48,7 +48,7 @@ test_that("Basic expectations for static ascertainment", {
 test_that("Correct for delays for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    epidist = onset_to_death_ebola,
+    delay_dist = onset_to_death_ebola,
     burn_in = 0,
     severity_baseline = 0.7,
     type = "static"
@@ -81,7 +81,7 @@ test_that("Correct for delays for static ascertainment", {
 test_that("Smooth inputs for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    epidist = onset_to_death_ebola,
+    delay_dist = onset_to_death_ebola,
     burn_in = 0, smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -114,7 +114,7 @@ test_that("Smooth inputs for static ascertainment", {
 test_that("Automatic burn-in for static ascertainment with delay correction", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    epidist = onset_to_death_ebola,
+    delay_dist = onset_to_death_ebola,
     smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -195,7 +195,7 @@ onset_to_death_covid <- epiparameter::epidist_db(
 test_that("Basic expectations for time-varying ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    epidist = onset_to_death_covid,
+    delay_dist = onset_to_death_covid,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -237,7 +237,7 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate using max_date
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    epidist = onset_to_death_covid,
+    delay_dist = onset_to_death_covid,
     max_date = max_date,
     severity_baseline = 0.02,
     type = "varying"
@@ -246,7 +246,7 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate after subsetting the data
   ascertainment_estimate_2 <- estimate_ascertainment(
     data = covid_uk[covid_uk$date <= max_date, ],
-    epidist = onset_to_death_covid,
+    delay_dist = onset_to_death_covid,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -263,7 +263,7 @@ test_that("Ascertainment > 1.0 throws a warning", {
   expect_warning(
     estimate_ascertainment(
       data = ebola1976,
-      epidist = onset_to_death_ebola,
+      delay_dist = onset_to_death_ebola,
       severity_baseline = 0.7,
       type = "varying"
     ),

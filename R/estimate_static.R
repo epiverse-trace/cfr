@@ -21,11 +21,20 @@
 #' Note also that the total number of cases must be greater than the total
 #' number of reported deaths.
 #'
-#' @param epidist An optional argument for the delay distribution used, in the
-#' form of an `<epidist>` object.
+#' @param delay_dist An optional argument that specifies how the duration
+#' between cases and outcomes is distributed.
+#' May be one of two types:
+#'
+#'  1. A delay distribution in the form of an `<epidist>` object, the density of
+#' which is evaluated by calling the `stats::density()` generic, or,
+#'
+#'  2. A closure that wraps the density function of a distribution to evaluate
+#' density at user-specified values, e.g.
+#' `function(x) stats::dgamma(shape = 5, scale = 1, x = x)`
+#'
 #' Defaults to `NULL`, in which case no delay correction is applied.
-#' Passing an `<epidist>` automatically applies delay correction in the
-#' severity estimation.
+#' Passing an `<epidist>` or closure automatically applies delay correction in
+#' the severity estimation.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 100 by default.
@@ -93,11 +102,11 @@
 #' # estimate severity while correcting for delays
 #' cfr_static(
 #'   ebola1976,
-#'   epidist = onset_to_death_ebola
+#'   delay_dist = onset_to_death_ebola
 #' )
 #'
 cfr_static <- function(data,
-                       epidist = NULL,
+                       delay_dist = NULL,
                        poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(
@@ -119,23 +128,26 @@ cfr_static <- function(data,
   # check for excessive missing date and throw an error
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
+      identical(unique(diff(data$date)), 1), # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
+    "`delay_dist` must be an <epidist> or a distribution density function\\
+    evaluating density at a vector of values `x`.\\
+    E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
+      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
+        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
   )
-  checkmate::assert_class(epidist, "epidist", null.ok = TRUE)
   checkmate::assert_count(poisson_threshold)
 
-  # apply delay correction if an epidist is provided
-  if (!is.null(epidist)) {
-
+  # apply delay correction if a delay distribution is provided
+  if (!is.null(delay_dist)) {
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,
     # used as a replacement for total deaths in the original severity formula
     df_corrected <- known_outcomes(
       data = data,
-      epidist = epidist
+      delay_dist = delay_dist
     )
 
     # calculating the maximum likelihood estimate and 95% confidence interval
