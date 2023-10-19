@@ -1,14 +1,6 @@
 #### Tests for the rolling static CFR function cfr_rolling() ####
 # prepare data and common testing elements
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
 # Load ebola 1976 outbreak data
 data("ebola1976")
 
@@ -17,10 +9,13 @@ rolling_scfr_naive <- cfr_rolling(
   data = ebola1976
 )
 
+# Ebola onset to death distribution comes from Barry et al. 2018
+# a gamma distribution with k = 2.40, theta = 3.33
+
 # Calculate static corrected CFRs
 rolling_scfr_corrected <- cfr_rolling(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # Basic expectations
@@ -86,7 +81,7 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
     tail(rolling_scfr_corrected, 1),
     cfr_static(
       ebola1976,
-      delay_dist = onset_to_death_ebola
+      delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
     ),
     ignore_attr = TRUE
   )

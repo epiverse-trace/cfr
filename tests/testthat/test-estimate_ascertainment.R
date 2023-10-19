@@ -3,14 +3,7 @@
 # load Ebola 1976 outbreak data
 data("ebola1976")
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
+# define poisson threshold
 poisson_threshold <- 100
 
 test_that("Basic expectations for static ascertainment", {
@@ -48,7 +41,7 @@ test_that("Basic expectations for static ascertainment", {
 test_that("Correct for delays for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    delay_dist = onset_to_death_ebola,
+    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
     burn_in = 0,
     severity_baseline = 0.7,
     type = "static"
@@ -81,7 +74,7 @@ test_that("Correct for delays for static ascertainment", {
 test_that("Smooth inputs for static ascertainment", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    delay_dist = onset_to_death_ebola,
+    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
     burn_in = 0, smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -114,7 +107,7 @@ test_that("Smooth inputs for static ascertainment", {
 test_that("Automatic burn-in for static ascertainment with delay correction", {
   ascertainment_estimate <- estimate_ascertainment(
     data = ebola1976,
-    delay_dist = onset_to_death_ebola,
+    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
     smoothing_window = 7,
     severity_baseline = 0.7,
     type = "static"
@@ -184,18 +177,15 @@ data("covid_data")
 covid_uk <- covid_data[covid_data$country == "United Kingdom" &
   covid_data$date < "2021-01-01", ]
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_covid <- epiparameter::epidist_db(
-  disease = "Covid-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
-
 test_that("Basic expectations for time-varying ascertainment", {
+  # provide burn in as mean of lognormal distribution
+  distr_lnorm <- distributional::dist_lognormal(mu = 2.577, sigma = 0.440)
+  burn_in <- round(mean(distr_lnorm))
+
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    delay_dist = onset_to_death_covid,
+    delay_density = function(x) unlist(density(distr_lnorm, x)),
+    burn_in = burn_in,
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -237,7 +227,7 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate using max_date
   ascertainment_estimate <- estimate_ascertainment(
     data = covid_uk,
-    delay_dist = onset_to_death_covid,
+    delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
     max_date = max_date,
     severity_baseline = 0.02,
     type = "varying"
@@ -246,7 +236,7 @@ test_that("Time varying ascertainment at a user-specified date", {
   # get the estimate after subsetting the data
   ascertainment_estimate_2 <- estimate_ascertainment(
     data = covid_uk[covid_uk$date <= max_date, ],
-    delay_dist = onset_to_death_covid,
+    delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
     severity_baseline = 0.02,
     type = "varying"
   )
@@ -263,7 +253,7 @@ test_that("Ascertainment > 1.0 throws a warning", {
   expect_warning(
     estimate_ascertainment(
       data = ebola1976,
-      delay_dist = onset_to_death_ebola,
+      delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
       severity_baseline = 0.7,
       type = "varying"
     ),

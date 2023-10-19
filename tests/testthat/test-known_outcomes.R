@@ -3,16 +3,12 @@
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
+# Ebola onset to death distribution comes from Barry et al. 2018
+# a gamma distribution with k = 2.40, theta = 3.33
 
 df_known_outcomes <- known_outcomes(
-  data = ebola1976, delay_dist = onset_to_death_ebola
+  data = ebola1976,
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 test_that("`known_outcomes` basic functionality", {

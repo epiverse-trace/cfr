@@ -44,5 +44,5 @@
       ascertainment_estimate
     Output
         ascertainment_mean ascertainment_low ascertainment_high
-      1          0.4644663         0.4322843          0.4997936
+      1          0.4644944         0.4323104          0.4998239
 
