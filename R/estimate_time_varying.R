@@ -221,23 +221,3 @@ cfr_time_varying <- function(data,
   # return data
   data
 }
-
-#' Get a default burn-in value from a delay distribution
-#'
-#' @inheritParams cfr_time_varying
-#'
-#' @return A single integer, the burn-in value.
-#' @keywords internal
-get_default_burn_in <- function(delay_dist = NULL) {
-  default_value <- 7L
-  # calculate mean of <epidist> if possible, else return default
-  if (!is.null(delay_dist) && inherits(delay_dist, "epidist") &&
-    !is.na(mean(delay_dist))) {
-    x <- as.integer(round(mean(delay_dist)))
-  } else {
-    x <- default_value
-  }
-
-  # return x
-  x
-}
