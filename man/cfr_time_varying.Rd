@@ -6,8 +6,8 @@
 \usage{
 cfr_time_varying(
   data,
-  delay_dist = NULL,
-  burn_in = get_default_burn_in(delay_dist),
+  delay_density = NULL,
+  burn_in = 7,
   smoothing_window = NULL
 )
 }
@@ -26,32 +26,19 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{delay_dist}{An optional argument that specifies how the duration
-between cases and outcomes is distributed.
-May be one of two types:
-\enumerate{
-\item A delay distribution in the form of an \verb{<epidist>} object, the density of
-which is evaluated by calling the \code{stats::density()} generic, or,
-\item A closure that wraps the density function of a distribution to evaluate
+\item{delay_density}{An optional argument that controls whether delay
+correction is applied in the severity estimation.
+May be \code{NULL}, for no delay correction, or a function that returns the
+density function of a distribution to evaluate
 density at user-specified values, e.g.
-\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}
-}
-
-Defaults to \code{NULL}, in which case no delay correction is applied.
-Passing an \verb{<epidist>} or closure automatically applies delay correction in
-the severity estimation.}
+\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}.}
 
 \item{burn_in}{A single integer value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
 
-When an \verb{<epidist>} is provided to \code{delay_dist}, the default value is set to
-the mean of the \verb{<epidist>}.
-
-Defaults to 7 if a closure is provided to \code{delay_dist} instead, or if the
-\verb{<epidist>} provided is not parameterised.
-This is a sensible default value that disregards the first week of cases and
-deaths, assuming daily data.
+Defaults to 7, which is a sensible default value that disregards the first
+week of cases and deaths, assuming daily data.
 
 To consider all case data including the start of the time-series, set this
 argument to 0.}
@@ -72,7 +59,7 @@ and 95\% confidence interval of the corrected severity.
 Calculates how the severity of a disease changes over time
 while optionally correcting for reporting delays using an epidemiological
 delay distribution of the time between symptom onset and outcome
-(e.g. onset to death for the fatality risk).
+(e.g. onset-to-death for the fatality risk).
 }
 \section{Details: Adjusting for delays between two time series}{
 This function estimates the number of cases which have a known outcome over
@@ -103,14 +90,6 @@ here.
 data("covid_data")
 df_covid_uk <- covid_data[covid_data$country == "United Kingdom", ]
 
-# load epidist object from {epiparameter}
-onset_to_death_covid <- epiparameter::epidist_db(
-  disease = "COVID-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
-
 # estimate time varying severity without correcting for delays
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk,
@@ -120,9 +99,11 @@ cfr_time_varying <- cfr_time_varying(
 tail(cfr_time_varying)
 
 # estimate time varying severity while correcting for delays
+# obtain onset-to-death delay distribution parameters from Linton et al. 2020
+# view only the first values
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk,
-  delay_dist = onset_to_death_covid,
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   burn_in = 7L
 )
 tail(cfr_time_varying)

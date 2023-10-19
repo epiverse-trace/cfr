@@ -4,7 +4,7 @@
 \alias{known_outcomes}
 \title{Estimate known outcomes of cases using a delay distribution}
 \usage{
-known_outcomes(data, delay_dist)
+known_outcomes(data, delay_density)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,20 +21,12 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{delay_dist}{An optional argument that specifies how the duration
-between cases and outcomes is distributed.
-May be one of two types:
-\enumerate{
-\item A delay distribution in the form of an \verb{<epidist>} object, the density of
-which is evaluated by calling the \code{stats::density()} generic, or,
-\item A closure that wraps the density function of a distribution to evaluate
+\item{delay_density}{An optional argument that controls whether delay
+correction is applied in the severity estimation.
+May be \code{NULL}, for no delay correction, or a function that returns the
+density function of a distribution to evaluate
 density at user-specified values, e.g.
-\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}
-}
-
-Defaults to \code{NULL}, in which case no delay correction is applied.
-Passing an \verb{<epidist>} or closure automatically applies delay correction in
-the severity estimation.}
+\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}.}
 }
 \value{
 A \verb{<data.frame>} with the columns in \code{data}, and with two additional
@@ -57,16 +49,13 @@ estimates of the known death outcomes.
 # Load Ebola 1976 outbreak data
 data("ebola1976")
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
+# estimate severity for each day while correcting for delays
+# obtain onset-to-death delay distribution parameters from Barry et al. 2018
 # examine the first few rows of the output
-outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+outcomes <- known_outcomes(
+  data = ebola1976,
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
+)
 
 head(outcomes)
 }

@@ -4,7 +4,7 @@
 \alias{cfr_static}
 \title{Estimate a static disease severity measure}
 \usage{
-cfr_static(data, delay_dist = NULL, poisson_threshold = 100)
+cfr_static(data, delay_density = NULL, poisson_threshold = 100)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -21,20 +21,12 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
-\item{delay_dist}{An optional argument that specifies how the duration
-between cases and outcomes is distributed.
-May be one of two types:
-\enumerate{
-\item A delay distribution in the form of an \verb{<epidist>} object, the density of
-which is evaluated by calling the \code{stats::density()} generic, or,
-\item A closure that wraps the density function of a distribution to evaluate
+\item{delay_density}{An optional argument that controls whether delay
+correction is applied in the severity estimation.
+May be \code{NULL}, for no delay correction, or a function that returns the
+density function of a distribution to evaluate
 density at user-specified values, e.g.
-\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}
-}
-
-Defaults to \code{NULL}, in which case no delay correction is applied.
-Passing an \verb{<epidist>} or closure automatically applies delay correction in
-the severity estimation.}
+\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
@@ -77,8 +69,9 @@ allowing the functions within this package to be quick and easy tools to use.
 The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
 represents depends upon the input data given by the user.
 
-The epidemiological delay distribution passed to \code{epidist} is used to obtain
-a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+The epidemiological delay-distribution density function passed to
+\code{delay_density} is used to evaluate the probability mass function
+parameterised by time; i.e. \eqn{f(t)} which
 gives the probability a case has a known outcomes (usually, death) at time
 \eqn{t}, parameterised with disease-specific parameters before it is supplied
 here.
@@ -88,21 +81,14 @@ here.
 # load package data
 data("ebola1976")
 
-# get an onset to death distribution from the {epiparameter} package
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
 # estimate severity without correcting for delays
 cfr_static(ebola1976)
 
-# estimate severity while correcting for delays
+# estimate severity for each day while correcting for delays
+# obtain onset-to-death delay distribution parameters from Barry et al. 2018
 cfr_static(
   ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 }
