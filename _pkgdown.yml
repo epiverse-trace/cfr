@@ -5,6 +5,7 @@ articles:
 - title: Package vignettes
   navbar: Package vignettes
   contents:
+  - delay_distributions
   - estimate_static_severity
   - estimate_time_varying_severity
   - estimate_ascertainment
@@ -12,3 +13,7 @@ articles:
   navbar: Handling data from other packages
   contents:
   - data_from_incidence2
+- title: Handling delay distributions
+  navbar: Handling delay distributions
+  contents:
+  - delay_distributions

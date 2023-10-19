@@ -56,12 +56,11 @@ Suggests:
     knitr,
     bookdown,
     spelling,
-    epiparameter,
     incidence2,
     outbreaks,
-    data.table
-Remotes:
-    epiverse-trace/epiparameter
+    data.table,
+    distributional,
+    distcrete
 Config/testthat/edition: 3
 Config/Needs/website:
     epiverse-trace/epiversetheme
