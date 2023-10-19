@@ -5,20 +5,15 @@
 # load Ebola 1976 outbreak data
 data("ebola1976")
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
+# Ebola onset to death distribution comes from Barry et al. 2018
+# a gamma distribution with k = 2.40, theta = 3.33
 
 poisson_threshold <- 100
 
 # get the corrected dataframe
 df_corrected <- known_outcomes(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # run estimate_severity
@@ -74,7 +69,7 @@ test_that("`cfr_rolling`: Basic expectations", {
   # get the corrected dataframe
   df_corrected <- known_outcomes(
     data = ebola1976,
-    delay_dist = onset_to_death_ebola
+    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
   )
 
   # run estimate_severity
@@ -94,7 +89,7 @@ test_that("`cfr_rolling`: Messages and errors", {
   ebola1976$cases <- 0L
   df_corrected <- known_outcomes(
     data = ebola1976,
-    delay_dist = onset_to_death_ebola
+    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
   )
 
   # expect an error because cases are 0

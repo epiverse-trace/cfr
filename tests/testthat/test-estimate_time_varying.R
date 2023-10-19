@@ -1,13 +1,8 @@
 #### Tests for the static CFR function cfr_static() ####
 # prepare data and common testing elements
 
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
+# Ebola onset to death distribution comes from Barry et al. 2018
+# a gamma distribution with k = 2.40, theta = 3.33
 
 # Load ebola 1976 outbreak data
 data("ebola1976")
@@ -20,7 +15,7 @@ tvcfr_naive <- cfr_time_varying(
 # Calculate corrected time-varying
 tvcfr_corrected <- cfr_time_varying(
   ebola1976,
-  delay_dist = onset_to_death_ebola,
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
   burn_in = 0
 )
 
@@ -73,14 +68,6 @@ data("covid_data")
 # subset data
 covid_uk <- covid_data[covid_data$country == "United Kingdom" &
   covid_data$date < "2021-01-01" & covid_data$date > "2020-05-01", ]
-
-# read epidist for EVD onset to death from {epiparameter}
-onset_to_death_covid <- epiparameter::epidist_db(
-  disease = "Covid-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
 
 # Calculate naive time-varying CFR
 tvcfr_naive_smoothed_3 <- cfr_time_varying(
