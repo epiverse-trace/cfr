@@ -1,0 +1,155 @@
+---
+title: "A primer on working with delay distributions"
+output:
+  bookdown::html_vignette2:
+    fig_caption: yes
+    code_folding: show
+pkgdown:
+  as_is: true
+bibliography: resources/library.json
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{A primer on working with delay distributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is intended to be guidance for working with probability distributions in R in the context of using delay distributions with _cfr_ to obtain delay-corrected estimates of disease severity.
+
+```{r setup}
+# load necessary packages
+library(cfr)
+
+# some distribution packages
+library(distributional)
+library(distcrete)
+```
+
+## A brief primer on distributions in R
+
+R provides rich and extensive support for representing and working with probability distributions, and this can be seen from the [CRAN probability distributions task view](https://cran.r-project.org/view=Distributions).
+
+Users might already be familiar with some distributions and their related functionality --- such as the probability density function, or random number generation --- provided in the _stats_ package which is loaded when R is started.
+
+For example, the Gamma distribution's probability density function (PDF) is represented by `stats::dgamma()`.
+
+```{r}
+# the probability density function at `x` for a Gamma distribution
+dgamma(x = seq(10), shape = 5, rate = 1)
+```
+
+## Using delay distribution densities in _cfr_
+
+To correct for reporting delays in disease severity estimation, we are primarily interested in the PDF or PMF (probability mass function) of the distribution of reporting delays between cases and known outcomes.
+
+We refer to the _R functions providing_ both the PDF and PMF as the _density_ of the distribution.
+
+The delay distribution density must be passed to functions such as `cfr_static()` or `cfr_time_varying()` via the `delay_density` argument. This can be represented in pseudo-code as
+
+```
+cfr_*(data, delay_density = <DENSITY_FUNCTION>)
+```
+
+## Preparing delay distribution density for _cfr_
+
+_Importantly_, the _cfr_ functions must receive the delay density in such a way that the density can be calculated over a flexible number of values (the sequence of days in the outbreak data).
+
+For example, the density function for a Gamma distribution can be made generalisable to any set of values, by wrapping it within another function that accepts a vector of numbers.
+
+```{r}
+# wrap stats::dgamma() in a function
+# the Gamma distribution parameters are contained within dens_gamma()
+dens_gamma <- function(x) {
+  stats::dgamma(x = x, shape = 5, scale = 1)
+}
+
+# check over a vector of `x`
+dens_gamma(x = seq(10))
+```
+
+::: {.alert .alert-info}
+More information on working with functions, and especially anonymous functions, can be found in the [chapter on Functional Programming in _Advanced R_](https://adv-r.hadley.nz/fp.html).
+Users working with R > 4.1.0 can also use the new syntax for anonymous functions.
+:::
+
+## Passing delay distribution density to _cfr_ functions
+
+delay distribution density functions can be passed, as anonymous functions, to _cfr_ functions as shown with the example data provided with the package @camacho2014.
+Parameters for the onset-to-death distribution of Ebola virus disease are taken from @barry2018.
+
+```{r}
+# load package data
+data("ebola1976")
+
+# pass function wrapping dgamma to cfr_static()
+cfr_static(
+  data = ebola1976,
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
+)
+```
+
+## Using other distribution representations
+
+While many R packages provide support for representing probability distributions, we focus on two examples, _distributional_ and _distcrete_, to show how closures wrapping these could be implemented, while wrapping the parameters from @barry2018.
+
+Users may wish to use these or similar packages for better management of distributions and parameters.
+See the [CRAN probability distributions task view](https://cran.r-project.org/view=Distributions) for more information on distribution packages suitable for different use cases.
+
+### Using _distributional_
+
+Note that the output of `density(<distribution>, x)` is a list containing a vector.
+
+```{r}
+# using {distributional} and parameters from Barry et al. 2018
+dist_onset_to_death_ebola <- dist_gamma(shape = 2.40, rate = 1.0 / 3.33)
+
+# wrap function and pass it to cfr_static()
+# unlist() required as density(<distribution>, x) is a list
+cfr_static(
+  data = ebola1976,
+  delay_density = function(x) unlist(density(dist_onset_to_death_ebola, x))
+)
+```
+
+### Using _distcrete_
+
+The _distcrete_ package provides support for discretised distributions.
+Here, we show an example for the discretised Gamma distribution.
+
+```{r}
+# using {distcrete} and parameters from Barry et al. 2018
+dist_onset_to_death_ebola <- distcrete(
+  name = "gamma", shape = 2.40, scale = 3.33, interval = 1
+)
+
+# pass density function to cfr_static()
+cfr_static(
+  data = ebola1976,
+  delay_density = function(x) dist_onset_to_death_ebola$d(x)
+)
+```
+
+## Links to _epiparameter_
+
+While users can pass functions from _stats_, and can manage distribution parameters using specialised packages and classes, it may be convenient to be able to access parameters reported in the epidemiological literature from a curated library.
+
+The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be such a library of epidemiological delay distributions.
+The dedicated `<epidist>` class is expected to have similar functionality to other distribution classes, allowing easy definition of density functions that can be passed to _cfr_.
+
+The pseudo-code below shows how this might work.
+
+```r
+# NOTE: this is pseudo-code
+EPIDIST_OBJECT <- ACCESS_DISTRIBUTION(disease, study)
+
+cfr_*(data = data, delay_density = function(x) density(<EPIDIST_OBJECT> x))
+```
+
+## References
