@@ -6,9 +6,9 @@
 #' time point, and increasing the number of time points included by one in each
 #' iteration.
 #'
-#' @details When delay correction is applied by passing an `<epidist>` or
-#' closure to `delay_dist`, the internal function [estimate_severity()] is used
-#' to calculate the rolling severity.
+#' @details When delay correction is applied by passing a delay distribution
+#' density function to `delay_density`, the internal function
+#' [estimate_severity()] is used to calculate the rolling severity.
 #'
 #' @inheritParams cfr_static
 #'
@@ -22,28 +22,21 @@
 #' # load package data
 #' data("ebola1976")
 #'
-#' # get an onset to death distribution from the {epiparameter} package
-#' onset_to_death_ebola <- epiparameter::epidist_db(
-#'   disease = "Ebola Virus Disease",
-#'   epi_dist = "onset_to_death",
-#'   author = "The-Ebola-Outbreak-Epidemiology-Team",
-#'   single_epidist = TRUE
-#' )
-#'
 #' # estimate severity without correcting for delays
 #' cfr_static(ebola1976)
 #'
 #' # estimate severity for each day while correcting for delays
+#' # obtain onset-to-death delay distribution parameters from Barry et al. 2018
 #' # view only the first values
 #' estimate <- cfr_rolling(
 #'   ebola1976,
-#'   delay_dist = onset_to_death_ebola
+#'   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 #' )
 #'
 #' head(estimate)
 #'
 cfr_rolling <- function(data,
-                        delay_dist = NULL,
+                        delay_density = NULL,
                         poisson_threshold = 100) {
   # input checking
   # input checking
@@ -64,18 +57,17 @@ cfr_rolling <- function(data,
   # check that data$date is a date column
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
   # check for excessive missing date and throw an error
-  # also check delay_dist
+  # also check delay_density
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
       identical(unique(diff(data$date)), 1), # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
-    "`delay_dist` must be an <epidist> or a distribution density function\\
-    evaluating density at a vector of values `x`.\\
+    "`delay_density` must be a distribution density function with 1 argument\\
+    evaluating density at a vector of values and returning a numeric vector.\\
     E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
-      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
-        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
   checkmate::assert_count(poisson_threshold)
 
@@ -83,13 +75,13 @@ cfr_rolling <- function(data,
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
-  if (!is.null(delay_dist)) {
+  if (!is.null(delay_density)) {
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with known outcomes and using this estimate as the
     # of deaths
     data <- known_outcomes(
       data = data,
-      delay_dist = delay_dist
+      delay_density = delay_density
     )
 
     cumulative_outcomes <- cumsum(data$known_outcomes)

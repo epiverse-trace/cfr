@@ -35,20 +35,15 @@
 #'
 #' df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 #'
-#' # load epidist object from {epiparameter}
-#' onset_to_death_covid <- epiparameter::epidist_db(
-#'   disease = "COVID-19",
-#'   epi_dist = "onset_to_death",
-#'   author = "Linton",
-#'   single_epidist = TRUE
-#' )
-#'
 #' # use a severity baseline of 1.4% (0.014) taken from Verity et al. (2020)
 #' # Lancet Infectious Diseases: 10.1016/S1473-3099(20)30243-7
 #'
+#' # use onset-to-death distribution from Linton et al. (2020)
+#' # J. Clinical Medicine: 10.3390/jcm9020538
+#'
 #' estimate_ascertainment(
 #'   data = df_covid_uk,
-#'   delay_dist = onset_to_death_covid,
+#'   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
 #'   type = "varying",
 #'   severity_baseline = 0.014,
 #'   burn_in = 7L,
@@ -56,12 +51,10 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
-                                   delay_dist = NULL,
+                                   delay_density = NULL,
                                    type = c("static", "varying"),
                                    severity_baseline,
-                                   burn_in = get_default_burn_in(
-                                     delay_dist
-                                   ),
+                                   burn_in = 7,
                                    smoothing_window = NULL,
                                    max_date = NULL) {
   # input checking
@@ -84,12 +77,13 @@ estimate_ascertainment <- function(data,
   )
   checkmate::assert_int(burn_in, lower = 0)
   checkmate::assert_date(max_date, null.ok = TRUE)
+
+  # check delay_density and run over short sequence to test output
   stopifnot(
-    "`delay_dist` must be an <epidist> or a distribution density function\\
-    evaluating density at a vector of values `x`.\\
+    "`delay_density` must be a distribution density function with 1 argument\\
+    evaluating density at a vector of values and returning a numeric vector.\\
     E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
-      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
-        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
 
   # match argument for type
@@ -99,12 +93,12 @@ estimate_ascertainment <- function(data,
   df_severity <- switch(type,
     static = cfr_static(
       data,
-      delay_dist = delay_dist
+      delay_density = delay_density
     ),
     varying = {
       df_sev <- cfr_time_varying(
         data,
-        delay_dist = delay_dist,
+        delay_density = delay_density,
         smoothing_window = smoothing_window,
         burn_in = burn_in
       )
