@@ -23,20 +23,17 @@
 #' # Load Ebola 1976 outbreak data
 #' data("ebola1976")
 #'
-#' # read epidist for EVD onset to death from {epiparameter}
-#' onset_to_death_ebola <- epiparameter::epidist_db(
-#'   disease = "Ebola Virus Disease",
-#'   epi_dist = "onset_to_death",
-#'   author = "The-Ebola-Outbreak-Epidemiology-Team",
-#'   single_epidist = TRUE
-#' )
-#'
+#' # estimate severity for each day while correcting for delays
+#' # obtain onset-to-death delay distribution parameters from Barry et al. 2018
 #' # examine the first few rows of the output
-#' outcomes <- known_outcomes(data = ebola1976, onset_to_death_ebola)
+#' outcomes <- known_outcomes(
+#'   data = ebola1976,
+#'   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
+#' )
 #'
 #' head(outcomes)
 known_outcomes <- function(data,
-                           delay_dist) {
+                           delay_density) {
   # some input checking; this function is mainly called internally
   # but currently exported
   # input checking is a candidate for removal
@@ -54,17 +51,13 @@ known_outcomes <- function(data,
     any.missing = FALSE
   )
   stopifnot(
-    "`delay_dist` must be an <epidist> or a distribution density function\\
-    evaluating density at a vector of values `x`.\\
+    "`delay_density` must be a distribution density function with 1 argument\\
+    evaluating density at a vector of values and returning a numeric vector.\\
     E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
-      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
-        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
 
-  pmf_vals <- get_density(
-    f = delay_dist,
-    x = seq(from = 0, to = nrow(data) - 1L)
-  )
+  pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
   # defining vectors to be used in the main loop
   cases <- data$cases

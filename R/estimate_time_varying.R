@@ -3,20 +3,15 @@
 #' @description Calculates how the severity of a disease changes over time
 #' while optionally correcting for reporting delays using an epidemiological
 #' delay distribution of the time between symptom onset and outcome
-#' (e.g. onset to death for the fatality risk).
+#' (e.g. onset-to-death for the fatality risk).
 #'
 #' @inheritParams cfr_static
 #' @param burn_in A single integer value for the number of time-points
 #' (typically days) to disregard at the start of the time-series, if a burn-in
 #' period is desired.
 #'
-#' When an `<epidist>` is provided to `delay_dist`, the default value is set to
-#' the mean of the `<epidist>`.
-#'
-#' Defaults to 7 if a closure is provided to `delay_dist` instead, or if the
-#' `<epidist>` provided is not parameterised.
-#' This is a sensible default value that disregards the first week of cases and
-#' deaths, assuming daily data.
+#' Defaults to 7, which is a sensible default value that disregards the first
+#' week of cases and deaths, assuming daily data.
 #'
 #' To consider all case data including the start of the time-series, set this
 #' argument to 0.
@@ -70,14 +65,6 @@
 #' data("covid_data")
 #' df_covid_uk <- covid_data[covid_data$country == "United Kingdom", ]
 #'
-#' # load epidist object from {epiparameter}
-#' onset_to_death_covid <- epiparameter::epidist_db(
-#'   disease = "COVID-19",
-#'   epi_dist = "onset_to_death",
-#'   author = "Linton",
-#'   single_epidist = TRUE
-#' )
-#'
 #' # estimate time varying severity without correcting for delays
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk,
@@ -87,16 +74,18 @@
 #' tail(cfr_time_varying)
 #'
 #' # estimate time varying severity while correcting for delays
+#' # obtain onset-to-death delay distribution parameters from Linton et al. 2020
+#' # view only the first values
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk,
-#'   delay_dist = onset_to_death_covid,
+#'   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
 #'   burn_in = 7L
 #' )
 #' tail(cfr_time_varying)
 #'
 cfr_time_varying <- function(data,
-                             delay_dist = NULL,
-                             burn_in = get_default_burn_in(delay_dist),
+                             delay_density = NULL,
+                             burn_in = 7,
                              smoothing_window = NULL) {
   # input checking
   # expect an integer-like number
@@ -119,11 +108,10 @@ cfr_time_varying <- function(data,
   stopifnot(
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0),
-    "`delay_dist` must be an <epidist> or a distribution density function\\
-    evaluating density at a vector of values `x`.\\
+    "`delay_density` must be a distribution density function with 1 argument\\
+    evaluating density at a vector of values and returning a numeric vector.\\
     E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
-      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
-        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
 
   # prepare a new dataframe with smoothed columns if requested
@@ -173,11 +161,8 @@ cfr_time_varying <- function(data,
   # end at the first row after the burn-in number of rows (days)
   # TODO: check if modifying start point is necessary for runmed "keep" endrule
   indices <- seq(case_length - smoothing_window, burn_in + 1, -1)
-  if (!is.null(delay_dist)) {
-    pmf_vals <- get_density(
-      f = delay_dist,
-      x = seq(from = 0, to = nrow(data) - 1L)
-    )
+  if (!is.null(delay_density)) {
+    pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
     df_temp[indices, "known_outcomes"] <- vapply(
       X = indices,

@@ -21,20 +21,12 @@
 #' Note also that the total number of cases must be greater than the total
 #' number of reported deaths.
 #'
-#' @param delay_dist An optional argument that specifies how the duration
-#' between cases and outcomes is distributed.
-#' May be one of two types:
-#'
-#'  1. A delay distribution in the form of an `<epidist>` object, the density of
-#' which is evaluated by calling the `stats::density()` generic, or,
-#'
-#'  2. A closure that wraps the density function of a distribution to evaluate
+#' @param delay_density An optional argument that controls whether delay
+#' correction is applied in the severity estimation.
+#' May be `NULL`, for no delay correction, or a function that returns the
+#' density function of a distribution to evaluate
 #' density at user-specified values, e.g.
-#' `function(x) stats::dgamma(shape = 5, scale = 1, x = x)`
-#'
-#' Defaults to `NULL`, in which case no delay correction is applied.
-#' Passing an `<epidist>` or closure automatically applies delay correction in
-#' the severity estimation.
+#' `function(x) stats::dgamma(shape = 5, scale = 1, x = x)`.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 100 by default.
@@ -66,8 +58,9 @@
 #' The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
 #' represents depends upon the input data given by the user.
 #'
-#' The epidemiological delay distribution passed to `epidist` is used to obtain
-#' a probability mass function parameterised by time; i.e. \eqn{f(t)} which
+#' The epidemiological delay-distribution density function passed to 
+#' `delay_density` is used to evaluate the probability mass function
+#' parameterised by time; i.e. \eqn{f(t)} which
 #' gives the probability a case has a known outcomes (usually, death) at time
 #' \eqn{t}, parameterised with disease-specific parameters before it is supplied
 #' here.
@@ -88,25 +81,18 @@
 #' # load package data
 #' data("ebola1976")
 #'
-#' # get an onset to death distribution from the {epiparameter} package
-#' onset_to_death_ebola <- epiparameter::epidist_db(
-#'   disease = "Ebola Virus Disease",
-#'   epi_dist = "onset_to_death",
-#'   author = "The-Ebola-Outbreak-Epidemiology-Team",
-#'   single_epidist = TRUE
-#' )
-#'
 #' # estimate severity without correcting for delays
 #' cfr_static(ebola1976)
 #'
-#' # estimate severity while correcting for delays
+#' # estimate severity for each day while correcting for delays
+#' # obtain onset-to-death delay distribution parameters from Barry et al. 2018
 #' cfr_static(
 #'   ebola1976,
-#'   delay_dist = onset_to_death_ebola
+#'   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 #' )
 #'
 cfr_static <- function(data,
-                       delay_dist = NULL,
+                       delay_density = NULL,
                        poisson_threshold = 100) {
   # input checking
   checkmate::assert_data_frame(
@@ -132,22 +118,21 @@ cfr_static <- function(data,
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
-    "`delay_dist` must be an <epidist> or a distribution density function\\
-    evaluating density at a vector of values `x`.\\
+    "`delay_density` must be a distribution density function with 1 argument\\
+    evaluating density at a vector of values and returning a numeric vector.\\
     E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
-      checkmate::test_class(delay_dist, "epidist", null.ok = TRUE) ||
-        checkmate::test_function(delay_dist, args = "x", null.ok = TRUE)
+      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
   checkmate::assert_count(poisson_threshold)
 
   # apply delay correction if a delay distribution is provided
-  if (!is.null(delay_dist)) {
+  if (!is.null(delay_density)) {
     # calculating the corrected severity, corrected for delay between case
     # detection and outcome calculating the number of cases with known outcome,
     # used as a replacement for total deaths in the original severity formula
     df_corrected <- known_outcomes(
       data = data,
-      delay_dist = delay_dist
+      delay_density = delay_density
     )
 
     # calculating the maximum likelihood estimate and 95% confidence interval
