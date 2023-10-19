@@ -32,11 +32,8 @@ delays reporting the outcomes of cases.
 ([2009](#ref-nishiura2009)). There are plans to add estimates based on
 other methods.
 
-*cfr* supports using the [*epiparameter*
-package](https://epiverse-trace.github.io/epiparameter/) to pass
-epidemiological delay distributions in order to calculate
-delay-corrected CFR estimates, and both packages are developed at the
-[Centre for the Mathematical Modelling of Infectious
+*cfr* is developed at the [Centre for the Mathematical Modelling of
+Infectious
 Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases)
 at the London School of Hygiene and Tropical Medicine as part of the
 [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
@@ -49,9 +46,6 @@ The current development version of *cfr* can be installed from
 ``` r
 if(!require("pak")) install.packages("pak")
 pak::pak("epiverse-trace/cfr")
-
-# Also install R package {epiparameter} for epidemiological parameter values
-pak::pak("epiverse-trace/epiparameter")
 ```
 
 ## Quick start
@@ -60,8 +54,10 @@ pak::pak("epiverse-trace/epiparameter")
 
 This example shows how to use *cfr* to estimate the overall case
 fatality risks from the 1976 Ebola outbreak ([Camacho et al.
-2014](#ref-camacho2014)), while correcting for delays using an ‘onset to
-death’ distribution from the *epiparameter* package.
+2014](#ref-camacho2014)), while correcting for delays using a
+Gamma-distributed onset to death duration taken from Barry et al.
+([2018](#ref-barry2018)), with a shape $k$ of 2.40 and a scale $\theta$
+of 3.33.
 
 ``` r
 # Load package
@@ -69,20 +65,6 @@ library(cfr)
 
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
-
-# read delay distribution for ebolavirus onset to death from {epiparameter}
-# accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
-# View distribution parameters
-epiparameter::get_parameters(onset_to_death_ebola)
-#>  shape  scale 
-#> 2.4000 3.3333
 
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
@@ -92,35 +74,10 @@ cfr_static(data = ebola1976)
 # Calculate the static CFR while correcting for delays
 cfr_static(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 #>   severity_mean severity_low severity_high
 #> 1         0.959        0.842             1
-```
-
-*cfr* also allows users to correct for any desired delay distribution by
-allowing `delay_dist` to optionally be a function that wraps around the
-probability density function (or probability mass function) for the
-distribution.
-
-Here, we replicate the example above but with slightly different shape
-and scale parameters.
-
-``` r
-# Replicate the example above:
-# define a probability density function for a Gamma distribution
-# with shape = 3.0, and scale = 4.0 (from the {epiparameter} library)
-dens_gamma <- function(x) {
-  stats::dgamma(shape = 3.0, scale = 4.0, x = x)
-}
-
-# calculate the static CFR for ebola
-cfr_static(
-  data = ebola1976,
-  delay_dist = dens_gamma
-)
-#>   severity_mean severity_low severity_high
-#> 1         0.967        0.848             1
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
@@ -153,7 +110,7 @@ head(rolling_cfr_naive)
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- cfr_rolling(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # add the date from the outbreak
@@ -215,6 +172,16 @@ By contributing to this project, you agree to abide by its terms.
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-barry2018" class="csl-entry">
+
+Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide
+Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et
+al. 2018. “Outbreak of Ebola virus disease in the Democratic Republic of
+the Congo, April–May, 2018: an epidemiological study.” *The Lancet* 392
+(10143): 213–21. <https://doi.org/10.1016/S0140-6736(18)31387-4>.
+
+</div>
 
 <div id="ref-camacho2014" class="csl-entry">
 
