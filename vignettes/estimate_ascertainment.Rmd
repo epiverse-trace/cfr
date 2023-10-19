@@ -42,11 +42,9 @@ We wish to estimate one of the typical severity quantities used in epidemiology 
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+* Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
 
 The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths".
-
-The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
 This vignette shows how to use the `estimate_ascertainment()` function in _cfr_ to estimate the proportion of cases, infections or hospitalisations ascertained, and consequently, the extent of under-ascertainment or under-reporting.
@@ -61,7 +59,6 @@ First load _cfr_ and packages to access and plot data.
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 # load {cfr} and data packages
 library(cfr)
-library(epiparameter)
 
 # packages to wrangle and plot data
 library(dplyr)
@@ -160,16 +157,7 @@ ggplot(df_covid_uk_subset) +
 
 ### Onset-to-death distribution for Covid-19
 
-We retrieve the appropriate distribution reported in @linton2020 using the `epidist_db()` function from the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
-
-```{r}
-onset_to_death_covid <- epidist_db(
-  disease = "COVID-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
-```
+We obtain the appropriate distribution reported in @linton2020; this is a log-normal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
 ### Estimating the proportion of cases that have been ascertained
 
@@ -188,7 +176,7 @@ The other arguments are the same as those found in `cfr_time_varying()`.
 ```{r }
 df_reporting_static <- estimate_ascertainment(
   data = df_covid_uk_subset,
-  delay_dist = onset_to_death_covid,
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   type = "static",
   severity_baseline = 0.014
 )
@@ -197,7 +185,7 @@ df_reporting_static <- estimate_ascertainment(
 ```{r }
 df_reporting_varying <- estimate_ascertainment(
   data = df_covid_uk,
-  delay_dist = onset_to_death_covid,
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   type = "varying",
   severity_baseline = 0.014,
   burn_in = 7,
@@ -242,6 +230,9 @@ covid_data_early <- filter(
 # nest the data
 df_reporting <- nest(covid_data_early, .by = country)
 
+# define density function
+delay_density <- function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
+
 # calculate the reporting rate in each country using
 # map on nested dataframes
 df_reporting <- mutate(
@@ -249,7 +240,7 @@ df_reporting <- mutate(
   reporting = map(
     .x = data, .f = estimate_ascertainment,
     # arguments to function
-    delay_dist = onset_to_death_covid, type = "varying",
+    delay_density = delay_density, type = "varying",
     severity_baseline = 0.014,
     burn_in = 7
   )

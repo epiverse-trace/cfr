@@ -47,18 +47,15 @@ We want a static estimate of the severity of an outbreak, using a method that us
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+* Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
 
 The first two elements are expected to be included in a dataframe with the columns "dates", "cases", and "deaths".
-
-The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
 First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
-library(epiparameter)
 library(incidence2)
 library(dplyr)
 library(scales)
@@ -131,20 +128,11 @@ using `dplyr::filter()`.
 df_ebola_subset <- filter(ebola1976, date <= "1976-09-30")
 ```
 
-### The delay distribution
+### Onset-to-death delay distribution
 
 For this example, given that we are using case data and detection of a case is well-approximated by symptom onset, we use the distribution describing the delay between onset-to-death.
 
-As such, we retrieve such a distribution from the literature [@barry2018] using the `epidist_db()` function from the _epiparameter_ package with the following command:
-
-```{r}
-onset_to_death_ebola <- epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-```
+As such, we retrieve such a distribution from the literature [@barry2018]; this is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
 
 ### Estimating incidence of cases (or similar time-series) with a known death outcome
 
@@ -156,13 +144,12 @@ The resulting data frame contains two new columns, "known_outcomes", for the num
 # calculate known death outcomes
 df_known_outcomes_ebola <- known_outcomes(
   data = df_ebola_subset,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # visualise head of data frame
 head(df_known_outcomes_ebola)
 ```
-
 
 ```{r fig.cap = "The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known death outcomes included.", class.source = 'fold-hide'}
 # plot cases and known death outcomes as separate layers
@@ -205,14 +192,14 @@ ggplot(df_known_outcomes_ebola) +
 ### Estimating the naive and corrected CFR
 
 Once we calculate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
+
 We do so by using the function `cfr_static()` from the _cfr_ package.
 This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
 
-Users can correct for delays by passing an epidemiological delay distribution as an optional argument, called `epidist`.
-The delay distribution must be appropriate to the severity measure being calculated, and must be an `<epidist>` object.
-These can be created using `epiparameter::epidist()`, or loaded from a parameter library (see below).
+Users can correct for delays by passing a density function for epidemiological delays to the optional argument `delay_density`.
+The delay distribution must be appropriate to the severity measure being calculated.
 
-When no delay distribution is provided, the function calculates a naive severity estimate, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
+When no delay density function is provided, a naive severity estimate is calculated, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
@@ -223,7 +210,7 @@ cfr_static(
 # calculating the corrected CFR
 cfr_static(
   df_ebola_subset,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 ```
 
@@ -311,18 +298,9 @@ ggplot(df_covid_uk_subset) +
   theme(legend.position = "top")
 ```
 
-### The delay distribution
+### Onset-to-death delay distribution
 
-We again retrieve the appropriate distribution from @linton2020 using the `epidist_db()` function from the _epiparameter_ package.
-
-```{r message = FALSE, warning = FALSE, eval = TRUE}
-onset_to_death_covid <- epidist_db(
-  disease = "COVID-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
-```
+We retrieve the appropriate distribution for Covid-19 from @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
 ### Estimating incidence of cases with a known death outcome
 
@@ -331,7 +309,7 @@ We use the same method and implementation as in the Ebola example to calculate t
 ```{r}
 df_known_outcomes_covid <- known_outcomes(
   data = df_covid_uk_subset,
-  delay_dist = onset_to_death_covid
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
 )
 ```
 
@@ -389,7 +367,7 @@ cfr_static(
 # calculating the corrected CFR
 cfr_static(
   df_covid_uk_subset,
-  delay_dist = onset_to_death_covid
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
 )
 ```
 

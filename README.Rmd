@@ -35,7 +35,7 @@ _{{ packagename }}_ can help estimate disease under-reporting in real-time, acco
 
 _{{ packagename }}_ implements methods outlined in @nishiura2009. There are plans to add estimates based on other methods.
 
-_{{ packagename }}_ supports using the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) to pass epidemiological delay distributions in order to calculate delay-corrected CFR estimates, and both packages are developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
+_{{ packagename }}_ is developed at the [Centre for the Mathematical Modelling of Infectious Diseases](https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases) at the London School of Hygiene and Tropical Medicine as part of the [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
 
@@ -44,16 +44,13 @@ The current development version of _{{ packagename }}_ can be installed from [Gi
 ```r
 if(!require("pak")) install.packages("pak")
 pak::pak("{{ gh_repo }}")
-
-# Also install R package {epiparameter} for epidemiological parameter values
-pak::pak("epiverse-trace/epiparameter")
 ```
 
 ## Quick start
 
 ### Overall severity of the 1976 Ebola outbreak
 
-This example shows how to use _{{ packagename }}_ to estimate the overall case fatality risks from the 1976 Ebola outbreak [@camacho2014], while correcting for delays using an 'onset to death' distribution from the _epiparameter_ package.
+This example shows how to use _{{ packagename }}_ to estimate the overall case fatality risks from the 1976 Ebola outbreak [@camacho2014], while correcting for delays using a Gamma-distributed onset to death duration taken from @barry2018, with a shape $k$ of 2.40 and a scale $\theta$ of 3.33.
 
 ```{r example-ebola-calc}
 # Load package
@@ -62,44 +59,13 @@ library(cfr)
 # Load the Ebola 1976 data provided with the package
 data("ebola1976")
 
-# read delay distribution for ebolavirus onset to death from {epiparameter}
-# accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4
-onset_to_death_ebola <- epiparameter::epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
-# View distribution parameters
-epiparameter::get_parameters(onset_to_death_ebola)
-
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
 
 # Calculate the static CFR while correcting for delays
 cfr_static(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
-)
-```
-
-_{{ packagename }}_ also allows users to correct for any desired delay distribution by allowing `delay_dist` to optionally be a function that wraps around the probability density function (or probability mass function) for the distribution.
-
-Here, we replicate the example above but with slightly different shape and scale parameters.
-
-```{r example-closure}
-# Replicate the example above:
-# define a probability density function for a Gamma distribution
-# with shape = 3.0, and scale = 4.0 (from the {epiparameter} library)
-dens_gamma <- function(x) {
-  stats::dgamma(shape = 3.0, scale = 4.0, x = x)
-}
-
-# calculate the static CFR for ebola
-cfr_static(
-  data = ebola1976,
-  delay_dist = dens_gamma
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 ```
 
@@ -122,7 +88,7 @@ head(rolling_cfr_naive)
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- cfr_rolling(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # add the date from the outbreak

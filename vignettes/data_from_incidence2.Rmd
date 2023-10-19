@@ -14,7 +14,7 @@ vignette: >
 
 This vignette shows how to prepare `<incidence2>` objects from the [_incidence2_ package](https://www.reconverse.org/incidence2/) for use with _cfr_, using the `prepare_data()` method for the `<incidence2>` class. If detailed individual-level data are available that include deaths and recoveries, then alternative methods for severity estimation could be used (e.g. directly calculating CFR from the subset cases with a known death outcome). However, there may be situations where only deaths are recorded, in which case the methods described here would provide an option for CFR calculation.
 
-We first load the libraries we require, including _cfr_, _incidence2_, [_outbreaks_](https://www.reconverse.org/outbreaks/) for linelist data from a simulated ebola outbreak, and [_epiparameter_](https://epiverse-trace.github.io/epiparameter/) for delay distribution data.
+We first load the libraries we require, including _cfr_, _incidence2_, [_outbreaks_](https://www.reconverse.org/outbreaks/) for linelist data from a simulated ebola outbreak.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -31,9 +31,6 @@ library(incidence2)
 
 # load {outbreaks} for ebola data
 library(outbreaks)
-
-# load {epiparameter} for delay distributions
-library(epiparameter)
 
 # packages to wrangle data
 library(dplyr)
@@ -91,16 +88,7 @@ In this example, we used the `fill_NA` argument and set it to `TRUE`; this repla
 The default value of this argument is `FALSE`, however, keeping `NA`s in the data causes downstream issues with functions such as `cfr_static()`.
 We recommend that users should carefully consider whether they can safely fill `NA`s with zeros for the purposes of their analysis.
 
-We then load a delay distribution from the _epiparameter_ database as an `<epidist>` object.
-
-```{r}
-onset_to_death_ebola <- epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-```
+We obtain and use a delay distribution from @barry2018 for Ebola virus disease; this is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
 
 Finally, we estimate the static case fatality risk while correcting for delays using the `cfr_static()` function.
 
@@ -108,7 +96,7 @@ Finally, we estimate the static case fatality risk while correcting for delays u
 # estimate static CFR as a sanity check
 cfr_static(
   ebola,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 ```
 
