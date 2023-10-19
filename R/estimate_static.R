@@ -58,7 +58,7 @@
 #' The precise severity measure — CFR, IFR, HFR, etc — that \eqn{\theta}
 #' represents depends upon the input data given by the user.
 #'
-#' The epidemiological delay-distribution density function passed to 
+#' The epidemiological delay-distribution density function passed to
 #' `delay_density` is used to evaluate the probability mass function
 #' parameterised by time; i.e. \eqn{f(t)} which
 #' gives the probability a case has a known outcomes (usually, death) at time
