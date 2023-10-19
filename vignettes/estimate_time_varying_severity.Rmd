@@ -47,20 +47,15 @@ We wish to estimate how common severity quantities _change over time_ --- such a
 
 * A time-series of cases, hospitalisations or some other proxy for infections over time;
 * A time-series of deaths;
-* A delay distribution, describing the probability an individual will die $t$ days after they were initially infected.
+* Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
 
 The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths".
-
-The delay distribution is expected to be specified as an object of the class `<epidist>` from the package [_epiparameter_](https://epiverse-trace.github.io/epiparameter/).
 :::
 
 First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
-
-# packages to access delay data and case data
-library(epiparameter)
 
 # packages to wrangle and plot data
 library(dplyr)
@@ -70,8 +65,7 @@ library(scales)
 library(ggplot2)
 ```
 
-The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and optionally, a delay distribution as an `<epidist>` object.
-The delay distribution we use here comes from the [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
+The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and optionally, a delay distribution density function to allow for delay correction.
 
 ## Changing severity of the COVID-19 pandemic in the U.K.
 
@@ -155,16 +149,7 @@ ggplot(df_covid_uk_subset) +
 
 ### Onset-to-death distribution for Covid-19
 
-We retrieve the appropriate distribution reported in @linton2020 using the `epidist_db()` function from the _epiparameter_ package.
-
-```{r message=FALSE, warning=FALSE, eval=TRUE}
-onset_to_death_covid <- epidist_db(
-  disease = "COVID-19",
-  epi_dist = "onset_to_death",
-  author = "Linton",
-  single_epidist = TRUE
-)
-```
+We retrieve the appropriate distribution reported in @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
 ### Estimating the naive and corrected CFR
 
@@ -174,14 +159,14 @@ We use the `cfr_time_varying()` function within the _cfr_ package to calculate t
 # calculating the naive time-varying CFR
 df_covid_cfr_uk_naive <- cfr_time_varying(
   df_covid_uk_subset,
-  delay_dist = onset_to_death_covid,
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   burn_in = 7
 )
 
 # calculating the corrected time-varying CFR
 df_covid_cfr_uk_corrected <- cfr_time_varying(
   df_covid_uk_subset,
-  delay_dist = onset_to_death_covid,
+  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   burn_in = 7
 )
 ```
@@ -278,6 +263,9 @@ df_covid_cfr <- nest(
 ```
 
 ```{r}
+# define delay density function
+delay_density <- function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
+
 # to each nested data frame, apply the function `cfr_time_varying`
 # overwrite the `data` column, as all data will be preserved
 df_covid_cfr <- mutate(
@@ -286,7 +274,7 @@ df_covid_cfr <- mutate(
   data = map(
     .x = data, .f = cfr_time_varying,
     # arguments to the function
-    delay_dist = onset_to_death_covid,
+    delay_density = delay_density,
     smoothing_window = 7, burn_in = 7
   )
 )

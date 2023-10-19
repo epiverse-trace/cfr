@@ -46,12 +46,11 @@ knitr::opts_chunk$set(
 )
 ```
 
-First we load the _cfr_ package, and the _epiparameter_ package for epidemiological distributions.
+First we load the _cfr_ package.
 
 ```{r setup}
-# load cfr and epiparameter
+# load cfr
 library(cfr)
-library(epiparameter)
 ```
 
 ## Case and death data {-}
@@ -79,23 +78,11 @@ head(ebola1976)
 
 ## Obtaining data on reporting delays
 
-We can access data on the distribution of delays between cases being reported, and deaths or recoveries from those cases being known, using the convenient [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/).
+We obtain the disease's onset-to-death distribution from a more recent Ebola outbreak, reported in @barry2018.
+The onset-to-death distribution is considered to be Gamma distributed, with a shape $k$ = 2.40 and a scale of $\theta$ = 3.33.
 
-We access the disease's onset-to-death distribution from a more recent Ebola outbreak stored in the package's parameter library, using the function `epiparameter::epidist_db()` [@barry2018].
-
-```{r}
-onset_to_death_ebola <- epidist_db(
-  disease = "Ebola Virus Disease",
-  epi_dist = "onset_to_death",
-  author = "The-Ebola-Outbreak-Epidemiology-Team",
-  single_epidist = TRUE
-)
-
-# print the object
-onset_to_death_ebola
-```
-
-This `<epidist>` object can be passed to the functions in _cfr_ to help correct for reporting delays.
+The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.
+See the [vignette on using delay distributions](delay_distributions.html) for more information on how to use this and other distribution objects supported by R to prepare delay density functions.
 
 ## Estimate disease severity
 
@@ -104,11 +91,13 @@ We use the function `cfr_static()` to calculate overall disease severity at the 
 ```{r}
 cfr_static(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 ```
 
-The `cfr_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time. For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `cfr_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
+The `cfr_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time.
+
+For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `cfr_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
 
 ## Estimate ascertainment ratio
 
@@ -120,12 +109,13 @@ When the main factor in low ascertainment is the lack of (access to) testing cap
 The `estimate_ascertainment()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
 
 Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that Ebola virus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths), based on CFR values estimated in later, larger datasets.
+We use the onset-to-death distribution from @barry2018.
 
 ```{r}
 # estimate reporting with a baseline severity of 70%
 estimate_ascertainment(
   data = ebola1976,
-  delay_dist = onset_to_death_ebola,
+  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
   type = "static",
   severity_baseline = 0.7
 )
