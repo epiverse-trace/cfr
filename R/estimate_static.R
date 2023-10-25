@@ -26,7 +26,7 @@
 #' May be `NULL`, for no delay correction, or a function that returns the
 #' density function of a distribution to evaluate
 #' density at user-specified values, e.g.
-#' `function(x) stats::dgamma(shape = 5, scale = 1, x = x)`.
+#' `function(x) stats::dgamma(x = x, shape = 5, scale = 1)`.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
 #' approximation. Set to 100 by default.
@@ -118,9 +118,9 @@ cfr_static <- function(data,
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
-    "`delay_density` must be a distribution density function with 1 argument\\
-    evaluating density at a vector of values and returning a numeric vector.\\
-    E.g. function(x) stats::dgamma(shape = 5, scale = 1, x = x)" =
+    "`delay_density` must be a distribution density function with 1 argument
+    evaluating density at a vector of values and returning a numeric vector.
+    E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
       checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
   )
   checkmate::assert_count(poisson_threshold)

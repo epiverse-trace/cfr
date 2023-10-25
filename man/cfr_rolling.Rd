@@ -26,7 +26,7 @@ correction is applied in the severity estimation.
 May be \code{NULL}, for no delay correction, or a function that returns the
 density function of a distribution to evaluate
 density at user-specified values, e.g.
-\code{function(x) stats::dgamma(shape = 5, scale = 1, x = x)}.}
+\code{function(x) stats::dgamma(x = x, shape = 5, scale = 1)}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
