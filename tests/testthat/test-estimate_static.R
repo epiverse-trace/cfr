@@ -2,7 +2,7 @@
 # prepare data and common testing elements
 
 # Ebola onset to death distribution comes from Barry et al. 2018
-# a gamma distribution with k = 2.40, theta = 3.33
+# a gamma distribution with shape = 2.40, scale = 3.33
 
 # Load ebola 1976 outbreak data
 data("ebola1976")
