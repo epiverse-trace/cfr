@@ -54,7 +54,7 @@ known_outcomes <- function(data,
     "`delay_density` must be a distribution density function with 1 argument
     evaluating density at a vector of values and returning a numeric vector.
     E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
-      checkmate::test_function(delay_density, nargs = 1, null.ok = TRUE)
+      checkmate::test_function(delay_density, null.ok = TRUE)
   )
 
   pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
