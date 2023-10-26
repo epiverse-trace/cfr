@@ -10,7 +10,7 @@ rolling_scfr_naive <- cfr_rolling(
 )
 
 # Ebola onset to death distribution comes from Barry et al. 2018
-# a gamma distribution with k = 2.40, theta = 3.33
+# a gamma distribution with shape = 2.40, scale = 3.33
 
 # Calculate static corrected CFRs
 rolling_scfr_corrected <- cfr_rolling(
