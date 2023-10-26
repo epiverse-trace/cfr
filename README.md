@@ -84,9 +84,13 @@ cfr_static(
 
 In this example we show how the estimate of overall severity can change
 as more data on cases and deaths over time becomes available, using the
-function `cfr_rolling()`. The adjusted estimate converges to the naive
-estimate as the outbreak declines and a larger proportion of cases have
-known outcomes.
+function `cfr_rolling()`. Because there is a delay from onset-to-death,
+a simple “naive” calculation that just divides deaths-to-date by
+cases-to-date will underestimate severity. The `cfr_rolling()` function
+uses the `cfr_severity()` adjustment to account for delays, and instead
+compares deaths-to-date with cases-with-known-outcome-to-date. The
+adjusted estimate converges to the naive estimate as the outbreak
+declines and a larger proportion of cases have known outcomes.
 
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
