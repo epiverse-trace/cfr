@@ -34,7 +34,7 @@ library(distcrete)
 
 ## A brief primer on distributions in R
 
-R provides rich and extensive support for representing and working with probability distributions, and this can be seen from the [CRAN probability distributions task view](https://cran.r-project.org/view=Distributions).
+R and its extension packages provide rich and extensive support for representing and working with probability distributions, and this can be seen from the [CRAN probability distributions task view](https://cran.r-project.org/view=Distributions).
 
 Users might already be familiar with some distributions and their related functionality --- such as the probability density function, or random number generation --- provided in the _stats_ package which is loaded when R is started.
 
@@ -61,7 +61,7 @@ cfr_*(data, delay_density = <DENSITY_FUNCTION>)
 
 _Importantly_, the _cfr_ functions must receive the delay density in such a way that the density can be calculated over a flexible number of values (the sequence of days in the outbreak data).
 
-For example, the density function for a Gamma distribution can be made generalisable to any set of values, by wrapping it within another function that accepts a vector of numbers.
+For example, by wrapping the density function for a Gamma distribution within another function which fixes the distribution parameters and accepts a vector of numbers, it can be evaluated at any set of values specified by the vector.
 
 ```{r}
 # wrap stats::dgamma() in a function
@@ -76,7 +76,7 @@ dens_gamma(x = seq(10))
 
 ::: {.alert .alert-info}
 More information on working with functions, and especially anonymous functions, can be found in the [chapter on Functional Programming in _Advanced R_](https://adv-r.hadley.nz/fp.html).
-Users working with R > 4.1.0 can also use the new syntax for anonymous functions.
+Users working with R > 4.1.0 can also use the new syntax for anonymous functions, e.g. `\(x) stats::dgamma(x, shape, scale)`.
 :::
 
 ## Passing delay distribution density to _cfr_ functions
@@ -122,6 +122,7 @@ cfr_static(
 
 The _distcrete_ package provides support for discretised distributions.
 Here, we show an example for the discretised Gamma distribution.
+Note that the density function for `<distcrete>` objects is encapsulated, and can be passed directly to the `delay_density` argument.
 
 ```{r}
 # using {distcrete} and parameters from Barry et al. 2018
@@ -132,7 +133,7 @@ dist_onset_to_death_ebola <- distcrete(
 # pass density function to cfr_static()
 cfr_static(
   data = ebola1976,
-  delay_density = function(x) dist_onset_to_death_ebola$d(x)
+  delay_density = dist_onset_to_death_ebola$d
 )
 ```
 
