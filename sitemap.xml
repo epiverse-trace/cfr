@@ -19,6 +19,9 @@
     <loc>https://epiverse-trace.github.io/cfr/articles/data_from_incidence2.html</loc>
   </url>
   <url>
+    <loc>https://epiverse-trace.github.io/cfr/articles/delay_distributions.html</loc>
+  </url>
+  <url>
     <loc>https://epiverse-trace.github.io/cfr/articles/estimate_ascertainment.html</loc>
   </url>
   <url>
@@ -56,9 +59,6 @@
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/cfr/reference/estimate_severity.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/reference/get_default_burn_in.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/cfr/reference/index.html</loc>

@@ -58,12 +58,16 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Package vignettes</h6>
+    <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
     <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a>
     <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
     <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6>
     <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Handling delay distributions</h6>
+    <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
       </ul>
@@ -115,17 +119,13 @@ This could be useful, but a more detailed and easier to interpret approach is to
 <ul>
 <li>A time-series of cases, hospitalisations or some other proxy for infections over time;</li>
 <li>A time-series of deaths;</li>
-<li>A delay distribution, describing the probability an individual will die <span class="math inline">\(t\)</span> days after they were initially infected.</li>
+<li>Data on the distribution of delays, describing the probability an individual will die <span class="math inline">\(t\)</span> days after they were initially infected.</li>
 </ul>
 <p>The first two elements are expected be included in a dataframe with the columns “dates”, “cases”, and “deaths”.</p>
-<p>The delay distribution is expected to be specified as an object of the class <code>&lt;epidist&gt;</code> from the package <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em></a>.</p>
 </div>
 <p>First load <em>cfr</em> and packages to access and plot data.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># packages to access delay data and case data</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/epiparameter" class="external-link">epiparameter</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># packages to wrangle and plot data</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
@@ -133,8 +133,7 @@ This could be useful, but a more detailed and easier to interpret approach is to
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-</details><p>The <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function requires a <code>data.frame</code> of input data — typically case and death time series data — and optionally, a delay distribution as an <code>&lt;epidist&gt;</code> object.
-The delay distribution we use here comes from the <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a>.</p>
+</details><p>The <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function requires a <code>data.frame</code> of input data — typically case and death time series data — and optionally, a delay distribution density function to allow for delay correction.</p>
 <div class="section level2">
 <h2 id="changing-severity-of-the-covid-19-pandemic-in-the-u-k-">Changing severity of the COVID-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#changing-severity-of-the-covid-19-pandemic-in-the-u-k-"></a>
 </h2>
@@ -219,36 +218,28 @@ Figure 2: Incidence of deaths over time for the ongoing COVID-19 outbreak in the
 <div class="section level3">
 <h3 id="onset-to-death-distribution-for-covid-19">Onset-to-death distribution for Covid-19<a class="anchor" aria-label="anchor" href="#onset-to-death-distribution-for-covid-19"></a>
 </h3>
-<p>We retrieve the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> using the <code><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db()</a></code> function from the <em>epiparameter</em> package.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">onset_to_death_covid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
-<span>  disease <span class="op">=</span> <span class="st">"COVID-19"</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
-<span>  author <span class="op">=</span> <span class="st">"Linton"</span>,</span>
-<span>  single_epidist <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details>
+<p>We retrieve the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
 </div>
 <div class="section level3">
 <h3 id="estimating-the-naive-and-corrected-cfr">Estimating the naive and corrected CFR<a class="anchor" aria-label="anchor" href="#estimating-the-naive-and-corrected-cfr"></a>
 </h3>
 <p>We use the <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function within the <em>cfr</em> package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculating the naive time-varying CFR</span></span>
 <span><span class="va">df_covid_cfr_uk_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cfr_time_varying.html">cfr_time_varying</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
-<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
+<span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span>
 <span>  burn_in <span class="op">=</span> <span class="fl">7</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># calculating the corrected time-varying CFR</span></span>
 <span><span class="va">df_covid_cfr_uk_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cfr_time_varying.html">cfr_time_varying</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk_subset</span>,</span>
-<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
+<span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span>
 <span>  burn_in <span class="op">=</span> <span class="fl">7</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </details><p>Once we have calculated both severity quantities over time, we plot the results; first the naive estimate.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_cfr_uk_naive</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -278,13 +269,13 @@ Figure 2: Incidence of deaths over time for the ongoing COVID-19 outbreak in the
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 46 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-9"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-9-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
+<span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-8-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
 Figure 3: Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.
 </p>
 </div>
 <p>Lastly, we plot the estimate corrected for reporting delays.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_cfr_uk_corrected</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -314,8 +305,8 @@ Figure 3: Example plot of the naive time-varying CFR. We calculate the time-vary
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 46 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-10"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-10-1.png" alt="Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
+<span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-9-1.png" alt="Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
 Figure 4: Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.
 </p>
 </div>
@@ -331,7 +322,7 @@ We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-
 We exclude four countries which only provide weekly data (with zeros for dates in between) — France, Germany, Spain and Ukraine.</p>
 <p>Next, we group the data by country and apply the <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function across each group (country).
 This code takes a few moments to run.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># countries with weekly reporting</span></span>
 <span><span class="va">weekly_reporting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"France"</span>, <span class="st">"Germany"</span>, <span class="st">"Spain"</span>, <span class="st">"Ukraine"</span><span class="op">)</span></span>
 <span><span class="va">covid_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">covid_data</span>, <span class="op">!</span><span class="va">country</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">weekly_reporting</span><span class="op">)</span></span>
@@ -344,8 +335,11 @@ This code takes a few moments to run.</p>
 <span>  <span class="va">covid_data</span>,</span>
 <span>  .by <span class="op">=</span> <span class="va">country</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># to each nested data frame, apply the function `cfr_time_varying`</span></span>
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># define delay density function</span></span>
+<span><span class="va">delay_density</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># to each nested data frame, apply the function `cfr_time_varying`</span></span>
 <span><span class="co"># overwrite the `data` column, as all data will be preserved</span></span>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_cfr</span>,</span>
@@ -353,7 +347,7 @@ This code takes a few moments to run.</p>
 <span>  data <span class="op">=</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span></span>
 <span>    .x <span class="op">=</span> <span class="va">data</span>, .f <span class="op">=</span> <span class="va">cfr_time_varying</span>,</span>
 <span>    <span class="co"># arguments to the function</span></span>
-<span>    epidist <span class="op">=</span> <span class="va">onset_to_death_covid</span>,</span>
+<span>    delay_density <span class="op">=</span> <span class="va">delay_density</span>,</span>
 <span>    smoothing_window <span class="op">=</span> <span class="fl">7</span>, burn_in <span class="op">=</span> <span class="fl">7</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
@@ -362,7 +356,7 @@ This code takes a few moments to run.</p>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, cols <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span></code></pre></div>
 </details><p>For simplicity, we use the same delay distribution between onset and death for all countries.</p>
 <p>Finally we plot the time-varying CFR for a selection of three more countries with large outbreaks of COVID-19: Brazil, India, and the United States.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, <span class="va">country</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Brazil"</span>, <span class="st">"India"</span>, <span class="st">"United States"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
@@ -397,8 +391,8 @@ This code takes a few moments to run.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 264 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-13"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-13-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
+<span style="display:block;" id="fig:unnamed-chunk-12"></span>
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-12-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
 Figure 5: Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays.
 </p>
 </div>

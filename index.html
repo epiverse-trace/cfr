@@ -58,12 +58,16 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Package vignettes</h6>
+    <a class="dropdown-item" href="articles/delay_distributions.html">A primer on working with delay distributions</a>
     <a class="dropdown-item" href="articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a>
     <a class="dropdown-item" href="articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
     <a class="dropdown-item" href="articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6>
     <a class="dropdown-item" href="articles/data_from_incidence2.html">Handling data from {incidence2}</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Handling delay distributions</h6>
+    <a class="dropdown-item" href="articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
       </ul>
@@ -96,17 +100,14 @@
 <p><em>cfr</em> is an R package to estimate disease severity and under-reporting in real-time, accounting for delays in epidemic time-series.</p>
 <p><em>cfr</em> provides simple, fast methods to calculate the overall or static case fatality risk (CFR) of an outbreak up to a given time point, as well as how the CFR changes over the course of the outbreak. <em>cfr</em> can help estimate disease under-reporting in real-time, accounting for delays reporting the outcomes of cases.</p>
 <p><em>cfr</em> implements methods outlined in Nishiura et al. (<a href="#ref-nishiura2009">2009</a>). There are plans to add estimates based on other methods.</p>
-<p><em>cfr</em> uses the <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> to access a library of epidemiological delay distributions, in order to calculate delay-corrected CFR estimates, and both packages are developed at the <a href="https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases" class="external-link">Centre for the Mathematical Modelling of Infectious Diseases</a> at the London School of Hygiene and Tropical Medicine as part of the <a href="https://data.org/initiatives/epiverse/" class="external-link">Epiverse-TRACE initiative</a>.</p>
+<p><em>cfr</em> is developed at the <a href="https://www.lshtm.ac.uk/research/centres/centre-mathematical-modelling-infectious-diseases" class="external-link">Centre for the Mathematical Modelling of Infectious Diseases</a> at the London School of Hygiene and Tropical Medicine as part of the <a href="https://data.org/initiatives/epiverse/" class="external-link">Epiverse-TRACE initiative</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>The current development version of <em>cfr</em> can be installed from <a href="https://github.com/" class="external-link">GitHub</a> using the <code>pak</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://pak.r-lib.org/" class="external-link">"pak"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/cfr"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Also install R package {epiparameter} for epidemiological parameter values</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/epiparameter"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"epiverse-trace/cfr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
@@ -114,22 +115,13 @@
 <div class="section level3">
 <h3 id="overall-severity-of-the-1976-ebola-outbreak">Overall severity of the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#overall-severity-of-the-1976-ebola-outbreak"></a>
 </h3>
-<p>This example shows how to use <em>cfr</em> to estimate the overall case fatality risks from the 1976 Ebola outbreak (<a href="#ref-camacho2014">Camacho et al. 2014</a>).</p>
+<p>This example shows how to use <em>cfr</em> to estimate the overall case fatality risks from the 1976 Ebola outbreak (<a href="#ref-camacho2014">Camacho et al. 2014</a>), while correcting for delays using a Gamma-distributed onset to death duration taken from Barry et al. (<a href="#ref-barry2018">2018</a>), with a shape <span class="math inline"><em>k</em></span> of 2.40 and a scale <span class="math inline"><em>θ</em></span> of 3.33.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Load package</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load the Ebola 1976 data provided with the package</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># read delay distribution for ebolavirus onset to death from {epiparameter}</span></span>
-<span><span class="co"># accesses parameters reported in https://doi.org/10.1016/S0140-6736(18)31387-4</span></span>
-<span><span class="va">onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu">epiparameter</span><span class="fu">::</span><span class="fu"><a href="https://epiverse-trace.github.io/epiparameter/reference/epidist_db.html" class="external-link">epidist_db</a></span><span class="op">(</span></span>
-<span>  disease <span class="op">=</span> <span class="st">"Ebola Virus Disease"</span>,</span>
-<span>  epi_dist <span class="op">=</span> <span class="st">"onset_to_death"</span>,</span>
-<span>  author <span class="op">=</span> <span class="st">"The-Ebola-Outbreak-Epidemiology-Team"</span>,</span>
-<span>  single_epidist <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate the static CFR without correcting for delays</span></span>
 <span><span class="fu"><a href="reference/cfr_static.html">cfr_static</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ebola1976</span><span class="op">)</span></span>
@@ -139,7 +131,7 @@
 <span><span class="co"># Calculate the static CFR while correcting for delays</span></span>
 <span><span class="fu"><a href="reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
-<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
 <span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
@@ -147,8 +139,7 @@
 <div class="section level3">
 <h3 id="change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak">Change in real-time estimates of overall severity during the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak"></a>
 </h3>
-<p>In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code>. Because there is a delay from onset-to-death, a simple “naive” calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code> function uses the <code>cfr_severity()</code> adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.</p>
-<p>This example shows how the adjusted estimate converges to “naive” estimate as the outbreak declines, and hence a larger and large proportion of cases have known outcomes.</p>
+<p>In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code>. Because there is a delay from onset-to-death, a simple “naive” calculation that just divides deaths-to-date by cases-to-date will underestimate severity. The <code><a href="reference/cfr_rolling.html">cfr_rolling()</a></code> function uses the <code>cfr_severity()</code> adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date. The adjusted estimate converges to the naive estimate as the outbreak declines and a larger proportion of cases have known outcomes.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Calculate the CFR without correcting for delays on each day of the outbreak</span></span>
 <span><span class="va">rolling_cfr_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cfr_rolling.html">cfr_rolling</a></span><span class="op">(</span></span>
@@ -171,7 +162,7 @@
 <span><span class="co"># Calculate the rolling daily CFR while correcting for delays</span></span>
 <span><span class="va">rolling_cfr_corrected</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/cfr_rolling.html">cfr_rolling</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
-<span>  epidist <span class="op">=</span> <span class="va">onset_to_death_ebola</span></span>
+<span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># add the date from the outbreak</span></span>
@@ -220,6 +211,9 @@ Disease severity of ebola in the 1976 outbreak estimated on each day of the epid
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-barry2018" class="csl-entry">
+Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et al. 2018. “Outbreak of Ebola virus disease in the Democratic Republic of the Congo, April–May, 2018: an epidemiological study.” <em>The Lancet</em> 392 (10143): 213–21. <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link uri">https://doi.org/10.1016/S0140-6736(18)31387-4</a>.
+</div>
 <div id="ref-camacho2014" class="csl-entry">
 Camacho, A., A. J. Kucharski, S. Funk, J. Breman, P. Piot, and W. J. Edmunds. 2014. “Potential for Large Outbreaks of Ebola Virus Disease.” <em>Epidemics</em> 9 (December): 70–78. <a href="https://doi.org/10.1016/j.epidem.2014.09.003" class="external-link uri">https://doi.org/10.1016/j.epidem.2014.09.003</a>.
 </div>
