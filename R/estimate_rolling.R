@@ -70,10 +70,14 @@ cfr_rolling <- function(data,
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
-    "`delay_density` must be a distribution density function with 1 argument
-    evaluating density at a vector of values and returning a numeric vector.
+    "`delay_density` must be a function evaluating distribution density at a
+    vector of values and returning a numeric vector of the same length.
     E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
-      checkmate::test_function(delay_density, null.ok = TRUE)
+      (checkmate::test_function(delay_density) &&
+        checkmate::test_numeric(delay_density(seq(10)),
+          lower = 0,
+          any.missing = FALSE, finite = TRUE, len = 10L
+        )) || is.null(delay_density)
   )
   checkmate::assert_count(poisson_threshold)
 
