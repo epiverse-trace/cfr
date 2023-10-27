@@ -12,8 +12,8 @@
 #' @return A `<data.frame>` with the columns in `data`, and with two additional
 #' columns:
 #'
-#'  - `"known_outcomes"` for the total number of known outcomes on that day
-#' of the outbreak, and
+#'  - `"estimated_outcomes"` for the total number of outcomes estimated to be
+#' known on that day of the outbreak, and
 #'
 #'  - `"u_t"` for the under-reporting factor.
 #'
@@ -26,14 +26,14 @@
 #' # estimate severity for each day while correcting for delays
 #' # obtain onset-to-death delay distribution parameters from Barry et al. 2018
 #' # examine the first few rows of the output
-#' outcomes <- known_outcomes(
+#' estimated_outcomes <- estimate_outcomes(
 #'   data = ebola1976,
 #'   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 #' )
 #'
-#' head(outcomes)
-known_outcomes <- function(data,
-                           delay_density) {
+#' head(estimated_outcomes)
+estimate_outcomes <- function(data,
+                              delay_density) {
   # some input checking; this function is mainly called internally
   # but currently exported
   # input checking is a candidate for removal
@@ -91,7 +91,7 @@ known_outcomes <- function(data,
   }
   # Calculating the proportion of cases with known onset,
   # for use in the simple likelihood function
-  data$known_outcomes <- kn_out
+  data$estimated_outcomes <- kn_out
   data$u_t <- cumsum(kn_out) / cumsum(cases)
 
   # replace u_t that is NaN with NA
