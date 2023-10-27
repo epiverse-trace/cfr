@@ -83,14 +83,14 @@ cfr_rolling <- function(data,
 
   if (!is.null(delay_density)) {
     # calculating the total number of cases and deaths after correcting for
-    # the number of cases with known outcomes and using this estimate as the
+    # the number of cases with estimated outcomes and using this estimate as the
     # of deaths
-    data <- known_outcomes(
+    data <- estimate_outcomes(
       data = data,
       delay_density = delay_density
     )
 
-    cumulative_outcomes <- cumsum(data$known_outcomes)
+    cumulative_outcomes <- cumsum(data$estimated_outcomes)
 
     # generate series of CFR estimates with expanding time window
     severity_estimates <- Map(

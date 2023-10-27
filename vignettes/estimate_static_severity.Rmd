@@ -136,24 +136,24 @@ As such, we retrieve such a distribution from the literature [@barry2018]; this 
 
 ### Estimating incidence of cases (or similar time-series) with a known death outcome
 
-The function `known_outcomes()` from the _cfr_ package can estimate the number of cases which have a known death outcome over time.
+The function `estimate_outcomes()` from the _cfr_ package can estimate the number of cases which have a known death outcome over time.
 
-The resulting data frame contains two new columns, "known_outcomes", for the number of known death outcomes expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known death outcomes.
+The resulting data frame contains two new columns, "estimated_outcomes", for the number of known death outcomes expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known death outcomes.
 
 ```{r}
 # calculate known death outcomes
-df_known_outcomes_ebola <- known_outcomes(
+df_estimated_outcomes_ebola <- estimate_outcomes(
   data = df_ebola_subset,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
 # visualise head of data frame
-head(df_known_outcomes_ebola)
+head(df_estimated_outcomes_ebola)
 ```
 
 ```{r fig.cap = "The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known death outcomes included.", class.source = 'fold-hide'}
-# plot cases and known death outcomes as separate layers
-ggplot(df_known_outcomes_ebola) +
+# plot cases and estimated death outcomes as separate layers
+ggplot(df_estimated_outcomes_ebola) +
   geom_step(
     aes(
       x = date, y = cases,
@@ -162,14 +162,14 @@ ggplot(df_known_outcomes_ebola) +
   ) +
   geom_step(
     aes(
-      x = date, y = known_outcomes,
-      colour = "Known death outcomes"
+      x = date, y = estimated_outcomes,
+      colour = "Estimated death outcomes"
     )
   ) +
   scale_colour_manual(
     values = c(
       Cases = "steelblue",
-      `Known death outcomes` = "darkgreen"
+      `Estimated death outcomes` = "darkgreen"
     ),
     name = NULL
   ) +
@@ -191,7 +191,7 @@ ggplot(df_known_outcomes_ebola) +
 
 ### Estimating the naive and corrected CFR
 
-Once we calculate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
+Once we estimate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
 
 We do so by using the function `cfr_static()` from the _cfr_ package.
 This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
@@ -304,17 +304,17 @@ We retrieve the appropriate distribution for Covid-19 from @linton2020; this is 
 
 ### Estimating incidence of cases with a known death outcome
 
-We use the same method and implementation as in the Ebola example to calculate the number of known death outcomes over time.
+We use the same method and implementation as in the Ebola example to estimate the number of known death outcomes over time.
 
 ```{r}
-df_known_outcomes_covid <- known_outcomes(
+df_estimated_outcomes_covid <- estimate_outcomes(
   data = df_covid_uk_subset,
   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
 )
 ```
 
 ```{r fig.cap = "The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known death outcomes included.", class.source = 'fold-hide'}
-ggplot(df_known_outcomes_covid) +
+ggplot(df_estimated_outcomes_covid) +
   geom_step(
     aes(
       x = date, y = cases,
@@ -323,14 +323,14 @@ ggplot(df_known_outcomes_covid) +
   ) +
   geom_step(
     aes(
-      x = date, y = known_outcomes,
-      colour = "Known death outcomes"
+      x = date, y = estimated_outcomes,
+      colour = "Estimated death outcomes"
     )
   ) +
   scale_colour_manual(
     values = c(
       Cases = "steelblue",
-      `Known death outcomes` = "darkgreen"
+      `Estimated death outcomes` = "darkgreen"
     ),
     name = NULL
   ) +

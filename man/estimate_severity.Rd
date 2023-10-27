@@ -21,8 +21,7 @@ outbreak of interest. The total number of deaths must be less than or equal
 to the total number of cases.}
 
 \item{total_outcomes}{The total number of outcomes expected to be observed
-over the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}. Must be
-\eqn{\geq} \code{total_deaths}.}
+over the period of an outbreak of interest. See \code{\link[=estimate_outcomes]{estimate_outcomes()}}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}

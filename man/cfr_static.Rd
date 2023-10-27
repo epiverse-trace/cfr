@@ -48,8 +48,8 @@ severity measures such as the hospitalisation fatality risk.
 The method used in \code{cfr_static()} follows Nishiura et al.
 (2009).
 The function calculates a quantity \eqn{u_t} for each day within the input
-data, which represents the proportion of cases with a known outcome on day
-\eqn{t}.
+data, which represents the proportion of cases estimated to have
+a known outcome on day \eqn{t}.
 Following Nishiura et al., \eqn{u_t} is calculated as:
 \deqn{u_t = \dfrac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}}
@@ -72,7 +72,7 @@ represents depends upon the input data given by the user.
 The epidemiological delay-distribution density function passed to
 \code{delay_density} is used to evaluate the probability mass function
 parameterised by time; i.e. \eqn{f(t)} which
-gives the probability a case has a known outcomes (usually, death) at time
+gives the probability that a case has a known outcome (usually death) at time
 \eqn{t}, parameterised with disease-specific parameters before it is supplied
 here.
 }

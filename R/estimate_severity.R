@@ -14,8 +14,7 @@
 #' outbreak of interest. The total number of deaths must be less than or equal
 #' to the total number of cases.
 #' @param total_outcomes The total number of outcomes expected to be observed
-#' over the period of an outbreak of interest. See [known_outcomes()]. Must be
-#' \eqn{\geq} `total_deaths`.
+#' over the period of an outbreak of interest. See [estimate_outcomes()].
 #' @keywords internal
 #' @return A `<data.frame>` with one row and three columns for the maximum
 #' likelihood estimate and 95% confidence interval of the corrected severity
