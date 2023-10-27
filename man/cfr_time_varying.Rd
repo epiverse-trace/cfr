@@ -67,8 +67,8 @@ delay distribution of the time between symptom onset and outcome
 This function estimates the number of cases which have a known outcome over
 time, following Nishiura et al. (2009).
 The function calculates a quantity \eqn{k_t} for each day within the input
-data, which represents the number of cases with a known outcome, on day
-\eqn{t}. \eqn{k_t} is calculated in the following way:
+data, which represents the number of cases estimated to have a known outcome,
+on day \eqn{t}. \eqn{k_t} is calculated in the following way:
 \deqn{k_t = \sum_{j = 0}^t c_t f_{j - t}}
 
 We then assume that the severity measure, for example CFR, of interest is

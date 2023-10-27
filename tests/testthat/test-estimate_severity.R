@@ -11,7 +11,7 @@ data("ebola1976")
 poisson_threshold <- 100
 
 # get the corrected dataframe
-df_corrected <- known_outcomes(
+df_corrected <- estimate_outcomes(
   data = ebola1976,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
@@ -20,7 +20,7 @@ df_corrected <- known_outcomes(
 severity_estimate <- estimate_severity(
   total_cases = sum(df_corrected$cases),
   total_deaths = sum(df_corrected$deaths),
-  total_outcomes = sum(df_corrected$known_outcomes),
+  total_outcomes = sum(df_corrected$estimated_outcomes),
   poisson_threshold = poisson_threshold
 )
 
@@ -54,7 +54,7 @@ test_that("`cfr_rolling`: Basic expectations", {
   severity_estimate_lt <- estimate_severity(
     total_cases = sum(df_corrected$cases),
     total_deaths = sum(df_corrected$deaths),
-    total_outcomes = sum(df_corrected$known_outcomes),
+    total_outcomes = sum(df_corrected$estimated_outcomes),
     poisson_threshold = 1000
   )
   # snapshot of severity estimate using alternative method
@@ -67,7 +67,7 @@ test_that("`cfr_rolling`: Basic expectations", {
   ebola1976$deaths[ebola1976$deaths < 0] <- 0
 
   # get the corrected dataframe
-  df_corrected <- known_outcomes(
+  df_corrected <- estimate_outcomes(
     data = ebola1976,
     delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
   )
@@ -76,7 +76,7 @@ test_that("`cfr_rolling`: Basic expectations", {
   severity_low_deaths <- estimate_severity(
     total_cases = sum(df_corrected$cases),
     total_deaths = sum(df_corrected$deaths),
-    total_outcomes = sum(df_corrected$known_outcomes),
+    total_outcomes = sum(df_corrected$estimated_outcomes),
     poisson_threshold = poisson_threshold
   )
 
@@ -87,7 +87,7 @@ test_that("`cfr_rolling`: Basic expectations", {
 
 test_that("`cfr_rolling`: Messages and errors", {
   ebola1976$cases <- 0L
-  df_corrected <- known_outcomes(
+  df_corrected <- estimate_outcomes(
     data = ebola1976,
     delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
   )
@@ -97,7 +97,7 @@ test_that("`cfr_rolling`: Messages and errors", {
     estimate_severity(
       total_cases = sum(df_corrected$cases),
       total_deaths = sum(df_corrected$deaths),
-      total_outcomes = sum(df_corrected$known_outcomes),
+      total_outcomes = sum(df_corrected$estimated_outcomes),
       poisson_threshold = poisson_threshold
     ),
     regexp = "Assertion on 'total_deaths' failed: Element 1 is not <= 0"

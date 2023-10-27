@@ -35,8 +35,8 @@
 #' This function estimates the number of cases which have a known outcome over
 #' time, following Nishiura et al. (2009).
 #' The function calculates a quantity \eqn{k_t} for each day within the input
-#' data, which represents the number of cases with a known outcome, on day
-#' \eqn{t}. \eqn{k_t} is calculated in the following way:
+#' data, which represents the number of cases estimated to have a known outcome,
+#' on day \eqn{t}. \eqn{k_t} is calculated in the following way:
 #' \deqn{k_t = \sum_{j = 0}^t c_t f_{j - t}}
 #'
 #' We then assume that the severity measure, for example CFR, of interest is
@@ -148,9 +148,9 @@ cfr_time_varying <- function(data,
   case_length <- length(case_times)
 
   ##### prepare matrix for severity estimation ####
-  # when not correcting for delays, set known outcomes to cases
+  # when not correcting for delays, set estimated no. of known outcomes to cases
   # this is to avoid if-else ladders
-  df_temp$known_outcomes <- df_temp$cases
+  df_temp$estimated_outcomes <- df_temp$cases
 
   # assign columns for severity estimate and intervals
   severity_estimates <- matrix(
@@ -166,7 +166,7 @@ cfr_time_varying <- function(data,
   if (!is.null(delay_density)) {
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
-    df_temp[indices, "known_outcomes"] <- vapply(
+    df_temp[indices, "estimated_outcomes"] <- vapply(
       X = indices,
       FUN = function(x) {
         delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in)]]
@@ -181,20 +181,21 @@ cfr_time_varying <- function(data,
   }
 
   #### Get severity estimates ####
-  # handle case where deaths are fewer than non-zero known outcomes
+  # handle case where deaths are fewer than non-zero estimated (known) outcomes
   # and select indices which are not smoothed or excluded by burn in
   # this reduces the number of indices over which to run the binomial test
-  # known_outcomes are not allowed to be NA
+  # estimated_outcomes are not allowed to be NA
   indices <- intersect(
     indices,
-    which(df_temp$deaths <= df_temp$known_outcomes & df_temp$known_outcomes > 0)
+    which(df_temp$deaths <= df_temp$estimated_outcomes &
+      df_temp$estimated_outcomes > 0)
   )
 
   # binomial test at indices
   estimates_tmp <- lapply(indices, FUN = function(i) {
     severity_current_estimate <- stats::binom.test(
       df_temp$deaths[i],
-      df_temp$known_outcomes[i]
+      df_temp$estimated_outcomes[i]
     )
 
     # return a vector

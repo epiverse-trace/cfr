@@ -37,8 +37,8 @@
 #' The method used in `cfr_static()` follows Nishiura et al.
 #' (2009).
 #' The function calculates a quantity \eqn{u_t} for each day within the input
-#' data, which represents the proportion of cases with a known outcome on day
-#' \eqn{t}.
+#' data, which represents the proportion of cases estimated to have
+#' a known outcome on day \eqn{t}.
 #' Following Nishiura et al., \eqn{u_t} is calculated as:
 #' \deqn{u_t = \dfrac{\sum_{i = 0}^t
 #'         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}}
@@ -61,7 +61,7 @@
 #' The epidemiological delay-distribution density function passed to
 #' `delay_density` is used to evaluate the probability mass function
 #' parameterised by time; i.e. \eqn{f(t)} which
-#' gives the probability a case has a known outcomes (usually, death) at time
+#' gives the probability that a case has a known outcome (usually death) at time
 #' \eqn{t}, parameterised with disease-specific parameters before it is supplied
 #' here.
 #'
@@ -128,9 +128,9 @@ cfr_static <- function(data,
   # apply delay correction if a delay distribution is provided
   if (!is.null(delay_density)) {
     # calculating the corrected severity, corrected for delay between case
-    # detection and outcome calculating the number of cases with known outcome,
+    # detection and outcome estimating the number of cases with a known outcome,
     # used as a replacement for total deaths in the original severity formula
-    df_corrected <- known_outcomes(
+    df_corrected <- estimate_outcomes(
       data = data,
       delay_density = delay_density
     )
@@ -140,7 +140,7 @@ cfr_static <- function(data,
     severity_estimate <- estimate_severity(
       total_cases = sum(df_corrected$cases, na.rm = TRUE),
       total_deaths = sum(df_corrected$deaths, na.rm = TRUE),
-      total_outcomes = sum(df_corrected$known_outcomes, na.rm = TRUE),
+      total_outcomes = sum(df_corrected$estimated_outcomes, na.rm = TRUE),
       poisson_threshold = poisson_threshold
     )
   } else {
