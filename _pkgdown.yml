@@ -5,7 +5,6 @@ articles:
 - title: Package vignettes
   navbar: Package vignettes
   contents:
-  - delay_distributions
   - estimate_static_severity
   - estimate_time_varying_severity
   - estimate_ascertainment
