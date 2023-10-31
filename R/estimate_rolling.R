@@ -10,9 +10,15 @@
 #' density function to `delay_density`, the internal function
 #' [estimate_severity()] is used to calculate the rolling severity.
 #'
+#' Note that in the naive method the severity estimate and confidence intervals
+#' cannot be calculated for days on which the cumulative number of cases since
+#' the start of the time-series, and for days on which the cumulative number of
+#' deaths reported exceeds the cumulative reported cases, and is returned as
+#' `NA`.
+#'
 #' @inheritParams cfr_static
 #'
-#' @return A `<data.frame>` with the maximum likelihood estimate and 95%
+#' @return A `<data.frame>` with the date, maximum likelihood estimate and 95%
 #' confidence interval of the daily severity estimates, named
 #' "severity_mean", "severity_low", and "severity_high", with one row for each
 #' day in the original data.frame.
@@ -87,40 +93,56 @@ cfr_rolling <- function(data,
     cumulative_outcomes <- cumsum(data$known_outcomes)
 
     # generate series of CFR estimates with expanding time window
-    cfr_estimate <- Map(
+    severity_estimates <- Map(
       cumulative_cases, cumulative_deaths, cumulative_outcomes,
       f = estimate_severity, poisson_threshold = poisson_threshold
     )
 
     # bind list elements together
-    cfr_estimate <- do.call(rbind, cfr_estimate)
+    severity_estimates <- do.call(rbind, severity_estimates)
   } else {
+    # check for good indices
+    indices <- which(
+      cumulative_deaths <= cumulative_cases &
+        cumulative_cases > 0
+    )
+
+    # subset the good cumulative data
+    cumulative_cases <- cumulative_cases[indices]
+    cumulative_deaths <- cumulative_deaths[indices]
+
+    # prepare holding matrix
+    severity_estimates <- matrix(NA_real_, nrow = nrow(data), ncol = 3)
+    colnames(severity_estimates) <- c(
+      "severity_mean", "severity_low", "severity_high"
+    )
+
     # calculating the uncorrected CFR rolling over all days
-    cfr_me <- cumulative_deaths / cumulative_cases
+    severity_estimates[indices, "severity_mean"] <- cumulative_deaths /
+      cumulative_cases
 
     cfr_lims <- Map(
       cumulative_deaths, cumulative_cases,
       f = stats::binom.test, p = 1
     )
-    cfr_estimate <- Map(
-      cfr_lims, cfr_me,
-      f = function(bintest, me) {
-        c(me, bintest[["conf.int"]])
-      }
-    )
-
     # bind list elements together
-    cfr_estimate <- do.call(rbind, cfr_estimate)
+    cfr_lims <- lapply(cfr_lims, `[[`, "conf.int")
+    cfr_lims <- do.call(rbind, cfr_lims)
+
+    # assign to matrix
+    severity_estimates[indices, c("severity_low", "severity_high")] <- cfr_lims
+
     # process into a data.frame and return
     # bind single row data.frames and return, convert to data.frame when
     # matrix is returned from no delay correction
-    cfr_estimate <- as.data.frame(cfr_estimate)
-    # fix column names in the case of no delay correction
-    colnames(cfr_estimate) <- c(
-      "severity_mean", "severity_low", "severity_high"
-    )
+    severity_estimates <- as.data.frame(severity_estimates)
   }
 
-  # return cfr estimate
-  cfr_estimate
+  # add date
+  severity_estimates$date <- data$date
+
+  # return severity estimate with names in correct order
+  severity_estimates[, c(
+    "date", "severity_mean", "severity_low", "severity_high"
+  )]
 }
