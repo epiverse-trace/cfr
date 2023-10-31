@@ -1,8 +1,6 @@
 #' Check delay density functions passed to `cfr_*()`
 #'
-#' Checks whether a function has a given number of required arguments and
-#' returns a numeric of the same length as the vector of values on which it
-#' operates.
+#' Checks whether a function has a given number of required arguments.
 #'
 #' @param fn A function.
 #' @param n_req_args The number of required arguments, i.e., arguments without
