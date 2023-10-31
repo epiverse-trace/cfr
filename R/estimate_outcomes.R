@@ -53,14 +53,15 @@ estimate_outcomes <- function(data,
     any.missing = FALSE
   )
   stopifnot(
-    "`delay_density` must be a function evaluating distribution density at a
-    vector of values and returning a numeric vector of the same length.
+    "`delay_density` must be a function with a single required argument,
+    and evaluating distribution density at a vector of values and returning a
+    numeric vector of the same length.
     E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
-      (checkmate::test_function(delay_density) &&
+      test_fn_req_args(delay_density) &&
         checkmate::test_numeric(delay_density(seq(10)),
           lower = 0,
           any.missing = FALSE, finite = TRUE, len = 10L
-        )) || is.null(delay_density)
+        ) || is.null(delay_density)
   )
 
   pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
