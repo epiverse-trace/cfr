@@ -101,3 +101,11 @@ test_that("Time-varying CFR with smoothing and burn in", {
     burn_in
   )
 })
+
+# Expect that return type is the same as cfr_rolling
+test_that("cfr_rolling and cfr_time_varying have similar returns", {
+  expect_identical(
+    colnames(cfr_time_varying(covid_uk)),
+    colnames(cfr_rolling(covid_uk))
+  )
+})
