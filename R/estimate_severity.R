@@ -14,11 +14,17 @@
 #' outbreak of interest. The total number of deaths must be less than or equal
 #' to the total number of cases.
 #' @param total_outcomes The total number of outcomes expected to be observed
-#' over the period of an outbreak of interest. See [known_outcomes()].
+#' over the period of an outbreak of interest. See [known_outcomes()]. Must be
+#' \eqn{\geq} `total_deaths`.
 #' @keywords internal
-#' @return A data.frame with the maximum likelihood estimate and 95% confidence
-#' interval of the corrected severity estimates, named "severity_mean",
-#' "severity_low", and "severity_high".
+#' @return A `<data.frame>` with one row and three columns for the maximum
+#' likelihood estimate and 95% confidence interval of the corrected severity
+#' estimates, named "severity_mean", "severity_low", and "severity_high".
+#'
+#' @details
+#' When any two of `total_cases`, `total_deaths`, or `total_outcomes` are zero,
+#' the estimate and confidence intervals cannot be calculated and the output
+#' `<data.frame>` contains `NA`s.
 estimate_severity <- function(total_cases,
                               total_deaths,
                               total_outcomes,
@@ -26,8 +32,20 @@ estimate_severity <- function(total_cases,
   # Add input checking for single numbers
   checkmate::assert_count(total_cases)
   checkmate::assert_number(total_deaths, upper = total_cases, lower = 0)
+  # expect that the estimated number of outcomes is greater
   checkmate::assert_number(total_outcomes, lower = 0, finite = TRUE)
   checkmate::assert_count(poisson_threshold)
+
+  # check for special case where any two of cases, deaths, and outcomes are zero
+  if (sum(c(total_cases, total_deaths, total_outcomes) == 0) >= 2) {
+    return(
+      data.frame(
+        severity_mean = NA_real_,
+        severity_low = NA_real_,
+        severity_high = NA_real_
+      )
+    )
+  }
 
   # calculating the proportion of cases with known outcome
   u_t <- total_outcomes / total_cases
@@ -45,7 +63,7 @@ estimate_severity <- function(total_cases,
     lik <- stats::dpois(total_deaths, pprange * u_t * total_cases, log = TRUE)
   }
 
-  # maximum likelihood estimate
+  # maximum likelihood estimate - if this is empty, return NA
   severity_mean <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood
