@@ -94,6 +94,9 @@ known_outcomes <- function(data,
   data$known_outcomes <- kn_out
   data$u_t <- cumsum(kn_out) / cumsum(cases)
 
+  # replace u_t that is NaN with NA
+  data$u_t[is.nan(data$u_t)] <- NA_real_
+
   # return dataframe with added columns
   data
 }
