@@ -32,7 +32,7 @@ density at user-specified values, e.g.
 approximation. Set to 100 by default.}
 }
 \value{
-A \verb{<data.frame>} with the maximum likelihood estimate and 95\%
+A \verb{<data.frame>} with the date, maximum likelihood estimate and 95\%
 confidence interval of the daily severity estimates, named
 "severity_mean", "severity_low", and "severity_high", with one row for each
 day in the original data.frame.
@@ -48,6 +48,12 @@ iteration.
 When delay correction is applied by passing a delay distribution
 density function to \code{delay_density}, the internal function
 \code{\link[=estimate_severity]{estimate_severity()}} is used to calculate the rolling severity.
+
+Note that in the naive method the severity estimate and confidence intervals
+cannot be calculated for days on which the cumulative number of cases since
+the start of the time-series, and for days on which the cumulative number of
+deaths reported exceeds the cumulative reported cases, and is returned as
+\code{NA}.
 }
 \examples{
 # load package data

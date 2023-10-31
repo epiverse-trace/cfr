@@ -19,7 +19,7 @@ rolling_scfr_corrected <- cfr_rolling(
 )
 
 # Basic expectations
-test_that("`cfr_static`: Basic expectations", {
+test_that("`cfr_rolling`: Basic expectations", {
   # expect dataframes with specific columns
   expect_s3_class(rolling_scfr_naive, "data.frame")
   expect_s3_class(rolling_scfr_corrected, "data.frame")
@@ -35,7 +35,7 @@ test_that("`cfr_static`: Basic expectations", {
   )
 
   # expected names
-  expected_names <- c("severity_mean", "severity_low", "severity_high")
+  expected_names <- c("date", "severity_mean", "severity_low", "severity_high")
   # expect named columns
   expect_named(
     rolling_scfr_naive,
@@ -52,16 +52,29 @@ test_that("`cfr_static`: Basic expectations", {
 
   # expect that all columns in naive static CFR have values between 0 and 1
   invisible(
-    apply(rolling_scfr_naive, 2, function(x) {
-      expect_true(all((x >= 0.0 & x <= 1.0) | is.na(x)))
-    })
+    apply(
+      rolling_scfr_naive[, grepl(
+        "severity",
+        colnames(rolling_scfr_corrected),
+        fixed = TRUE
+      )], 2, function(x) {
+        expect_true(all((x >= 0.0 & x <= 1.0) | is.na(x)))
+      }
+    )
   )
 
-  # expect that all columns in corrected static CFR have values between 0 and 1
+  # expect that all columns in corrected rolling CFR have values between 0 and 1
+  # exclude date column
   invisible(
-    apply(rolling_scfr_corrected, 2, function(x) {
-      expect_true(all((x >= 0.0 & x <= 1.0) | is.na(x)))
-    })
+    apply(
+      rolling_scfr_naive[, grepl(
+        "severity",
+        colnames(rolling_scfr_corrected),
+        fixed = TRUE
+      )], 2, function(x) {
+        expect_true(all((x >= 0.0 & x <= 1.0) | is.na(x)))
+      }
+    )
   )
 })
 
@@ -69,8 +82,14 @@ test_that("`cfr_static`: Basic expectations", {
 # the final value should be the same as cfr_static()
 # for the corresponding value of corrected_for_delays
 test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
+  # remove date col
   expect_equal(
-    tail(rolling_scfr_naive, 1),
+    tail(
+      rolling_scfr_naive[, grepl(
+        "severity", colnames(rolling_scfr_naive),
+        fixed = TRUE
+      )], 1
+    ),
     cfr_static(
       ebola1976
     ),
@@ -78,7 +97,12 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
   )
 
   expect_equal(
-    tail(rolling_scfr_corrected, 1),
+    tail(
+      rolling_scfr_corrected[, grepl(
+        "severity", colnames(rolling_scfr_corrected),
+        fixed = TRUE
+      )], 1
+    ),
     cfr_static(
       ebola1976,
       delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
@@ -87,7 +111,7 @@ test_that("`cfr_rolling`: Comparison with `cfr_static()`", {
   )
 })
 
-test_that("`cfr_static`: Errors and messages", {
+test_that("`cfr_rolling`: Errors and messages", {
   # expect error when columns are missing
   expect_error(
     cfr_rolling(
@@ -126,5 +150,36 @@ test_that("`cfr_static`: Errors and messages", {
   expect_error(
     cfr_rolling(data = df_in_malformed),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
+  )
+})
+
+# Test case where cumulative cases and deaths are zero
+test_that("cfr_rolling handles cumulative zeroes case", {
+  data <- covid_data
+  data <- data[data$country == "United Kingdom", ]
+
+  # naive estimate works
+  expect_no_condition(
+    cfr_rolling(data)
+  )
+
+  # corrected estimate works
+  expect_no_condition(
+    cfr_rolling(
+      data,
+      delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
+    )
+  )
+
+  # expect as many NAs as there are days with cumulative cases and deaths at 0
+  cuml_cases <- cumsum(data$cases)
+  cuml_deaths <- cumsum(data$deaths)
+  n_nas <- which.max((cuml_cases & cuml_deaths))
+
+  cfr_estimate <- cfr_rolling(data)
+
+  expect_identical(
+    which.min(is.na(cfr_estimate$severity_mean)),
+    n_nas
   )
 })

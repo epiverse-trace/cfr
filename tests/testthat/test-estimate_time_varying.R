@@ -27,8 +27,7 @@ test_that("`Time varying CFR, basic expectations", {
 
   # expected names
   expected_names <- c(
-    "date", "cases", "deaths",
-    "severity_mean", "severity_low", "severity_high"
+    "date", "severity_mean", "severity_low", "severity_high"
   )
   # expect named columns
   expect_named(

@@ -21,15 +21,16 @@ outbreak of interest. The total number of deaths must be less than or equal
 to the total number of cases.}
 
 \item{total_outcomes}{The total number of outcomes expected to be observed
-over the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}.}
+over the period of an outbreak of interest. See \code{\link[=known_outcomes]{known_outcomes()}}. Must be
+\eqn{\geq} \code{total_deaths}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
 approximation. Set to 100 by default.}
 }
 \value{
-A data.frame with the maximum likelihood estimate and 95\% confidence
-interval of the corrected severity estimates, named "severity_mean",
-"severity_low", and "severity_high".
+A \verb{<data.frame>} with one row and three columns for the maximum
+likelihood estimate and 95\% confidence interval of the corrected severity
+estimates, named "severity_mean", "severity_low", and "severity_high".
 }
 \description{
 Estimates the maximum likelihood estimate and 95\% confidence
@@ -37,5 +38,10 @@ interval of a corrected severity, using the total cases and total cases with
 known outcomes, where the latter replaces the total number of deaths in the
 standard (naive) severity definition. We use a binomial likelihood,
 approximated by a Poisson likelihood for large samples.
+}
+\details{
+When any two of \code{total_cases}, \code{total_deaths}, or \code{total_outcomes} are zero,
+the estimate and confidence intervals cannot be calculated and the output
+\verb{<data.frame>} contains \code{NA}s.
 }
 \keyword{internal}
