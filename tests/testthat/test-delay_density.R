@@ -40,7 +40,7 @@ test_that("CFR functions work with delay_density as <distcrete>", {
 })
 
 # Test error cases
-msg <- "(`delay_density` must be)*(function evaluating distribution density)"
+msg <- "(`delay_density` must be)*(function)*(evaluating distribution density)"
 
 test_that("Input checking on delay_density works", {
   # Checks fail on badly specified delay_density fns
@@ -188,5 +188,32 @@ test_that("Input checking on delay_density works", {
       delay_density = ddens, severity_baseline = 0.7
     ),
     regexp = msg
+  )
+})
+
+#### Checks on test_fn_req_args() ####
+test_that("Function to test delay density works", {
+  expect_true(
+    test_fn_req_args(
+      function(x) dgamma(x, 5, 1)
+    )
+  )
+  expect_false(
+    test_fn_req_args(
+      dgamma
+    )
+  )
+  expect_true(
+    test_fn_req_args(
+      dgamma, 2
+    )
+  )
+
+  # distcrete
+  ddens <- distcrete::distcrete("gamma", 1, shape = 5, scale = 1)$d
+  expect_true(
+    test_fn_req_args(
+      ddens
+    )
   )
 })
