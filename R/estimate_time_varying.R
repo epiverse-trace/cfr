@@ -24,8 +24,10 @@
 #' The default behaviour is to apply no smoothing. The minimum value of this
 #' argument is 1.
 #'
-#' @return A `<data.frame>` containing the maximum likelihood estimate estimate
-#' and 95% confidence interval of the corrected severity.
+#' @return A `<data.frame>` with the date, maximum likelihood estimate and 95%
+#' confidence interval of the daily severity estimates, named
+#' "severity_mean", "severity_low", and "severity_high", with one row for each
+#' day in the original data.frame.
 #'
 #' @details
 #' # Details: Adjusting for delays between two time series
@@ -212,12 +214,13 @@ cfr_time_varying <- function(data,
   # replace the values at indices
   severity_estimates[indices, ] <- estimates_tmp
 
-  # remove known outcomes column as this is not expected as a side effect
-  data$known_outcomes <- NULL
+  # create data frame
+  severity_estimates <- as.data.frame(severity_estimates)
+  # add date and return
+  severity_estimates$date <- data$date
 
-  # bind estimates to data
-  data <- cbind(data, severity_estimates)
-
-  # return data
-  data
+  # return severity estimate with names in correct order
+  severity_estimates[, c(
+    "date", "severity_mean", "severity_low", "severity_high"
+  )]
 }
