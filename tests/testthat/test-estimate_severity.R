@@ -103,3 +103,28 @@ test_that("`cfr_rolling`: Messages and errors", {
     regexp = "Assertion on 'total_deaths' failed: Element 1 is not <= 0"
   )
 })
+
+# Expect NAs when multiple values are zero
+test_that("estimate_severity returns NAs when inputs are zeros", {
+  test_df <- data.frame(
+    severity_mean = NA_real_,
+    severity_low = NA_real_,
+    severity_high = NA_real_
+  )
+
+  expect_identical(
+    estimate_severity(0, 0, 0),
+    test_df
+  )
+
+  expect_identical(
+    estimate_severity(0, 0, 1),
+    test_df
+  )
+
+  expect_identical(
+    estimate_severity(1, 0, 0),
+    test_df
+  )
+  # not testing the case where total_outcomes is 0
+})

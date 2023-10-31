@@ -52,8 +52,10 @@ The default behaviour is to apply no smoothing. The minimum value of this
 argument is 1.}
 }
 \value{
-A \verb{<data.frame>} containing the maximum likelihood estimate estimate
-and 95\% confidence interval of the corrected severity.
+A \verb{<data.frame>} with the date, maximum likelihood estimate and 95\%
+confidence interval of the daily severity estimates, named
+"severity_mean", "severity_low", and "severity_high", with one row for each
+day in the original data.frame.
 }
 \description{
 Calculates how the severity of a disease changes over time
