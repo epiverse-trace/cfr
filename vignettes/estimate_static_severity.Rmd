@@ -138,7 +138,7 @@ As such, we retrieve such a distribution from the literature [@barry2018]; this 
 
 The function `estimate_outcomes()` from the _cfr_ package can estimate the number of cases which have a known death outcome over time.
 
-The resulting data frame contains two new columns, "estimated_outcomes", for the number of known death outcomes expected for each day, and "u_t", the under-reporting factor that estimates what proportion of cases have not been reported, given the estimated number of known death outcomes.
+The resulting data frame contains two new columns, "estimated_outcomes", for the number of known death outcomes expected for each day, and "u_t" for the ratio of cumulative number of estimated known outcomes and the cumulative number of cases reported until each date specified in data.
 
 ```{r}
 # calculate known death outcomes
