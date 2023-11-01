@@ -121,7 +121,7 @@ approximation. Set to 100 by default.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A <code>&lt;data.frame&gt;</code> with the maximum likelihood estimate and 95%
+<p>A <code>&lt;data.frame&gt;</code> with the date, maximum likelihood estimate and 95%
 confidence interval of the daily severity estimates, named
 "severity_mean", "severity_low", and "severity_high", with one row for each
 day in the original data.frame.</p>
@@ -131,6 +131,11 @@ day in the original data.frame.</p>
     <p>When delay correction is applied by passing a delay distribution
 density function to <code>delay_density</code>, the internal function
 <code><a href="estimate_severity.html">estimate_severity()</a></code> is used to calculate the rolling severity.</p>
+<p>Note that in the naive method the severity estimate and confidence intervals
+cannot be calculated for days on which the cumulative number of cases since
+the start of the time-series, and for days on which the cumulative number of
+deaths reported exceeds the cumulative reported cases, and is returned as
+<code>NA</code>.</p>
     </div>
 
     <div class="section level2">
@@ -152,13 +157,13 @@ density function to <code>delay_density</code>, the internal function
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         0.001           NA            NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         0.001        0.001         0.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         date severity_mean severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1976-08-25            NA           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1976-08-26         0.001        0.001         0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1976-08-27         0.001        0.001         0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1976-08-28         0.001        0.001         0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1976-08-29         0.001        0.001         0.999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1976-08-30         0.001        0.001         0.994</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

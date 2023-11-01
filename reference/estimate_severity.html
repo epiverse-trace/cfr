@@ -108,7 +108,8 @@ to the total number of cases.</p></dd>
 
 <dt>total_outcomes</dt>
 <dd><p>The total number of outcomes expected to be observed
-over the period of an outbreak of interest. See <code><a href="known_outcomes.html">known_outcomes()</a></code>.</p></dd>
+over the period of an outbreak of interest. See <code><a href="known_outcomes.html">known_outcomes()</a></code>. Must be
+\(\geq\) <code>total_deaths</code>.</p></dd>
 
 
 <dt>poisson_threshold</dt>
@@ -120,9 +121,15 @@ approximation. Set to 100 by default.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A data.frame with the maximum likelihood estimate and 95% confidence
-interval of the corrected severity estimates, named "severity_mean",
-"severity_low", and "severity_high".</p>
+<p>A <code>&lt;data.frame&gt;</code> with one row and three columns for the maximum
+likelihood estimate and 95% confidence interval of the corrected severity
+estimates, named "severity_mean", "severity_low", and "severity_high".</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When any two of <code>total_cases</code>, <code>total_deaths</code>, or <code>total_outcomes</code> are zero,
+the estimate and confidence intervals cannot be calculated and the output
+<code>&lt;data.frame&gt;</code> contains <code>NA</code>s.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
