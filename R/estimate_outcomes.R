@@ -12,10 +12,12 @@
 #' @return A `<data.frame>` with the columns in `data`, and with two additional
 #' columns:
 #'
-#'  - `"estimated_outcomes"` for the total number of outcomes estimated to be
-#' known on that day of the outbreak, and
+#'  - `"estimated_outcomes"` for the number of cases with an outcome of interest
+#' (usually, death) estimated to be known on the dates specified in `data`, and
 #'
-#'  - `"u_t"` for the under-reporting factor.
+#'  - `"u_t"` for the ratio of cumulative number of estimated known outcomes
+#' and the cumulative number of cases reported until each date specified in
+#' `data`.
 #'
 #' @export
 #'

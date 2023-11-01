@@ -32,9 +32,11 @@ density at user-specified values, e.g.
 A \verb{<data.frame>} with the columns in \code{data}, and with two additional
 columns:
 \itemize{
-\item \code{"estimated_outcomes"} for the total number of outcomes estimated to be
-known on that day of the outbreak, and
-\item \code{"u_t"} for the under-reporting factor.
+\item \code{"estimated_outcomes"} for the number of cases with an outcome of interest
+(usually, death) estimated to be known on the dates specified in \code{data}, and
+\item \code{"u_t"} for the ratio of cumulative number of estimated known outcomes
+and the cumulative number of cases reported until each date specified in
+\code{data}.
 }
 }
 \description{
