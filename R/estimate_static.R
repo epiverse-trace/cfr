@@ -114,19 +114,10 @@ cfr_static <- function(data,
   # check for excessive missing date and throw an error
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1), # use numeric 1, not integer
+      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
-    "`delay_density` must be a function with a single required argument,
-    and evaluating distribution density at a vector of values and returning a
-    numeric vector of the same length.
-    E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
-      test_fn_req_args(delay_density) &&
-        checkmate::test_numeric(delay_density(seq(10)),
-          lower = 0,
-          any.missing = FALSE, finite = TRUE, len = 10L
-        ) || is.null(delay_density)
   )
   checkmate::assert_count(poisson_threshold)
 
