@@ -78,18 +78,7 @@ estimate_ascertainment <- function(data,
   checkmate::assert_int(burn_in, lower = 0)
   checkmate::assert_date(max_date, null.ok = TRUE)
 
-  # check delay_density and run over short sequence to test output
-  stopifnot(
-    "`delay_density` must be a function with a single required argument,
-    and evaluating distribution density at a vector of values and returning a
-    numeric vector of the same length.
-    E.g. function(x) stats::dgamma(x = x, shape = 5, scale = 1)" =
-      test_fn_req_args(delay_density) &&
-        checkmate::test_numeric(delay_density(seq(10)),
-          lower = 0,
-          any.missing = FALSE, finite = TRUE, len = 10L
-        ) || is.null(delay_density)
-  )
+  # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
 
   # match argument for type
   type <- match.arg(type, several.ok = FALSE)

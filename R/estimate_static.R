@@ -121,6 +121,8 @@ cfr_static <- function(data,
   )
   checkmate::assert_count(poisson_threshold)
 
+  # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
+
   # apply delay correction if a delay distribution is provided
   if (!is.null(delay_density)) {
     # calculating the corrected severity, corrected for delay between case

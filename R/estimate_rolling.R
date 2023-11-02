@@ -73,6 +73,8 @@ cfr_rolling <- function(data,
   )
   checkmate::assert_count(poisson_threshold)
 
+  # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
+
   # prepare cumulative sums
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
