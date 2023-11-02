@@ -214,6 +214,10 @@ test_that("Functions to test delay density work", {
       dgamma, 2
     )
   )
+  # expect FALSE when a primitive is passed
+  expect_false(
+    test_fn_req_args(is.list)
+  )
 
   # distcrete
   ddens <- distcrete::distcrete("gamma", 1, shape = 5, scale = 1)$d

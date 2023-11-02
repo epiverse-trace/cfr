@@ -32,6 +32,7 @@
 test_fn_req_args <- function(fn, n_req_args = 1) {
   checkmate::assert_count(n_req_args, positive = TRUE)
   checkmate::test_function(fn) &&
+    (!is.primitive(fn)) &&
     sum(mapply(function(x, y) {
       is.name(x) && y != "..."
     }, formals(fn), names(formals(fn)))) == n_req_args
@@ -43,8 +44,8 @@ test_fn_num_out <- function(fn, n = 10) {
   checkmate::assert_count(n, positive = TRUE)
   checkmate::test_function(fn) &&
     checkmate::test_numeric(
-      fn(seq(10)),
+      fn(seq(n)),
       lower = 0,
-      any.missing = FALSE, finite = TRUE, len = 10L
+      any.missing = FALSE, finite = TRUE, len = n
     )
 }
