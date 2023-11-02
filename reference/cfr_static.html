@@ -130,8 +130,8 @@ confidence interval of the severity estimates, named "severity_mean",
     <p>The method used in <code>cfr_static()</code> follows Nishiura et al.
 (2009).
 The function calculates a quantity \(u_t\) for each day within the input
-data, which represents the proportion of cases with a known outcome on day
-\(t\).
+data, which represents the proportion of cases estimated to have
+a known outcome on day \(t\).
 Following Nishiura et al., \(u_t\) is calculated as:
 $$u_t = \dfrac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i}$$
@@ -152,7 +152,7 @@ represents depends upon the input data given by the user.</p>
 <p>The epidemiological delay-distribution density function passed to
 <code>delay_density</code> is used to evaluate the probability mass function
 parameterised by time; i.e. \(f(t)\) which
-gives the probability a case has a known outcomes (usually, death) at time
+gives the probability that a case has a known outcome (usually death) at time
 \(t\), parameterised with disease-specific parameters before it is supplied
 here.</p>
     </div>
