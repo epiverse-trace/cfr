@@ -192,7 +192,8 @@ test_that("Input checking on delay_density works", {
 })
 
 #### Checks on test_fn_req_args() ####
-test_that("Function to test delay density works", {
+test_that("Functions to test delay density work", {
+  # Test function to check number of required arguments
   expect_true(
     test_fn_req_args(
       function(x) dgamma(x, 5, 1)
@@ -201,6 +202,11 @@ test_that("Function to test delay density works", {
   expect_false(
     test_fn_req_args(
       dgamma
+    )
+  )
+  expect_false(
+    test_fn_req_args(
+      function(x, y, ...) dgamma(x, 5, 1, ...) + y
     )
   )
   expect_true(
@@ -214,6 +220,30 @@ test_that("Function to test delay density works", {
   expect_true(
     test_fn_req_args(
       ddens
+    )
+  )
+
+  # functions with ellipsis
+  expect_true(
+    test_fn_req_args(
+      function(x, ...) dgamma(x, 5, 1, ...)
+    )
+  )
+
+  # Test function to check for numeric output
+  expect_true(
+    test_fn_num_out(
+      function(x) dgamma(x, 5, 1)
+    )
+  )
+  expect_true(
+    test_fn_num_out(
+      ddens
+    )
+  )
+  expect_false(
+    test_fn_num_out(
+      function(x, ...) as.character(dgamma(x, 5, 1, ...))
     )
   )
 })
