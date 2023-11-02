@@ -1,17 +1,42 @@
-#' Check delay density functions passed to `cfr_*()`
+#' @title Check delay density functions passed to `cfr_*()`
 #'
-#' Checks whether a function has a given number of required arguments.
+#' @name delay_density_helpers
+#' @rdname delay_density_helpers
 #'
-#' @param fn A function.
+#' @description Internal helper function that check whether a function passed to
+#' the `delay_density` argument in `cfr_*()` meet the requirements of package
+#' methods.
+#'
+#' `test_fn_req_args()` checks whether the function has only the expected number
+#' of required arguments, i.e., arguments without default values. Defaults to
+#' checking for a single required argument.
+#'
+#' `test_fn_num_out()` checks whether the function returns a numeric output
+#' consistent with evaluating the probability density or probability mass
+#' function of a distribution over a sequence of values.
+#' Expects that the function returns a numeric vector of finite values
+#' \eqn{\geq} 0.0, that no values are missing, and that the output vector
+#' is the same length as the input vector.
+#'
+#' @param fn A function. This is expected to be a function evaluating the
+#' density of a distribution at numeric values, and suitable to be passed to
+#' `delay_density` in `cfr_*()`.
 #' @param n_req_args The number of required arguments, i.e., arguments without
 #' default values.
+#' @param n The number of elements over which to evaluate the function `fn`.
+#' Defaults to 10, and `fn` is evaluated over `seq(n)`.
 #'
-#' @return A logical for whether the function `fn` has the number of required
-#' arguments specified by the user.
+#' @return A logical for whether the function `fn` fulfils conditions specified
+#' in the respective checks.
 #' @keywords internal
 test_fn_req_args <- function(fn, n_req_args = 1) {
   checkmate::assert_count(n_req_args, positive = TRUE)
   checkmate::test_function(fn) &&
+    sum(mapply(function(x, y) {
+      is.name(x) && y != "..."
+    }, formals(fn), names(formals(fn)))) == n_req_args
+}
+
 #' @name delay_density_helpers
 test_fn_num_out <- function(fn, n = 10) {
   # use assert count to easily prevent values < 1
