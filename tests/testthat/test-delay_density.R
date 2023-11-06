@@ -214,9 +214,13 @@ test_that("Functions to test delay density work", {
       dgamma, 2
     )
   )
-  # expect FALSE when a primitive is passed
-  expect_false(
+  # expect TRUE when an appropriate primitive is passed
+  # NOTE: Passes as this primitive has one arg
+  expect_true(
     test_fn_req_args(is.list)
+  )
+  expect_false(
+    test_fn_req_args(`+`)
   )
 
   # distcrete

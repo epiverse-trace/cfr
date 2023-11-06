@@ -31,11 +31,13 @@
 #' @keywords internal
 test_fn_req_args <- function(fn, n_req_args = 1) {
   checkmate::assert_count(n_req_args, positive = TRUE)
+  # NOTE: using formals(args(fn)) to allow checking args of builtin primitives
+  # for which formals(fn) would return NULL and cause the check to error
+  # NOTE: errors non-informatively for specials such as `if`
   checkmate::test_function(fn) &&
-    (!is.primitive(fn)) &&
     sum(mapply(function(x, y) {
       is.name(x) && y != "..."
-    }, formals(fn), names(formals(fn)))) == n_req_args
+    }, formals(args(fn)), names(formals(args(fn))))) == n_req_args
 }
 
 #' @name delay_density_helpers
