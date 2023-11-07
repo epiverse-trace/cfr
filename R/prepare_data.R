@@ -1,3 +1,18 @@
+#' @title Check whether a package is installed
+#' @description A small internal function to check whether a required package
+#' is installed.
+#' This function is primarily intended to be used in mocking when testing for
+#' appropriate error messages from functions that rely on a package without
+#' that package being imported in {cfr}.
+#' The only current use case is [prepare_data.incidence2()].
+#' @param x A package name as a string.
+#' @return Quietly returns a logical for whether the package passed in `x` is
+#' available locally.
+#' @keywords internal
+.is_pkg_installed <- function(x) {
+  requireNamespace(x, quietly = TRUE)
+}
+
 #' @title Prepare common epidemiological data formats for CFR estimation
 #'
 #' @name prepare_data
