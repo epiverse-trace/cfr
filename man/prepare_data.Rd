@@ -11,7 +11,7 @@ prepare_data(data, ...)
   data,
   cases_variable = "cases",
   deaths_variable = "deaths",
-  fill_NA = FALSE,
+  fill_NA = TRUE,
   ...
 )
 }
@@ -28,9 +28,8 @@ objects are supported. These may be grouped.}
 "count_variable" column of \code{data}.}
 
 \item{fill_NA}{A logical indicating whether \code{NA}s in the cases and deaths
-data should be replaced by 0s. The default value is \code{FALSE}. The function
-will error if \code{fill_NA = FALSE} but \code{NA}s are detected in the case or death
-data.}
+data should be replaced by 0s. The default value is \code{TRUE}, with a message
+to make users aware of the replacement.}
 }
 \value{
 A \verb{<data.frame>} suitable for disease severity estimation functions
@@ -53,16 +52,12 @@ Currently, the only supported data format is \verb{<incidence2>} from the
 }
 \details{
 The method for \verb{<incidence2>} data can replace \code{NA}s in the case and death
-data with 0s using the \code{fill_NA} argument, which is \code{FALSE} by default,
-meaning that \code{NA}s are retained.
-\code{NA}s could arise if the dataset has non-sequential dates, as the
-function fills in missing dates between the range of dates in the input data.
-This is because downstream functions require data with a continuous sequence
-of dates.
+data with 0s using the \code{fill_NA} argument, which is \code{TRUE} by default,
+meaning that \code{NA}s are replaced.
 
 Keeping \code{NA}s will cause downstream issues when calling functions such as
 \code{\link[=cfr_static]{cfr_static()}} on the data, as they cannot handle \code{NA}s.
-Setting \code{fill_NA = TRUE} resolves this issue, but must be a conscious choice.
+Setting \code{fill_NA = TRUE} resolves this issue.
 
 Passing a grouped \verb{<incidence2>} object to \code{data} will result in the function
 respecting the grouping and returning grouping variables in separate columns.
@@ -84,8 +79,7 @@ covid_uk_incidence <- incidence2::incidence(
 data <- prepare_data(
   covid_uk_incidence,
   cases_variable = "cases_new",
-  deaths_variable = "deaths_new",
-  fill_NA = TRUE
+  deaths_variable = "deaths_new"
 )
 
 tail(data)
@@ -104,8 +98,7 @@ covid_uk_incidence <- incidence2::incidence(
 data <- prepare_data(
   covid_uk_incidence,
   cases_variable = "cases_new",
-  deaths_variable = "deaths_new",
-  fill_NA = TRUE
+  deaths_variable = "deaths_new"
 )
 
 tail(data)
