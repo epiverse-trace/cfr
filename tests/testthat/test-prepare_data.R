@@ -1,22 +1,50 @@
 # Tests for the prepare_data() generic and incidence2 method
-
-# convert to incidence2 object
-covid_uk_incidence <- incidence2::incidence(
-  incidence2::covidregionaldataUK,
-  date_index = "date",
-  counts = c("cases_new", "deaths_new"),
-  count_names_to = "count_variable"
-)
-
-# View head of prepared data
-data <- prepare_data(
-  covid_uk_incidence,
-  cases_variable = "cases_new",
-  deaths_variable = "deaths_new",
-  fill_NA = TRUE
-)
-
 test_that("Prepare `<incidence2>` data, basic expectations", {
+  # convert to incidence2 object
+  covid_uk_incidence <- incidence2::incidence(
+    incidence2::covidregionaldataUK,
+    date_index = "date",
+    counts = c("cases_new", "deaths_new"),
+    count_names_to = "count_variable"
+  )
+
+  expect_message(
+    prepare_data(
+      covid_uk_incidence,
+      cases_variable = "cases_new", deaths_variable = "deaths_new",
+      fill_NA = TRUE
+    ),
+    regexp = paste0(
+      "NAs in cases and deaths are being replaced with 0s: ",
+      "Set `fill_NA = FALSE` to prevent this."
+    )
+  )
+  expect_no_condition(
+    prepare_data(
+      covid_uk_incidence,
+      cases_variable = "cases_new", deaths_variable = "deaths_new",
+      fill_NA = FALSE
+    )
+  )
+
+  # snapshot with NAs for fill_NAs = FALSE
+  expect_snapshot(
+    head(
+      prepare_data(
+        covid_uk_incidence,
+        cases_variable = "cases_new", deaths_variable = "deaths_new",
+        fill_NA = FALSE
+      )
+    )
+  )
+
+  # get data for output expectations
+  data <- prepare_data(
+    covid_uk_incidence,
+    cases_variable = "cases_new",
+    deaths_variable = "deaths_new",
+    fill_NA = TRUE
+  )
   expect_s3_class(data, "data.frame")
   expect_named(
     data, c("date", "cases", "deaths")
@@ -30,6 +58,7 @@ test_that("Prepare `<incidence2>` data, basic expectations", {
     tail(data)
   )
 })
+
 
 test_that("Data preparation errors for data.frame method", {
   expect_error(
@@ -56,7 +85,25 @@ test_that("Prepare grouped `<incidence2>` data", {
     prepare_data(
       data,
       cases_variable = "cases_new", deaths_variable = "deaths_new",
+      fill_NA = FALSE
+    )
+  )
+  expect_snapshot(
+    prepare_data(
+      data,
+      cases_variable = "cases_new", deaths_variable = "deaths_new",
+      fill_NA = FALSE
+    )
+  )
+  expect_message(
+    prepare_data(
+      data,
+      cases_variable = "cases_new", deaths_variable = "deaths_new",
       fill_NA = TRUE
+    ),
+    regexp = paste0(
+      "NAs in cases and deaths are being replaced with 0s: ",
+      "Set `fill_NA = FALSE` to prevent this."
     )
   )
 
