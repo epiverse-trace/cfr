@@ -18,23 +18,18 @@
 #' @param deaths_variable A string for the name of the deaths variable in the
 #' "count_variable" column of `data`.
 #' @param fill_NA A logical indicating whether `NA`s in the cases and deaths
-#' data should be replaced by 0s. The default value is `FALSE`. The function
-#' will error if `fill_NA = FALSE` but `NA`s are detected in the case or death
-#' data.
+#' data should be replaced by 0s. The default value is `TRUE`, with a message
+#' to make users aware of the replacement.
 #' @param ... Currently unused. Passing extra arguments will throw a warning.
 #'
 #' @details
 #' The method for `<incidence2>` data can replace `NA`s in the case and death
-#' data with 0s using the `fill_NA` argument, which is `FALSE` by default,
-#' meaning that `NA`s are retained.
-#' `NA`s could arise if the dataset has non-sequential dates, as the
-#' function fills in missing dates between the range of dates in the input data.
-#' This is because downstream functions require data with a continuous sequence
-#' of dates.
+#' data with 0s using the `fill_NA` argument, which is `TRUE` by default,
+#' meaning that `NA`s are replaced.
 #'
 #' Keeping `NA`s will cause downstream issues when calling functions such as
 #' [cfr_static()] on the data, as they cannot handle `NA`s.
-#' Setting `fill_NA = TRUE` resolves this issue, but must be a conscious choice.
+#' Setting `fill_NA = TRUE` resolves this issue.
 #'
 #' Passing a grouped `<incidence2>` object to `data` will result in the function
 #' respecting the grouping and returning grouping variables in separate columns.
@@ -66,8 +61,7 @@
 #' data <- prepare_data(
 #'   covid_uk_incidence,
 #'   cases_variable = "cases_new",
-#'   deaths_variable = "deaths_new",
-#'   fill_NA = TRUE
+#'   deaths_variable = "deaths_new"
 #' )
 #'
 #' tail(data)
@@ -86,8 +80,7 @@
 #' data <- prepare_data(
 #'   covid_uk_incidence,
 #'   cases_variable = "cases_new",
-#'   deaths_variable = "deaths_new",
-#'   fill_NA = TRUE
+#'   deaths_variable = "deaths_new"
 #' )
 #'
 #' tail(data)
@@ -104,12 +97,13 @@ prepare_data <- function(data, ...) {
 #' @export
 prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     deaths_variable = "deaths",
-                                    fill_NA = FALSE,
+                                    fill_NA = TRUE,
                                     ...) {
-  # check for {incidence2} and error if not available
-  if (!requireNamespace("incidence2", quietly = TRUE)) {
-    stop("Install package 'incidence2' to prepare <incidence2> class data")
-  }
+  # Check whether incidence2 is installed using internal function
+  stopifnot(
+    "Install package <incidence2> to prepare <incidence2> data" =
+      .is_pkg_installed("incidence2")
+  )
   # assume that installing incidence2 will also install data.table
 
   # assert that cases and deaths variable are different
@@ -126,7 +120,7 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   dates_variable <- incidence2::get_date_index_name(data)
 
   stopifnot(
-    "`cases_variable` and `deaths_variable` should be in \
+    "`cases_variable` and `deaths_variable` should be in
     `count_variable` column of <incidence2> object `data`" =
       all(
         c(cases_variable, deaths_variable) %in%
@@ -139,6 +133,12 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
     data,
     fill = ifelse(fill_NA, 0, NA_integer_)
   )
+  if (fill_NA) {
+    message(
+      "NAs in cases and deaths are being replaced with 0s: ",
+      "Set `fill_NA = FALSE` to prevent this."
+    )
+  }
   data.table::setDT(data)
 
   index <- .subset2(data, count_var_col)

@@ -36,7 +36,7 @@ library(outbreaks)
 library(dplyr)
 ```
 
-# `<incidence2>` objects from linelists
+## Creating `<incidence2>` objects from linelists
 
 We first load some linelist data for the 2014 Ebola outbreak provided with the _outbreaks_ package, and create an _incidence2_ object and view it.
 
@@ -84,8 +84,8 @@ ebola <- prepare_data(
 )
 ```
 
-In this example, we used the `fill_NA` argument and set it to `TRUE`; this replaces missing case and death counts in the data with `0`s.
-The default value of this argument is `FALSE`, however, keeping `NA`s in the data causes downstream issues with functions such as `cfr_static()`.
+In this example, we used the default value of the `fill_NA` argument which is `TRUE`; this replaces missing case and death counts in the data with `0`s.
+Keeping `NA`s in the data causes downstream issues with functions such as `cfr_static()`.
 We recommend that users should carefully consider whether they can safely fill `NA`s with zeros for the purposes of their analysis.
 
 We obtain and use a delay distribution from @barry2018 for Ebola virus disease; this is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
@@ -100,7 +100,7 @@ cfr_static(
 )
 ```
 
-## `<incidence2>` objects from aggregated case data
+## Creating `<incidence2>` objects from aggregated case data
 
 Aggregated case data such as the Covid-19 dataset provided by _incidence2_ can be used with _cfr_ directly.
 
@@ -118,25 +118,30 @@ covid_uk <- covidregionaldataUK
 head(covid_uk)
 ```
 
-Note that the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object, but in this example it is overridden to provide a single dataset with cases and deaths summed across regions by date by `prepare_data()`.
-This functionality is currently under development and might change in future.
+Note that the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object.
+`prepare_data()` respects grouping structure when present, and returns a dataset with one additional column for each grouping variable.
 
 ```{r}
 # convert to incidence2 object
 covid_uk_incidence <- incidence(
   covid_uk,
   date_index = "date",
+  groups = "region",
   counts = c("cases_new", "deaths_new"),
   count_names_to = "count_variable"
 )
 
-# View head of prepared data
+# View head of prepared data with NAs retained
+# Note that this will cause issues with CFR functions such as cfr_static()
 head(
   prepare_data(
     covid_uk_incidence,
     cases_variable = "cases_new",
-    deaths_variable = "deaths_new",
-    fill_NA = TRUE
+    deaths_variable = "deaths_new"
   )
 )
 ```
+
+In this example, the "region" column is added to the data, allowing for disease severity to be calculated separately for each region if needed.
+
+Users who wish to override grouping variables in their data are advised to do this when converting their data into an `<incidence2>` object, and to be aware of how _incidence2_ aggregates case and death counts, including how it deals with `NA`s; see `incidence2::incidence()` for more details.
