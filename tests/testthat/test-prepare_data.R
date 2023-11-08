@@ -79,7 +79,7 @@ test_that("Prepare <incidence2> fails if <incidence2> not available", {
         cases_variable = "cases_new", deaths_variable = "deaths_new",
         fill_NA = TRUE
       ),
-      regexp = "Install package <incidence2> to prepare <incidence2> data"
+      regexp = "Install package \\{incidence2\\} to prepare <incidence2> data"
     )
   )
 })
