@@ -116,7 +116,7 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
                                     ...) {
   # Check whether incidence2 is installed using internal function
   stopifnot(
-    "Install package <incidence2> to prepare <incidence2> data" =
+    "Install package {incidence2} to prepare <incidence2> data" =
       .is_pkg_installed("incidence2")
   )
   # assume that installing incidence2 will also install data.table
