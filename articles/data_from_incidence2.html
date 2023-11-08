@@ -123,8 +123,7 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span></code></pre></div>
 </details><div class="section level2">
-<h2 id="incidence2-objects-from-linelists">
-<code>&lt;incidence2&gt;</code> objects from linelists<a class="anchor" aria-label="anchor" href="#incidence2-objects-from-linelists"></a>
+<h2 id="creating-incidence2-objects-from-linelists">Creating <code>&lt;incidence2&gt;</code> objects from linelists<a class="anchor" aria-label="anchor" href="#creating-incidence2-objects-from-linelists"></a>
 </h2>
 <p>We first load some linelist data for the 2014 Ebola outbreak provided with the <em>outbreaks</em> package, and create an <em>incidence2</em> object and view it.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
@@ -178,9 +177,10 @@
 <span>  cases_variable <span class="op">=</span> <span class="st">"onset"</span>,</span>
 <span>  deaths_variable <span class="op">=</span> <span class="st">"outcome"</span>,</span>
 <span>  fill_NA <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details><p>In this example, we used the <code>fill_NA</code> argument and set it to <code>TRUE</code>; this replaces missing case and death counts in the data with <code>0</code>s.
-The default value of this argument is <code>FALSE</code>, however, keeping <code>NA</code>s in the data causes downstream issues with functions such as <code><a href="../reference/cfr_static.html">cfr_static()</a></code>.
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; NAs in cases and deaths are being replaced with 0s: Set `fill_NA = FALSE` to prevent this.</span></span></code></pre></div>
+</details><p>In this example, we used the default value of the <code>fill_NA</code> argument which is <code>TRUE</code>; this replaces missing case and death counts in the data with <code>0</code>s.
+Keeping <code>NA</code>s in the data causes downstream issues with functions such as <code><a href="../reference/cfr_static.html">cfr_static()</a></code>.
 We recommend that users should carefully consider whether they can safely fill <code>NA</code>s with zeros for the purposes of their analysis.</p>
 <p>We obtain and use a delay distribution from <span class="citation">@barry2018</span> for Ebola virus disease; this is a Gamma distribution with shape <span class="math inline">\(k\)</span> = 2.40 and scale <span class="math inline">\(\theta\)</span> = 3.33.</p>
 <p>Finally, we estimate the static case fatality risk while correcting for delays using the <code><a href="../reference/cfr_static.html">cfr_static()</a></code> function.</p>
@@ -192,10 +192,11 @@ We recommend that users should carefully consider whether they can safely fill <
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
 <span><span class="co">#&gt; 1         0.369        0.354         0.384</span></span></code></pre></div>
-</details><div class="section level3">
-<h3 id="incidence2-objects-from-aggregated-case-data">
-<code>&lt;incidence2&gt;</code> objects from aggregated case data<a class="anchor" aria-label="anchor" href="#incidence2-objects-from-aggregated-case-data"></a>
-</h3>
+</details>
+</div>
+<div class="section level2">
+<h2 id="creating-incidence2-objects-from-aggregated-case-data">Creating <code>&lt;incidence2&gt;</code> objects from aggregated case data<a class="anchor" aria-label="anchor" href="#creating-incidence2-objects-from-aggregated-case-data"></a>
+</h2>
 <p>Aggregated case data such as the Covid-19 dataset provided by <em>incidence2</em> can be used with <em>cfr</em> directly.</p>
 <p>Such usage is shown in other vignettes such as the <a href="cfr_time_varying_severity.html">vignette on estimating time-varying severity</a>.</p>
 <p>Here we show how to transform such data into <code>&lt;incidence2&gt;</code> objects, and then prepare them for <em>cfr</em>.</p>
@@ -227,35 +228,37 @@ We recommend that users should carefully consider whether they can safely fill <
 <span><span class="co">#&gt; 4           NA</span></span>
 <span><span class="co">#&gt; 5           NA</span></span>
 <span><span class="co">#&gt; 6           NA</span></span></code></pre></div>
-</details><p>Note that the grouping structure of this dataset given by the “region” variable is present in the <code>&lt;incidence2&gt;</code> object, but in this example it is overridden to provide a single dataset with cases and deaths summed across regions by date by <code><a href="../reference/prepare_data.html">prepare_data()</a></code>.
-This functionality is currently under development and might change in future.</p>
+</details><p>Note that the grouping structure of this dataset given by the “region” variable is present in the <code>&lt;incidence2&gt;</code> object.
+<code><a href="../reference/prepare_data.html">prepare_data()</a></code> respects grouping structure when present, and returns a dataset with one additional column for each grouping variable.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># convert to incidence2 object</span></span>
 <span><span class="va">covid_uk_incidence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/incidence2/man/incidence.html" class="external-link">incidence</a></span><span class="op">(</span></span>
 <span>  <span class="va">covid_uk</span>,</span>
 <span>  date_index <span class="op">=</span> <span class="st">"date"</span>,</span>
+<span>  groups <span class="op">=</span> <span class="st">"region"</span>,</span>
 <span>  counts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cases_new"</span>, <span class="st">"deaths_new"</span><span class="op">)</span>,</span>
 <span>  count_names_to <span class="op">=</span> <span class="st">"count_variable"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># View head of prepared data</span></span>
+<span><span class="co"># View head of prepared data with NAs retained</span></span>
+<span><span class="co"># Note that this will cause issues with CFR functions such as cfr_static()</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="../reference/prepare_data.html">prepare_data</a></span><span class="op">(</span></span>
 <span>    <span class="va">covid_uk_incidence</span>,</span>
 <span>    cases_variable <span class="op">=</span> <span class="st">"cases_new"</span>,</span>
-<span>    deaths_variable <span class="op">=</span> <span class="st">"deaths_new"</span>,</span>
-<span>    fill_NA <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>    deaths_variable <span class="op">=</span> <span class="st">"deaths_new"</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date cases deaths</span></span>
-<span><span class="co">#&gt; 1 2020-01-30     0      0</span></span>
-<span><span class="co">#&gt; 2 2020-01-31     0      0</span></span>
-<span><span class="co">#&gt; 3 2020-02-01     0      0</span></span>
-<span><span class="co">#&gt; 4 2020-02-02     0      0</span></span>
-<span><span class="co">#&gt; 5 2020-02-03     0      0</span></span>
-<span><span class="co">#&gt; 6 2020-02-04     0      0</span></span></code></pre></div>
-</details>
-</div>
+<span><span class="co">#&gt; NAs in cases and deaths are being replaced with 0s: Set `fill_NA = FALSE` to prevent this.</span></span>
+<span><span class="co">#&gt;         date          region cases deaths</span></span>
+<span><span class="co">#&gt; 1 2020-01-30   East Midlands     0      0</span></span>
+<span><span class="co">#&gt; 2 2020-01-30 East of England     0      0</span></span>
+<span><span class="co">#&gt; 3 2020-01-30         England     2      0</span></span>
+<span><span class="co">#&gt; 4 2020-01-30          London     0      0</span></span>
+<span><span class="co">#&gt; 5 2020-01-30      North East     0      0</span></span>
+<span><span class="co">#&gt; 6 2020-01-30      North West     0      0</span></span></code></pre></div>
+</details><p>In this example, the “region” column is added to the data, allowing for disease severity to be calculated separately for each region if needed.</p>
+<p>Users who wish to override grouping variables in their data are advised to do this when converting their data into an <code>&lt;incidence2&gt;</code> object, and to be aware of how <em>incidence2</em> aggregates case and death counts, including how it deals with <code>NA</code>s; see <code><a href="https://rdrr.io/pkg/incidence2/man/incidence.html" class="external-link">incidence2::incidence()</a></code> for more details.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
