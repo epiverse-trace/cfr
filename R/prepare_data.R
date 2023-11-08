@@ -5,12 +5,13 @@
 #' appropriate error messages from functions that rely on a package without
 #' that package being imported in {cfr}.
 #' The only current use case is [prepare_data.incidence2()].
-#' @param x A package name as a string.
+#' @inheritParams base::requireNamespace
 #' @return Quietly returns a logical for whether the package passed in `x` is
 #' available locally.
+#' @noRd
 #' @keywords internal
-.is_pkg_installed <- function(x) {
-  requireNamespace(x, quietly = TRUE)
+.is_pkg_installed <- function(package) {
+  requireNamespace(package, quietly = TRUE)
 }
 
 #' @title Prepare common epidemiological data formats for CFR estimation
