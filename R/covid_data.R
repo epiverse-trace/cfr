@@ -1,9 +1,10 @@
 #' Daily Covid-19 case and death data for countries with 100,000 or more deaths
 #'
-#' Data adapted from the `covidregionaldata` package of daily cases and
+#' Data adapted from the \{covidregionaldata\} package of daily cases and
 #' deaths from the 19 countries with 100,000 or more deaths over the period
 #' 2020-01-01 to 2022-12-31. See the **References** for the publication which
-#' links to data sources made available through `covidregionaldata`.
+#' links to data sources made available through \{covidregionaldata\}.
+#' Included as \{covidregionaldata\} is no longer on CRAN.
 #' Data are provided as a `<data.frame>`.
 #'
 #' @format ## `covid_data`

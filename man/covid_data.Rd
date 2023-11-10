@@ -24,10 +24,11 @@ rather than "United States of America"}
 covid_data
 }
 \description{
-Data adapted from the \code{covidregionaldata} package of daily cases and
+Data adapted from the \{covidregionaldata\} package of daily cases and
 deaths from the 19 countries with 100,000 or more deaths over the period
 2020-01-01 to 2022-12-31. See the \strong{References} for the publication which
-links to data sources made available through \code{covidregionaldata}.
+links to data sources made available through \{covidregionaldata\}.
+Included as \{covidregionaldata\} is no longer on CRAN.
 Data are provided as a \verb{<data.frame>}.
 }
 \references{

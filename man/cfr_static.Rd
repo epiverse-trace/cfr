@@ -29,7 +29,7 @@ density at user-specified values, e.g.
 \code{function(x) stats::dgamma(x = x, shape = 5, scale = 1)}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 100 by default.}
+approximation. Set to 100 by default. Must be > 0.}
 }
 \value{
 A \verb{<data.frame>} with the maximum likelihood estimate and 95\%
@@ -86,6 +86,7 @@ cfr_static(ebola1976)
 
 # estimate severity for each day while correcting for delays
 # obtain onset-to-death delay distribution parameters from Barry et al. 2018
+# The Lancet. <https://doi.org/10.1016/S0140-6736(18)31387-4>
 cfr_static(
   ebola1976,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)

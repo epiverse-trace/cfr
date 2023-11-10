@@ -77,6 +77,7 @@
 #'
 #' # estimate time varying severity while correcting for delays
 #' # obtain onset-to-death delay distribution parameters from Linton et al. 2020
+#' # J. Clinical Medicine: <https://doi.org/10.3390/jcm9020538>
 #' # view only the first values
 #' cfr_time_varying <- cfr_time_varying(
 #'   data = df_covid_uk,

@@ -1,11 +1,11 @@
-#' @title Check delay density functions passed to `cfr_*()`
+#' @title Check delay density functions passed to exported functions
 #'
 #' @name delay_density_helpers
 #' @rdname delay_density_helpers
 #'
 #' @description Internal helper function that check whether a function passed to
-#' the `delay_density` argument in `cfr_*()` meet the requirements of package
-#' methods.
+#' the `delay_density` argument in `cfr_*()` or [estimate_outcomes()] meet the
+#' requirements of package methods.
 #'
 #' `test_fn_req_args()` checks whether the function has only the expected number
 #' of required arguments, i.e., arguments without default values. Defaults to

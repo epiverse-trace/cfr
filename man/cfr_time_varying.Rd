@@ -33,7 +33,7 @@ density function of a distribution to evaluate
 density at user-specified values, e.g.
 \code{function(x) stats::dgamma(x = x, shape = 5, scale = 1)}.}
 
-\item{burn_in}{A single integer value for the number of time-points
+\item{burn_in}{A single integer-like value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
 
@@ -102,6 +102,7 @@ tail(cfr_time_varying)
 
 # estimate time varying severity while correcting for delays
 # obtain onset-to-death delay distribution parameters from Linton et al. 2020
+# J. Clinical Medicine: <https://doi.org/10.3390/jcm9020538>
 # view only the first values
 cfr_time_varying <- cfr_time_varying(
   data = df_covid_uk,

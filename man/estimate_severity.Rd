@@ -24,7 +24,7 @@ to the total number of cases.}
 over the period of an outbreak of interest. See \code{\link[=estimate_outcomes]{estimate_outcomes()}}.}
 
 \item{poisson_threshold}{The case count above which to use Poisson
-approximation. Set to 100 by default.}
+approximation. Set to 100 by default. Must be > 0.}
 }
 \value{
 A \verb{<data.frame>} with one row and three columns for the maximum
