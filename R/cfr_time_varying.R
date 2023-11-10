@@ -6,7 +6,7 @@
 #' (e.g. onset-to-death for the fatality risk).
 #'
 #' @inheritParams cfr_static
-#' @param burn_in A single integer value for the number of time-points
+#' @param burn_in A single integer-like value for the number of time-points
 #' (typically days) to disregard at the start of the time-series, if a burn-in
 #' period is desired.
 #'
@@ -90,8 +90,8 @@ cfr_time_varying <- function(data,
                              burn_in = 7,
                              smoothing_window = NULL) {
   # input checking
-  # expect an integer-like number
-  checkmate::assert_int(burn_in, lower = 0)
+  # zero count allowed to include all data
+  checkmate::assert_count(burn_in)
 
   # expect rows more than burn in value
   checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
