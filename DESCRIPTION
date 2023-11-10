@@ -1,9 +1,9 @@
 Package: cfr
-Title: Estimate Disease Severity and Under-Reporting
+Title: Estimate Disease Severity and Case Ascertainment
 Version: 0.1.0
 Authors@R: c(
     person(
-        given = "Pratik", family = "Gupte", role = c("aut", "cre", "cph"), email = "pratik.gupte@lshtm.ac.uk",
+        given = "Pratik R.", family = "Gupte", role = c("aut", "cre", "cph"), email = "pratik.gupte@lshtm.ac.uk",
         comment = c(ORCID = "0000-0001-5294-7819")
         ),
     person(
@@ -16,26 +16,26 @@ Authors@R: c(
         ),
     person(
         given = "Joshua W.", family = "Lambert", role = c("rev"), email = "joshua.lambert@lshtm.ac.uk",
-        comment = c(ORCID = "https://orcid.org/0000-0001-5218-3046")
+        comment = c(ORCID = "0000-0001-5218-3046")
         ),
     person(
         given = "Hugo", family = "Gruson", role = c("rev"), email = "hugo.gruson@data.org",
-        comment = c(ORCID = "https://orcid.org/0000-0002-4094-1476")
+        comment = c(ORCID = "0000-0002-4094-1476")
         ),
     person(
         given = "Tim", family = "Taylor", role = c("rev"), email = "tim.taylor@hiddenelephants.co.uk",
-        comment = c(ORCID = "https://orcid.org/0000-0002-8587-7113")
+        comment = c(ORCID = "0000-0002-8587-7113")
         ),
     person(
         given = "James M.", family = "Azam", role = c("rev"), email = "james.azam@lshtm.ac.uk",
-        comment = c(ORCID = "https://orcid.org/0000-0001-5782-7330")
+        comment = c(ORCID = "0000-0001-5782-7330")
         ),
     person(
         given = "Abdoelnaser M.", family = "Degoot", role = c("rev"), email = "abdoelnaser-mahmood.degoot@lshtm.ac.uk",
-        comment = c(ORCID = "https://orcid.org/0000-0001-8788-2496")
+        comment = c(ORCID = "0000-0001-8788-2496")
         )
     )
-Description: Estimate the severity of a disease and under-reporting of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
+Description: Estimate the severity of a disease and ascertainment of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
 License: MIT + file LICENSE
 URL: https://github.com/epiverse-trace/cfr, https://epiverse-trace.github.io/cfr/
 BugReports: https://github.com/epiverse-trace/cfr/issues
