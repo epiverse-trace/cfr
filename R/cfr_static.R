@@ -29,7 +29,7 @@
 #' `function(x) stats::dgamma(x = x, shape = 5, scale = 1)`.
 #'
 #' @param poisson_threshold The case count above which to use Poisson
-#' approximation. Set to 100 by default.
+#' approximation. Set to 100 by default. Must be > 0.
 #'
 #' @details
 #' # Details: Adjusting for delays between two time series
@@ -119,7 +119,7 @@ cfr_static <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
-  checkmate::assert_count(poisson_threshold)
+  checkmate::assert_count(poisson_threshold, positive = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
 
