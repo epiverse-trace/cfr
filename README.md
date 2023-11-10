@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![License:
-MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
+MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit/)
 [![R-CMD-check](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/epiverse-trace/cfr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/cfr?branch=main)
@@ -39,6 +39,12 @@ at the London School of Hygiene and Tropical Medicine as part of the
 [Epiverse-TRACE initiative](https://data.org/initiatives/epiverse/).
 
 ## Installation
+
+*cfr* can be installed from CRAN using
+
+``` r
+install.packages("cfr")
+```
 
 The current development version of *cfr* can be installed from
 [GitHub](https://github.com/) using the `pak` package.
@@ -87,10 +93,11 @@ as more data on cases and deaths over time becomes available, using the
 function `cfr_rolling()`. Because there is a delay from onset-to-death,
 a simple “naive” calculation that just divides deaths-to-date by
 cases-to-date will underestimate severity. The `cfr_rolling()` function
-uses the `cfr_severity()` adjustment to account for delays, and instead
-compares deaths-to-date with cases-with-known-outcome-to-date. The
-adjusted estimate converges to the naive estimate as the outbreak
-declines and a larger proportion of cases have known outcomes.
+uses the `estimate_severity()` adjustment internally to account for
+delays, and instead compares deaths-to-date with
+cases-with-known-outcome-to-date. The adjusted estimate converges to the
+naive estimate as the outbreak declines and a larger proportion of cases
+have known outcomes.
 
 ``` r
 # Calculate the CFR without correcting for delays on each day of the outbreak
@@ -98,7 +105,6 @@ rolling_cfr_naive <- cfr_rolling(
   data = ebola1976
 )
 
-# add the date from the outbreak
 # see the first few rows
 head(rolling_cfr_naive)
 #>         date severity_mean severity_low severity_high
