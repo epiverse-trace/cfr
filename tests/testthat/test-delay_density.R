@@ -20,6 +20,8 @@ test_that("CFR functions work with delay_density as lambda", {
 })
 
 test_that("CFR functions work with delay_density as <distcrete>", {
+  # guarding against CRAN noSuggests checks
+  skip_if_not_installed("distcrete")
   # Checks pass and cfr_static function works with disctcrete
   ddens <- distcrete::distcrete("gamma", 1, shape = 2.4, scale = 3.33)$d
   expect_no_condition(
