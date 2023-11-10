@@ -39,6 +39,12 @@ _{{ packagename }}_ is developed at the [Centre for the Mathematical Modelling o
 
 ## Installation
 
+_{{ packagename }}_ can be installed from CRAN using
+
+```r
+install.packages("{{ packagename }}")
+```
+
 The current development version of _{{ packagename }}_ can be installed from [GitHub](https://github.com/) using the `pak` package.
 
 ```r
@@ -73,7 +79,7 @@ cfr_static(
 
 In this example we show how the estimate of overall severity can change as more data on cases and deaths over time becomes available, using the function `cfr_rolling()`. 
 Because there is a delay from onset-to-death, a simple "naive" calculation that just divides deaths-to-date by cases-to-date will underestimate severity.
-The `cfr_rolling()` function uses the `cfr_severity()` adjustment to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.
+The `cfr_rolling()` function uses the `estimate_severity()` adjustment internally to account for delays, and instead compares deaths-to-date with cases-with-known-outcome-to-date.
 The adjusted estimate converges to the naive estimate as the outbreak declines and a larger proportion of cases have known outcomes.
 
 ```{r example-ebola-plot}
@@ -82,7 +88,6 @@ rolling_cfr_naive <- cfr_rolling(
   data = ebola1976
 )
 
-# add the date from the outbreak
 # see the first few rows
 head(rolling_cfr_naive)
 
