@@ -33,7 +33,7 @@ estimate_severity <- function(total_cases,
   checkmate::assert_number(total_deaths, upper = total_cases, lower = 0)
   # expect that the estimated number of outcomes is greater
   checkmate::assert_number(total_outcomes, lower = 0, finite = TRUE)
-  checkmate::assert_count(poisson_threshold)
+  checkmate::assert_count(poisson_threshold, positive = TRUE)
 
   # check for special case where any two of cases, deaths, and outcomes are zero
   if (sum(c(total_cases, total_deaths, total_outcomes) == 0) >= 2) {

@@ -71,7 +71,7 @@ cfr_rolling <- function(data,
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
-  checkmate::assert_count(poisson_threshold)
+  checkmate::assert_count(poisson_threshold, positive = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
 
