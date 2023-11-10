@@ -55,7 +55,7 @@ library(cfr)
 
 ## Case and death data {-}
 
-Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset curated by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/web/packages/outbreaks/index.html).
+Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset curated by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/package=outbreaks).
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
 
