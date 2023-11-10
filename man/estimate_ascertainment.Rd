@@ -46,7 +46,7 @@ assumed true baseline severity estimate used to estimate the overall
 ascertainment ratio. Missing by default, which causes the function to error;
 must be supplied by the user.}
 
-\item{burn_in}{A single integer value for the number of time-points
+\item{burn_in}{A single integer-like value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.
 
@@ -90,10 +90,10 @@ df_covid_uk <- covid_data[covid_data$country == "United Kingdom", ]
 df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 
 # use a severity baseline of 1.4\% (0.014) taken from Verity et al. (2020)
-# Lancet Infectious Diseases: 10.1016/S1473-3099(20)30243-7
+# Lancet Infectious Diseases: <https://doi.org/10.1016/S1473-3099(20)30243-7>
 
 # use onset-to-death distribution from Linton et al. (2020)
-# J. Clinical Medicine: 10.3390/jcm9020538
+# J. Clinical Medicine: <https://doi.org/10.3390/jcm9020538>
 
 estimate_ascertainment(
   data = df_covid_uk,

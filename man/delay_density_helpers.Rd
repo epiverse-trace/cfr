@@ -4,7 +4,7 @@
 \alias{delay_density_helpers}
 \alias{test_fn_req_args}
 \alias{test_fn_num_out}
-\title{Check delay density functions passed to \verb{cfr_*()}}
+\title{Check delay density functions passed to exported functions}
 \usage{
 test_fn_req_args(fn, n_req_args = 1)
 
@@ -27,8 +27,8 @@ in the respective checks.
 }
 \description{
 Internal helper function that check whether a function passed to
-the \code{delay_density} argument in \verb{cfr_*()} meet the requirements of package
-methods.
+the \code{delay_density} argument in \verb{cfr_*()} or \code{\link[=estimate_outcomes]{estimate_outcomes()}} meet the
+requirements of package methods.
 
 \code{test_fn_req_args()} checks whether the function has only the expected number
 of required arguments, i.e., arguments without default values. Defaults to

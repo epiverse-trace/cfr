@@ -33,6 +33,7 @@
 #'
 #' # estimate severity for each day while correcting for delays
 #' # obtain onset-to-death delay distribution parameters from Barry et al. 2018
+#' # The Lancet. <https://doi.org/10.1016/S0140-6736(18)31387-4>
 #' # view only the first values
 #' estimate <- cfr_rolling(
 #'   ebola1976,
