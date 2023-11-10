@@ -75,7 +75,8 @@ estimate_ascertainment <- function(data,
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE
   )
-  checkmate::assert_int(burn_in, lower = 0)
+  # zero count allowed to include all data
+  checkmate::assert_count(burn_in)
   checkmate::assert_date(max_date, null.ok = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
