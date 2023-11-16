@@ -28,87 +28,9 @@ library(cfr)
 
 # load {incidence2}
 library(incidence2)
-
-# load {outbreaks} for ebola data
-library(outbreaks)
-
-# packages to wrangle data
-library(dplyr)
 ```
 
-## Creating `<incidence2>` objects from linelists
-
-We first load some linelist data for the 2014 Ebola outbreak provided with the _outbreaks_ package, and create an _incidence2_ object and view it.
-
-```{r}
-# load ebola dataset from outbreak
-data("ebola_sim_clean")
-ebola <- ebola_sim_clean$linelist
-
-# view ebola
-head(ebola)
-```
-
-We then prepare an `<incidence2>` object using the `date_of_onset` and `date_of_outcome` columns as the date indices, and grouping by outcome.
-
-These steps use a combination of functions from _incidence2_ as well as common data science packages such as [_dplyr_](https://dplyr.tidyverse.org/).
-
-```{r}
-# create incidence2 object of ebola deaths
-ebola <- incidence(
-  x = ebola,
-  date_index = c(
-    onset = "date_of_onset",
-    outcome = "date_of_outcome"
-  ),
-  groups = "outcome"
-)
-
-# filter for outcomes that are deaths using dplyr::filter --- death counts
-# also filter for all onsets --- these are the case counts
-ebola <- filter(
-  ebola,
-  (outcome == "Death" & count_variable == "outcome") |
-    (count_variable == "onset")
-)
-
-# remove groups using incidence2::regroup()
-ebola <- regroup(ebola)
-
-# prepare data
-ebola <- prepare_data(
-  ebola,
-  cases_variable = "onset",
-  deaths_variable = "outcome",
-  fill_NA = TRUE
-)
-```
-
-In this example, we used the default value of the `fill_NA` argument which is `TRUE`; this replaces missing case and death counts in the data with `0`s.
-Keeping `NA`s in the data causes downstream issues with functions such as `cfr_static()`.
-We recommend that users should carefully consider whether they can safely fill `NA`s with zeros for the purposes of their analysis.
-
-We obtain and use a delay distribution from @barry2018 for Ebola virus disease; this is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
-
-Finally, we estimate the static case fatality risk while correcting for delays using the `cfr_static()` function.
-
-```{r}
-# estimate static CFR as a sanity check
-cfr_static(
-  ebola,
-  delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
-)
-```
-
-## Creating `<incidence2>` objects from aggregated case data
-
-Aggregated case data such as the Covid-19 dataset provided by _incidence2_ can be used with _cfr_ directly.
-
-Such usage is shown in other vignettes such as the [vignette on estimating time-varying severity](cfr_time_varying_severity.html).
-
-Here we show how to transform such data into `<incidence2>` objects, and then prepare them for _cfr_.
-
-The columns in this dataset are already in a format that can be converted into an `<incidence2>` object using `incidence2::incidence()`, and then handled by `prepare_data()`.
+Aggregated case data such as the Covid-19 dataset provided by _incidence2_ can be converted into an `<incidence2>` object using `incidence2::incidence()`, and then handled by `prepare_data()`.
 
 ```{r}
 # get data bundled with the {incidence2} package
