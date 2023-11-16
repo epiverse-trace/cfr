@@ -106,9 +106,13 @@ cfr_time_varying <- function(data,
     data[, c("date", "cases", "deaths")],
     any.missing = FALSE
   )
-  checkmate::assert_number(smoothing_window, lower = 1, null.ok = TRUE)
+  # check that data$date is a date column
+  checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
+  checkmate::assert_count(smoothing_window, null.ok = TRUE)
 
   stopifnot(
+    "Input data must have sequential dates with none missing or duplicated" =
+      identical(unique(diff(data$date)), 1), # use numeric 1, not integer
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0),
     "`delay_density` must be a function with a single required argument,
