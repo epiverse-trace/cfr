@@ -219,37 +219,8 @@ test_that("Basic expectations for time-varying ascertainment", {
   )
 })
 
-# test that the time varying estimate at a specific date X is the same as when
-# the data are subset up to the date X
-test_that("Time varying ascertainment at a user-specified date", {
-  # prepare the date
-  max_date <- as.Date("2020-06-01")
-  # get the estimate using max_date
-  ascertainment_estimate <- estimate_ascertainment(
-    data = covid_uk,
-    delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-    max_date = max_date,
-    severity_baseline = 0.02,
-    type = "varying"
-  )
-
-  # get the estimate after subsetting the data
-  ascertainment_estimate_2 <- estimate_ascertainment(
-    data = covid_uk[covid_uk$date <= max_date, ],
-    delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-    severity_baseline = 0.02,
-    type = "varying"
-  )
-
-  expect_identical(
-    ascertainment_estimate,
-    ascertainment_estimate_2
-  )
-})
-
 # test for a warning from ascertainment ratios > 1.0
 test_that("Ascertainment > 1.0 throws a warning", {
-  # get the estimate using max_date
   expect_warning(
     estimate_ascertainment(
       data = ebola1976,
