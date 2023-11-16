@@ -194,7 +194,7 @@ cfr_time_varying <- function(data,
   )
 
   # binomial test at indices
-  estimates_tmp <- lapply(indices, FUN = function(i) {
+  estimates_tmp <- vapply(indices, FUN = function(i) {
     severity_current_estimate <- stats::binom.test(
       df_temp$deaths[i],
       df_temp$estimated_outcomes[i]
@@ -206,16 +206,10 @@ cfr_time_varying <- function(data,
       severity_current_estimate$conf.int[[1]],
       severity_current_estimate$conf.int[[2]]
     )
-  })
+  }, numeric(3))
 
-  # create matrix to replace values of severity_estimates at indices
-  estimates_tmp <- matrix(
-    unlist(estimates_tmp),
-    nrow = length(indices),
-    byrow = TRUE
-  )
   # replace the values at indices
-  severity_estimates[indices, ] <- estimates_tmp
+  severity_estimates[indices, ] <- t(estimates_tmp)
 
   # create data frame
   severity_estimates <- as.data.frame(severity_estimates)
