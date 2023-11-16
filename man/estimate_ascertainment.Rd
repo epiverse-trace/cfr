@@ -10,8 +10,7 @@ estimate_ascertainment(
   delay_density = NULL,
   type = c("static", "varying"),
   burn_in = 7,
-  smoothing_window = NULL,
-  max_date = NULL
+  smoothing_window = NULL
 )
 }
 \arguments{
@@ -63,11 +62,6 @@ time-varying severity.
 
 The default behaviour is to apply no smoothing. The minimum value of this
 argument is 1.}
-
-\item{max_date}{A \code{Date} representing a user supplied maximum date, up to
-which the time-varying severity estimate will be calculated. Useful in the
-case of long time-series, where the user wishes to focus on a specific
-time-period. See \code{\link[=as.Date]{as.Date()}} for converting a string to a \code{Date}.}
 }
 \value{
 A \verb{<data.frame>} containing the maximum likelihood estimate estimate
@@ -95,13 +89,14 @@ df_covid_uk_subset <- subset(df_covid_uk, date <= "2020-05-31")
 # use onset-to-death distribution from Linton et al. (2020)
 # J. Clinical Medicine: <https://doi.org/10.3390/jcm9020538>
 
+# subset data until 30th June 2020
+data <- df_covid_uk[df_covid_uk$date <= "2020-06-30", ]
 estimate_ascertainment(
-  data = df_covid_uk,
+  data = data,
   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
   type = "varying",
   severity_baseline = 0.014,
-  burn_in = 7L,
-  max_date = as.Date("2020-06-30")
+  burn_in = 7L
 )
 
 }

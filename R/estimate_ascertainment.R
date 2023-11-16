@@ -17,10 +17,6 @@
 #' assumed true baseline severity estimate used to estimate the overall
 #' ascertainment ratio. Missing by default, which causes the function to error;
 #' must be supplied by the user.
-#' @param max_date A `Date` representing a user supplied maximum date, up to
-#' which the time-varying severity estimate will be calculated. Useful in the
-#' case of long time-series, where the user wishes to focus on a specific
-#' time-period. See [as.Date()] for converting a string to a `Date`.
 #'
 #' @return A `<data.frame>` containing the maximum likelihood estimate estimate
 #' and 95% confidence interval of the corrected severity, named
@@ -41,13 +37,14 @@
 #' # use onset-to-death distribution from Linton et al. (2020)
 #' # J. Clinical Medicine: <https://doi.org/10.3390/jcm9020538>
 #'
+#' # subset data until 30th June 2020
+#' data <- df_covid_uk[df_covid_uk$date <= "2020-06-30", ]
 #' estimate_ascertainment(
-#'   data = df_covid_uk,
+#'   data = data,
 #'   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
 #'   type = "varying",
 #'   severity_baseline = 0.014,
-#'   burn_in = 7L,
-#'   max_date = as.Date("2020-06-30")
+#'   burn_in = 7L
 #' )
 #'
 estimate_ascertainment <- function(data,
@@ -55,8 +52,7 @@ estimate_ascertainment <- function(data,
                                    delay_density = NULL,
                                    type = c("static", "varying"),
                                    burn_in = 7,
-                                   smoothing_window = NULL,
-                                   max_date = NULL) {
+                                   smoothing_window = NULL) {
   # input checking
   # expect rows more than burn in value
   checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
@@ -77,7 +73,6 @@ estimate_ascertainment <- function(data,
   )
   # zero count allowed to include all data
   checkmate::assert_count(burn_in)
-  checkmate::assert_date(max_date, null.ok = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
 
@@ -100,13 +95,8 @@ estimate_ascertainment <- function(data,
 
       df_sev <- df_sev[!is.na(df_sev$severity_mean), ]
 
-      # collect the severity at the last date, or the date specified by
-      # the user in `max_date`
-      if (!is.null(max_date)) {
-        df_sev <- df_sev[df_sev$date == max_date, ]
-      } else {
-        df_sev <- df_sev[df_sev$date == max(df_sev$date), ]
-      }
+      # collect the severity at the last date in the data
+      df_sev <- df_sev[df_sev$date == max(df_sev$date), ]
 
       # subset column names
       df_sev <- df_sev[
