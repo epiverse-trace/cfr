@@ -31,7 +31,7 @@
       expected_outcomes <- cases[seq(offset + 1, i)] * rev(delay_pmf_eval)
 
       # return total expected outcomes
-      round(sum(expected_outcomes, na.rm = TRUE))
+      sum(expected_outcomes)
     },
     FUN.VALUE = numeric(1)
   )
@@ -102,37 +102,13 @@ estimate_outcomes <- function(data,
 
   pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
-  # defining vectors to be used in the main loop
-  cases <- data$cases
-
-  # the times at which cases are reported, in numbers of days (or whichever
-  # time units are used) since the first case was reported
-  case_times <- as.numeric(
-    data$date - min(data$date, na.rm = TRUE),
-    units = "days"
-  ) + 1
-
-  # the total number of time points at which cases were reported
-  case_length <- length(case_times)
-
   # calculate expected outcomes
-  estimated_outcomes <- vapply(
-    X = rev(seq_len(case_length)),
-    FUN = function(i) {
-      delay_pmf_eval <- pmf_vals[case_times[seq_len(i)]]
+  # NOTE: assumes daily data, which is checked in higher level functions
+  estimated_outcomes <- .calc_expected_outcomes(data$cases, pmf_vals)
 
-      # Estimate the number of onsets associated with deaths
-      expected_outcomes <- cases[seq_len(i)] * rev(delay_pmf_eval)
-
-      # return total expected outcomes
-      sum(expected_outcomes)
-    },
-    FUN.VALUE = numeric(1)
-  )
-
-  # calculate severity as ratio - note use of reversed vector
-  data$estimated_outcomes <- rev(estimated_outcomes)
-  data$u_t <- cumsum(data$estimated_outcomes) / cumsum(cases)
+  # calculate severity as ratio
+  data$estimated_outcomes <- estimated_outcomes
+  data$u_t <- cumsum(data$estimated_outcomes) / cumsum(data$cases)
 
   # replace u_t that is NaN with NA (due to zero division)
   data$u_t[is.nan(data$u_t)] <- NA_real_
