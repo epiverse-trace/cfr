@@ -172,7 +172,7 @@ cfr_time_varying <- function(data,
       X = indices,
       FUN = function(x) {
         delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in)]]
-        known_onsets_current <- cases[seq_len(x - burn_in)] *
+        known_onsets_current <- cases[seq(burn_in + 1, x)] *
           rev(delay_pmf_eval)
 
         # return rounded sum of known_onsets_current
