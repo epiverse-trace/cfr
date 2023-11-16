@@ -1,3 +1,42 @@
+#' Calculate expected outcomes
+#'
+#' @description
+#' An internal function to calculate the number of outcomes expected given
+#' a time-series of cases and probability density or mass functions evaluated
+#' at relevant time points.
+#'
+#' @param cases A numeric vector of the time-series of cases.
+#' @param pmf_vals A numeric vector of the probability mass function or
+#' probability density function of a reporting delay distribution evaluated at
+#' each time point represented in `cases`.
+#' @param offset A single number for an offset applied to the calculation.
+#' Defaults to 0 for no offset.
+#' @param indices The indices in the time-series to which cases correspond.
+#' Defaults to a sequence along the vector of cases.
+#'
+#' @keywords internal
+#' @noRd
+#' @return A numeric vector of the number of outcomes expected.
+#'
+.calc_expected_outcomes <- function(
+    cases, pmf_vals, offset = 0,
+    indices = seq_along(cases)) {
+  # no input checks as this is an internal function
+  vapply(
+    X = indices,
+    FUN = function(i) {
+      delay_pmf_eval <- pmf_vals[seq_len(i - offset)]
+
+      # estimate expected number of outcomes
+      expected_outcomes <- cases[seq(offset + 1, i)] * rev(delay_pmf_eval)
+
+      # return total expected outcomes
+      round(sum(expected_outcomes, na.rm = TRUE))
+    },
+    FUN.VALUE = numeric(1)
+  )
+}
+
 #' @title Estimate known outcomes of cases using a delay distribution
 #'
 #' @description Estimates the expected number of individuals with known outcomes
