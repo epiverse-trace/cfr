@@ -6,9 +6,9 @@
 \usage{
 estimate_ascertainment(
   data,
+  severity_baseline,
   delay_density = NULL,
   type = c("static", "varying"),
-  severity_baseline,
   burn_in = 7,
   smoothing_window = NULL,
   max_date = NULL
@@ -29,6 +29,11 @@ dates with no missing dates in between. The "date" column must be of class
 Note also that the total number of cases must be greater than the total
 number of reported deaths.}
 
+\item{severity_baseline}{A single number in the range 0.0 -- 1.0 for the
+assumed true baseline severity estimate used to estimate the overall
+ascertainment ratio. Missing by default, which causes the function to error;
+must be supplied by the user.}
+
 \item{delay_density}{An optional argument that controls whether delay
 correction is applied in the severity estimation.
 May be \code{NULL}, for no delay correction, or a function that returns the
@@ -40,11 +45,6 @@ density at user-specified values, e.g.
 whether \code{\link[=cfr_static]{cfr_static()}} or \code{\link[=cfr_time_varying]{cfr_time_varying()}} is used to calculate
 the resulting ascertainment ratio. Defaults to \code{"static"} if this argument is
 missing.}
-
-\item{severity_baseline}{A single number in the range 0.0 -- 1.0 for the
-assumed true baseline severity estimate used to estimate the overall
-ascertainment ratio. Missing by default, which causes the function to error;
-must be supplied by the user.}
 
 \item{burn_in}{A single integer-like value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in

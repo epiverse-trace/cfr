@@ -51,9 +51,9 @@
 #' )
 #'
 estimate_ascertainment <- function(data,
+                                   severity_baseline,
                                    delay_density = NULL,
                                    type = c("static", "varying"),
-                                   severity_baseline,
                                    burn_in = 7,
                                    smoothing_window = NULL,
                                    max_date = NULL) {
