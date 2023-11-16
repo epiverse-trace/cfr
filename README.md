@@ -135,9 +135,20 @@ We plot the rolling CFR to visualise how severity changes over time,
 using the [*ggplot2* package](https://ggplot2.tidyverse.org/). The
 plotting code is hidden here.
 
+``` r
+# combine the data for plotting
+rolling_cfr_naive$method <- "naive"
+rolling_cfr_corrected$method <- "corrected"
+
+data_cfr <- rbind(
+  rolling_cfr_naive,
+  rolling_cfr_corrected
+)
+```
+
 <div class="figure">
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%" />
 <p class="caption">
 Disease severity of ebola in the 1976 outbreak estimated on each day of
 the epidemic. The rolling CFR value converges to the static value
