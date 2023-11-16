@@ -54,3 +54,5 @@ rsconnect/
 # ignore development file
 scratch.R
 inst/doc
+/doc/
+/Meta/
