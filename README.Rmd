@@ -102,36 +102,32 @@ head(rolling_cfr_corrected)
 
 We plot the rolling CFR to visualise how severity changes over time, using the [_ggplot2_ package](https://ggplot2.tidyverse.org/). The plotting code is hidden here.
 
+```{r}
+# combine the data for plotting
+rolling_cfr_naive$method <- "naive"
+rolling_cfr_corrected$method <- "corrected"
+
+data_cfr <- rbind(
+  rolling_cfr_naive,
+  rolling_cfr_corrected
+)
+```
+
 ```{r echo=FALSE, fig.cap="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown."}
 library(ggplot2)
 
 # visualise both corrected and uncorrected rolling estimates
-ggplot() +
+ggplot(data_cfr) +
   geom_ribbon(
-    data = rolling_cfr_naive,
     aes(
       date,
       ymin = severity_low, ymax = severity_high,
-      fill = "naive"
-    ),
-    alpha = 0.2, show.legend = FALSE
-  ) +
-  geom_ribbon(
-    data = rolling_cfr_corrected,
-    aes(
-      date,
-      ymin = severity_low, ymax = severity_high,
-      fill = "corrected"
+      fill = method
     ),
     alpha = 0.2, show.legend = FALSE
   ) +
   geom_line(
-    data = rolling_cfr_naive,
-    aes(date, severity_mean, colour = "naive")
-  ) +
-  geom_line(
-    data = rolling_cfr_corrected,
-    aes(date, severity_mean, colour = "corrected")
+    aes(date, severity_mean, colour = method)
   ) +
   scale_colour_brewer(
     palette = "Dark2",
