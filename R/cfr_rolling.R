@@ -121,10 +121,8 @@ cfr_rolling <- function(data,
 
     cfr_lims <- Map(
       cumulative_deaths, cumulative_cases,
-      f = stats::binom.test, p = 1
+      f = function(x, n) stats::binom.test(x, n, p = 1)$conf.int
     )
-    # bind list elements together
-    cfr_lims <- lapply(cfr_lims, `[[`, "conf.int")
     cfr_lims <- do.call(rbind, cfr_lims)
 
     # assign to matrix
