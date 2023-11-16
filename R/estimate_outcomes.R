@@ -76,29 +76,26 @@ estimate_outcomes <- function(data,
   # the total number of time points at which cases were reported
   case_length <- length(case_times)
 
-  # declaring the outputs of the main loop as vectors within the main
-  # data.frame
-  kn_out <- numeric(case_length)
+  # calculate expected outcomes
+  estimated_outcomes <- vapply(
+    X = rev(seq_len(case_length)),
+    FUN = function(i) {
+      delay_pmf_eval <- pmf_vals[case_times[seq_len(i)]]
 
-  # main calculation loop
-  for (i in rev(seq_len(case_length))) {
-    # Delay probability mass function, evaluated at times
-    # within the case and death times series
-    delay_pmf_eval <- pmf_vals[case_times[seq_len(i)]]
+      # Estimate the number of onsets associated with deaths
+      expected_outcomes <- cases[seq_len(i)] * rev(delay_pmf_eval)
 
-    # Estimate the number of onsets associated with deaths
-    known_onsets_current <- cases[seq_len(i)] * rev(delay_pmf_eval)
+      # return total expected outcomes
+      sum(expected_outcomes)
+    },
+    FUN.VALUE = numeric(1)
+  )
 
-    # Collecting all current known onset estimates in a new
-    # column of the original data.frame
-    kn_out[i] <- sum(known_onsets_current)
-  }
-  # Calculating the proportion of cases with known onset,
-  # for use in the simple likelihood function
-  data$estimated_outcomes <- kn_out
-  data$u_t <- cumsum(kn_out) / cumsum(cases)
+  # calculate severity as ratio - note use of reversed vector
+  data$estimated_outcomes <- rev(estimated_outcomes)
+  data$u_t <- cumsum(data$estimated_outcomes) / cumsum(cases)
 
-  # replace u_t that is NaN with NA
+  # replace u_t that is NaN with NA (due to zero division)
   data$u_t[is.nan(data$u_t)] <- NA_real_
 
   # return dataframe with added columns
