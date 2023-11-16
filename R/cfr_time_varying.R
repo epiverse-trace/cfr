@@ -173,11 +173,11 @@ cfr_time_varying <- function(data,
       X = indices,
       FUN = function(x) {
         delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in)]]
-        known_onsets_current <- cases[seq(burn_in + 1, x)] *
+        expected_outcomes <- cases[seq(burn_in + 1, x)] *
           rev(delay_pmf_eval)
 
-        # return rounded sum of known_onsets_current
-        round(sum(known_onsets_current, na.rm = TRUE))
+        # return rounded sum of expected_outcomes
+        round(sum(expected_outcomes, na.rm = TRUE))
       },
       FUN.VALUE = numeric(1)
     )
@@ -196,16 +196,16 @@ cfr_time_varying <- function(data,
 
   # binomial test at indices
   estimates_tmp <- vapply(indices, FUN = function(i) {
-    severity_current_estimate <- stats::binom.test(
+    severity_estimate <- stats::binom.test(
       df_temp$deaths[i],
       df_temp$estimated_outcomes[i]
     )
 
     # return a vector
     c(
-      severity_current_estimate$estimate[[1]],
-      severity_current_estimate$conf.int[[1]],
-      severity_current_estimate$conf.int[[2]]
+      severity_estimate$estimate[[1]],
+      severity_estimate$conf.int[[1]],
+      severity_estimate$conf.int[[2]]
     )
   }, numeric(3))
 
