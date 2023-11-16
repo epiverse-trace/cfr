@@ -25,9 +25,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-There are many biological, epidemiological and behavioural reasons why the severity of a disease might change during the course of an outbreak, including the introduction of vaccines or therapeutics, reducing the relative risk of death, or the emergence of pathogen variants, which may alter the risk of hospitalisation or death associated with infection.
+There are many biological, epidemiological and behavioural reasons why the severity of a disease might change during the course of an outbreak, including transmission within specific subgroups of differing risk of severe outcomes, the introduction of vaccines or therapeutics, reducing the relative risk of death, or the emergence of pathogen variants, which may alter the risk of hospitalisation or death associated with infection.
 
-Running the `cfr_static()` function on datasets corresponding to different stages of the outbreak would lead to two static estimates, which may or may not differ.
+Running the `cfr_static()` function on datasets corresponding to two different stages of the outbreak would lead to two static estimates, which may or may not differ.
 This could be useful, but a more detailed and easier to interpret approach is to use the function demonstrated in this vignette, `cfr_time_varying()`.
 
 This vignette outlines how to use _cfr_ to estimate how the severity of a disease changes over the course of an ongoing outbreak.
@@ -65,7 +65,7 @@ library(scales)
 library(ggplot2)
 ```
 
-The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data --- and optionally, a delay distribution density function to allow for delay correction.
+The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data for estimating a CFR --- and, optionally, a delay distribution density function to allow for delay correction.
 
 ## Changing severity of the COVID-19 pandemic in the U.K.
 

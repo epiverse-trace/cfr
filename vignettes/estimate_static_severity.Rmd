@@ -191,7 +191,7 @@ ggplot(df_estimated_outcomes_ebola) +
 
 ### Estimating the naive and corrected CFR
 
-Once we estimate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset-to-death.
+Once we estimate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset and death.
 
 We do so by using the function `cfr_static()` from the _cfr_ package.
 This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
@@ -224,7 +224,7 @@ We get the data from the [_incidence2_ package](https://cran.r-project.org/packa
 ### Plotting the raw data
 
 We subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
-We do so, as the CFR changed dramatically as a result of the vaccination campaign.
+We do so, as the CFR changed dramatically as a result of the vaccination campaign that started in December 2020.
 The static severity calculations we are performing in this vignette are not able to deal with changes in severity over time.
 
 We change some default column names to match those required by _cfr_ and subset the data.frame to focus on the first year of the pandemic in the U.K.
