@@ -83,8 +83,6 @@ rolling_cfr_naive <- cfr_rolling(
 )
 
 # add the date from the outbreak
-rolling_cfr_naive <- cbind(date = ebola1976[, "date"], rolling_cfr_naive)
-
 # see the first few rows
 head(rolling_cfr_naive)
 
@@ -92,12 +90,6 @@ head(rolling_cfr_naive)
 rolling_cfr_corrected <- cfr_rolling(
   data = ebola1976,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
-)
-
-# add the date from the outbreak
-rolling_cfr_corrected <- cbind(
-  date = ebola1976[, "date"],
-  rolling_cfr_corrected
 )
 
 head(rolling_cfr_corrected)
