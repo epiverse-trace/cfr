@@ -39,8 +39,21 @@ standard (naive) severity definition. We use a binomial likelihood,
 approximated by a Poisson likelihood for large samples.
 }
 \details{
-When any two of \code{total_cases}, \code{total_deaths}, or \code{total_outcomes} are zero,
+\subsection{Special cases}{
+\itemize{
+\item When any two of \code{total_cases}, \code{total_deaths}, or \code{total_outcomes} are 0,
 the estimate and confidence intervals cannot be calculated and the output
-\verb{<data.frame>} contains \code{NA}s.
+\verb{<data.frame>} contains only \code{NA}s.
+\item When \code{total_cases == total_deaths} \emph{and} \code{total_outcomes <= total_deaths},
+while \code{total_cases < poisson_threshold}, the confidence intervals cannot be
+calculated and are returned as \code{NA}. The severity is returned as the lowest
+possible value for the method used when cases are below the Poisson
+threshold, which is 0.001.
+\item When \code{total_outcomes == total_deaths} while
+\code{total_cases < poisson_threshold} the confidence intervals cannot be
+calculated and are returned as \code{NA}s while the severity estimate is returned
+as \code{0.999}.
+}
+}
 }
 \keyword{internal}

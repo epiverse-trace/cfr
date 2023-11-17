@@ -21,17 +21,32 @@
 #' estimates, named "severity_mean", "severity_low", and "severity_high".
 #'
 #' @details
-#' When any two of `total_cases`, `total_deaths`, or `total_outcomes` are zero,
+#' ## Special cases
+#'
+#' - When any two of `total_cases`, `total_deaths`, or `total_outcomes` are 0,
 #' the estimate and confidence intervals cannot be calculated and the output
-#' `<data.frame>` contains `NA`s.
+#' `<data.frame>` contains only `NA`s.
+#'
+#' - When `total_cases == total_deaths` _and_ `total_outcomes <= total_deaths`,
+#' while `total_cases < poisson_threshold`, the confidence intervals cannot be
+#' calculated and are returned as `NA`. The severity is returned as the lowest
+#' possible value for the method used when cases are below the Poisson
+#' threshold, which is 0.001.
+#'
+#' - When `total_outcomes == total_deaths` while
+#' `total_cases < poisson_threshold` the confidence intervals cannot be
+#' calculated and are returned as `NA`s while the severity estimate is returned
+#' as `0.999`.
 estimate_severity <- function(total_cases,
                               total_deaths,
                               total_outcomes,
                               poisson_threshold = 100) {
   # Add input checking for single numbers
   checkmate::assert_count(total_cases)
+  # use assert_number to set upper limit at total_cases
   checkmate::assert_number(total_deaths, upper = total_cases, lower = 0)
   # expect that the estimated number of outcomes is greater
+  # need not be integer-like, need not be limited by cases or deaths
   checkmate::assert_number(total_outcomes, lower = 0, finite = TRUE)
   checkmate::assert_count(poisson_threshold, positive = TRUE)
 
