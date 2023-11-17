@@ -173,17 +173,10 @@ cfr_time_varying <- function(data,
   if (!is.null(delay_density)) {
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
-    df_temp[indices, "estimated_outcomes"] <- vapply(
-      X = indices,
-      FUN = function(x) {
-        delay_pmf_eval <- pmf_vals[case_times[seq_len(x - burn_in)]]
-        expected_outcomes <- cases[seq(burn_in + 1, x)] *
-          rev(delay_pmf_eval)
-
-        # return rounded sum of expected_outcomes
-        round(sum(expected_outcomes, na.rm = TRUE))
-      },
-      FUN.VALUE = numeric(1)
+    df_temp[indices, "estimated_outcomes"] <- round(.calc_expected_outcomes(
+        cases = df_temp$cases, pmf_vals = pmf_vals, offset = burn_in,
+        indices = indices
+      )
     )
   }
 
