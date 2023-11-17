@@ -166,10 +166,9 @@ cfr_time_varying <- function(data,
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
     df_temp[indices, "estimated_outcomes"] <- round(.calc_expected_outcomes(
-        cases = df_temp$cases, pmf_vals = pmf_vals, offset = burn_in,
-        indices = indices
-      )
-    )
+      cases = df_temp$cases, pmf_vals = pmf_vals, offset = burn_in,
+      indices = indices
+    ))
   }
 
   #### Get severity estimates ####
