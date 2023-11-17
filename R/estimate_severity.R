@@ -55,11 +55,14 @@ estimate_severity <- function(total_cases,
   # Calculate likelihood - use binomial for small samples and Poisson
   # approximation for larger numbers
   if (total_cases < poisson_threshold) {
-    lik <- log(choose(round(u_t * total_cases), total_deaths)) +
+    lik <- lchoose(round(u_t * total_cases), total_deaths) +
       (total_deaths * log(pprange)) +
       (((u_t * total_cases) - total_deaths) * log(1.0 - pprange))
   } else {
-    lik <- stats::dpois(total_deaths, pprange * u_t * total_cases, log = TRUE)
+    lik <- stats::dpois(
+      total_deaths, pprange * round(u_t * total_cases),
+      log = TRUE
+    )
   }
 
   # maximum likelihood estimate - if this is empty, return NA
