@@ -40,7 +40,7 @@ covid_uk <- covidregionaldataUK
 head(covid_uk)
 ```
 
-Note that the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object.
+**Note that** the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object.
 `prepare_data()` respects grouping structure when present, and returns a dataset with one additional column for each grouping variable.
 
 ```{r}
@@ -67,3 +67,5 @@ head(
 In this example, the "region" column is added to the data, allowing for disease severity to be calculated separately for each region if needed.
 
 Users who wish to override grouping variables in their data are advised to do this when converting their data into an `<incidence2>` object, and to be aware of how _incidence2_ aggregates case and death counts, including how it deals with `NA`s; see `incidence2::incidence()` for more details.
+
+Users who prepare data while maintaining grouping structure should take care to apply `cfr_*()` to their data by group, as `cfr_*()` functions cannot currently handle grouped data.

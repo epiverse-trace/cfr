@@ -25,12 +25,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-It is important to understand the severity of a disease in terms of the case fatality risk in order to respond appropriately to an outbreak.
-During an outbreak there is often a delay between cases being reported, and the outcomes (hospitalisation, death, etc.) of those cases being known.
-
-Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can be useful in getting better estimates of disease severity.
-
-This vignette demonstrates how to calculate a static (not time-varying) estimate of the severity of an outbreak using methods outlined in @nishiura2009, and implemented in _cfr_.
+Understanding disease severity, and especially the case fatality risk (CFR), is key to outbreak response.
+During an outbreak there is often a delay between cases being reported, and the outcomes (for CFR, deaths) of those cases being known, and accounting for these leads to better estimates of CFR.
+`cfr_static()` can be used to calculate a static estimate of the severity of an outbreak using methods from @nishiura2009 while accounting for the distribution of reporting delays.
 
 ::: {.alert .alert-warning}
 New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
@@ -39,106 +36,57 @@ New to calculating disease severity using _cfr_? You might want to see the ["Get
 ::: {.alert .alert-primary}
 ## Use case {-}
 
-We want a static estimate of the severity of an outbreak, using a method that uses a time series of cases, infections or hospitalisations (as appropriate) and deaths, _while correcting for the delay in reporting the outcomes of cases_.
+We want a **static estimate of the severity of an outbreak** in the form of the case fatality risk (CFR) while correcting for the delay in reporting the outcomes of cases.
 :::
 
 ::: {.alert .alert-secondary}
 ### What we have {-}
 
-* A time-series of cases, hospitalisations or some other proxy for infections over time;
-* A time-series of deaths;
+* A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);
 * Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
-
-The first two elements are expected to be included in a dataframe with the columns "dates", "cases", and "deaths".
 :::
 
 First load _cfr_ and packages to access and plot data.
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
-library(incidence2)
+
+# packages to wrangle and plot data
 library(dplyr)
-library(scales)
-library(ggplot2)
 ```
 
 ## Severity of the 1976 Ebola Outbreak
 
-We use case and death incidence data from the 1976 Ebola outbreak in the Democratic the overall severity of Ebola. We do so as though we were roughly half way through the outbreak, emulating when the methods presented in this package are arguably their most useful. 
+This example data comes from the 1976 Ebola virus disease (EVD, or Ebola) outbreak in the Democratic Republic of the Congo [@camacho2014].
 
-### Plotting the raw data
-
-First of all, we load the raw data.
+We focus on the roughly the first half of this dataset, by subsetting the data so that we only include days before 30th September, 1976.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 data("ebola1976")
-```
 
-Then, we plot the case incidence data.
+# view the first few rows
+head(ebola1976)
 
-```{r fig.cap ="Incidence of cases over time, taken from the 1976 Ebola outbreak in the Democratic Republic of the Congo. Data retrieved from within the *cfr* package.", class.source = 'fold-hide'}
-ggplot(ebola1976) +
-  geom_step(
-    aes(
-      x = date, y = cases
-    ),
-    colour = "steelblue"
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  labs(
-    x = "Date", y = "Cases"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
-
-Lastly, we plot the death data.
-
-```{r fig.cap = "Incidence of deaths over time from the same dataset as Figure 1.", class.source = 'fold-hide'}
-ggplot(ebola1976) +
-  geom_step(
-    aes(
-      x = date, y = deaths
-    ),
-    colour = "brown"
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  labs(
-    x = "Date", y = "Deaths"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
-
-We will focus on the roughly the first half of this dataset. We do so by
-subsetting the data so that we only include days before the 30th September 1976,
-using `dplyr::filter()`.
-
-```{r, message = FALSE, warning = FALSE, eval = TRUE}
 df_ebola_subset <- filter(ebola1976, date <= "1976-09-30")
 ```
 
 ### Onset-to-death delay distribution
 
-For this example, given that we are using case data and detection of a case is well-approximated by symptom onset, we use the distribution describing the delay between onset-to-death.
+We retrieve the parameters of the distribution of durations (also called delays) between the onset of EVD symptoms and death from the literature [@barry2018].
+This is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
 
-As such, we retrieve such a distribution from the literature [@barry2018]; this is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
+::: {.alert .alert-warning}
+**Note that** while we shall use a continuous distribution here as we do not expect this difference to bias the estimates excessively, it is more appropriate to use a discretised distribution instead as we are working with daily data.
+See the [vignette on delay distributions](delay_distribution.html) for more on using discretised distributions with _cfr_.
 
-### Estimating incidence of cases (or similar time-series) with a known death outcome
+**Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
+:::
 
-The function `estimate_outcomes()` from the _cfr_ package can estimate the number of cases which have a known death outcome over time.
+### Intermediate step: Estimating expected deaths
 
-The resulting data frame contains two new columns, "estimated_outcomes", for the number of known death outcomes expected for each day, and "u_t" for the ratio of cumulative number of estimated known outcomes and the cumulative number of cases reported until each date specified in data.
+The function `estimate_outcomes()` from the _cfr_ package can estimate the number of deaths expected given a time-series of case onset and reported deaths and a delay density function.
+
+The resulting data frame contains two new columns, "estimated_outcomes", for the number of deaths expected for each day, and "u_t" for the ratio of cumulative number of estimated deaths and the cumulative number of cases reported until each date specified in data.
 
 ```{r}
 # calculate known death outcomes
@@ -147,59 +95,24 @@ df_estimated_outcomes_ebola <- estimate_outcomes(
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 
-# visualise head of data frame
+# print head of data frame
 head(df_estimated_outcomes_ebola)
+
+# print tail of data frame
+tail(df_estimated_outcomes_ebola)
 ```
 
-```{r fig.cap = "The same case and death time series for the 1976 Ebola outbreak in D.R.C., with estimated known death outcomes included.", class.source = 'fold-hide'}
-# plot cases and estimated death outcomes as separate layers
-ggplot(df_estimated_outcomes_ebola) +
-  geom_step(
-    aes(
-      x = date, y = cases,
-      colour = "Cases"
-    )
-  ) +
-  geom_step(
-    aes(
-      x = date, y = estimated_outcomes,
-      colour = "Estimated death outcomes"
-    )
-  ) +
-  scale_colour_manual(
-    values = c(
-      Cases = "steelblue",
-      `Estimated death outcomes` = "darkgreen"
-    ),
-    name = NULL
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  theme(
-    legend.position = "top"
-  ) +
-  labs(
-    x = "Date", y = "No. of individuals"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
+The estimated deaths are greater than the true deaths at the beginning of the outbreak, as infected individuals who have not yet died are expected to die in the coming days.
+
+Similarly, the estimated deaths later in the outbreak are similar to or less than the reported deaths, as the deaths of individuals who survived for longer are now reported.
+
+::: {.alert .alert-warning}
+**Note that** `estimate_outcomes()` is exported but is primarily intended for internal use.
+:::
 
 ### Estimating the naive and corrected CFR
 
-Once we estimate the proportion of cases with known death outcomes, we apply the proportion to the number of cases to correct for the delay between onset and death.
-
-We do so by using the function `cfr_static()` from the _cfr_ package.
-This function estimates the proportion of known death outcomes over time, and uses the estimate to correct the naive severity estimate.
-
-Users can correct for delays by passing a density function for epidemiological delays to the optional argument `delay_density`.
-The delay distribution must be appropriate to the severity measure being calculated.
-
-When no delay density function is provided, a naive severity estimate is calculated, which does not adjust for delays and is simply the total number of deaths in the dataset divided by the total number of cases.
+The function `cfr_static()` wraps the internal functions `estimate_outcomes()` and `estimate_severity()` to provide a static CFR by automatically correcting for reporting delays if a delay density function is provided.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
@@ -216,157 +129,45 @@ cfr_static(
 
 ## Severity of the COVID-19 pandemic in the U.K.
 
-We now perform a similar analysis with all of the same steps, with data taken from the ongoing COVID-19 epidemic in the U.K.
-For brevity, we describe the steps without methodological explanations throughout this example.
+This example shows static severity estimation using _cfr_ and data from the Covid-19 pandemic in the United Kingdom.
 
-We get the data from the [_incidence2_ package](https://cran.r-project.org/package=incidence2) (but note that it was originally made available in the  [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) package which is no longer available on CRAN; see @palmer2021).
+We load example Covid-19 daily case and death data provided with the _cfr_ package as `covid_data`, and subset for the first year of U.K. data.
 
-### Plotting the raw data
+```{r}
+# get Covid data loaded with the package
+data("covid_data")
 
-We subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
-We do so, as the CFR changed dramatically as a result of the vaccination campaign that started in December 2020.
-The static severity calculations we are performing in this vignette are not able to deal with changes in severity over time.
-
-We change some default column names to match those required by _cfr_ and subset the data.frame to focus on the first year of the pandemic in the U.K.
-
-```{r, message = FALSE, warning = FALSE, eval = TRUE}
-df_covid_uk <- covidregionaldataUK
-
-df_covid_uk <- aggregate(
-  data = df_covid_uk,
-  x = cbind(cases_new, deaths_new) ~ date,
-  FUN = function(x) sum(x, na.rm = TRUE)
+# filter for the U.K
+df_covid_uk <- filter(
+  covid_data,
+  country == "United Kingdom", date <= "2020-12-31"
 )
 
-df_covid_uk <- rename(
-  df_covid_uk,
-  cases = cases_new, deaths = deaths_new
-)
-
-df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-12-31")
+# View the first few rows and recall necessary columns: date, cases, deaths
+head(df_covid_uk)
 ```
 
-Then, we plot the subsetted case data.
-
-```{r, fig.cap = "Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
-ggplot(df_covid_uk_subset) +
-  geom_step(
-    aes(
-      x = date, y = cases
-    ),
-    colour = "steelblue"
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = comma
-  ) +
-  labs(
-    x = "Date", y = "Cases"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
-
-Then, we plot the subsetted death data.
-
-```{r, fig.cap = "Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
-ggplot(df_covid_uk_subset) +
-  geom_step(
-    aes(
-      x = date, y = deaths
-    ),
-    colour = "brown"
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = comma
-  ) +
-  labs(
-    x = "Date", y = "Deaths"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
-
-### Onset-to-death delay distribution
+### Onset-to-death distribution for Covid-19
 
 We retrieve the appropriate distribution for Covid-19 from @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
-### Estimating incidence of cases with a known death outcome
-
-We use the same method and implementation as in the Ebola example to estimate the number of known death outcomes over time.
-
-```{r}
-df_estimated_outcomes_covid <- estimate_outcomes(
-  data = df_covid_uk_subset,
-  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
-)
-```
-
-```{r fig.cap = "The case time series for the ongoing COVID-19 epidemic in the U.K., with estimated known death outcomes included.", class.source = 'fold-hide'}
-ggplot(df_estimated_outcomes_covid) +
-  geom_step(
-    aes(
-      x = date, y = cases,
-      colour = "Cases"
-    )
-  ) +
-  geom_step(
-    aes(
-      x = date, y = estimated_outcomes,
-      colour = "Estimated death outcomes"
-    )
-  ) +
-  scale_colour_manual(
-    values = c(
-      Cases = "steelblue",
-      `Estimated death outcomes` = "darkgreen"
-    ),
-    name = NULL
-  ) +
-  scale_x_date(
-    date_labels = "%d-%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = comma
-  ) +
-  theme(
-    legend.position = "top"
-  ) +
-  labs(
-    x = "Date", y = "No. of individuals"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
+::: {.alert .alert-warning}
+**Note that** @linton2020 fitted a discretised lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.
+:::
 
 ### Estimating the naive and corrected CFR
 
-Finally, we calculate the naive and corrected CFRs for the COVID-19 epidemic in
-the U.K.
+Finally, we calculate the naive and corrected CFRs for the Covid-19 pandemic in the U.K.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
 cfr_static(
-  df_covid_uk_subset
+  df_covid_uk
 )
 
 # calculating the corrected CFR
 cfr_static(
-  df_covid_uk_subset,
+  df_covid_uk,
   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)
 )
 ```
@@ -375,36 +176,32 @@ cfr_static(
 
 ## Details: Adjusting for delays between two time series
 
-The method used in `cfr_static()` function follows @nishiura2009.
-The function calculates a quantity $u_t$ for each day within the input data, which represents the proportion of cases with a known outcome, on day $t$.
-This may be a known death outcome, as shown earlier in this vignette.
-Following Nishiura et al., $u_t$ is calculated in the following way:
+`cfr_static()` follows @nishiura2009 to calculate a quantity $u_t$ for each day within the input data which represents the proportion of cases with a known adverse outcome (usually death) on day $t$.
 
 $$
   u_t = \dfrac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
 $$
 
-where $f_t$ is the value of the probability mass function at time $t$ and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$, (respectively).
-We then use $u_t$ at the end of the outbreak in the following likelihood function to estimate the severity of the disease in question.
+where $f_t$ is the value of the probability mass function at time $t$, and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$ (respectively).
+We then use $u_t$ in the following likelihood function to estimate severity.
 
 $$
   {\sf L}(\theta | y) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
   (u_tC - D)\log{(1.0 - \theta)},
 $$
 
-$C$ and $D$ are the cumulative number of cases and deaths (respectively) up until time $t$.
-Lastly, $\theta$ is the parameter we wish to estimate, the severity of the disease.
-We estimate $\theta$ using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.
+$C$ and $D$ are the cumulative number of cases and deaths (respectively) until time $t$.
+
+Lastly $\theta$ (severity) is estimated $\theta$ using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.
 
 The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
-For complete clarity, here are the most common time series that users might calculate severity from and the resulting severity estimate from such data.
 
- - Case and death incidence data, with a case-to-death delay distribution (or close approximation, such as onset-to-death) — Case Fatality Risk (CFR).
+ - Case fatality risk (CFR) requires case and death incidence data, with a case-to-death delay distribution (or close approximation, such as symptom onset-to-death).
 
- - Infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).
+ - Infection fatality risk (IFR) requires infection and death incidence data, with an exposure-to-death delay distribution (or close approximation).
 
- - Hospitalisation Fatality Risk (HFR) --- Hospitalisation and death incidence data, delay distribution (or close approximation).
+ - Hospitalisation Fatality Risk (HFR) requires hospitalisation and death incidence data, and the appropriate delay distribution (or close approximation).
 
 ---
 

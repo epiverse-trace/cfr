@@ -25,12 +25,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-There are many biological, epidemiological and behavioural reasons why the severity of a disease might change during the course of an outbreak, including transmission within specific subgroups of differing risk of severe outcomes, the introduction of vaccines or therapeutics, reducing the relative risk of death, or the emergence of pathogen variants, which may alter the risk of hospitalisation or death associated with infection.
-
-Running the `cfr_static()` function on datasets corresponding to two different stages of the outbreak would lead to two static estimates, which may or may not differ.
-This could be useful, but a more detailed and easier to interpret approach is to use the function demonstrated in this vignette, `cfr_time_varying()`.
-
-This vignette outlines how to use _cfr_ to estimate how the severity of a disease changes over the course of an ongoing outbreak.
+The severity of a disease (commonly understood as the case fatality risk, CFR) might change during the course of an outbreak for multiple biological, epidemiological and behavioural reasons.
+`cfr_time_varying()` offers a convenient way to understand changes in disease severity over time using an approach with a finer time resolution that calculates severity over a moving time window, using methods from @nishiura2009.
 
 ::: {.alert .alert-warning}
 New to calculating disease severity using _cfr_? You might want to see the ["Get started" vignette first](cfr.html).
@@ -39,20 +35,28 @@ New to calculating disease severity using _cfr_? You might want to see the ["Get
 ::: {.alert .alert-primary}
 ## Use case {-}
 
-We wish to estimate how common severity quantities _change over time_ --- such as the case fatality risk (CFR) --- using a method that uses a time series of cases, infections or hospitalisations (as appropriate) and deaths, _while correcting for the delay in reporting the outcomes of cases_.
+There are substantial **changes to the characteristics of an outbreak over time** --- such as the introduction of therapeutics or a changing case definition.
+We want to estimate how disease severity in the form of the case fatality risk (CFR) changes over time while correcting for the delay in reporting the outcomes of cases.
 :::
 
 ::: {.alert .alert-secondary}
 ### What we have {-}
 
-* A time-series of cases, hospitalisations or some other proxy for infections over time;
-* A time-series of deaths;
+* A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);
 * Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
-
-The first two elements are expected be included in a dataframe with the columns "dates", "cases", and "deaths".
 :::
 
-First load _cfr_ and packages to access and plot data.
+::: {.alert .alert-info}
+## Potential reasons for changing disease severity {-}
+
+- Change in the probability of infection being reported as a case,
+
+- Transmission dynamics within specific subgroups of differing risk of severe outcomes,
+
+- Introduction of vaccines or therapeutics reducing the relative risk of death,
+
+- Emergence of pathogen variants which may alter the mortality risk associated with infection.
+:::
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
 library(cfr)
@@ -65,133 +69,103 @@ library(scales)
 library(ggplot2)
 ```
 
-The `cfr_time_varying()` function requires a `data.frame` of input data --- typically case and death time series data for estimating a CFR --- and, optionally, a delay distribution density function to allow for delay correction.
+## Changing severity of the Covid-19 pandemic in the U.K.
 
-## Changing severity of the COVID-19 pandemic in the U.K.
-
-We outline how the time-varying severity estimation works in *cfr* using a number of examples.
-The data for all of the examples is from the ongoing COVID-19 epidemic.
-Firstly, we analyse the U.K. data, then we pick three other countries with large outbreaks to analyse. 
+This example shows time-varying severity estimation using _cfr_ and data from the Covid-19 pandemic in the United Kingdom.
 
 ### Preparing the raw data
 
-First we subset the data so that we focus on just the first year of the COVID-19 outbreak in the U.K.
-During this period, the CFR changed dramatically as a result of a number of changes in policy, such as implementation and relaxation of lockdown, rollout of the vaccine, new variants emerging, etc.
+We load example Covid-19 daily case and death data provided with the _cfr_ package as `covid_data`, and subset for the first year of U.K. data.
 
-We load Covid-19 daily case and death data for 19 countries with ≥ 100,000 deaths between 2020 and 2023 --- this data is provided with the _cfr_ package as `covid_data`, and was initially made available in the [_covidregionaldata_ package](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], which is no longer available on CRAN.
+We would expect the estimated CFR to change over this period due to changes in pandemic response policy, such as changes in case definitions, implementation and relaxation of lockdowns, and new variants emerging.
 
 ```{r}
 # get Covid data loaded with the package
 data("covid_data")
 
 # filter for the U.K
-df_covid_uk <- filter(covid_data, country == "United Kingdom")
-```
+df_covid_uk <- filter(
+  covid_data,
+  country == "United Kingdom", date <= "2020-12-31"
+)
 
-We then subset the data to focus on just the first few months of the outbreak.
-
-```{r}
-df_covid_uk_subset <- filter(df_covid_uk, date <= "2020-12-31")
-```
-
-Then, we plot case incidence data.
-Further plotting commands are hidden for brevity.
-
-```{r, fig.cap = "Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."}
-ggplot(df_covid_uk_subset) +
-  geom_step(
-    aes(
-      x = date, y = cases
-    ),
-    colour = "steelblue"
-  ) +
-  scale_x_date(
-    date_labels = "%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = comma
-  ) +
-  labs(
-    x = "Date", y = "Cases"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
-
-We also plot the death incidence data over time.
-
-```{r, fig.cap = "Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.", class.source = 'fold-hide'}
-ggplot(df_covid_uk_subset) +
-  geom_step(
-    aes(
-      x = date, y = deaths
-    ),
-    colour = "brown"
-  ) +
-  scale_x_date(
-    date_labels = "%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = comma
-  ) +
-  labs(
-    x = "Date", y = "Deaths"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
+# View the first few rows and recall necessary columns: date, cases, deaths
+head(df_covid_uk)
 ```
 
 ### Onset-to-death distribution for Covid-19
 
-We retrieve the appropriate distribution reported in @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
+We retrieve the appropriate distribution of the duration between symptom onset and deaths reported in @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
+
+::: {.alert .alert-warning}
+@linton2020 fitted a discretised lognormal distribution --- but we use a continuous distribution here as we do not expect this difference to bias the estimates excessively.
+See the [vignette on delay distributions](delay_distribution.html) for more on using discretised distributions with _cfr_.
+
+**Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
+:::
 
 ### Estimating the naive and corrected CFR
 
-We use the `cfr_time_varying()` function within the _cfr_ package to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.
+We use the `cfr_time_varying()` function within the _cfr_ package to calculate the time-varying CFR for the Covid-19 pandemic in the U.K., and plot the results.
+
+The `burn_in` time is used to determine how many days at the start of the outbreak are excluded from the CFR calculation, potentially due to poor data quality at the beginning of an outbreak.
+The default value is 7, which ignores the first week of data.
+
+The `smoothing_window` is used to smooth the case and death data using a rolling median with a window of the corresponding size (in days) using `stats::runmed()` internally --- this is disabled by default.
+Users should apply smoothing if there are reporting artefacts such as lower reporting on weekends.
 
 ```{r}
 # calculating the naive time-varying CFR
 df_covid_cfr_uk_naive <- cfr_time_varying(
-  df_covid_uk_subset,
-  delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-  burn_in = 7
+  df_covid_uk,
+  burn_in = 7,
+  smoothing_window = 7
 )
 
 # calculating the corrected time-varying CFR
 df_covid_cfr_uk_corrected <- cfr_time_varying(
-  df_covid_uk_subset,
+  df_covid_uk,
   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-  burn_in = 7
+  burn_in = 7,
+  smoothing_window = 7
 )
+
+# assign method tag and plot
+df_covid_cfr_uk_naive$method <- "naive"
+df_covid_cfr_uk_corrected$method <- "corrected"
+
+df_covid_cfr_uk <- bind_rows(df_covid_cfr_uk_naive, df_covid_cfr_uk_corrected)
 ```
 
-Once we have calculated both severity quantities over time, we plot the results; first the naive estimate.
-
-```{r, fig.cap = "Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.", class.source = 'fold-hide'}
-ggplot(df_covid_cfr_uk_naive) +
+```{r, fig.cap = "Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.", class.source = 'fold-hide'}
+ggplot(df_covid_cfr_uk) +
   geom_ribbon(
     aes(
-      x = date, ymin = severity_low, ymax = severity_high
+      x = date, ymin = severity_low, ymax = severity_high,
+      fill = method
     ),
-    fill = "grey75"
+    alpha = 0.5
   ) +
   geom_line(
     aes(
-      x = date, y = severity_mean
-    ),
-    colour = "brown"
+      x = date, y = severity_mean, colour = method
+    )
   ) +
   scale_x_date(
     date_labels = "%b-%Y"
   ) +
   scale_y_continuous(
     labels = percent
+  ) +
+  scale_fill_brewer(
+    palette = "Dark2",
+    name = NULL,
+    labels = c("Naive CFR", "Corrected CFR")
+  ) +
+  scale_colour_brewer(
+    palette = "Dark2",
+    name = NULL,
+    labels = c("Naive CFR", "Corrected CFR")
   ) +
   labs(
     x = "Date", y = "CFR (%)"
@@ -203,49 +177,15 @@ ggplot(df_covid_cfr_uk_naive) +
   theme(legend.position = "top")
 ```
 
-Lastly, we plot the estimate corrected for reporting delays.
+## Severity of Covid-19 in multiple countries
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR.** We calculate the time-varying CFR for the ongoing COVID-19 epidemic in the U.K., corrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.", class.source = 'fold-hide'}
-ggplot(df_covid_cfr_uk_corrected) +
-  geom_ribbon(
-    aes(
-      x = date, ymin = severity_low, ymax = severity_high
-    ),
-    fill = "grey75"
-  ) +
-  geom_line(
-    aes(
-      x = date, y = severity_mean
-    ),
-    colour = "brown"
-  ) +
-  scale_x_date(
-    date_labels = "%b-%Y"
-  ) +
-  scale_y_continuous(
-    labels = percent
-  ) +
-  labs(
-    x = "Date", y = "CFR (%)"
-  ) +
-  coord_cartesian(
-    expand = FALSE
-  ) +
-  theme_classic() +
-  theme(legend.position = "top")
-```
+`cfr_time_varying()` and other _cfr_ functions can be conveniently applied over nested data to estimate the time-varying severity of Covid-19.
 
-## Severity of COVID-19 in multiple countries
-
-We now show how to calculate the time-varying CFR for Covid-19 in multiple countries with large outbreaks.
-To do this, we adopt a data science approach to apply the `cfr_time_varying()` function across data grouped by country.
+::: {.alert .alert-secondary}
 We refer the user to the book [R for Data Science](https://r4ds.had.co.nz/) for a better explanation of some of the code used here, including from the packages in [the Tidyverse](https://www.tidyverse.org/).
+:::
 
-We use the larger Covid-19 cases and deaths data provided with the package as `covid_data`.
-We exclude four countries which only provide weekly data (with zeros for dates in between) --- France, Germany, Spain and Ukraine.
-
-Next, we group the data by country and apply the `cfr_time_varying()` function across each group (country).
-This code takes a few moments to run.
+We use the example Covid-19 cases and deaths data provided with the package as `covid_data`, while excluding four countries which only provide weekly data (with zeros for dates in between).
 
 ```{r}
 # countries with weekly reporting
@@ -283,11 +223,11 @@ df_covid_cfr <- mutate(
 df_covid_cfr <- unnest(df_covid_cfr, cols = data)
 ```
 
-For simplicity, we use the same delay distribution between onset and death for all countries.
+For simplicity, we use the same delay distribution between onset and death for all countries --- users should **note that** this likely introduces biases given inter-country differences in testing or reporting policies.
 
-Finally we plot the time-varying CFR for a selection of three more countries with large outbreaks of COVID-19: Brazil, India, and the United States.
+Finally we plot the time-varying CFR for a selection of three countries with large outbreaks of Covid-19: Brazil, India, and the United States.
 
-```{r, fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the ongoing COVID-19 epidemic in Brazil, India, and the United States, corrected for delays.", class.source = 'fold-hide', fig.width=8}
+```{r, fig.cap = "Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in Brazil, India, and the United States, corrected for delays.", class.source = 'fold-hide', fig.width=8}
 filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
   ggplot() +
   geom_ribbon(
@@ -326,17 +266,13 @@ filter(df_covid_cfr, country %in% c("Brazil", "India", "United States")) %>%
 
 ## Details: Adjusting for delays between two time series 
 
-The function `cfr_time_varying()` from the _cfr_ package estimates the number of cases which have a known outcome over time, following @nishiura2009.
-The function calculates a quantity $k_t$ for each day within the input data, which represents the number of cases with a known outcome, on day $t$.
-This may be a known death outcome, as shown earlier in this vignette.
-Following @nishiura2009, $k_t$ is calculated in the following way:
+`cfr_time_varying()` estimates the number of cases which have a known outcome over time following @nishiura2009, by calculating a quantity $k_t$ for each day within the input data, which represents the number of cases with a known adverse outcome (usually death), on day $t$.
 
 $$
   k_t = \sum_{j = 0}^t c_t f_{j - t}.
 $$
 
-We then assume that the severity measure, for example CFR, of interest is
-binomially distributed, in the following way 
+We then assume that the severity measure (usually CFR) is binomially distributed in the following way 
 
 $$
   d_t \sim {\sf Binomial}(k_t, \theta_t). 
@@ -344,7 +280,7 @@ $$
 
 We use maximum likelihood estimation to determine the value of $\theta_t$ for each $t$, where $\theta$ represents the severity measure of interest.
 
-The precise severity measure — CFR, IFR, HFR, etc — that $\theta$ represents depends upon the input data given by the user.
+The precise severity measure --- case fatality risk (CFR), infection fatality risk (IFR), hospitalisation fatality risk (HFR), etc. --- that $\theta$ represents depends upon the input data given by the user.
 
 ---
 

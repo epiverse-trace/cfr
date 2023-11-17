@@ -12,6 +12,7 @@ COVID
 Camacho
 Codecov
 Covid
+EVD
 Epiverse
 HFR
 Heesterbeek
@@ -38,7 +39,6 @@ dfrac
 discretised
 distcrete
 doi
-dplyr
 ebola
 epiday
 epiparameter
@@ -50,14 +50,12 @@ github
 infty
 io
 linelist
-linelists
-lockdown
+lockdowns
 md
 org
 packagename
 parameterised
 pkg
-rollout
 sim
 st
 svg
