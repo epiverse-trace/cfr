@@ -1,4 +1,4 @@
-# `cfr_rolling`: Basic expectations
+# `estimate_severity`: Basic expectations
 
     Code
       severity_estimate

@@ -24,14 +24,13 @@ severity_estimate <- estimate_severity(
   poisson_threshold = poisson_threshold
 )
 
-test_that("`cfr_rolling`: Basic expectations", {
+test_that("`estimate_severity`: Basic expectations", {
   expect_s3_class(severity_estimate, "data.frame")
   expect_named(
     severity_estimate,
     sprintf("severity_%s", c("mean", "low", "high"))
   )
   # expect within values
-  # TODO: account for potential NA values or vectors
   expect_true(
     all(
       apply(severity_estimate, 2, function(x) x >= 0.0 && x <= 1.0)
@@ -85,7 +84,83 @@ test_that("`cfr_rolling`: Basic expectations", {
   )
 })
 
-test_that("`cfr_rolling`: Messages and errors", {
+test_that("Special cases of `estimate_severity()`", {
+  # all values are 0
+  total_cases <- 0
+  total_deaths <- 0
+  total_outcomes <- 0
+  expect_identical(
+    estimate_severity(total_cases, total_deaths, total_outcomes),
+    data.frame(
+      severity_mean = NA_real_,
+      severity_low = NA_real_,
+      severity_high = NA_real_
+    )
+  )
+
+  # any 2 values are 0
+  total_cases <- 10
+  expect_identical(
+    estimate_severity(total_cases, total_deaths, total_outcomes),
+    data.frame(
+      severity_mean = NA_real_,
+      severity_low = NA_real_,
+      severity_high = NA_real_
+    )
+  )
+
+  total_cases <- 0
+  total_outcomes <- 10
+  expect_identical(
+    estimate_severity(total_cases, total_deaths, total_outcomes),
+    data.frame(
+      severity_mean = NA_real_,
+      severity_low = NA_real_,
+      severity_high = NA_real_
+    )
+  )
+
+  # total deaths == total cases, or total deaths == total outcomes
+  # when total cases < poisson threshold
+  total_cases <- 99
+  total_deaths <- 99
+  total_outcomes <- 0
+  expect_identical(
+    estimate_severity(total_cases, total_deaths, total_outcomes),
+    data.frame(
+      severity_mean = 0.001, # lowest possible severity under this method
+      severity_low = NA_real_,
+      severity_high = NA_real_
+    )
+  )
+
+  total_outcomes <- 99
+  expect_identical(
+    estimate_severity(total_cases, total_deaths, total_outcomes),
+    data.frame(
+      severity_mean = 0.999, # highest possible severity under this method
+      severity_low = NA_real_,
+      severity_high = NA_real_
+    )
+  )
+
+  # expect that total cases >= poisson threshold does not return NAs
+  total_cases <- 100
+  total_deaths <- 100
+  total_outcomes <- 0
+  expect_error(
+    expect_identical(
+      estimate_severity(total_cases, total_deaths, total_outcomes),
+      data.frame(
+        severity_mean = 0.99,
+        severity_low = NA_real_,
+        severity_high = NA_real_
+      )
+    )
+  )
+})
+
+test_that("`estimate_severity`: Messages and errors", {
   ebola1976$cases <- 0L
   df_corrected <- estimate_outcomes(
     data = ebola1976,
