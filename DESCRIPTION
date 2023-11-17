@@ -33,6 +33,10 @@ Authors@R: c(
     person(
         given = "Abdoelnaser M.", family = "Degoot", role = c("rev"), email = "abdoelnaser-mahmood.degoot@lshtm.ac.uk",
         comment = c(ORCID = "0000-0001-8788-2496")
+        ),
+    person(
+        given = "Sebastian", family = "Funk", role = c("rev"), email = "sebastian.funk@lshtm.ac.uk",
+        comment = c(ORCID = "0000-0002-2842-3406")
         )
     )
 Description: Estimate the severity of a disease and ascertainment of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
