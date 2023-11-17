@@ -14,8 +14,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-It is important to understand the severity of a disease in terms of the case fatality risk in order to respond appropriately to an outbreak.
-However, during an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known. As a result, simply dividing total deaths to date by total cases to date may lead to an underestimate of the fatality rate in real-time, because many cases have outcomes that are not yet known.
+
+Understanding disease severity, and especially the case fatality risk (CFR), is key to outbreak response.
+During an outbreak there is often a delay between cases being reported, and the outcomes (for CFR, deaths) of those cases being known.
+Simply dividing total deaths to date by total cases to date may lead to an underestimate of the CFR rate in real-time, because many cases have outcomes that are not yet known.
 
 Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can therefore help ensure less biased estimates of disease severity.
 See the **Concept** section at the end of this vignette for more on how reporting delays bias CFR estimates.
@@ -25,18 +27,18 @@ The severity of a disease can be estimated while correcting for delays in report
 ::: {.alert .alert-primary}
 ## Use case {-}
 
-A disease outbreak is underway. We want to know **how severe the disease is**, that is, the case fatality risk, but there is a delay between cases being reported, and the outcomes of those cases --- whether recovery or death --- being known. This is the _reporting delay_, and can be accounted for by knowing the reporting delay from past outbreaks.
+A disease outbreak is underway. We want to know **how severe the disease is** in terms of the case fatality risk (CFR), but there is a delay between cases being reported, and the outcomes of those cases --- whether recovery or death --- being known. This is the _reporting delay_, and can be accounted for by knowing the reporting delay from past outbreaks.
 :::
 
 ::: {.alert .alert-secondary}
 ### What we have {-}
 
-  1. A dataset of daily cases and deaths reported;
-  2. Data on the distribution of reporting delays from past outbreaks of the same disease.
+* A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);
+* Data on the distribution of delays, describing the probability an individual will die $t$ days after they were initially infected.
 
 ### What we assume {-}
 
-  1. That data on reporting delays from past outbreaks is informative about reporting delays in the current outbreak.
+* That data on reporting delays from past outbreaks is informative about reporting delays in the current outbreak.
 :::
 
 ```{r, include = FALSE}
@@ -58,16 +60,11 @@ library(cfr)
 Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the [global Covid-19 dataset curated by Our World in Data](https://ourworldindata.org/coronavirus), a similar dataset made available through the R package [_covidregionaldata_](https://github.com/epiforecasts/covidregionaldata) [@palmer2021], or data on outbreaks of other infections made available in [_outbreaks_](https://cran.r-project.org/package=outbreaks).
 
 In an outbreak response scenario, such data may also be compiled and shared locally.
+See the [vignette on working with data from _incidence2_](data_from_incidence2.html) on working with a common format of incidence data which can help interoperability with other formats.
 
 The _cfr_ package requires only a data frame with three columns, "date", "cases", and "deaths", giving the daily number of reported cases and deaths.
 
-::: {.alert .alert-warning}
-Datasets with columns that contain this information under different names can be handled by common data science tools, such as [packages in the Tidyverse](https://www.tidyverse.org/), to prepare data for _cfr_.
-
-See examples of this in the [vignette on obtaining a static severity estimate](cfr_static_severity.html).
-:::
-
-Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with the package [@camacho2014].
+Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with this package [@camacho2014].
 
 ```{r}
 data("ebola1976")
@@ -81,12 +78,18 @@ head(ebola1976)
 We obtain the disease's onset-to-death distribution from a more recent Ebola outbreak, reported in @barry2018.
 The onset-to-death distribution is considered to be Gamma distributed, with a shape $k$ = 2.40 and a scale of $\theta$ = 3.33.
 
+::: {.alert .alert-warning}
+**Note that** while we use a continuous distribution here, it is more appropriate to use a discretised distribution instead as we are working with daily data.
+
+**Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
+:::
+
 The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.
 See the [vignette on using delay distributions](delay_distributions.html) for more information on how to use this and other distribution objects supported by R to prepare delay density functions.
 
 ## Estimate disease severity
 
-We use the function `cfr_static()` to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity's mean as well as lower and upper limits.
+We use the function `cfr_static()` to calculate overall disease severity at the latest date of the outbreak.
 
 ```{r}
 cfr_static(
@@ -97,16 +100,20 @@ cfr_static(
 
 The `cfr_static()` function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time.
 
-For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function `cfr_time_varying()` is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
+To understand how severity has changed over time (e.g. following vaccination or pathogen evolution), use the function `cfr_time_varying()`.
+This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes.
+More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
 
 ## Estimate ascertainment ratio
 
 It is important to know what proportion of cases in an outbreak are being ascertained to muster the appropriate response, and to estimate the overall burden of the outbreak.
 
-**Note** that the ascertainment ratio may be affected by a number of factors.
+::: {.alert .alert-info}
+**Note that** the ascertainment ratio may be affected by a number of factors.
 When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.
+:::
 
-The `estimate_ascertainment()` function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.
+The `estimate_ascertainment()` function estimates the ascertainment ratio using daily case and death data, the known severity of the disease from previous outbreaks, and optionally a delay distribution of onset-to-death.
 
 Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that Ebola virus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths), based on CFR values estimated in later, larger datasets.
 We use the onset-to-death distribution from @barry2018.
@@ -131,12 +138,12 @@ More details can be found in the [vignette on estimating the proportion of cases
 
 Simply dividing the number of deaths by the number of cases would obtain a CFR that is a _naive estimator_ of the true CFR.
 
-Suppose 10 people start showing symptoms of a specific disease on a given day and the end of that day all remain alive.
+Suppose 10 people start showing symptoms of a disease on a given day and the end of that day all remain alive.
 Suppose that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5.
 However, suppose that by day 5, all infected individuals remain alive.
 
 The naive estimate of the CFR calculated at the end of the first 5 days would be _zero_, because there would have been zero deaths in total --- _at that point_.
-That is to say, the _outcomes_ of cases (infections) would not be known.
+That is to say, the _outcomes_ of cases (deaths) would not be known.
 
 Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
 Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.
