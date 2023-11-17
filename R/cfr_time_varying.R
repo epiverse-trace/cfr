@@ -146,14 +146,6 @@ cfr_time_varying <- function(data,
     )
   }
 
-  cases <- df_temp$cases
-
-  case_times <- as.numeric(df_temp$date - min(df_temp$date, na.rm = TRUE),
-    units = "days"
-  ) + 1
-
-  case_length <- length(case_times)
-
   ##### prepare matrix for severity estimation ####
   # when not correcting for delays, set estimated no. of known outcomes to cases
   # this is to avoid if-else ladders
@@ -169,7 +161,7 @@ cfr_time_varying <- function(data,
   # start from the final index to be smoothed
   # end at the first row after the burn-in number of rows (days)
   # TODO: check if modifying start point is necessary for runmed "keep" endrule
-  indices <- seq(case_length - smoothing_window, burn_in + 1, -1)
+  indices <- seq(nrow(data) - smoothing_window, burn_in + 1, -1)
   if (!is.null(delay_density)) {
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
