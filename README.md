@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# *cfr*: Estimate disease severity and under-reporting <img src="man/figures/logo.svg" align="right" width="130"/>
+# cfr: Estimate disease severity and under-reporting <img src="man/figures/logo.svg" align="right" width="130"/>
 
 <!-- badges: start -->
 
