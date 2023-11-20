@@ -167,7 +167,6 @@ cfr_time_varying <- function(data,
   # calculation of indices to modify
   # start from the final index to be smoothed
   # end at the first row after the burn-in number of rows (days)
-  # TODO: check if modifying start point is necessary for runmed "keep" endrule
   indices <- seq(nrow(data) - smoothing_window, burn_in + 1, -1)
   if (!is.null(delay_density)) {
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
