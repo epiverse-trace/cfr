@@ -114,3 +114,18 @@ test_that("cfr_rolling and cfr_time_varying have similar returns", {
     colnames(cfr_rolling(covid_uk))
   )
 })
+
+# Expect that index shifting does not lead to biases
+test_that("cfr_rolling does not introduce bias due to index shifting", {
+  expect_identical(
+    cfr_time_varying(
+      data = covid_uk,
+      delay_density = function(x) ifelse(x == 0, 1, 0),
+      burn_in = 7L
+    ),
+    cfr_time_varying(
+      data = covid_uk,
+      burn_in = 7L
+    )
+  )
+})
