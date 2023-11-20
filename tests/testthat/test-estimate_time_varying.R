@@ -100,6 +100,11 @@ test_that("Time-varying CFR with smoothing and burn in", {
     which(is.na(tvcfr_burnin_7$severity_mean)),
     burn_in
   )
+
+  # test snapshot with burn in applied as previous example has 0 burn in
+  expect_snapshot(
+    head(tvcfr_burnin_7, 15)
+  )
 })
 
 # Expect that return type is the same as cfr_rolling

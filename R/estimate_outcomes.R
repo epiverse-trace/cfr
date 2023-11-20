@@ -28,7 +28,7 @@
       delay_pmf_eval <- pmf_vals[seq_len(i - offset)]
 
       # estimate expected number of outcomes
-      expected_outcomes <- cases[seq(offset + 1, i)] * rev(delay_pmf_eval)
+      expected_outcomes <- cases[seq(i - offset)] * rev(delay_pmf_eval)
 
       # return total expected outcomes
       sum(expected_outcomes)
