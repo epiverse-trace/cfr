@@ -282,6 +282,10 @@ We use maximum likelihood estimation to determine the value of $\theta_t$ for ea
 
 The precise severity measure --- case fatality risk (CFR), infection fatality risk (IFR), hospitalisation fatality risk (HFR), etc. --- that $\theta$ represents depends upon the input data given by the user.
 
+::: {.alert .alert-secondary}
+**Note** that the function arguments `burn_in` and `smoothing_window` are not explicitly used in this calculation. `burn_in` controls how many estimates at the beginning of the outbreak are replaced with `NA`s --- the calculation above is not applied to the first `burn_in` data points. The calculation is applied to the smoothed data, if a `smoothing_window` is specified.
+:::
+
 ---
 
 ## References

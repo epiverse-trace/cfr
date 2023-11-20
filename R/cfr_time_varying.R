@@ -54,6 +54,13 @@
 #' \eqn{t}, parameterised with disease-specific parameters before it is supplied
 #' here.
 #'
+#' **Note** that the function arguments `burn_in` and `smoothing_window` are not
+#' explicitly used in this calculation. `burn_in` controls how many estimates at
+#' the beginning of the outbreak are replaced with `NA`s --- the calculation
+#' above is not applied to the first `burn_in` data points.
+#' The calculation is applied to the smoothed data, if a `smoothing_window`
+#' is specified.
+#'
 #' @references
 #' Nishiura, H., Klinkenberg, D., Roberts, M., & Heesterbeek, J. A. P. (2009).
 #' Early Epidemiological Assessment of the Virulence of Emerging Infectious
