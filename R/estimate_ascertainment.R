@@ -123,7 +123,6 @@ estimate_ascertainment <- function(data,
   # re-convert to data.frame from list
   # here, the estimate called "severity_mean" translates to "ascertainment_me"
   # and the estimate "severity_high" translates to "ascertainment_lo"
-  # TODO: check if this is correct
   colnames(df_severity) <- c(
     "ascertainment_mean", "ascertainment_high", "ascertainment_low"
   )
