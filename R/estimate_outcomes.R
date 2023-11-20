@@ -9,29 +9,17 @@
 #' @param pmf_vals A numeric vector of the probability mass function or
 #' probability density function of a reporting delay distribution evaluated at
 #' each time point represented in `cases`.
-#' @param offset A single number for an offset applied to the calculation.
-#' Defaults to 0 for no offset.
-#' @param indices The indices in the time-series to which cases correspond.
-#' Defaults to a sequence along the vector of cases.
-#'
 #' @keywords internal
 #' @noRd
 #' @return A numeric vector of the number of outcomes expected.
 #'
-.calc_expected_outcomes <- function(
-    cases, pmf_vals, offset = 0,
-    indices = seq_along(cases)) {
+.convolve_cases_pmfs <- function(cases, pmf_vals) {
   # no input checks as this is an internal function
   vapply(
-    X = indices,
+    X = seq_along(cases),
     FUN = function(i) {
-      delay_pmf_eval <- pmf_vals[seq_len(i - offset)]
-
       # estimate expected number of outcomes
-      expected_outcomes <- cases[seq(i - offset)] * rev(delay_pmf_eval)
-
-      # return total expected outcomes
-      sum(expected_outcomes)
+      sum(cases[seq_len(i)] * rev(pmf_vals[seq_len(i)]))
     },
     FUN.VALUE = numeric(1)
   )
@@ -104,7 +92,7 @@ estimate_outcomes <- function(data,
 
   # calculate expected outcomes
   # NOTE: assumes daily data, which is checked in higher level functions
-  estimated_outcomes <- .calc_expected_outcomes(data$cases, pmf_vals)
+  estimated_outcomes <- .convolve_cases_pmfs(data$cases, pmf_vals)
 
   # calculate severity as ratio
   data$estimated_outcomes <- estimated_outcomes
