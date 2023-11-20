@@ -85,6 +85,13 @@ a probability mass function parameterised by time; i.e. \eqn{f(t)} which
 gives the probability a case has a known outcomes (usually, death) at time
 \eqn{t}, parameterised with disease-specific parameters before it is supplied
 here.
+
+\strong{Note} that the function arguments \code{burn_in} and \code{smoothing_window} are not
+explicitly used in this calculation. \code{burn_in} controls how many estimates at
+the beginning of the outbreak are replaced with \code{NA}s --- the calculation
+above is not applied to the first \code{burn_in} data points.
+The calculation is applied to the smoothed data, if a \code{smoothing_window}
+is specified.
 }
 
 \examples{
