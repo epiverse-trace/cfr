@@ -171,9 +171,8 @@ cfr_time_varying <- function(data,
   if (!is.null(delay_density)) {
     pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
 
-    df_temp[indices, "estimated_outcomes"] <- round(.calc_expected_outcomes(
-      cases = df_temp$cases, pmf_vals = pmf_vals, offset = burn_in,
-      indices = indices
+    df_temp[["estimated_outcomes"]] <- round(.convolve_cases_pmfs(
+      cases = df_temp$cases, pmf_vals = pmf_vals
     ))
   }
 
