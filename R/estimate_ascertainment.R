@@ -99,36 +99,33 @@ estimate_ascertainment <- function(data,
       df_sev <- df_sev[df_sev$date == max(df_sev$date), ]
 
       # subset column names
-      df_sev <- df_sev[
-        ,
-        grepl("severity", colnames(df_sev), fixed = TRUE)
-      ]
+      df_sev <- df_sev[, grepl("severity", colnames(df_sev), fixed = TRUE)]
     }
   )
 
   # data.frame for exports, first scale values by the 1/severity baseline
   # then ensure maximum is 1.0
-  df_severity <- severity_baseline / df_severity
+  df_ascertainment <- severity_baseline / df_severity
   # throw a warning for ascertainment ration > 1.0
-  if (any(df_severity > 1.0)) {
+  if (any(df_ascertainment > 1.0)) {
     warning(
       "Ascertainment ratios > 1.0 detected, setting these values to 1.0"
     )
   }
-  df_severity[df_severity > 1.0] <- 1.0
+  df_ascertainment[df_ascertainment > 1.0] <- 1.0
 
   # reset row numbers, which might be confusing
-  rownames(df_severity) <- NULL
+  rownames(df_ascertainment) <- NULL
 
   # re-convert to data.frame from list
   # here, the estimate called "severity_mean" translates to "ascertainment_me"
   # and the estimate "severity_high" translates to "ascertainment_lo"
-  colnames(df_severity) <- c(
+  colnames(df_ascertainment) <- c(
     "ascertainment_mean", "ascertainment_high", "ascertainment_low"
   )
 
   # return data with columns in correct order
-  df_severity[, c(
+  df_ascertainment[, c(
     "ascertainment_mean", "ascertainment_low", "ascertainment_high"
   )]
 }
