@@ -164,4 +164,11 @@ Contributions to _{{ packagename }}_ are welcomed. Please follow the [package co
 
 Please note that the _{{ packagename }}_ project is released with a [Contributor Code of Conduct](https://github.com/epiverse-trace/.github/blob/main/CODE_OF_CONDUCT.md). By contributing to this project, you agree to abide by its terms.
 
+## Related projects
+
+_cfr_ functionality overlaps with that of some other packages, including
+
+- [_coarseDataTools_](https://cran.r-project.org/package=coarseDataTools) is an R package that also allows estimation of case fatality risk while accounting for delays due to survival time. _cfr_ uses simpler methods from @nishiura2009 to correct for under-ascertainment and a simpler likelihood calculation.
+- [_EpiNow2_](https://cran.r-project.org/package=EpiNow2) is an R package that allows estimation of case fatality risk as a secondary observation of cases, but is a more complex package to use.
+
 ## References
