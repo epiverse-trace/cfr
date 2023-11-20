@@ -178,6 +178,7 @@ covid_uk <- covid_data[covid_data$country == "United Kingdom" &
   covid_data$date < "2021-01-01", ]
 
 test_that("Basic expectations for time-varying ascertainment", {
+  skip_if_not_installed("distributional") # use pkg to check functionality
   # provide burn in as mean of lognormal distribution
   distr_lnorm <- distributional::dist_lognormal(mu = 2.577, sigma = 0.440)
   burn_in <- round(mean(distr_lnorm))
