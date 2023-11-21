@@ -195,6 +195,14 @@ By contributing to this project, you agree to abide by its terms.
   package that allows estimation of case fatality risk as a secondary
   observation of cases, but is a more complex package to use.
 
+*cfr* is in future expected to benefit from the functionality of the
+forthcoming [*epiparameter*
+package](https://epiverse-trace.github.io/epiparameter/), which is also
+developed by Epiverse-TRACE. *epiparameter* aims to provide a library of
+epidemiological parameters to parameterise delay density functions, as
+well as the convenient `<epidist>` class to store, access, and pass
+these parameters for delay correction.
+
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent">
