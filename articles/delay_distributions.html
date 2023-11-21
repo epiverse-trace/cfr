@@ -70,6 +70,9 @@
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -150,6 +153,9 @@
 <p>More information on working with functions, and especially anonymous functions, can be found in the <a href="https://adv-r.hadley.nz/fp.html" class="external-link">chapter on Functional Programming in <em>Advanced R</em></a>.
 Users working with R &gt; 4.1.0 can also use the new syntax for anonymous functions, e.g. <code>\(x) stats::dgamma(x, shape, scale)</code>.</p>
 </div>
+<div class="alert alert-warning">
+<p><strong>Note</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="passing-delay-distribution-density-to-cfr-functions">Passing delay distribution density to <em>cfr</em> functions<a class="anchor" aria-label="anchor" href="#passing-delay-distribution-density-to-cfr-functions"></a>
@@ -178,7 +184,7 @@ See the <a href="https://cran.r-project.org/view=Distributions" class="external-
 <div class="section level3">
 <h3 id="using-distributional">Using <em>distributional</em><a class="anchor" aria-label="anchor" href="#using-distributional"></a>
 </h3>
-<p>Note that the output of <code>density(&lt;distribution&gt;, x)</code> is a list containing a vector.</p>
+<p><strong>Note that</strong> the output of <code>density(&lt;distribution&gt;, x)</code> is a list containing a vector.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># using {distributional} and parameters from Barry et al. 2018</span></span>
 <span><span class="va">dist_onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pkg.mitchelloharawild.com/distributional/reference/dist_gamma.html" class="external-link">dist_gamma</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fl">2.40</span>, rate <span class="op">=</span> <span class="fl">1.0</span> <span class="op">/</span> <span class="fl">3.33</span><span class="op">)</span></span>
@@ -198,7 +204,7 @@ See the <a href="https://cran.r-project.org/view=Distributions" class="external-
 </h3>
 <p>The <em>distcrete</em> package provides support for discretised distributions.
 Here, we show an example for the discretised Gamma distribution.
-Note that the density function for <code>&lt;distcrete&gt;</code> objects is encapsulated, and can be passed directly to the <code>delay_density</code> argument.</p>
+<strong>Note that</strong> the density function for <code>&lt;distcrete&gt;</code> objects is encapsulated, and can be passed directly to the <code>delay_density</code> argument.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># using {distcrete} and parameters from Barry et al. 2018</span></span>
 <span><span class="va">dist_onset_to_death_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/distcrete/man/distcrete.html" class="external-link">distcrete</a></span><span class="op">(</span></span>
@@ -211,8 +217,11 @@ Note that the density function for <code>&lt;distcrete&gt;</code> objects is enc
 <span>  delay_density <span class="op">=</span> <span class="va">dist_onset_to_death_ebola</span><span class="op">$</span><span class="va">d</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1         0.958        0.841             1</span></span></code></pre></div>
-</details>
+<span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
+</details><div class="alert alert-warning">
+<p><strong>Note that</strong> discretised distributions are the more appropriate choice to be passed to <code>cfr_*()</code>, as we are usually working with daily case and death data.
+We do use continuous distributions in many examples as we do not expect this difference to bias the estimates excessively.</p>
+</div>
 </div>
 </div>
 <div class="section level2">
@@ -248,7 +257,7 @@ Camacho, A., A. J. Kucharski, S. Funk, J. Breman, P. Piot, and W. J. Edmunds. 20
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+<p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

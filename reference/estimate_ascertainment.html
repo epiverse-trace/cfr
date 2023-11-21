@@ -54,6 +54,9 @@ to be the 'true' disease severity, and the delay-adjusted severity estimate."><m
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -87,12 +90,11 @@ to be the 'true' disease severity, and the delay-adjusted severity estimate.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">estimate_ascertainment</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
+<span>  <span class="va">severity_baseline</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"static"</span>, <span class="st">"varying"</span><span class="op">)</span>,</span>
-<span>  <span class="va">severity_baseline</span>,</span>
 <span>  burn_in <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>  smoothing_window <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  max_date <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  smoothing_window <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -112,6 +114,13 @@ dates with no missing dates in between. The "date" column must be of class
 number of reported deaths.</p></dd>
 
 
+<dt>severity_baseline</dt>
+<dd><p>A single number in the range 0.0 -- 1.0 for the
+assumed true baseline severity estimate used to estimate the overall
+ascertainment ratio. Missing by default, which causes the function to error;
+must be supplied by the user.</p></dd>
+
+
 <dt>delay_density</dt>
 <dd><p>An optional argument that controls whether delay
 correction is applied in the severity estimation.
@@ -128,15 +137,8 @@ the resulting ascertainment ratio. Defaults to <code>"static"</code> if this arg
 missing.</p></dd>
 
 
-<dt>severity_baseline</dt>
-<dd><p>A single number in the range 0.0 -- 1.0 for the
-assumed true baseline severity estimate used to estimate the overall
-ascertainment ratio. Missing by default, which causes the function to error;
-must be supplied by the user.</p></dd>
-
-
 <dt>burn_in</dt>
-<dd><p>A single integer value for the number of time-points
+<dd><p>A single integer-like value for the number of time-points
 (typically days) to disregard at the start of the time-series, if a burn-in
 period is desired.</p>
 <p>Defaults to 7, which is a sensible default value that disregards the first
@@ -152,13 +154,6 @@ procedure (as the <code>k</code> argument to <code><a href="https://rdrr.io/r/st
 time-varying severity.</p>
 <p>The default behaviour is to apply no smoothing. The minimum value of this
 argument is 1.</p></dd>
-
-
-<dt>max_date</dt>
-<dd><p>A <code>Date</code> representing a user supplied maximum date, up to
-which the time-varying severity estimate will be calculated. Useful in the
-case of long time-series, where the user wishes to focus on a specific
-time-period. See <code><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date()</a></code> for converting a string to a <code>Date</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -180,21 +175,22 @@ and 95% confidence interval of the corrected severity, named
 <span class="r-in"><span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-05-31"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use a severity baseline of 1.4% (0.014) taken from Verity et al. (2020)</span></span></span>
-<span class="r-in"><span><span class="co"># Lancet Infectious Diseases: 10.1016/S1473-3099(20)30243-7</span></span></span>
+<span class="r-in"><span><span class="co"># Lancet Infectious Diseases: &lt;https://doi.org/10.1016/S1473-3099(20)30243-7&gt;</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># use onset-to-death distribution from Linton et al. (2020)</span></span></span>
-<span class="r-in"><span><span class="co"># J. Clinical Medicine: 10.3390/jcm9020538</span></span></span>
+<span class="r-in"><span><span class="co"># J. Clinical Medicine: &lt;https://doi.org/10.3390/jcm9020538&gt;</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># subset data until 30th June 2020</span></span></span>
+<span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">df_covid_uk</span><span class="op">[</span><span class="va">df_covid_uk</span><span class="op">$</span><span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-06-30"</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu">estimate_ascertainment</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span></span>
+<span class="r-in"><span>  data <span class="op">=</span> <span class="va">data</span>,</span></span>
 <span class="r-in"><span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  type <span class="op">=</span> <span class="st">"varying"</span>,</span></span>
 <span class="r-in"><span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span></span>
-<span class="r-in"><span>  burn_in <span class="op">=</span> <span class="fl">7L</span>,</span></span>
-<span class="r-in"><span>  max_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-06-30"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  burn_in <span class="op">=</span> <span class="fl">7L</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ascertainment_mean ascertainment_low ascertainment_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1             0.2346         0.1871687          0.2990665</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1             0.2032           0.16232          0.2587827</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -203,7 +199,7 @@ and 95% confidence interval of the corrected severity, named
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+  <p></p><p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

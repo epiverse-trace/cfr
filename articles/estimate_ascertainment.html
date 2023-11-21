@@ -70,6 +70,9 @@
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -101,31 +104,27 @@
 
     
     
-<p>Cases, infections or hospitalisations and deaths might be under-ascertained during an outbreak of an infectious disease for reasons including testing capacity, criteria not being sufficient to identify all infections, or symptom-based testing rather than random sampling, or changes in case definition over time.</p>
+<p>The ascertainment of cases during an outbreak is influenced by a multiple factor including testing capacity, the case definition, and sampling regime (e.g. symptom-based testing rather than random sampling).
+<code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> offers a convenient way to calculate the proportion of cases that is ascertained using a cases and deaths time-series, a baseline “known” severity, and optionally a distribution of delays between case reporting and death.</p>
+<p>The ascertainment ratio is calculated as the disease severity calculated from the data, divided by the “known” disease severity known or assumed from our best knowledge of the pathology of the disease.</p>
+<p><code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> uses <code><a href="../reference/cfr_static.html">cfr_static()</a></code> or <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> internally to estimate the delay-adjusted severity of the disease.</p>
 <div class="alert alert-warning">
 <p>New to calculating disease severity using <em>cfr</em>? You might want to see the <a href="cfr.html">“Get started” vignette first</a>.</p>
 </div>
 <div class="section level2 unnumbered alert alert-primary">
 <h2 id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
 </h2>
-<p>We wish to estimate one of the typical severity quantities used in epidemiology – the <em>case fatality risk (CFR)</em>, <em>infection hospitality risk (IFR)</em> or <em>hospitalisation fatality risk (HFR)</em> – using a method that uses a time series of cases, infections or hospitalisations (respectively) and deaths, <em>while correcting for the delay in reporting the outcomes of cases</em>.</p>
+<p>The <strong>ascertainment of cases in an outbreak is not perfect</strong>.
+We want to estimate the proportion of cases being ascertained given case and death data.</p>
 </div>
 <div class="section level3 unnumbered alert alert-secondary">
 <h3 id="what-we-have">What we have<a class="anchor" aria-label="anchor" href="#what-we-have"></a>
 </h3>
 <ul>
-<li>A time-series of cases, hospitalisations or some other proxy for infections over time;</li>
-<li>A time-series of deaths;</li>
+<li>A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);</li>
 <li>Data on the distribution of delays, describing the probability an individual will die <span class="math inline">\(t\)</span> days after they were initially infected.</li>
 </ul>
-<p>The first two elements are expected be included in a dataframe with the columns “dates”, “cases”, and “deaths”.</p>
 </div>
-<p>This vignette shows how to use the <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function in <em>cfr</em> to estimate the proportion of cases, infections or hospitalisations ascertained, and consequently, the extent of under-ascertainment or under-reporting.
-Note that under-ascertainment may be due to a number of reasons (see above), while under-reporting is due to cases not being reported (such as due to a lack of testing capacity).
-Users should take care to use the correct terminology for their specific situation.</p>
-<p>We have named the function <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> as we expect that users will be most interested in situations where testing capacity is itself the limiting factor in ascertainment.
-This was the case during the Covid-19 pandemic before testing capacity was substantially increased, and is expected to be the case for a future pandemic caused by a novel pathogen.</p>
-<p>First load <em>cfr</em> and packages to access and plot data.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load {cfr} and data packages</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
@@ -137,153 +136,83 @@ This was the case during the Covid-19 pandemic before testing capacity was subst
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://forcats.tidyverse.org/" class="external-link">forcats</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-</details><div class="section level2">
+</details><div class="alert alert-info">
+<p>See the vignettes on <a href="cfr_static_severity.html">estimating a static measure of disease severity</a> and <a href="cfr_time_varying_severity.html">estimating a time-varying measure of disease severity</a>, respectively, for more details on each of these functions.</p>
+</div>
+<div class="section level2">
 <h2 id="ascertainment-for-the-covid-19-pandemic-in-the-u-k-">Ascertainment for the Covid-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#ascertainment-for-the-covid-19-pandemic-in-the-u-k-"></a>
 </h2>
-<p>The function <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> from the <em>cfr</em> package estimates the proportion of cases, infections, hospitalisations – or whichever proxy for infections is provided – which have been ascertained.</p>
-<p>The methods are based on <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span> to estimate severity, and are extended by combining the resulting severity estimates with an assumed baseline severity estimate.</p>
-<p>The proportion of cases, infections or other quantity provided that have been ascertained is given by the ratio of the (assumed) true baseline severity estimate, to the delay-adjusted severity estimate.</p>
-<p>The delay-adjusted severity estimates can be calculated using either the <code><a href="../reference/cfr_static.html">cfr_static()</a></code> or the <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> functions.
-See the vignettes on <a href="cfr_static_severity.html">estimating a static measure of disease severity</a> and <a href="cfr_time_varying_severity.html">estimating a time-varying measure of disease severity</a>, respectively, for more details on each of these functions.</p>
-<div class="section level3">
-<h3 id="preparing-the-raw-data">Preparing the raw data<a class="anchor" aria-label="anchor" href="#preparing-the-raw-data"></a>
-</h3>
-<p>First we subset the data so that we focus on just the first few months of the COVID-19 outbreak in the U.K.
-During this period test availability changed dramatically as a result of the vaccination campaign.</p>
-<p>We load data provided with the <em>cfr</em> package and initially made available using the <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em> package</a> <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>.</p>
-<p>We filter for data from the United Kingdom here, while later examples will use more of the data.</p>
+<p>This example shows ascertainment ratio estimation using <em>cfr</em> and data from the Covid-19 pandemic in the United Kingdom.</p>
+<p>We load example Covid-19 daily case and death data provided with the <em>cfr</em> package as <code>covid_data</code>, and subset for the first six months of U.K. data.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get Covid data provided with the package</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"covid_data"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># filter for the U.K</span></span>
-<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">covid_data</span>, <span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span><span class="op">)</span></span>
+<span><span class="va">df_covid_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span></span>
+<span>  <span class="va">covid_data</span>,</span>
+<span>  <span class="va">country</span> <span class="op">==</span> <span class="st">"United Kingdom"</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-06-30"</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># view the data format</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">df_covid_uk</span><span class="op">)</span></span>
-<span><span class="co">#&gt;            date        country cases deaths</span></span>
-<span><span class="co">#&gt; 1089 2022-12-26 United Kingdom  4132    144</span></span>
-<span><span class="co">#&gt; 1090 2022-12-27 United Kingdom  3694    131</span></span>
-<span><span class="co">#&gt; 1091 2022-12-28 United Kingdom  4950    128</span></span>
-<span><span class="co">#&gt; 1092 2022-12-29 United Kingdom  6605    142</span></span>
-<span><span class="co">#&gt; 1093 2022-12-30 United Kingdom  8419    134</span></span>
-<span><span class="co">#&gt; 1094 2022-12-31 United Kingdom  7718    132</span></span></code></pre></div>
-</details><p>We then subset the data to focus on just the first few months of the outbreak in the United Kingdom, and plot the cases and deaths to explore the data.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># the first few months of the pandemic</span></span>
-<span><span class="va">df_covid_uk_subset</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_uk</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2020-05-31"</span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">cases</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    colour <span class="op">=</span> <span class="st">"steelblue"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
-<span>    date_labels <span class="op">=</span> <span class="st">"%b-%Y"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
-<span>    labels <span class="op">=</span> <span class="va">comma</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Cases"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span></span>
-<span>    expand <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
-</details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-4"></span>
-<img src="estimate_ascertainment_files/figure-html/unnamed-chunk-4-1.png" alt="Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K."><p class="caption">
-Figure 1: Incidence of cases over time for the ongoing COVID-19 outbreak in the U.K.
-</p>
-</div>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_uk_subset</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_step</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
-<span>      x <span class="op">=</span> <span class="va">date</span>, y <span class="op">=</span> <span class="va">deaths</span></span>
-<span>    <span class="op">)</span>,</span>
-<span>    colour <span class="op">=</span> <span class="st">"brown"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_date.html" class="external-link">scale_x_date</a></span><span class="op">(</span></span>
-<span>    date_labels <span class="op">=</span> <span class="st">"%b-%Y"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span></span>
-<span>    labels <span class="op">=</span> <span class="va">comma</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span></span>
-<span>    x <span class="op">=</span> <span class="st">"Date"</span>, y <span class="op">=</span> <span class="st">"Deaths"</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/coord_cartesian.html" class="external-link">coord_cartesian</a></span><span class="op">(</span></span>
-<span>    expand <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
-</details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-5"></span>
-<img src="estimate_ascertainment_files/figure-html/unnamed-chunk-5-1.png" alt="Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K."><p class="caption">
-Figure 2: Incidence of deaths over time for the ongoing COVID-19 outbreak in the U.K.
-</p>
-</div>
-</div>
-<div class="section level3">
-<h3 id="onset-to-death-distribution-for-covid-19">Onset-to-death distribution for Covid-19<a class="anchor" aria-label="anchor" href="#onset-to-death-distribution-for-covid-19"></a>
-</h3>
-<p>We obtain the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a log-normal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+<span><span class="co">#&gt;           date        country cases deaths</span></span>
+<span><span class="co">#&gt; 175 2020-06-25 United Kingdom   883     97</span></span>
+<span><span class="co">#&gt; 176 2020-06-26 United Kingdom   777    101</span></span>
+<span><span class="co">#&gt; 177 2020-06-27 United Kingdom   726    108</span></span>
+<span><span class="co">#&gt; 178 2020-06-28 United Kingdom   666     79</span></span>
+<span><span class="co">#&gt; 179 2020-06-29 United Kingdom   653     73</span></span>
+<span><span class="co">#&gt; 180 2020-06-30 United Kingdom   449     70</span></span></code></pre></div>
+</details><p>We obtain the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a log-normal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+<div class="alert alert-warning">
+<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discretised lognormal distribution — but we use a continuous distribution here as we do not expect this difference to bias the estimates excessively.
+See the <a href="delay_distribution.html">vignette on delay distributions</a> for more on using discretised distributions with <em>cfr</em>.</p>
+<p><strong>Note that</strong> we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
 <div class="section level3">
 <h3 id="estimating-the-proportion-of-cases-that-have-been-ascertained">Estimating the proportion of cases that have been ascertained<a class="anchor" aria-label="anchor" href="#estimating-the-proportion-of-cases-that-have-been-ascertained"></a>
 </h3>
-<p>We use the <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function to calculate the time-varying CFR for the COVID-19 epidemic in the U.K.</p>
-<p>The function includes a <code>type</code> argument, which determines whether <code><a href="../reference/cfr_static.html">cfr_static()</a></code> or <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> is used to estimate the delay-adjusted severity of the disease.</p>
-<p>The ascertainment ratio is calculated as the disease severity calculated from the data, divided by the ‘known’ disease severity; this is expected to be known or assumed from our best knowledge of the pathology of the disease.</p>
-<p>This known disease severity is passed to the <code>severity_baseline</code> argument in <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code>, and forms the numerator in the resulting under-ascertainment calculation.</p>
-<p>We assume that the ‘true’ CFR of Covid-19 is 0.014 (i.e. 1.4%) <span class="citation">(<a href="#ref-verity2020" role="doc-biblioref">Verity et al. 2020</a>)</span>. Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating under-ascertainment.</p>
-<p>The other arguments are the same as those found in <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code>.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_reporting_static</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">df_covid_uk_subset</span>,</span>
+<p>We use the <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function to calculate the time-varying CFR for the Covid-19 pandemic in the U.K.</p>
+<p>We assume that the “true” CFR of Covid-19 is 0.014 (i.e. 1.4%) <span class="citation">(<a href="#ref-verity2020" role="doc-biblioref">Verity et al. 2020</a>)</span>.
+Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating under-ascertainment.</p>
+<div class="alert alert-info">
+<p><strong>Note that</strong> the CFR from <span class="citation">Verity et al. (<a href="#ref-verity2020" role="doc-biblioref">2020</a>)</span> is based on lab-confirmed and clinically diagnosed cases from Wuhan, China.
+Since the case definition for the U.K. is different from that used here, the ascertainment ratio estimated is likely to be biased.</p>
+<p>Furthermore, by ignoring uncertainty in this estimate, the ascertainment ratio is likely to be over-precise as well.</p>
+</div>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># static ascertainment on data</span></span>
+<span><span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"static"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">df_reporting_varying</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt;   ascertainment_mean ascertainment_low ascertainment_high</span></span>
+<span><span class="co">#&gt; 1         0.06796117        0.06730769         0.06829268</span></span></code></pre></div>
+</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># time varying ascertainment on data</span></span>
+<span><span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_covid_uk</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"varying"</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span>,</span>
-<span>  burn_in <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>  max_date <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="st">"2020-06-30"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-</details><p>Once we have calculated both severity quantities over time, we visualise the results.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># the static reporting estimate</span></span>
-<span><span class="va">df_reporting_static</span></span>
+<span>  burn_in <span class="op">=</span> <span class="fl">7</span></span>
+<span><span class="op">)</span></span>
 <span><span class="co">#&gt;   ascertainment_mean ascertainment_low ascertainment_high</span></span>
-<span><span class="co">#&gt; 1         0.05982906        0.05932203         0.06008584</span></span>
-<span></span>
-<span><span class="co"># the time-varying reporting estimate</span></span>
-<span><span class="va">df_reporting_varying</span></span>
-<span><span class="co">#&gt;   ascertainment_mean ascertainment_low ascertainment_high</span></span>
-<span><span class="co">#&gt; 1             0.2346         0.1871687          0.2990665</span></span></code></pre></div>
-</details>
+<span><span class="co">#&gt; 1             0.2032           0.16232          0.2587827</span></span></code></pre></div>
+</details><p><strong>Note</strong> that <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> allows a <code>burn_in</code> argument that is passed to <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code>.
+The <code>burn_in</code> time is used to determine how many days at the start of the outbreak are excluded from the CFR calculation, potentially due to poor data quality at the beginning of an outbreak.
+The default value is 7, which ignores the first week of data.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="ascertainment-in-countries-with-large-early-covid-19-outbreaks">Ascertainment in countries with large early COVID-19 outbreaks<a class="anchor" aria-label="anchor" href="#ascertainment-in-countries-with-large-early-covid-19-outbreaks"></a>
+<h2 id="ascertainment-in-countries-with-large-early-covid-19-pandemics">Ascertainment in countries with large early Covid-19 pandemics<a class="anchor" aria-label="anchor" href="#ascertainment-in-countries-with-large-early-covid-19-pandemics"></a>
 </h2>
-<p>Finally, we estimate ascertainment for all countries with large early outbreaks of Covid-19.</p>
-<p>For illustrative purposes, we define a large outbreak as one which has caused at least 100,000 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st of June 2020.</p>
-<p>We do so as under-ascertainment of cases and infections was likely to be high in this early period of the pandemic because testing of symptomatic cases was still being scaled up and had not been made widely available in many countries.</p>
-<p>We now use the larger dataset <code>covid_data</code> made available with the <em>cfr</em> package, and initially made available via the <em>covidregionaldata</em> package <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>.
-We exclude four countries which only provide weekly data (with zeros for dates in between) — France, Germany, Spain and Ukraine.</p>
-<p>We adopt data science tools to iteratively apply the <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function across data grouped by country.
-We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-link">R for Data Science</a> for a better explanation of some of the code used here, including from the packages in <a href="https://www.tidyverse.org/" class="external-link">the Tidyverse</a>.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>Finally, we estimate ascertainment for all countries with at least 100,000 reported Covid-19 deaths between 2020 and 2023, and focus on the period between the start of each outbreak to the 1st of June 2020.</p>
+<p>We now use the larger dataset <code>covid_data</code> made available with the <em>cfr</em> package.
+We exclude four countries which only provide weekly data (with zeros for dates in between), and plot the ascertainment for each country remaining.</p>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># countries with weekly reporting</span></span>
 <span><span class="va">weekly_reporting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"France"</span>, <span class="st">"Germany"</span>, <span class="st">"Spain"</span>, <span class="st">"Ukraine"</span><span class="op">)</span></span>
 <span></span>
@@ -311,12 +240,6 @@ We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-
 <span>    burn_in <span class="op">=</span> <span class="fl">7</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: There were 3 warnings in `mutate()`.</span></span>
-<span><span class="co">#&gt; The first warning was:</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> In argument: `reporting = map(...)`.</span></span>
-<span><span class="co">#&gt; Caused by warning in `.f()`:</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> Ascertainment ratios &gt; 1.0 detected, setting these values to 1.0</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.</span></span>
 <span></span>
 <span><span class="co"># unnest the data</span></span>
 <span><span class="va">df_reporting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">df_reporting</span>, cols <span class="op">=</span> <span class="st">"reporting"</span><span class="op">)</span></span>
@@ -326,14 +249,13 @@ We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">#&gt;   country   data     ascertainment_mean ascertainment_low ascertainment_high</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Argentina <span style="color: #949494;">&lt;tibble&gt;</span>              0.138             0.101              0.195</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Brazil    <span style="color: #949494;">&lt;tibble&gt;</span>              0.109             0.103              0.115</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Colombia  <span style="color: #949494;">&lt;tibble&gt;</span>              0.230             0.164              0.335</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> India     <span style="color: #949494;">&lt;tibble&gt;</span>              0.252             0.220              0.291</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Indonesia <span style="color: #949494;">&lt;tibble&gt;</span>              0.156             0.117              0.216</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Iran      <span style="color: #949494;">&lt;tibble&gt;</span>              0.381             0.296              0.501</span></span></code></pre></div>
-</details><p>Plot the ascertainment for each country.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Argentina <span style="color: #949494;">&lt;tibble&gt;</span>              0.222             0.161              0.315</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Brazil    <span style="color: #949494;">&lt;tibble&gt;</span>              0.161             0.152              0.170</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Colombia  <span style="color: #949494;">&lt;tibble&gt;</span>              0.290             0.206              0.424</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> India     <span style="color: #949494;">&lt;tibble&gt;</span>              0.350             0.305              0.404</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Indonesia <span style="color: #949494;">&lt;tibble&gt;</span>              0.200             0.148              0.277</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Iran      <span style="color: #949494;">&lt;tibble&gt;</span>              0.470             0.364              0.619</span></span></code></pre></div>
+</details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_reporting</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_linerange.html" class="external-link">geom_pointrange</a></span><span class="op">(</span></span>
@@ -353,9 +275,9 @@ We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span></code></pre></div>
 </details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-10"></span>
-<img src="estimate_ascertainment_files/figure-html/unnamed-chunk-10-1.png" alt="Example plot of the ascertainment ratio by country during the early stages of the Covid-19 pandemic."><p class="caption">
-Figure 3: Example plot of the ascertainment ratio by country during the early stages of the Covid-19 pandemic.
+<span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="estimate_ascertainment_files/figure-html/unnamed-chunk-6-1.png" alt="Example plot of the ascertainment ratio by country during the early stages of the Covid-19 pandemic."><p class="caption">
+Figure 1: Example plot of the ascertainment ratio by country during the early stages of the Covid-19 pandemic.
 </p>
 </div>
 </div>
@@ -365,12 +287,6 @@ Figure 3: Example plot of the ascertainment ratio by country during the early st
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-linton2020" class="csl-entry">
 Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and Hiroshi Nishiura. 2020. <span>“Incubation Period and Other Epidemiological Characteristics of 2019 Novel Coronavirus Infections with Right Truncation: A Statistical Analysis of Publicly Available Case Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
-</div>
-<div id="ref-nishiura2009" class="csl-entry">
-Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P. Heesterbeek. 2009. <span>“Early Epidemiological Assessment of the Virulence of Emerging Infectious Diseases: A Case Study of an Influenza Pandemic.”</span> <em>PLOS ONE</em> 4 (8): e6852. <a href="https://doi.org/10.1371/journal.pone.0006852" class="external-link">https://doi.org/10.1371/journal.pone.0006852</a>.
-</div>
-<div id="ref-palmer2021" class="csl-entry">
-Palmer, Joseph, Katharine Sherratt, Richard Martin-Nielsen, Jonnie Bevan, Hamish Gibbs, Cmmid Group, Sebastian Funk, and Sam Abbott. 2021. <span>“Covidregionaldata: Subnational Data for COVID-19 Epidemiology.”</span> <em>Journal of Open Source Software</em> 6 (63): 3290. <a href="https://doi.org/10.21105/joss.03290" class="external-link">https://doi.org/10.21105/joss.03290</a>.
 </div>
 <div id="ref-verity2020" class="csl-entry">
 Verity, Robert, Lucy C. Okell, Ilaria Dorigatti, Peter Winskill, Charles Whittaker, Natsuko Imai, Gina Cuomo-Dannenburg, et al. 2020. <span>“Estimates of the severity of coronavirus disease 2019: a model-based analysis.”</span> <em>The Lancet Infectious Diseases</em> 20 (6): 669–77. <a href="https://doi.org/10.1016/S1473-3099(20)30243-7" class="external-link">https://doi.org/10.1016/S1473-3099(20)30243-7</a>.
@@ -385,7 +301,7 @@ Verity, Robert, Lucy C. Okell, Ilaria Dorigatti, Peter Winskill, Charles Whittak
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+<p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

@@ -54,6 +54,9 @@ severity measures such as the hospitalisation fatality risk."><meta property="og
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -115,7 +118,7 @@ density at user-specified values, e.g.
 
 <dt>poisson_threshold</dt>
 <dd><p>The case count above which to use Poisson
-approximation. Set to 100 by default.</p></dd>
+approximation. Set to 100 by default. Must be &gt; 0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -177,6 +180,7 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate severity for each day while correcting for delays</span></span></span>
 <span class="r-in"><span><span class="co"># obtain onset-to-death delay distribution parameters from Barry et al. 2018</span></span></span>
+<span class="r-in"><span><span class="co"># The Lancet. &lt;https://doi.org/10.1016/S0140-6736(18)31387-4&gt;</span></span></span>
 <span class="r-in"><span><span class="fu">cfr_static</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">ebola1976</span>,</span></span>
 <span class="r-in"><span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span></span>
@@ -191,7 +195,7 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+  <p></p><p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

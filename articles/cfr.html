@@ -70,6 +70,9 @@
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -101,31 +104,32 @@
 
     
     
-<p>It is important to understand the severity of a disease in terms of the case fatality risk in order to respond appropriately to an outbreak.
-However, during an outbreak there is often a delay between cases being reported, and the outcomes of those cases being known. As a result, simply dividing total deaths to date by total cases to date may lead to an underestimate of the fatality rate in real-time, because many cases have outcomes that are not yet known.</p>
+<p>Understanding disease severity, and especially the case fatality risk (CFR), is key to outbreak response.
+During an outbreak there is often a delay between cases being reported, and the outcomes (for CFR, deaths) of those cases being known.
+Simply dividing total deaths to date by total cases to date may lead to an underestimate of the CFR rate in real-time, because many cases have outcomes that are not yet known.</p>
 <p>Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can therefore help ensure less biased estimates of disease severity.
 See the <strong>Concept</strong> section at the end of this vignette for more on how reporting delays bias CFR estimates.</p>
 <p>The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>, and which are implemented in the <em>cfr</em> package.</p>
 <div class="section level2 unnumbered alert alert-primary">
 <h2 id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
 </h2>
-<p>A disease outbreak is underway. We want to know <strong>how severe the disease is</strong>, that is, the case fatality risk, but there is a delay between cases being reported, and the outcomes of those cases — whether recovery or death — being known. This is the <em>reporting delay</em>, and can be accounted for by knowing the reporting delay from past outbreaks.</p>
+<p>A disease outbreak is underway. We want to know <strong>how severe the disease is</strong> in terms of the case fatality risk (CFR), but there is a delay between cases being reported, and the outcomes of those cases — whether recovery or death — being known. This is the <em>reporting delay</em>, and can be accounted for by knowing the reporting delay from past outbreaks.</p>
 </div>
 <div class="alert alert-secondary">
 <div class="section level3 unnumbered">
 <h3 id="what-we-have">What we have<a class="anchor" aria-label="anchor" href="#what-we-have"></a>
 </h3>
-<ol style="list-style-type: decimal">
-<li>A dataset of daily cases and deaths reported;</li>
-<li>Data on the distribution of reporting delays from past outbreaks of the same disease.</li>
-</ol>
+<ul>
+<li>A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);</li>
+<li>Data on the distribution of delays, describing the probability an individual will die <span class="math inline">\(t\)</span> days after they were initially infected.</li>
+</ul>
 </div>
 <div class="section level3 unnumbered">
 <h3 id="what-we-assume">What we assume<a class="anchor" aria-label="anchor" href="#what-we-assume"></a>
 </h3>
-<ol style="list-style-type: decimal">
+<ul>
 <li>That data on reporting delays from past outbreaks is informative about reporting delays in the current outbreak.</li>
-</ol>
+</ul>
 </div>
 </div>
 <p>First we load the <em>cfr</em> package.</p>
@@ -135,14 +139,11 @@ See the <strong>Concept</strong> section at the end of this vignette for more on
 </details><div class="section level2 unnumbered">
 <h2 id="case-and-death-data">Case and death data<a class="anchor" aria-label="anchor" href="#case-and-death-data"></a>
 </h2>
-<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset curated by Our World in Data</a>, a similar dataset made available through the R package <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em></a> <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>, or data on outbreaks of other infections made available in <a href="https://cran.r-project.org/web/packages/outbreaks/index.html" class="external-link"><em>outbreaks</em></a>.</p>
-<p>In an outbreak response scenario, such data may also be compiled and shared locally.</p>
+<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset curated by Our World in Data</a>, a similar dataset made available through the R package <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em></a> <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>, or data on outbreaks of other infections made available in <a href="https://cran.r-project.org/package=outbreaks" class="external-link"><em>outbreaks</em></a>.</p>
+<p>In an outbreak response scenario, such data may also be compiled and shared locally.
+See the <a href="data_from_incidence2.html">vignette on working with data from <em>incidence2</em></a> on working with a common format of incidence data which can help interoperability with other formats.</p>
 <p>The <em>cfr</em> package requires only a data frame with three columns, “date”, “cases”, and “deaths”, giving the daily number of reported cases and deaths.</p>
-<div class="alert alert-warning">
-<p>Datasets with columns that contain this information under different names can be handled by common data science tools, such as <a href="https://www.tidyverse.org/" class="external-link">packages in the Tidyverse</a>, to prepare data for <em>cfr</em>.</p>
-<p>See examples of this in the <a href="cfr_static_severity.html">vignette on obtaining a static severity estimate</a>.</p>
-</div>
-<p>Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with the package <span class="citation">(<a href="#ref-camacho2014" role="doc-biblioref">Camacho et al. 2014</a>)</span>.</p>
+<p>Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with this package <span class="citation">(<a href="#ref-camacho2014" role="doc-biblioref">Camacho et al. 2014</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
 <span></span>
@@ -162,13 +163,17 @@ See the <strong>Concept</strong> section at the end of this vignette for more on
 </h2>
 <p>We obtain the disease’s onset-to-death distribution from a more recent Ebola outbreak, reported in <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.
 The onset-to-death distribution is considered to be Gamma distributed, with a shape <span class="math inline">\(k\)</span> = 2.40 and a scale of <span class="math inline">\(\theta\)</span> = 3.33.</p>
+<div class="alert alert-warning">
+<p><strong>Note that</strong> while we use a continuous distribution here, it is more appropriate to use a discretised distribution instead as we are working with daily data.</p>
+<p><strong>Note also</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
+</div>
 <p>The forthcoming <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.
 See the <a href="delay_distributions.html">vignette on using delay distributions</a> for more information on how to use this and other distribution objects supported by R to prepare delay density functions.</p>
 </div>
 <div class="section level2">
 <h2 id="estimate-disease-severity">Estimate disease severity<a class="anchor" aria-label="anchor" href="#estimate-disease-severity"></a>
 </h2>
-<p>We use the function <code><a href="../reference/cfr_static.html">cfr_static()</a></code> to calculate overall disease severity at the latest date of the outbreak. The output is a dataframe with a single row and three columns that holds estimates for the severity’s mean as well as lower and upper limits.</p>
+<p>We use the function <code><a href="../reference/cfr_static.html">cfr_static()</a></code> to calculate overall disease severity at the latest date of the outbreak.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
@@ -177,15 +182,19 @@ See the <a href="delay_distributions.html">vignette on using delay distributions
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
 <span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
 </details><p>The <code><a href="../reference/cfr_static.html">cfr_static()</a></code> function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time.</p>
-<p>For larger outbreaks where it may be useful to know how severity has changed over time (e.g. following vaccination or pathogen evolution), the function <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> is available. This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes. More on this can be found on the <a href="cfr_time_varying_severity.html">vignette on estimating how disease severity varies over the course of an outbreak</a>.</p>
+<p>To understand how severity has changed over time (e.g. following vaccination or pathogen evolution), use the function <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code>.
+This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes.
+More on this can be found on the <a href="cfr_time_varying_severity.html">vignette on estimating how disease severity varies over the course of an outbreak</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="estimate-ascertainment-ratio">Estimate ascertainment ratio<a class="anchor" aria-label="anchor" href="#estimate-ascertainment-ratio"></a>
 </h2>
 <p>It is important to know what proportion of cases in an outbreak are being ascertained to muster the appropriate response, and to estimate the overall burden of the outbreak.</p>
-<p><strong>Note</strong> that the ascertainment ratio may be affected by a number of factors.
+<div class="alert alert-info">
+<p><strong>Note that</strong> the ascertainment ratio may be affected by a number of factors.
 When the main factor in low ascertainment is the lack of (access to) testing capacity, we refer to this as reporting or under-reporting.</p>
-<p>The <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function can help estimate this using the daily case and death data, the known severity of the disease from previous outbreaks, as well as a delay distribution of onset-to-death.</p>
+</div>
+<p>The <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function estimates the ascertainment ratio using daily case and death data, the known severity of the disease from previous outbreaks, and optionally a delay distribution of onset-to-death.</p>
 <p>Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that Ebola virus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths), based on CFR values estimated in later, larger datasets.
 We use the onset-to-death distribution from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -206,11 +215,11 @@ We use the onset-to-death distribution from <span class="citation">Barry et al. 
 <h2 id="concept-how-reporting-delays-bias-cfr-estimates">Concept: How reporting delays bias CFR estimates<a class="anchor" aria-label="anchor" href="#concept-how-reporting-delays-bias-cfr-estimates"></a>
 </h2>
 <p>Simply dividing the number of deaths by the number of cases would obtain a CFR that is a <em>naive estimator</em> of the true CFR.</p>
-<p>Suppose 10 people start showing symptoms of a specific disease on a given day and the end of that day all remain alive.
+<p>Suppose 10 people start showing symptoms of a disease on a given day and the end of that day all remain alive.
 Suppose that for the next 5 days, the numbers of new cases continue to rise until they reach 100 new cases on day 5.
 However, suppose that by day 5, all infected individuals remain alive.</p>
 <p>The naive estimate of the CFR calculated at the end of the first 5 days would be <em>zero</em>, because there would have been zero deaths in total — <em>at that point</em>.
-That is to say, the <em>outcomes</em> of cases (infections) would not be known.</p>
+That is to say, the <em>outcomes</em> of cases (deaths) would not be known.</p>
 <p>Even after deaths begin to occur, this lag between the ascertainment of a case or hospitalisation and outcome leads to a consistently biased estimate.
 Hence, adjusting for such delays using an appropriate delay distribution is essential for accurate estimates of severity.</p>
 <hr>
@@ -241,7 +250,7 @@ Palmer, Joseph, Katharine Sherratt, Richard Martin-Nielsen, Jonnie Bevan, Hamish
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+<p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">

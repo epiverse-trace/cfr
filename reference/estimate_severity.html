@@ -54,6 +54,9 @@ approximated by a Poisson likelihood for large samples."><meta property="og:imag
     <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -114,7 +117,7 @@ over the period of an outbreak of interest. See <code><a href="estimate_outcomes
 
 <dt>poisson_threshold</dt>
 <dd><p>The case count above which to use Poisson
-approximation. Set to 100 by default.</p></dd>
+approximation. Set to 100 by default. Must be &gt; 0.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -127,9 +130,24 @@ estimates, named "severity_mean", "severity_low", and "severity_high".</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When any two of <code>total_cases</code>, <code>total_deaths</code>, or <code>total_outcomes</code> are zero,
+    
+<div class="section">
+<h3 id="special-cases">Special cases<a class="anchor" aria-label="anchor" href="#special-cases"></a></h3>
+
+<ul><li><p>When any two of <code>total_cases</code>, <code>total_deaths</code>, or <code>total_outcomes</code> are 0,
 the estimate and confidence intervals cannot be calculated and the output
-<code>&lt;data.frame&gt;</code> contains <code>NA</code>s.</p>
+<code>&lt;data.frame&gt;</code> contains only <code>NA</code>s.</p></li>
+<li><p>When <code>total_cases == total_deaths</code> <em>and</em> <code>total_outcomes &lt;= total_deaths</code>,
+while <code>total_cases &lt; poisson_threshold</code>, the confidence intervals cannot be
+calculated and are returned as <code>NA</code>. The severity is returned as the lowest
+possible value for the method used when cases are below the Poisson
+threshold, which is 0.001.</p></li>
+<li><p>When <code>total_outcomes == total_deaths</code> while
+<code>total_cases &lt; poisson_threshold</code> the confidence intervals cannot be
+calculated and are returned as <code>NA</code>s while the severity estimate is returned
+as <code>0.999</code>.</p></li>
+</ul></div>
+
     </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -137,7 +155,7 @@ the estimate and confidence intervals cannot be calculated and the output
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Pratik Gupte, Adam Kucharski, Tim Russell.</p>
+  <p></p><p>Developed by Pratik R. Gupte, Adam Kucharski, Tim Russell.</p>
 </div>
 
 <div class="pkgdown-footer-right">
