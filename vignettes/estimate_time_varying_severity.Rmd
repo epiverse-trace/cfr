@@ -49,13 +49,10 @@ We want to estimate how disease severity in the form of the case fatality risk (
 ::: {.alert .alert-info}
 ## Potential reasons for changing disease severity {-}
 
-- Change in the probability of infection being reported as a case,
-
-- Transmission dynamics within specific subgroups of differing risk of severe outcomes,
-
-- Introduction of vaccines or therapeutics reducing the relative risk of death,
-
-- Emergence of pathogen variants which may alter the mortality risk associated with infection.
+* Change in the probability of infection being reported as a case,
+* Transmission dynamics within specific subgroups of differing risk of severe outcomes,
+* Introduction of vaccines or therapeutics reducing the relative risk of death,
+* Emergence of pathogen variants which may alter the mortality risk associated with infection.
 :::
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}

@@ -40,8 +40,10 @@ covid_uk <- covidregionaldataUK
 head(covid_uk)
 ```
 
+::: {.alert .alert-secondary}
 **Note that** the grouping structure of this dataset given by the "region" variable is present in the `<incidence2>` object.
 `prepare_data()` respects grouping structure when present, and returns a dataset with one additional column for each grouping variable.
+:::
 
 ```{r}
 # convert to incidence2 object
