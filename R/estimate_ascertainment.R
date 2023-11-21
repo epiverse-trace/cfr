@@ -6,13 +6,8 @@
 #' calculated as the ratio of the baseline severity estimate, which is assumed
 #' to be the 'true' disease severity, and the delay-adjusted severity estimate.
 #'
-#' @inheritParams cfr_time_varying
 #' @inheritParams cfr_static
 #'
-#' @param type A string, either `"static"` or `"varying"` which determines
-#' whether [cfr_static()] or [cfr_time_varying()] is used to calculate
-#' the resulting ascertainment ratio. Defaults to `"static"` if this argument is
-#' missing.
 #' @param severity_baseline A single number in the range 0.0 -- 1.0 for the
 #' assumed true baseline severity estimate used to estimate the overall
 #' ascertainment ratio. Missing by default, which causes the function to error;
@@ -42,20 +37,15 @@
 #' estimate_ascertainment(
 #'   data = data,
 #'   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-#'   type = "varying",
-#'   severity_baseline = 0.014,
-#'   burn_in = 7L
+#'   severity_baseline = 0.014
 #' )
 #'
 estimate_ascertainment <- function(data,
                                    severity_baseline,
-                                   delay_density = NULL,
-                                   type = c("static", "varying"),
-                                   burn_in = 7,
-                                   smoothing_window = NULL) {
+                                   delay_density = NULL) {
   # input checking
   # expect rows more than burn in value
-  checkmate::assert_data_frame(data, min.cols = 3, min.rows = burn_in + 1)
+  checkmate::assert_data_frame(data, min.cols = 3, min.rows = 1)
   # check that input `<data.frame>` has columns date, cases, and deaths
   checkmate::assert_names(
     colnames(data),
@@ -71,36 +61,13 @@ estimate_ascertainment <- function(data,
     severity_baseline,
     lower = 0.0, upper = 1.0, finite = TRUE
   )
-  # zero count allowed to include all data
-  checkmate::assert_count(burn_in)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
 
-  # match argument for type
-  type <- match.arg(type, several.ok = FALSE)
-
   # switch the output based on user specified type
-  df_severity <- switch(type,
-    static = cfr_static(
-      data,
-      delay_density = delay_density
-    ),
-    varying = {
-      df_sev <- cfr_time_varying(
-        data,
-        delay_density = delay_density,
-        smoothing_window = smoothing_window,
-        burn_in = burn_in
-      )
-
-      df_sev <- df_sev[!is.na(df_sev$severity_mean), ]
-
-      # collect the severity at the last date in the data
-      df_sev <- df_sev[df_sev$date == max(df_sev$date), ]
-
-      # subset column names
-      df_sev <- df_sev[, grepl("severity", colnames(df_sev), fixed = TRUE)]
-    }
+  df_severity <- cfr_static(
+    data,
+    delay_density = delay_density
   )
 
   # data.frame for exports, first scale values by the 1/severity baseline

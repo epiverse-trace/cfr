@@ -51,7 +51,7 @@ To correct for reporting delays in disease severity estimation, we are primarily
 
 We refer to the _R functions providing_ both the PDF and PMF as the _density_ of the distribution.
 
-The delay distribution density must be passed to functions such as `cfr_static()` or `cfr_time_varying()` via the `delay_density` argument. This can be represented in pseudo-code as
+The delay distribution density must be passed to functions such as `cfr_static()`, `cfr_time_varying()`, or `estimate_ascertainment()` via the `delay_density` argument. This can be represented in pseudo-code as
 
 ```
 cfr_*(data, delay_density = <DENSITY_FUNCTION>)
