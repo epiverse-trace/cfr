@@ -123,7 +123,6 @@ We use the onset-to-death distribution from @barry2018.
 estimate_ascertainment(
   data = ebola1976,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
-  type = "static",
   severity_baseline = 0.7
 )
 ```

@@ -4,14 +4,7 @@
 \alias{estimate_ascertainment}
 \title{Estimate the ascertainment ratio of a disease}
 \usage{
-estimate_ascertainment(
-  data,
-  severity_baseline,
-  delay_density = NULL,
-  type = c("static", "varying"),
-  burn_in = 7,
-  smoothing_window = NULL
-)
+estimate_ascertainment(data, severity_baseline, delay_density = NULL)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -39,29 +32,6 @@ May be \code{NULL}, for no delay correction, or a function that returns the
 density function of a distribution to evaluate
 density at user-specified values, e.g.
 \code{function(x) stats::dgamma(x = x, shape = 5, scale = 1)}.}
-
-\item{type}{A string, either \code{"static"} or \code{"varying"} which determines
-whether \code{\link[=cfr_static]{cfr_static()}} or \code{\link[=cfr_time_varying]{cfr_time_varying()}} is used to calculate
-the resulting ascertainment ratio. Defaults to \code{"static"} if this argument is
-missing.}
-
-\item{burn_in}{A single integer-like value for the number of time-points
-(typically days) to disregard at the start of the time-series, if a burn-in
-period is desired.
-
-Defaults to 7, which is a sensible default value that disregards the first
-week of cases and deaths, assuming daily data.
-
-To consider all case data including the start of the time-series, set this
-argument to 0.}
-
-\item{smoothing_window}{An \emph{odd} number determining the smoothing window size
-to use when smoothing the case and death time-series, using a rolling median
-procedure (as the \code{k} argument to \code{\link[stats:runmed]{stats::runmed()}}) before calculating the
-time-varying severity.
-
-The default behaviour is to apply no smoothing. The minimum value of this
-argument is 1.}
 }
 \value{
 A \verb{<data.frame>} containing the maximum likelihood estimate estimate
@@ -94,9 +64,7 @@ data <- df_covid_uk[df_covid_uk$date <= "2020-06-30", ]
 estimate_ascertainment(
   data = data,
   delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440),
-  type = "varying",
-  severity_baseline = 0.014,
-  burn_in = 7L
+  severity_baseline = 0.014
 )
 
 }
