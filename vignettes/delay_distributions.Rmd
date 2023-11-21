@@ -80,7 +80,7 @@ Users working with R > 4.1.0 can also use the new syntax for anonymous functions
 :::
 
 ::: {.alert .alert-warning}
-**Note** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
+**Note that** we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
 
 ## Passing delay distribution density to _cfr_ functions
@@ -101,7 +101,7 @@ cfr_static(
 
 ## Using other distribution representations
 
-While many R packages provide support for representing probability distributions, we focus on two examples, _distributional_ and _distcrete_, to show how closures wrapping these could be implemented, while wrapping the parameters from @barry2018.
+While many R packages provide support for representing probability distributions, we focus on two examples, [_distributional_](https://cran.r-project.org/package=distributional) and [_distcrete_](https://cran.r-project.org/package=distcrete), to show how closures wrapping these could be implemented, while wrapping the parameters from @barry2018.
 
 Users may wish to use these or similar packages for better management of distributions and parameters.
 See the [CRAN probability distributions task view](https://cran.r-project.org/view=Distributions) for more information on distribution packages suitable for different use cases.
