@@ -171,4 +171,6 @@ _cfr_ functionality overlaps with that of some other packages, including
 - [_coarseDataTools_](https://cran.r-project.org/package=coarseDataTools) is an R package that also allows estimation of case fatality risk while accounting for delays due to survival time. _cfr_ uses simpler methods from @nishiura2009 to correct for under-ascertainment and a simpler likelihood calculation.
 - [_EpiNow2_](https://cran.r-project.org/package=EpiNow2) is an R package that allows estimation of case fatality risk as a secondary observation of cases, but is a more complex package to use.
 
+_cfr_ is in future expected to benefit from the functionality of the forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/), which is also developed by Epiverse-TRACE. _epiparameter_ aims to provide a library of epidemiological parameters to parameterise delay density functions, as well as the convenient `<epidist>` class to store, access, and pass these parameters for delay correction.
+
 ## References
