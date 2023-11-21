@@ -77,7 +77,7 @@ This is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
 
 ::: {.alert .alert-warning}
 **Note that** while we shall use a continuous distribution here as we do not expect this difference to bias the estimates excessively, it is more appropriate to use a discretised distribution instead as we are working with daily data.
-See the [vignette on delay distributions](delay_distribution.html) for more on using discretised distributions with _cfr_.
+See the [vignette on delay distributions](delay_distributions.html) for more on using discretised distributions with _cfr_.
 
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::

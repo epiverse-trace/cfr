@@ -96,7 +96,7 @@ We retrieve the appropriate distribution of the duration between symptom onset a
 
 ::: {.alert .alert-warning}
 @linton2020 fitted a discretised lognormal distribution --- but we use a continuous distribution here as we do not expect this difference to bias the estimates excessively.
-See the [vignette on delay distributions](delay_distribution.html) for more on using discretised distributions with _cfr_.
+See the [vignette on delay distributions](delay_distributions.html) for more on using discretised distributions with _cfr_.
 
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
