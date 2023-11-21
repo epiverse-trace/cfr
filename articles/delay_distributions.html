@@ -154,7 +154,7 @@
 Users working with R &gt; 4.1.0 can also use the new syntax for anonymous functions, e.g. <code>\(x) stats::dgamma(x, shape, scale)</code>.</p>
 </div>
 <div class="alert alert-warning">
-<p><strong>Note</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
+<p><strong>Note that</strong> we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
 </div>
 <div class="section level2">
@@ -178,7 +178,7 @@ Parameters for the onset-to-death distribution of Ebola virus disease are taken 
 <div class="section level2">
 <h2 id="using-other-distribution-representations">Using other distribution representations<a class="anchor" aria-label="anchor" href="#using-other-distribution-representations"></a>
 </h2>
-<p>While many R packages provide support for representing probability distributions, we focus on two examples, <em>distributional</em> and <em>distcrete</em>, to show how closures wrapping these could be implemented, while wrapping the parameters from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>While many R packages provide support for representing probability distributions, we focus on two examples, <a href="https://cran.r-project.org/package=distributional" class="external-link"><em>distributional</em></a> and <a href="https://cran.r-project.org/package=distcrete" class="external-link"><em>distcrete</em></a>, to show how closures wrapping these could be implemented, while wrapping the parameters from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
 <p>Users may wish to use these or similar packages for better management of distributions and parameters.
 See the <a href="https://cran.r-project.org/view=Distributions" class="external-link">CRAN probability distributions task view</a> for more information on distribution packages suitable for different use cases.</p>
 <div class="section level3">
