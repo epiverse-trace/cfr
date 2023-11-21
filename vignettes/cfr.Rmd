@@ -102,7 +102,7 @@ The `cfr_static()` function is well suited to small outbreaks where there are re
 
 To understand how severity has changed over time (e.g. following vaccination or pathogen evolution), use the function `cfr_time_varying()`.
 This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes.
-More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](cfr_time_varying_severity.html).
+More on this can be found on the [vignette on estimating how disease severity varies over the course of an outbreak](estimate_time_varying_severity.html).
 
 ## Estimate ascertainment ratio
 
