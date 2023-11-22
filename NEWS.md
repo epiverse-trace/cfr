@@ -1,3 +1,5 @@
+# cfr (development version)
+
 # cfr 0.1.0
 
 Initial CRAN submission of _cfr_, an R package to estimate the severity of a disease and ascertainment of cases while correcting for delays in outcomes of reported cases being known.

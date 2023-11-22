@@ -1,6 +1,6 @@
 Package: cfr
 Title: Estimate Disease Severity and Case Ascertainment
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
     person(
         given = "Pratik R.", family = "Gupte", role = c("aut", "cre", "cph"), email = "pratik.gupte@lshtm.ac.uk",
