@@ -70,12 +70,12 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="cfr-010">cfr 0.1.0<a class="anchor" aria-label="anchor" href="#cfr-010"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="cfr-010">cfr 0.1.0<a class="anchor" aria-label="anchor" href="#cfr-010"></a></h2><p class="text-muted">CRAN release: 2023-11-21</p>
 <p>Initial CRAN submission of <em>cfr</em>, an R package to estimate the severity of a disease and ascertainment of cases while correcting for delays in outcomes of reported cases being known.</p>
 <p>This release includes:</p>
 <ol style="list-style-type: decimal"><li>Functions for the overall severity of an outbreak, the overall severity of an outbreak estimated with an expanding time series of data, and the time-varying severity of an outbreak,</li>
 <li>A function to estimate the number of outcomes to be expected from a given number of cases assuming a user-specified distribution of delays between cases and outcomes being known,</li>
-<li>A function to estimate the overall (static) or time-varying ascertainment of cases in an outbreak by comparing the relevant severity measures against a user-specified baseline severity,</li>
+<li>A function to estimate the overall (static) ascertainment of cases in an outbreak by comparing the relevant severity measures against a user-specified baseline severity,</li>
 <li>A data preparation generic with an S3 method for the <code>&lt;incidence2&gt;</code> class from the <em>incidence2</em> package,</li>
 <li>Example daily case and death data from the 1976 Ebola Virus Disease outbreak as reported in Camacho et al. (2014). <a href="https://doi.org/10.1016/j.epidem.2014.09.003" class="external-link uri">https://doi.org/10.1016/j.epidem.2014.09.003</a>,</li>
 <li>Example daily case and death data from the Covid-19 pandemic over the range 2020-01-01 to 2022-12-31 from the 19 countries with over 100,00 deaths over this period, as taken from the <em>covidregionaldata</em> package which is no longer on CRAN,</li>
@@ -83,8 +83,13 @@
 <li>A vignette on working with data from the <em>incidence2</em> package, and a vignette on working with delay distributions,</li>
 <li>100% code coverage,</li>
 <li>Workflows to render the vignettes and README as a website.</li>
-</ol></div>
-  </main></div>
+</ol><div class="section level3">
+<h3 id="correction-0-1-0">Correction<a class="anchor" aria-label="anchor" href="#correction-0-1-0"></a></h3>
+<p><em>cfr</em> v0.1.0 only includes functionality for static ascertainment calculations. The functionality for time-varying ascertainment is expected to be included in future versions, and an older implementation was removed just prior to release. The news section for <em>cfr</em> v0.1.0 has been updated to reflect this.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
