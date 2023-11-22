@@ -187,13 +187,23 @@ By contributing to this project, you agree to abide by its terms.
 *cfr* functionality overlaps with that of some other packages, including
 
 - [*coarseDataTools*](https://cran.r-project.org/package=coarseDataTools)
-  is an R package that also allows estimation of case fatality risk
-  while accounting for delays due to survival time. *cfr* uses simpler
-  methods from Nishiura et al. ([2009](#ref-nishiura2009)) to correct
-  for under-ascertainment and a simpler likelihood calculation.
+  is an R package that allows estimation of relative [case fatality
+  risk](https://cran.r-project.org/web/packages/coarseDataTools/vignettes/CFR_vignette.html)
+  between covariate groups while accounting for delays due to survival
+  time, when numbers of deaths and recoveries over time are known. *cfr*
+  uses simpler methods from Nishiura et al. ([2009](#ref-nishiura2009))
+  that can be applied when only cases and deaths over time are known,
+  generating estimates based on all data to date, as well as
+  time-varying estimates. *cfr* can also convert estimates of cases with
+  known outcomes over time into an estimate of under-ascertainment, if a
+  baseline estimate of fatality risk is available from the literature
+  (e.g. from past outbreaks).
 - [*EpiNow2*](https://cran.r-project.org/package=EpiNow2) is an R
-  package that allows estimation of case fatality risk as a secondary
-  observation of cases, but is a more complex package to use.
+  package that can allow estimation of case fatality risk if it is
+  defined as a secondary observation of cases. In particular, it allows
+  for estimation that accounts for the smooth underlying epidemic
+  process, but this requires additional computational effort. A
+  comparison of these methods is planned for a future release.
 
 *cfr* is in future expected to benefit from the functionality of the
 forthcoming [*epiparameter*
