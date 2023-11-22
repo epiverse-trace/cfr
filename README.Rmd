@@ -131,7 +131,7 @@ ggplot(data_cfr) +
   ) +
   scale_colour_brewer(
     palette = "Dark2",
-    labels = c("Naive CFR", "Corrected CFR"),
+    labels = c("Corrected CFR","Naive CFR"),
     name = NULL
   ) +
   scale_fill_brewer(
