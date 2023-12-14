@@ -7,13 +7,13 @@ cff-version: 1.2.0
 message: 'To cite package "cfr" in publications use:'
 type: software
 license: MIT
-title: 'cfr: Estimate Disease Severity and Under-Reporting'
-version: 0.1.0
-abstract: Estimate the severity of a disease and under-reporting of cases, as discussed
+title: 'cfr: Estimate Disease Severity and Case Ascertainment'
+version: 0.1.0.9000
+abstract: Estimate the severity of a disease and ascertainment of cases, as discussed
   in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
 authors:
 - family-names: Gupte
-  given-names: Pratik
+  given-names: Pratik R.
   email: pratik.gupte@lshtm.ac.uk
   orcid: https://orcid.org/0000-0001-5294-7819
 - family-names: Kucharski
@@ -24,11 +24,12 @@ authors:
   given-names: Tim
   email: timothy.russell@lshtm.ac.uk
   orcid: https://orcid.org/0000-0001-5610-6080
+repository: https://CRAN.R-project.org/package=cfr
 repository-code: https://github.com/epiverse-trace/cfr
 url: https://epiverse-trace.github.io/cfr/
 contact:
 - family-names: Gupte
-  given-names: Pratik
+  given-names: Pratik R.
   email: pratik.gupte@lshtm.ac.uk
   orcid: https://orcid.org/0000-0001-5294-7819
 keywords:
@@ -41,6 +42,18 @@ keywords:
 - r
 - r-package
 references:
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  location:
+    name: Vienna, Austria
+  year: '2023'
+  institution:
+    name: R Foundation for Statistical Computing
+  version: '>= 3.5.0'
 - type: software
   title: checkmate
   abstract: 'checkmate: Fast and Versatile Argument Checks'
@@ -64,6 +77,68 @@ references:
   year: '2023'
   institution:
     name: R Foundation for Statistical Computing
+- type: software
+  title: bookdown
+  abstract: 'bookdown: Authoring Books and Technical Documents with R Markdown'
+  notes: Suggests
+  url: https://pkgs.rstudio.com/bookdown/
+  repository: https://CRAN.R-project.org/package=bookdown
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2023'
+- type: software
+  title: data.table
+  abstract: 'data.table: Extension of `data.frame`'
+  notes: Suggests
+  url: https://r-datatable.com
+  repository: https://CRAN.R-project.org/package=data.table
+  authors:
+  - family-names: Barrett
+    given-names: Tyson
+    email: t.barrett88@gmail.com
+  - family-names: Dowle
+    given-names: Matt
+    email: mattjdowle@gmail.com
+  - family-names: Srinivasan
+    given-names: Arun
+    email: asrini@pm.me
+  year: '2023'
+- type: software
+  title: distcrete
+  abstract: 'distcrete: Discrete Distribution Approximations'
+  notes: Suggests
+  url: https://github.com/reconhub/distcrete
+  repository: https://CRAN.R-project.org/package=distcrete
+  authors:
+  - family-names: FitzJohn
+    given-names: Rich
+    email: rich.fitzjohn@gmail.com
+  - family-names: Cori
+    given-names: Anne
+  - family-names: Jombart
+    given-names: Thibaut
+  year: '2023'
+- type: software
+  title: distributional
+  abstract: 'distributional: Vectorised Probability Distributions'
+  notes: Suggests
+  url: https://pkg.mitchelloharawild.com/distributional/
+  repository: https://CRAN.R-project.org/package=distributional
+  authors:
+  - family-names: O'Hara-Wild
+    given-names: Mitchell
+    email: mail@mitchelloharawild.com
+    orcid: https://orcid.org/0000-0001-6729-7695
+  - family-names: Kay
+    given-names: Matthew
+    orcid: https://orcid.org/0000-0001-9446-0419
+  - family-names: Hayes
+    given-names: Alex
+    orcid: https://orcid.org/0000-0002-4985-5160
+  year: '2023'
 - type: software
   title: dplyr
   abstract: 'dplyr: A Grammar of Data Manipulation'
@@ -89,54 +164,10 @@ references:
     orcid: https://orcid.org/0000-0003-4777-038X
   year: '2023'
 - type: software
-  title: tidyr
-  abstract: 'tidyr: Tidy Messy Data'
-  notes: Suggests
-  url: https://tidyr.tidyverse.org
-  repository: https://CRAN.R-project.org/package=tidyr
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@posit.co
-  - family-names: Vaughan
-    given-names: Davis
-    email: davis@posit.co
-  - family-names: Girlich
-    given-names: Maximilian
-  year: '2023'
-- type: software
-  title: purrr
-  abstract: 'purrr: Functional Programming Tools'
-  notes: Suggests
-  url: https://purrr.tidyverse.org/
-  repository: https://CRAN.R-project.org/package=purrr
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@rstudio.com
-    orcid: https://orcid.org/0000-0003-4757-117X
-  - family-names: Henry
-    given-names: Lionel
-    email: lionel@rstudio.com
-  year: '2023'
-- type: software
-  title: scales
-  abstract: 'scales: Scale Functions for Visualization'
-  notes: Suggests
-  url: https://scales.r-lib.org
-  repository: https://CRAN.R-project.org/package=scales
-  authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@rstudio.com
-  - family-names: Seidel
-    given-names: Dana
-  year: '2023'
-- type: software
   title: forcats
   abstract: 'forcats: Tools for Working with Categorical Variables (Factors)'
   notes: Suggests
-  url: https://forcats.tidyverse.org
+  url: https://forcats.tidyverse.org/
   repository: https://CRAN.R-project.org/package=forcats
   authors:
   - family-names: Wickham
@@ -179,17 +210,17 @@ references:
     orcid: https://orcid.org/0000-0002-9415-4582
   year: '2023'
 - type: software
-  title: testthat
-  abstract: 'testthat: Unit Testing for R'
+  title: incidence2
+  abstract: 'incidence2: Compute, Handle and Plot Incidence of Dated Events'
   notes: Suggests
-  url: https://testthat.r-lib.org
-  repository: https://CRAN.R-project.org/package=testthat
+  url: https://www.reconverse.org/incidence2/
+  repository: https://CRAN.R-project.org/package=incidence2
   authors:
-  - family-names: Wickham
-    given-names: Hadley
-    email: hadley@rstudio.com
+  - family-names: Taylor
+    given-names: Tim
+    email: tim.taylor@hiddenelephants.co.uk
+    orcid: https://orcid.org/0000-0002-8587-7113
   year: '2023'
-  version: '>= 3.0.0'
 - type: software
   title: knitr
   abstract: 'knitr: A General-Purpose Package for Dynamic Report Generation in R'
@@ -203,16 +234,36 @@ references:
     orcid: https://orcid.org/0000-0003-0645-5666
   year: '2023'
 - type: software
-  title: bookdown
-  abstract: 'bookdown: Authoring Books and Technical Documents with R Markdown'
+  title: purrr
+  abstract: 'purrr: Functional Programming Tools'
   notes: Suggests
-  url: https://pkgs.rstudio.com/bookdown/
-  repository: https://CRAN.R-project.org/package=bookdown
+  url: https://purrr.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=purrr
   authors:
-  - family-names: Xie
-    given-names: Yihui
-    email: xie@yihui.name
-    orcid: https://orcid.org/0000-0003-0645-5666
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  year: '2023'
+- type: software
+  title: scales
+  abstract: 'scales: Scale Functions for Visualization'
+  notes: Suggests
+  url: https://scales.r-lib.org
+  repository: https://CRAN.R-project.org/package=scales
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Pedersen
+    given-names: Thomas Lin
+    email: thomas.pedersen@posit.co
+    orcid: https://orcid.org/0000-0002-5147-4711
+  - family-names: Seidel
+    given-names: Dana
   year: '2023'
 - type: software
   title: spelling
@@ -230,62 +281,30 @@ references:
     email: james.hester@rstudio.com
   year: '2023'
 - type: software
-  title: epiparameter
-  abstract: 'epiparameter: Library of Epidemiological Parameters'
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
   notes: Suggests
-  url: https://epiverse-trace.github.io/epiparameter/
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
   authors:
-  - family-names: Lambert
-    given-names: Joshua W.
-    email: joshua.lambert@lshtm.ac.uk
-    orcid: https://orcid.org/0000-0001-5218-3046
-  - family-names: Kucharski
-    given-names: Adam
-    email: adam.kucharski@lshtm.ac.uk
-    orcid: https://orcid.org/0000-0001-8814-9421
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
   year: '2023'
+  version: '>= 3.0.0'
 - type: software
-  title: incidence2
-  abstract: 'incidence2: Compute, Handle and Plot Incidence of Dated Events'
+  title: tidyr
+  abstract: 'tidyr: Tidy Messy Data'
   notes: Suggests
-  url: https://github.com/reconverse/incidence2
-  repository: https://CRAN.R-project.org/package=incidence2
+  url: https://tidyr.tidyverse.org
+  repository: https://CRAN.R-project.org/package=tidyr
   authors:
-  - family-names: Taylor
-    given-names: Tim
-    email: tim.taylor@hiddenelephants.co.uk
-    orcid: https://orcid.org/0000-0002-8587-7113
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Vaughan
+    given-names: Davis
+    email: davis@posit.co
+  - family-names: Girlich
+    given-names: Maximilian
   year: '2023'
-- type: software
-  title: outbreaks
-  abstract: 'outbreaks: A Collection of Disease Outbreak Data'
-  notes: Suggests
-  url: https://github.com/reconhub/outbreaks
-  repository: https://CRAN.R-project.org/package=outbreaks
-  authors:
-  - family-names: Jombart
-    given-names: Thibaut
-    email: thibaut.jombart@gmail.com
-  - family-names: Frost
-    given-names: Simon
-  - family-names: Nouvellet
-    given-names: Pierre
-  - family-names: Campbell
-    given-names: Finlay
-    email: finlaycampbell93@gmail.com
-  - family-names: Sudre
-    given-names: Bertrand
-    email: bertrand.sudre@edc.europa.eu
-  year: '2023'
-- type: software
-  title: 'R: A Language and Environment for Statistical Computing'
-  notes: Depends
-  url: https://www.R-project.org/
-  authors:
-  - name: R Core Team
-  location:
-    name: Vienna, Austria
-  year: '2023'
-  institution:
-    name: R Foundation for Statistical Computing
-  version: '>= 3.5.0'
