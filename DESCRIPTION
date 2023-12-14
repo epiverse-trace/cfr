@@ -2,73 +2,58 @@ Package: cfr
 Title: Estimate Disease Severity and Case Ascertainment
 Version: 0.1.0.9000
 Authors@R: c(
-    person(
-        given = "Pratik R.", family = "Gupte", role = c("aut", "cre", "cph"), email = "pratik.gupte@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-5294-7819")
-        ),
-    person(
-        given = "Adam", family = "Kucharski", role = c("aut", "cph"), email = "adam.kucharski@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-8814-9421")
-        ),
-    person(
-        given = "Tim", family = "Russell", role = c("aut", "cph"), email = "timothy.russell@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-5610-6080")
-        ),
-    person(
-        given = "Joshua W.", family = "Lambert", role = c("rev"), email = "joshua.lambert@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-5218-3046")
-        ),
-    person(
-        given = "Hugo", family = "Gruson", role = c("rev"), email = "hugo.gruson@data.org",
-        comment = c(ORCID = "0000-0002-4094-1476")
-        ),
-    person(
-        given = "Tim", family = "Taylor", role = c("rev"), email = "tim.taylor@hiddenelephants.co.uk",
-        comment = c(ORCID = "0000-0002-8587-7113")
-        ),
-    person(
-        given = "James M.", family = "Azam", role = c("rev"), email = "james.azam@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-5782-7330")
-        ),
-    person(
-        given = "Abdoelnaser M.", family = "Degoot", role = c("rev"), email = "abdoelnaser-mahmood.degoot@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0001-8788-2496")
-        ),
-    person(
-        given = "Sebastian", family = "Funk", role = c("rev"), email = "sebastian.funk@lshtm.ac.uk",
-        comment = c(ORCID = "0000-0002-2842-3406")
-        )
-    )
-Description: Estimate the severity of a disease and ascertainment of cases, as discussed in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
+    person("Pratik R.", "Gupte", , "pratik.gupte@lshtm.ac.uk", role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0001-5294-7819")),
+    person("Adam", "Kucharski", , "adam.kucharski@lshtm.ac.uk", role = c("aut", "cph"),
+           comment = c(ORCID = "0000-0001-8814-9421")),
+    person("Tim", "Russell", , "timothy.russell@lshtm.ac.uk", role = c("aut", "cph"),
+           comment = c(ORCID = "0000-0001-5610-6080")),
+    person("Joshua W.", "Lambert", , "joshua.lambert@lshtm.ac.uk", role = "rev",
+           comment = c(ORCID = "0000-0001-5218-3046")),
+    person("Hugo", "Gruson", , "hugo.gruson@data.org", role = "rev",
+           comment = c(ORCID = "0000-0002-4094-1476")),
+    person("Tim", "Taylor", , "tim.taylor@hiddenelephants.co.uk", role = "rev",
+           comment = c(ORCID = "0000-0002-8587-7113")),
+    person("James M.", "Azam", , "james.azam@lshtm.ac.uk", role = "rev",
+           comment = c(ORCID = "0000-0001-5782-7330")),
+    person("Abdoelnaser M.", "Degoot", , "abdoelnaser-mahmood.degoot@lshtm.ac.uk", role = "rev",
+           comment = c(ORCID = "0000-0001-8788-2496")),
+    person("Sebastian", "Funk", , "sebastian.funk@lshtm.ac.uk", role = "rev",
+           comment = c(ORCID = "0000-0002-2842-3406"))
+  )
+Description: Estimate the severity of a disease and ascertainment of
+    cases, as discussed in Nishiura et al. (2009)
+    <doi:10.1371/journal.pone.0006852>.
 License: MIT + file LICENSE
-URL: https://github.com/epiverse-trace/cfr, https://epiverse-trace.github.io/cfr/
+URL: https://github.com/epiverse-trace/cfr,
+    https://epiverse-trace.github.io/cfr/
 BugReports: https://github.com/epiverse-trace/cfr/issues
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.3
+Depends: 
+    R (>= 3.5.0)
 Imports:
     checkmate,
     stats
 Suggests: 
+    bookdown,
+    data.table,
+    distcrete,
+    distributional,
     dplyr,
-    tidyr,
-    purrr,
-    scales,
     forcats,
     ggplot2,
-    testthat (>= 3.0.0),
-    knitr,
-    bookdown,
-    spelling,
     incidence2,
-    data.table,
-    distributional,
-    distcrete
+    knitr,
+    purrr,
+    scales,
+    spelling,
+    testthat (>= 3.0.0),
+    tidyr
+VignetteBuilder: 
+    knitr
+Config/Needs/website:epiverse-trace/epiversetheme
 Config/testthat/edition: 3
-Config/Needs/website:
-    epiverse-trace/epiversetheme
-Depends: 
-    R (>= 3.5.0)
-LazyData: true
-VignetteBuilder: knitr
+Encoding: UTF-8
 Language: en-GB
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
