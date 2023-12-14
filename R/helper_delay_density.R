@@ -35,9 +35,15 @@ test_fn_req_args <- function(fn, n_req_args = 1) {
   # for which formals(fn) would return NULL and cause the check to error
   # NOTE: errors non-informatively for specials such as `if`
   checkmate::test_function(fn) &&
-    sum(mapply(function(x, y) {
-      is.name(x) && y != "..."
-    }, formals(args(fn)), names(formals(args(fn))))) == n_req_args
+    Reduce(
+      x = Map(
+        function(x, y) {
+          is.name(x) && y != "..."
+        },
+        formals(args(fn)), names(formals(args(fn)))
+      ),
+      f = `+`
+    ) == n_req_args
 }
 
 #' @name delay_density_helpers
