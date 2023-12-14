@@ -148,7 +148,7 @@ data_cfr <- rbind(
 
 <div class="figure">
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%" />
+<img src="man/figures/README-fig-rolling-cfr-ebola-1.png" alt="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown." width="100%" />
 <p class="caption">
 Disease severity of ebola in the 1976 outbreak estimated on each day of
 the epidemic. The rolling CFR value converges to the static value
