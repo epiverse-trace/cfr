@@ -187,8 +187,7 @@ By contributing to this project, you agree to abide by its terms.
 *cfr* functionality overlaps with that of some other packages, including
 
 - [*coarseDataTools*](https://cran.r-project.org/package=coarseDataTools)
-  is an R package that allows estimation of relative [case fatality
-  risk](https://cran.r-project.org/web/packages/coarseDataTools/vignettes/CFR_vignette.html)
+  is an R package that allows estimation of relative case fatality risk
   between covariate groups while accounting for delays due to survival
   time, when numbers of deaths and recoveries over time are known. *cfr*
   uses simpler methods from Nishiura et al. ([2009](#ref-nishiura2009))
