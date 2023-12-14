@@ -113,7 +113,7 @@ data_cfr <- rbind(
 )
 ```
 
-```{r echo=FALSE, fig.cap="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown."}
+```{r fig-rolling-cfr-ebola, echo=FALSE, fig.cap="Disease severity of ebola in the 1976 outbreak estimated on each day of the epidemic. The rolling CFR value converges to the static value towards the end of the outbreak. Both corrected and uncorrected estimates are shown."}
 library(ggplot2)
 
 # visualise both corrected and uncorrected rolling estimates
