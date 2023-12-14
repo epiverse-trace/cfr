@@ -16,3 +16,14 @@ articles:
   navbar: Handling delay distributions
   contents:
   - delay_distributions
+reference:
+- title: Estimating severity
+  contents: contains("cfr")
+- title: Estimating deaths and ascertainment
+  contents: contains("estimate")
+- title: Data preparation
+  contents: contains("prepare")
+- title: Package data
+  contents:
+    - contains("ebola")
+    - contains("covid")
