@@ -112,10 +112,13 @@ cfr_static <- function(data,
   )
   # check that data$date is a date column
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
-  # check for excessive missing date and throw an error
+  # check for irregular time series
+  # get date interval
+  data_interval <- unique(diff(data$date))
+
   stopifnot(
-    "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
+    "Input data must have a regular sequence of dates" =
+      length(data_interval) == 1 # use numeric 1, not integer
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
@@ -131,7 +134,8 @@ cfr_static <- function(data,
     # used as a replacement for total deaths in the original severity formula
     df_corrected <- estimate_outcomes(
       data = data,
-      delay_density = delay_density
+      delay_density = delay_density,
+      data_interval = data_interval
     )
 
     # calculating the maximum likelihood estimate and 95% confidence interval
