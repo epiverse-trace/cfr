@@ -4,7 +4,7 @@
 \alias{estimate_outcomes}
 \title{Estimate known outcomes of cases using a delay distribution}
 \usage{
-estimate_outcomes(data, delay_density)
+estimate_outcomes(data, delay_density, data_interval = 1)
 }
 \arguments{
 \item{data}{A \verb{<data.frame>} containing the outbreak data. A daily time
@@ -27,6 +27,9 @@ May be \code{NULL}, for no delay correction, or a function that returns the
 density function of a distribution to evaluate
 density at user-specified values, e.g.
 \code{function(x) stats::dgamma(x = x, shape = 5, scale = 1)}.}
+
+\item{data_interval}{The interval, in days, at which case and death data are
+provided in \code{data}. Defaults to 1 for daily data.}
 }
 \value{
 A \verb{<data.frame>} with the columns in \code{data}, and with two additional

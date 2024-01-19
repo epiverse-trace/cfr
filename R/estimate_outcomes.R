@@ -35,6 +35,8 @@
 #' estimates of the known death outcomes.
 #'
 #' @inheritParams cfr_static
+#' @param data_interval The interval, in days, at which case and death data are
+#' provided in `data`. Defaults to 1 for daily data.
 #'
 #' @return A `<data.frame>` with the columns in `data`, and with two additional
 #' columns:
@@ -62,7 +64,8 @@
 #'
 #' head(estimated_outcomes)
 estimate_outcomes <- function(data,
-                              delay_density) {
+                              delay_density,
+                              data_interval = 1) {
   # some input checking; this function is mainly called internally
   # but currently exported
   # input checking is a candidate for removal
@@ -88,7 +91,7 @@ estimate_outcomes <- function(data,
         test_fn_num_out(delay_density)) || is.null(delay_density)
   )
 
-  pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L))
+  pmf_vals <- delay_density(seq(from = 0, to = nrow(data) - 1L) * data_interval)
 
   # calculate expected outcomes
   # NOTE: assumes daily data, which is checked in higher level functions
