@@ -159,7 +159,7 @@ The pseudo-code below shows how this might work.
 # NOTE: this is pseudo-code
 EPIDIST_OBJECT <- ACCESS_DISTRIBUTION(disease, study)
 
-cfr_*(data = data, delay_density = function(x) density(<EPIDIST_OBJECT> x))
+cfr_*(data = data, delay_density = function(x) density(<EPIDIST_OBJECT>, x))
 ```
 
 ## References
