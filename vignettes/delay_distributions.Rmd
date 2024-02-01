@@ -124,8 +124,8 @@ cfr_static(
 
 ### Using _distcrete_
 
-The _distcrete_ package provides support for discretised distributions.
-Here, we show an example for the discretised Gamma distribution.
+The _distcrete_ package provides support for discrete distributions.
+Here, we show an example for the discrete Gamma distribution.
 **Note that** the density function for `<distcrete>` objects is encapsulated, and can be passed directly to the `delay_density` argument.
 
 ```{r}
@@ -142,8 +142,16 @@ cfr_static(
 ```
 
 ::: {.alert .alert-warning}
-**Note that** discretised distributions are the more appropriate choice to be passed to `cfr_*()`, as we are usually working with daily case and death data.
-We do use continuous distributions in many examples as we do not expect this difference to bias the estimates excessively.
+## Using continuous and discrete distributions
+
+**Note that** discrete distributions are the more appropriate choice to be passed to `cfr_*()`, as we are usually working with daily case and death data.
+
+We do use continuous distributions in many examples as onset-to-death delays are typically long with large variance.
+Evaluating the probability distribution function of such distributions at discrete points (here, days) is similar to evaluating the probability mass function of the equivalent discrete distribution.
+
+However, note that this assumption may not be appropriate for more strongly peaked distributions, i.e., where onset-to-death is strongly peaked with a low variance, as the difference between the PDF and PMF is likely to be larger on average (than for a more spread out distribution).
+
+Further, _cfr_ functions tally estimated death counts (calculated by convolving cases and densities), so that any underestimates due to the PDF-PMF discrepancy at one end of the distribution help to cancel out overestimates at the end of the distribution.
 :::
 
 ## Links to _epiparameter_
