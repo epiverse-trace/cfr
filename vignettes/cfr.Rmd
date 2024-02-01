@@ -79,7 +79,7 @@ We obtain the disease's onset-to-death distribution from a more recent Ebola out
 The onset-to-death distribution is considered to be Gamma distributed, with a shape $k$ = 2.40 and a scale of $\theta$ = 3.33.
 
 ::: {.alert .alert-warning}
-**Note that** while we use a continuous distribution here, it is more appropriate to use a discretised distribution instead as we are working with daily data.
+**Note that** while we use a continuous distribution here, it is more appropriate to use a discrete distribution instead as we are working with daily data.
 
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
