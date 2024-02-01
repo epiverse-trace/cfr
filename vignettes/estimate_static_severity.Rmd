@@ -76,8 +76,8 @@ We retrieve the parameters of the distribution of durations (also called delays)
 This is a Gamma distribution with shape $k$ = 2.40 and scale $\theta$ = 3.33.
 
 ::: {.alert .alert-warning}
-**Note that** while we shall use a continuous distribution here as we do not expect this difference to bias the estimates excessively, it is more appropriate to use a discretised distribution instead as we are working with daily data.
-See the [vignette on delay distributions](delay_distributions.html) for more on using discretised distributions with _cfr_.
+**Note that** while we shall use a continuous distribution here, it is more appropriate to use a discrete distribution instead as we are working with daily data.
+See the [vignette on delay distributions](delay_distributions.html) for more on when using a continuous instead of discrete distribution is acceptable, and on using discrete distributions with _cfr_.
 
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
@@ -152,7 +152,7 @@ head(df_covid_uk)
 We retrieve the appropriate distribution for Covid-19 from @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
 ::: {.alert .alert-warning}
-**Note that** @linton2020 fitted a discretised lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.
+**Note that** @linton2020 fitted a discrete lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.
 :::
 
 ### Estimating the naive and corrected CFR
