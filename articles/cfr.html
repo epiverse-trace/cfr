@@ -164,7 +164,7 @@ See the <a href="data_from_incidence2.html">vignette on working with data from <
 <p>We obtain the disease’s onset-to-death distribution from a more recent Ebola outbreak, reported in <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.
 The onset-to-death distribution is considered to be Gamma distributed, with a shape <span class="math inline">\(k\)</span> = 2.40 and a scale of <span class="math inline">\(\theta\)</span> = 3.33.</p>
 <div class="alert alert-warning">
-<p><strong>Note that</strong> while we use a continuous distribution here, it is more appropriate to use a discretised distribution instead as we are working with daily data.</p>
+<p><strong>Note that</strong> while we use a continuous distribution here, it is more appropriate to use a discrete distribution instead as we are working with daily data.</p>
 <p><strong>Note also</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
 <p>The forthcoming <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.

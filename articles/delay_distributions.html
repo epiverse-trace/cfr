@@ -202,8 +202,8 @@ See the <a href="https://cran.r-project.org/view=Distributions" class="external-
 <div class="section level3">
 <h3 id="using-distcrete">Using <em>distcrete</em><a class="anchor" aria-label="anchor" href="#using-distcrete"></a>
 </h3>
-<p>The <em>distcrete</em> package provides support for discretised distributions.
-Here, we show an example for the discretised Gamma distribution.
+<p>The <em>distcrete</em> package provides support for discrete distributions.
+Here, we show an example for the discrete Gamma distribution.
 <strong>Note that</strong> the density function for <code>&lt;distcrete&gt;</code> objects is encapsulated, and can be passed directly to the <code>delay_density</code> argument.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># using {distcrete} and parameters from Barry et al. 2018</span></span>
@@ -218,11 +218,17 @@ Here, we show an example for the discretised Gamma distribution.
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
 <span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
-</details><div class="alert alert-warning">
-<p><strong>Note that</strong> discretised distributions are the more appropriate choice to be passed to <code>cfr_*()</code>, as we are usually working with daily case and death data.
-We do use continuous distributions in many examples as we do not expect this difference to bias the estimates excessively.</p>
+</details>
 </div>
 </div>
+<div class="section level2 alert alert-warning">
+<h2 id="using-continuous-and-discrete-distributions">Using continuous and discrete distributions<a class="anchor" aria-label="anchor" href="#using-continuous-and-discrete-distributions"></a>
+</h2>
+<p><strong>Note that</strong> discrete distributions are the more appropriate choice to be passed to <code>cfr_*()</code>, as we are usually working with daily case and death data.</p>
+<p>We do use continuous distributions in many examples as onset-to-death delays are typically long with large variance.
+Evaluating the probability distribution function of such distributions at discrete points (here, days) is similar to evaluating the probability mass function of the equivalent discrete distribution.</p>
+<p>However, note that this assumption may not be appropriate for more strongly peaked distributions, i.e., where onset-to-death is strongly peaked with a low variance, as the difference between the PDF and PMF is likely to be larger on average (than for a more spread out distribution).</p>
+<p>Further, <em>cfr</em> functions tally estimated death counts (calculated by convolving cases and densities), so that any underestimates due to the PDF-PMF discrepancy at one end of the distribution help to cancel out overestimates at the end of the distribution.</p>
 </div>
 <div class="section level2">
 <h2 id="links-to-epiparameter">Links to <em>epiparameter</em><a class="anchor" aria-label="anchor" href="#links-to-epiparameter"></a>

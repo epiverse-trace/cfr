@@ -162,8 +162,8 @@ We want to estimate the proportion of cases being ascertained given case and dea
 <span><span class="co">#&gt; 180 2020-06-30 United Kingdom   449     70</span></span></code></pre></div>
 </details><p>We obtain the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a log-normal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
 <div class="alert alert-warning">
-<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discretised lognormal distribution — but we use a continuous distribution here as we do not expect this difference to bias the estimates excessively.
-See the <a href="delay_distributions.html">vignette on delay distributions</a> for more on using discretised distributions with <em>cfr</em>.</p>
+<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
+See the <a href="delay_distributions.html">vignette on delay distributions</a> for more on when using a continuous instead of discrete distribution is acceptable, and on using discrete distributions with <em>cfr</em>.</p>
 <p><strong>Note that</strong> we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
 <div class="section level3">
