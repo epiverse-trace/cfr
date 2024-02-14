@@ -14,13 +14,14 @@ knitr::opts_chunk$set(
 )
 ```
 
-This document is not a legally binding contract but present a simplified
+This document is not a legally binding contract but presents a simplified
 overview of how this package interacts with the rest of your system, the
 internet, third-party services, etc., and may inform compliance with
 institutional policies or international legislation.
 
-Although this is not a contractual document, we take user rights seriously and
-welcome any reports of non-compliance with the principles outlined here.
+Although this is not a contractual document, we take user rights seriously, and
+welcome any reports of instances where the behaviour of the package does not
+conform with the principles outlined here.
 
 ## Scope of regulations
 
