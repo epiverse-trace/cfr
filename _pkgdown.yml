@@ -19,7 +19,7 @@ articles:
 - title: Software permissions and regulations
   navbar: Sotware permissions and regulations
   contents:
-  - software_permissions
+  - software-permissions
 reference:
 - title: Estimating severity
   contents: contains("cfr")
