@@ -1,0 +1,50 @@
+---
+title: "Software permissions and regulations"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Software permissions and regulations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This document is not a legally binding contract but presents a simplified
+overview of how this package interacts with the rest of your system, the
+internet, third-party services, etc., and may inform compliance with
+institutional policies or international legislation.
+
+Although this is not a contractual document, we take user rights seriously, and
+welcome any reports of instances where the behaviour of the package does not
+conform with the principles outlined here.
+
+## Scope of regulations
+
+This package IS NOT [Software as Medical Device (SaMD)](https://www.fda.gov/medical-devices/digital-health-center-excellence/software-medical-device-samd).
+
+## Data privacy and integrity
+
+- This package DOES NOT read any data from the user computer
+- This package DOES NOT write any data on the user computer
+- This package DOES NOT interact with external peripherals connected to the user computer (such as, but not limited to: microphone, webcam, printer, etc.)
+ 
+## Internet access
+
+- This package DOES NOT download data from the internet
+- This package DOES NOT upload data to the internet
+- This package CAN be used offline
+
+## Registration and third parties
+
+- Usage of this package DOES NOT require registration
+- Usage of this package DOES NOT involve third-party services
+- Usage of this package IS NOT restricted to certain geographical regions
+
+## Updates
+
+This package IS NOT automatically updated. Note that this means security updates are not automatically applied.
