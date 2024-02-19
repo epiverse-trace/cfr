@@ -8,7 +8,8 @@ articles:
   estimate_ascertainment: estimate_ascertainment.html
   estimate_static_severity: estimate_static_severity.html
   estimate_time_varying_severity: estimate_time_varying_severity.html
-last_built: 2024-02-13T11:11Z
+  software-permissions: software-permissions.html
+last_built: 2024-02-19T09:22Z
 urls:
   reference: https://epiverse-trace.github.io/cfr/reference
   article: https://epiverse-trace.github.io/cfr/articles
