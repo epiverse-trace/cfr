@@ -20,6 +20,7 @@ knitr::opts_chunk$set(
 # {{ packagename }}: Estimate disease severity and under-reporting <img src="man/figures/logo.svg" align="right" width="130"/>
 
 <!-- badges: start -->
+<a href="https://app.digitalpublicgoods.net/a/11092"><img src="https://digitalpublicgoods.net/registry/dpgicon.svg" alt="Digital Public Good" height="25">
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit/)
 [![R-CMD-check](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/{{ gh_repo }}/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/{{ gh_repo }}/branch/main/graph/badge.svg)](https://app.codecov.io/gh/{{ gh_repo }}?branch=main)
