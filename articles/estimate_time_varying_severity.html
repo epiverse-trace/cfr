@@ -108,7 +108,7 @@
     
     
 <p>The severity of a disease (commonly understood as the case fatality risk, CFR) might change during the course of an outbreak for multiple biological, epidemiological and behavioural reasons.
-<code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> offers a convenient way to understand changes in disease severity over time using an approach with a finer time resolution that calculates severity over a moving time window, using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>.</p>
+<code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> offers a convenient way to understand changes in disease severity over time using an approach with a finer time resolution that calculates severity over a moving time window, using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>.</p>
 <div class="alert alert-warning">
 <p>New to calculating disease severity using <em>cfr</em>? You might want to see the <a href="cfr.html">“Get started” vignette first</a>.</p>
 </div>
@@ -178,9 +178,9 @@ We want to estimate how disease severity in the form of the case fatality risk (
 <div class="section level3">
 <h3 id="onset-to-death-distribution-for-covid-19">Onset-to-death distribution for Covid-19<a class="anchor" aria-label="anchor" href="#onset-to-death-distribution-for-covid-19"></a>
 </h3>
-<p>We retrieve the appropriate distribution of the duration between symptom onset and deaths reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+<p>We retrieve the appropriate distribution of the duration between symptom onset and deaths reported in <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
 <div class="alert alert-warning">
-<p><span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
+<p><span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
 See the <a href="delay_distributions.html">vignette on delay distributions</a> for more on when using a continuous instead of discrete distribution is acceptable, and on using discrete distributions with <em>cfr</em>.</p>
 <p><strong>Note also</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
@@ -252,7 +252,8 @@ Users should apply smoothing if there are reporting artefacts such as lower repo
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 93 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 93 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
 <span style="display:block;" id="fig:unnamed-chunk-5"></span>
 <img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-5-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
@@ -336,7 +337,8 @@ Figure 1: Example plot of the naive time-varying CFR. We calculate the time-vary
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_classic</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Removed 215 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<span><span class="co">#&gt; Warning: Removed 215 rows containing missing values or values outside the scale range</span></span>
+<span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
 </details><div class="figure">
 <span style="display:block;" id="fig:unnamed-chunk-8"></span>
 <img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-8-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
@@ -348,7 +350,7 @@ Figure 2: Example plot of the corrected time-varying CFR. We calculate the time-
 <div class="section level2">
 <h2 id="details-adjusting-for-delays-between-two-time-series">Details: Adjusting for delays between two time series<a class="anchor" aria-label="anchor" href="#details-adjusting-for-delays-between-two-time-series"></a>
 </h2>
-<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> estimates the number of cases which have a known outcome over time following <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>, by calculating a quantity <span class="math inline">\(k_t\)</span> for each day within the input data, which represents the number of cases with a known adverse outcome (usually death), on day <span class="math inline">\(t\)</span>.</p>
+<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> estimates the number of cases which have a known outcome over time following <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>, by calculating a quantity <span class="math inline">\(k_t\)</span> for each day within the input data, which represents the number of cases with a known adverse outcome (usually death), on day <span class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
   k_t = \sum_{j = 0}^t c_t f_{j - t}.
 \]</span></p>
@@ -366,7 +368,7 @@ Figure 2: Example plot of the corrected time-varying CFR. We calculate the time-
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-linton2020" class="csl-entry">
 Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and Hiroshi Nishiura. 2020. <span>“Incubation Period and Other Epidemiological Characteristics of 2019 Novel Coronavirus Infections with Right Truncation: A Statistical Analysis of Publicly Available Case Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
 </div>

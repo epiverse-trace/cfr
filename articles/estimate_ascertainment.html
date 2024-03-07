@@ -163,9 +163,9 @@ We want to estimate the proportion of cases being ascertained given case and dea
 <span><span class="co">#&gt; 178 2020-06-28 United Kingdom   666     79</span></span>
 <span><span class="co">#&gt; 179 2020-06-29 United Kingdom   653     73</span></span>
 <span><span class="co">#&gt; 180 2020-06-30 United Kingdom   449     70</span></span></code></pre></div>
-</details><p>We obtain the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a log-normal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+</details><p>We obtain the appropriate distribution reported in <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span>; this is a log-normal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
 <div class="alert alert-warning">
-<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
+<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
 See the <a href="delay_distributions.html">vignette on delay distributions</a> for more on when using a continuous instead of discrete distribution is acceptable, and on using discrete distributions with <em>cfr</em>.</p>
 <p><strong>Note that</strong> we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
@@ -173,10 +173,10 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <h3 id="estimating-the-proportion-of-cases-that-have-been-ascertained">Estimating the proportion of cases that have been ascertained<a class="anchor" aria-label="anchor" href="#estimating-the-proportion-of-cases-that-have-been-ascertained"></a>
 </h3>
 <p>We use the <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function to calculate the static CFR (internally), and the overall ascertainment for the Covid-19 pandemic in the U.K.</p>
-<p>We assume that the “true” CFR of Covid-19 is 0.014 (i.e. 1.4%) <span class="citation">(<a href="#ref-verity2020" role="doc-biblioref">Verity et al. 2020</a>)</span>.
+<p>We assume that the “true” CFR of Covid-19 is 0.014 (i.e. 1.4%) <span class="citation">(<a href="#ref-verity2020">Verity et al. 2020</a>)</span>.
 Future plans for this package include ability to incorporate uncertainty in CFR estimates when calculating under-ascertainment.</p>
 <div class="alert alert-info">
-<p><strong>Note that</strong> the CFR from <span class="citation">Verity et al. (<a href="#ref-verity2020" role="doc-biblioref">2020</a>)</span> is based on lab-confirmed and clinically diagnosed cases from Wuhan, China.
+<p><strong>Note that</strong> the CFR from <span class="citation">Verity et al. (<a href="#ref-verity2020">2020</a>)</span> is based on lab-confirmed and clinically diagnosed cases from Wuhan, China.
 Since the case definition for the U.K. is different from that used here, the ascertainment ratio estimated is likely to be biased.</p>
 <p>Furthermore, by ignoring uncertainty in this estimate, the ascertainment ratio is likely to be over-precise as well.</p>
 </div>
@@ -269,7 +269,7 @@ Figure 1: Example plot of the ascertainment ratio by country during the early st
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-linton2020" class="csl-entry">
 Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and Hiroshi Nishiura. 2020. <span>“Incubation Period and Other Epidemiological Characteristics of 2019 Novel Coronavirus Infections with Right Truncation: A Statistical Analysis of Publicly Available Case Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
 </div>

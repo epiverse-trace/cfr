@@ -112,7 +112,7 @@ During an outbreak there is often a delay between cases being reported, and the 
 Simply dividing total deaths to date by total cases to date may lead to an underestimate of the CFR rate in real-time, because many cases have outcomes that are not yet known.</p>
 <p>Knowing the distribution of these delays from previous outbreaks of the same (or similar) diseases, and accounting for them, can therefore help ensure less biased estimates of disease severity.
 See the <strong>Concept</strong> section at the end of this vignette for more on how reporting delays bias CFR estimates.</p>
-<p>The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span>, and which are implemented in the <em>cfr</em> package.</p>
+<p>The severity of a disease can be estimated while correcting for delays in reporting using methods outlines in <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>, and which are implemented in the <em>cfr</em> package.</p>
 <div class="section level2 unnumbered alert alert-primary">
 <h2 id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
 </h2>
@@ -142,11 +142,11 @@ See the <strong>Concept</strong> section at the end of this vignette for more on
 </details><div class="section level2 unnumbered">
 <h2 id="case-and-death-data">Case and death data<a class="anchor" aria-label="anchor" href="#case-and-death-data"></a>
 </h2>
-<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset curated by Our World in Data</a>, a similar dataset made available through the R package <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em></a> <span class="citation">(<a href="#ref-palmer2021" role="doc-biblioref">Palmer et al. 2021</a>)</span>, or data on outbreaks of other infections made available in <a href="https://cran.r-project.org/package=outbreaks" class="external-link"><em>outbreaks</em></a>.</p>
+<p>Data on cases and deaths may be obtained from a number of publicly accessible sources, such as the <a href="https://ourworldindata.org/coronavirus" class="external-link">global Covid-19 dataset curated by Our World in Data</a>, a similar dataset made available through the R package <a href="https://github.com/epiforecasts/covidregionaldata" class="external-link"><em>covidregionaldata</em></a> <span class="citation">(<a href="#ref-palmer2021">Palmer et al. 2021</a>)</span>, or data on outbreaks of other infections made available in <a href="https://cran.r-project.org/package=outbreaks" class="external-link"><em>outbreaks</em></a>.</p>
 <p>In an outbreak response scenario, such data may also be compiled and shared locally.
 See the <a href="data_from_incidence2.html">vignette on working with data from <em>incidence2</em></a> on working with a common format of incidence data which can help interoperability with other formats.</p>
 <p>The <em>cfr</em> package requires only a data frame with three columns, “date”, “cases”, and “deaths”, giving the daily number of reported cases and deaths.</p>
-<p>Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with this package <span class="citation">(<a href="#ref-camacho2014" role="doc-biblioref">Camacho et al. 2014</a>)</span>.</p>
+<p>Here, we use some data from the first Ebola outbreak, in the Democratic Republic of the Congo in 1976, that is included with this package <span class="citation">(<a href="#ref-camacho2014">Camacho et al. 2014</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
 <span></span>
@@ -164,7 +164,7 @@ See the <a href="data_from_incidence2.html">vignette on working with data from <
 <div class="section level2">
 <h2 id="obtaining-data-on-reporting-delays">Obtaining data on reporting delays<a class="anchor" aria-label="anchor" href="#obtaining-data-on-reporting-delays"></a>
 </h2>
-<p>We obtain the disease’s onset-to-death distribution from a more recent Ebola outbreak, reported in <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.
+<p>We obtain the disease’s onset-to-death distribution from a more recent Ebola outbreak, reported in <span class="citation">Barry et al. (<a href="#ref-barry2018">2018</a>)</span>.
 The onset-to-death distribution is considered to be Gamma distributed, with a shape <span class="math inline">\(k\)</span> = 2.40 and a scale of <span class="math inline">\(\theta\)</span> = 3.33.</p>
 <div class="alert alert-warning">
 <p><strong>Note that</strong> while we use a continuous distribution here, it is more appropriate to use a discrete distribution instead as we are working with daily data.</p>
@@ -199,7 +199,7 @@ When the main factor in low ascertainment is the lack of (access to) testing cap
 </div>
 <p>The <code><a href="../reference/estimate_ascertainment.html">estimate_ascertainment()</a></code> function estimates the ascertainment ratio using daily case and death data, the known severity of the disease from previous outbreaks, and optionally a delay distribution of onset-to-death.</p>
 <p>Here, we estimate reporting in the 1976 Ebola outbreak in the Congo, assuming that Ebola virus disease (at that time) had a baseline severity of about 0.7 (70% of cases result in deaths), based on CFR values estimated in later, larger datasets.
-We use the onset-to-death distribution from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
+We use the onset-to-death distribution from <span class="citation">Barry et al. (<a href="#ref-barry2018">2018</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># estimate reporting with a baseline severity of 70%</span></span>
 <span><span class="fu"><a href="../reference/estimate_ascertainment.html">estimate_ascertainment</a></span><span class="op">(</span></span>
@@ -229,7 +229,7 @@ Hence, adjusting for such delays using an appropriate delay distribution is esse
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-barry2018" class="csl-entry">
 Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et al. 2018. <span>“Outbreak of Ebola virus disease in the Democratic Republic of the Congo, April–May, 2018: an epidemiological study.”</span> <em>The Lancet</em> 392 (10143): 213–21. <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">https://doi.org/10.1016/S0140-6736(18)31387-4</a>.
 </div>

@@ -109,7 +109,7 @@
     
 <p>Understanding disease severity, and especially the case fatality risk (CFR), is key to outbreak response.
 During an outbreak there is often a delay between cases being reported, and the outcomes (for CFR, deaths) of those cases being known, and accounting for these leads to better estimates of CFR.
-<code><a href="../reference/cfr_static.html">cfr_static()</a></code> can be used to calculate a static estimate of the severity of an outbreak using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span> while accounting for the distribution of reporting delays.</p>
+<code><a href="../reference/cfr_static.html">cfr_static()</a></code> can be used to calculate a static estimate of the severity of an outbreak using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span> while accounting for the distribution of reporting delays.</p>
 <div class="alert alert-warning">
 <p>New to calculating disease severity using <em>cfr</em>? You might want to see the <a href="cfr.html">“Get started” vignette first</a>.</p>
 </div>
@@ -135,7 +135,7 @@ During an outbreak there is often a delay between cases being reported, and the 
 </details><div class="section level2">
 <h2 id="severity-of-the-1976-ebola-outbreak">Severity of the 1976 Ebola Outbreak<a class="anchor" aria-label="anchor" href="#severity-of-the-1976-ebola-outbreak"></a>
 </h2>
-<p>This example data comes from the 1976 Ebola virus disease (EVD, or Ebola) outbreak in the Democratic Republic of the Congo <span class="citation">(<a href="#ref-camacho2014" role="doc-biblioref">Camacho et al. 2014</a>)</span>.</p>
+<p>This example data comes from the 1976 Ebola virus disease (EVD, or Ebola) outbreak in the Democratic Republic of the Congo <span class="citation">(<a href="#ref-camacho2014">Camacho et al. 2014</a>)</span>.</p>
 <p>We focus on the roughly the first half of this dataset, by subsetting the data so that we only include days before 30th September, 1976.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
@@ -154,7 +154,7 @@ During an outbreak there is often a delay between cases being reported, and the 
 </details><div class="section level3">
 <h3 id="onset-to-death-delay-distribution">Onset-to-death delay distribution<a class="anchor" aria-label="anchor" href="#onset-to-death-delay-distribution"></a>
 </h3>
-<p>We retrieve the parameters of the distribution of durations (also called delays) between the onset of EVD symptoms and death from the literature <span class="citation">(<a href="#ref-barry2018" role="doc-biblioref">Barry et al. 2018</a>)</span>.
+<p>We retrieve the parameters of the distribution of durations (also called delays) between the onset of EVD symptoms and death from the literature <span class="citation">(<a href="#ref-barry2018">Barry et al. 2018</a>)</span>.
 This is a Gamma distribution with shape <span class="math inline">\(k\)</span> = 2.40 and scale <span class="math inline">\(\theta\)</span> = 3.33.</p>
 <div class="alert alert-warning">
 <p><strong>Note that</strong> while we shall use a continuous distribution here, it is more appropriate to use a discrete distribution instead as we are working with daily data.
@@ -248,9 +248,9 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 </details><div class="section level3">
 <h3 id="onset-to-death-distribution-for-covid-19">Onset-to-death distribution for Covid-19<a class="anchor" aria-label="anchor" href="#onset-to-death-distribution-for-covid-19"></a>
 </h3>
-<p>We retrieve the appropriate distribution for Covid-19 from <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+<p>We retrieve the appropriate distribution for Covid-19 from <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
 <div class="alert alert-warning">
-<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020" role="doc-biblioref">2020</a>)</span> fitted a discrete lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.</p>
+<p><strong>Note that</strong> <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span> fitted a discrete lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.</p>
 </div>
 </div>
 <div class="section level3">
@@ -278,7 +278,7 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <div class="section level2">
 <h2 id="details-adjusting-for-delays-between-two-time-series">Details: Adjusting for delays between two time series<a class="anchor" aria-label="anchor" href="#details-adjusting-for-delays-between-two-time-series"></a>
 </h2>
-<p><code><a href="../reference/cfr_static.html">cfr_static()</a></code> follows <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009" role="doc-biblioref">2009</a>)</span> to calculate a quantity <span class="math inline">\(u_t\)</span> for each day within the input data which represents the proportion of cases with a known adverse outcome (usually death) on day <span class="math inline">\(t\)</span>.</p>
+<p><code><a href="../reference/cfr_static.html">cfr_static()</a></code> follows <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span> to calculate a quantity <span class="math inline">\(u_t\)</span> for each day within the input data which represents the proportion of cases with a known adverse outcome (usually death) on day <span class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
   u_t = \dfrac{\sum_{i = 0}^t
         \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
@@ -302,7 +302,7 @@ We then use <span class="math inline">\(u_t\)</span> in the following likelihood
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-barry2018" class="csl-entry">
 Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et al. 2018. <span>“Outbreak of Ebola virus disease in the Democratic Republic of the Congo, April–May, 2018: an epidemiological study.”</span> <em>The Lancet</em> 392 (10143): 213–21. <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">https://doi.org/10.1016/S0140-6736(18)31387-4</a>.
 </div>

@@ -163,8 +163,8 @@ Users working with R &gt; 4.1.0 can also use the new syntax for anonymous functi
 <div class="section level2">
 <h2 id="passing-delay-distribution-density-to-cfr-functions">Passing delay distribution density to <em>cfr</em> functions<a class="anchor" aria-label="anchor" href="#passing-delay-distribution-density-to-cfr-functions"></a>
 </h2>
-<p>delay distribution density functions can be passed, as anonymous functions, to <em>cfr</em> functions as shown with the example data provided with the package <span class="citation">Camacho et al. (<a href="#ref-camacho2014" role="doc-biblioref">2014</a>)</span>.
-Parameters for the onset-to-death distribution of Ebola virus disease are taken from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>delay distribution density functions can be passed, as anonymous functions, to <em>cfr</em> functions as shown with the example data provided with the package <span class="citation">Camacho et al. (<a href="#ref-camacho2014">2014</a>)</span>.
+Parameters for the onset-to-death distribution of Ebola virus disease are taken from <span class="citation">Barry et al. (<a href="#ref-barry2018">2018</a>)</span>.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load package data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
@@ -181,7 +181,7 @@ Parameters for the onset-to-death distribution of Ebola virus disease are taken 
 <div class="section level2">
 <h2 id="using-other-distribution-representations">Using other distribution representations<a class="anchor" aria-label="anchor" href="#using-other-distribution-representations"></a>
 </h2>
-<p>While many R packages provide support for representing probability distributions, we focus on two examples, <a href="https://cran.r-project.org/package=distributional" class="external-link"><em>distributional</em></a> and <a href="https://cran.r-project.org/package=distcrete" class="external-link"><em>distcrete</em></a>, to show how closures wrapping these could be implemented, while wrapping the parameters from <span class="citation">Barry et al. (<a href="#ref-barry2018" role="doc-biblioref">2018</a>)</span>.</p>
+<p>While many R packages provide support for representing probability distributions, we focus on two examples, <a href="https://cran.r-project.org/package=distributional" class="external-link"><em>distributional</em></a> and <a href="https://cran.r-project.org/package=distcrete" class="external-link"><em>distcrete</em></a>, to show how closures wrapping these could be implemented, while wrapping the parameters from <span class="citation">Barry et al. (<a href="#ref-barry2018">2018</a>)</span>.</p>
 <p>Users may wish to use these or similar packages for better management of distributions and parameters.
 See the <a href="https://cran.r-project.org/view=Distributions" class="external-link">CRAN probability distributions task view</a> for more information on distribution packages suitable for different use cases.</p>
 <div class="section level3">
@@ -240,16 +240,16 @@ Evaluating the probability distribution function of such distributions at discre
 <p>The forthcoming <a href="https://epiverse-trace.github.io/epiparameter/" class="external-link"><em>epiparameter</em> package</a> aims to be such a library of epidemiological delay distributions.
 The dedicated <code>&lt;epidist&gt;</code> class is expected to have similar functionality to other distribution classes, allowing easy definition of density functions that can be passed to <em>cfr</em>.</p>
 <p>The pseudo-code below shows how this might work.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: this is pseudo-code</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>EPIDIST_OBJECT <span class="ot">&lt;-</span> <span class="fu">ACCESS_DISTRIBUTION</span>(disease, study)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>cfr_<span class="sc">*</span>(<span class="at">data =</span> data, <span class="at">delay_density =</span> <span class="cf">function</span>(x) <span class="fu">density</span>(<span class="sc">&lt;</span>EPIDIST_OBJECT<span class="sc">&gt;</span>, x))</span></code></pre></div>
+<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: this is pseudo-code</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>EPIDIST_OBJECT <span class="ot">&lt;-</span> <span class="fu">ACCESS_DISTRIBUTION</span>(disease, study)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>cfr_<span class="sc">*</span>(<span class="at">data =</span> data, <span class="at">delay_density =</span> <span class="cf">function</span>(x) <span class="fu">density</span>(<span class="sc">&lt;</span>EPIDIST_OBJECT<span class="sc">&gt;</span>, x))</span></code></pre></div>
 </details>
 </div>
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-barry2018" class="csl-entry">
 Barry, Ahmadou, Steve Ahuka-Mundeke, Yahaya Ali Ahmed, Yokouide Allarangar, Julienne Anoko, Brett Nicholas Archer, Aaron Aruna Abedi, et al. 2018. <span>“Outbreak of Ebola virus disease in the Democratic Republic of the Congo, April–May, 2018: an epidemiological study.”</span> <em>The Lancet</em> 392 (10143): 213–21. <a href="https://doi.org/10.1016/S0140-6736(18)31387-4" class="external-link">https://doi.org/10.1016/S0140-6736(18)31387-4</a>.
 </div>
