@@ -1,4 +1,4 @@
-# Tests for estimate_severity()
+# Tests for .estimate_severity()
 # Note that this is an internal function underlying cfr_static()
 # when corrected_for_delays is TRUE
 
@@ -17,30 +17,28 @@ df_corrected <- estimate_outcomes(
 )
 
 # run estimate_severity
-severity_estimate <- estimate_severity(
+severity_estimate <- .estimate_severity(
   total_cases = sum(df_corrected$cases),
   total_deaths = sum(df_corrected$deaths),
   total_outcomes = sum(df_corrected$estimated_outcomes),
-  poisson_threshold = poisson_threshold
+  poisson_threshold = 100
 )
 
 test_that("`estimate_severity`: Basic expectations", {
-  expect_s3_class(severity_estimate, "data.frame")
+  expect_vector(severity_estimate, numeric())
   expect_named(
     severity_estimate,
     sprintf("severity_%s", c("mean", "low", "high"))
   )
   # expect within values
   expect_true(
-    all(
-      apply(severity_estimate, 2, function(x) x >= 0.0 && x <= 1.0)
-    )
+    all(severity_estimate >= 0.0 & severity_estimate <= 1.0)
   )
   # expect that lo, me, and hi are in roughly ascending order
   expect_true(
     all(
-      severity_estimate$severity_low < severity_estimate$severity_mean &&
-        severity_estimate$severity_mean < severity_estimate$severity_high
+      severity_estimate["severity_low"] < severity_estimate["severity_mean"] &&
+        severity_estimate["severity_mean"] < severity_estimate["severity_high"]
     )
   )
   # also check for a snapshot
@@ -50,7 +48,7 @@ test_that("`estimate_severity`: Basic expectations", {
 
   # check estimate_severity with higher poisson threshold
   # forcing use of an alternative calculation
-  severity_estimate_lt <- estimate_severity(
+  severity_estimate_lt <- .estimate_severity(
     total_cases = sum(df_corrected$cases),
     total_deaths = sum(df_corrected$deaths),
     total_outcomes = sum(df_corrected$estimated_outcomes),
@@ -72,7 +70,7 @@ test_that("`estimate_severity`: Basic expectations", {
   )
 
   # run estimate_severity
-  severity_low_deaths <- estimate_severity(
+  severity_low_deaths <- .estimate_severity(
     total_cases = sum(df_corrected$cases),
     total_deaths = sum(df_corrected$deaths),
     total_outcomes = sum(df_corrected$estimated_outcomes),
@@ -84,14 +82,14 @@ test_that("`estimate_severity`: Basic expectations", {
   )
 })
 
-test_that("Special cases of `estimate_severity()`", {
+test_that("Special cases of `.estimate_severity()`", {
   # all values are 0
   total_cases <- 0
   total_deaths <- 0
   total_outcomes <- 0
   expect_identical(
-    estimate_severity(total_cases, total_deaths, total_outcomes),
-    data.frame(
+    .estimate_severity(total_cases, total_deaths, total_outcomes),
+    c(
       severity_mean = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
@@ -101,8 +99,8 @@ test_that("Special cases of `estimate_severity()`", {
   # any 2 values are 0
   total_cases <- 10
   expect_identical(
-    estimate_severity(total_cases, total_deaths, total_outcomes),
-    data.frame(
+    .estimate_severity(total_cases, total_deaths, total_outcomes),
+    c(
       severity_mean = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
@@ -112,8 +110,8 @@ test_that("Special cases of `estimate_severity()`", {
   total_cases <- 0
   total_outcomes <- 10
   expect_identical(
-    estimate_severity(total_cases, total_deaths, total_outcomes),
-    data.frame(
+    .estimate_severity(total_cases, total_deaths, total_outcomes),
+    c(
       severity_mean = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
@@ -126,9 +124,12 @@ test_that("Special cases of `estimate_severity()`", {
   total_deaths <- 99
   total_outcomes <- 0
   expect_identical(
-    estimate_severity(total_cases, total_deaths, total_outcomes),
-    data.frame(
-      severity_mean = 0.001, # lowest possible severity under this method
+    .estimate_severity(
+      total_cases, total_deaths, total_outcomes,
+      poisson_threshold = 100
+    ),
+    c(
+      severity_mean = 1e-4, # lowest possible severity under this method
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -136,9 +137,12 @@ test_that("Special cases of `estimate_severity()`", {
 
   total_outcomes <- 99
   expect_identical(
-    estimate_severity(total_cases, total_deaths, total_outcomes),
-    data.frame(
-      severity_mean = 0.999, # highest possible severity under this method
+    .estimate_severity(
+      total_cases, total_deaths, total_outcomes,
+      poisson_threshold = 100
+    ),
+    c(
+      severity_mean = 1 - 1e-4, # highest possible severity under this method
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -150,8 +154,8 @@ test_that("Special cases of `estimate_severity()`", {
   total_outcomes <- 0
   expect_error(
     expect_identical(
-      estimate_severity(total_cases, total_deaths, total_outcomes),
-      data.frame(
+      .estimate_severity(total_cases, total_deaths, total_outcomes),
+      c(
         severity_mean = 0.99,
         severity_low = NA_real_,
         severity_high = NA_real_
@@ -160,45 +164,28 @@ test_that("Special cases of `estimate_severity()`", {
   )
 })
 
-test_that("`estimate_severity`: Messages and errors", {
-  ebola1976$cases <- 0L
-  df_corrected <- estimate_outcomes(
-    data = ebola1976,
-    delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
-  )
-
-  # expect an error because cases are 0
-  expect_error(
-    estimate_severity(
-      total_cases = sum(df_corrected$cases),
-      total_deaths = sum(df_corrected$deaths),
-      total_outcomes = sum(df_corrected$estimated_outcomes),
-      poisson_threshold = poisson_threshold
-    ),
-    regexp = "Assertion on 'total_deaths' failed: Element 1 is not <= 0"
-  )
-})
+# NOTE: tests on errors removed as input checking moved to upper-level functions
 
 # Expect NAs when multiple values are zero
 test_that("estimate_severity returns NAs when inputs are zeros", {
-  test_df <- data.frame(
+  test_df <- c(
     severity_mean = NA_real_,
     severity_low = NA_real_,
     severity_high = NA_real_
   )
 
   expect_identical(
-    estimate_severity(0, 0, 0),
+    .estimate_severity(0, 0, 0),
     test_df
   )
 
   expect_identical(
-    estimate_severity(0, 0, 1),
+    .estimate_severity(0, 0, 1),
     test_df
   )
 
   expect_identical(
-    estimate_severity(1, 0, 0),
+    .estimate_severity(1, 0, 0),
     test_df
   )
   # not testing the case where total_outcomes is 0

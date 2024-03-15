@@ -3,14 +3,14 @@
     Code
       severity_estimate
     Output
-        severity_mean severity_low severity_high
-      1         0.959        0.842             1
+      severity_mean  severity_low severity_high 
+             0.9742        0.8356        0.9877 
 
 ---
 
     Code
       severity_estimate_lt
     Output
-        severity_mean severity_low severity_high
-      1         0.959         0.93         0.979
+      severity_mean  severity_low severity_high 
+             0.9592        0.9295        0.9793 
 
