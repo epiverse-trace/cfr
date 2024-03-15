@@ -45,6 +45,13 @@
 cfr_rolling <- function(data,
                         delay_density = NULL,
                         poisson_threshold = 100) {
+  # Add message to indicate this is a utility function
+  message(
+    "`cfr_rolling()` is a convenience function to help understand how",
+    " additional data influences the overall (static) severity.",
+    " Use `cfr_time_varying()` instead to estimate severity changes over",
+    " the course of the outbreak."
+  )
   # input checking
   checkmate::assert_data_frame(
     data,

@@ -158,9 +158,10 @@ test_that("cfr_rolling handles cumulative zeroes case", {
   data <- covid_data
   data <- data[data$country == "United Kingdom", ]
 
-  # naive estimate works, expect no condition as data are sufficient here
-  expect_no_condition(
-    cfr_rolling(data)
+  # naive estimate works, expect message but no warnings
+  expect_message(
+    cfr_rolling(data),
+    regexp = "(is a convenience function)*(cfr_time_varying)*(instead)"
   )
 
   # corrected estimate works
