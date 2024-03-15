@@ -32,7 +32,7 @@ test_that("Basic expectations for static ascertainment", {
   )
   # snapshot test
   expect_snapshot(
-    ascertainment_estimate
+    estimate_ascertainment(data = ebola1976, severity_baseline = 0.7)
   )
 })
 
@@ -63,7 +63,11 @@ test_that("Correct for delays for static ascertainment", {
   )
   # snapshot test
   expect_snapshot(
-    ascertainment_estimate
+    estimate_ascertainment(
+      data = ebola1976,
+      delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
+      severity_baseline = 0.7
+    )
   )
 })
 

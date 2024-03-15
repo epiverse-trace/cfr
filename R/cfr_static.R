@@ -108,10 +108,12 @@ cfr_static <- function(data,
   # check for any NAs among data
   checkmate::assert_data_frame(
     data[, c("date", "cases", "deaths")],
+    types = c("Date", "integerish"),
     any.missing = FALSE
   )
   # check that data$date is a date column
   checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
+
   # check for excessive missing date and throw an error
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
@@ -123,6 +125,16 @@ cfr_static <- function(data,
   checkmate::assert_count(poisson_threshold, positive = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
+  # calculating the total number of cases (without correcting) and deaths
+
+  # Calculate total cases and deaths to pass to secondary checking
+  total_cases <- sum(data$cases, na.rm = TRUE)
+  total_deaths <- sum(data$deaths, na.rm = TRUE)
+
+  # Add input checking for total cases and deaths
+  checkmate::assert_count(total_cases)
+  # use assert_number to set upper limit at total_cases
+  checkmate::assert_number(total_deaths, upper = total_cases, lower = 0)
 
   # apply delay correction if a delay distribution is provided
   if (!is.null(delay_density)) {
@@ -134,19 +146,35 @@ cfr_static <- function(data,
       delay_density = delay_density
     )
 
+    # calculate total cases, deaths, and outcomes
+    total_outcomes <- sum(df_corrected$estimated_outcomes, na.rm = TRUE)
+
+    # NOTE: previous code used `u_t = total_outcomes / total_cases`
+    # which can be simplified in all operations to simply `total_outcomes`
+
+    # Get direct estimate of p, and throw warning if p < 1e-4
+    p_mid <- total_deaths / round(total_outcomes)
+
+    if (p_mid < 1e-4) {
+      warning(
+        "Ratio of total deaths to total cases with known outcome",
+        " is below 0.01%: CFR estimates may be unreliable.",
+        call. = FALSE
+      )
+    }
+
     # calculating the maximum likelihood estimate and 95% confidence interval
     # using the binomial likelihood function from Nishiura
-    severity_estimate <- estimate_severity(
-      total_cases = sum(df_corrected$cases, na.rm = TRUE),
-      total_deaths = sum(df_corrected$deaths, na.rm = TRUE),
-      total_outcomes = sum(df_corrected$estimated_outcomes, na.rm = TRUE),
-      poisson_threshold = poisson_threshold
+    severity_estimate <- .estimate_severity(
+      total_cases = total_cases,
+      total_deaths = total_deaths,
+      total_outcomes = total_outcomes,
+      poisson_threshold = poisson_threshold,
+      p_mid = p_mid
     )
+    # .estimate_severity() returns vector; convert to list and then data.frame
+    severity_estimate <- as.data.frame(as.list(severity_estimate))
   } else {
-    # calculating the total number of cases (without correcting) and deaths
-    total_cases <- sum(data$cases, na.rm = TRUE)
-    total_deaths <- sum(data$deaths, na.rm = TRUE)
-
     # calculating the central estimate
     severity_mean <- total_deaths / total_cases
 

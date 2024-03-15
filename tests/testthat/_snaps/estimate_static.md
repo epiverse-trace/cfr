@@ -12,5 +12,5 @@
       scfr_corrected
     Output
         severity_mean severity_low severity_high
-      1         0.959        0.842             1
+      1        0.9742       0.8356        0.9877
 

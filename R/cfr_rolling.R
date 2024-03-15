@@ -8,7 +8,7 @@
 #'
 #' @details When delay correction is applied by passing a delay distribution
 #' density function to `delay_density`, the internal function
-#' [estimate_severity()] is used to calculate the rolling severity.
+#' [.estimate_severity()] is used to calculate the rolling severity.
 #'
 #' Note that in the naive method the severity estimate and confidence intervals
 #' cannot be calculated for days on which the cumulative number of cases since
@@ -46,7 +46,6 @@ cfr_rolling <- function(data,
                         delay_density = NULL,
                         poisson_threshold = 100) {
   # input checking
-  # input checking
   checkmate::assert_data_frame(
     data,
     min.rows = 1, min.cols = 3
@@ -59,6 +58,7 @@ cfr_rolling <- function(data,
   # check for any NAs among data
   checkmate::assert_data_frame(
     data[, c("date", "cases", "deaths")],
+    types = c("Date", "integerish"),
     any.missing = FALSE
   )
   # check that data$date is a date column
@@ -80,6 +80,14 @@ cfr_rolling <- function(data,
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
+  # Check cumulative sums for count type
+  checkmate::assert_integerish(cumulative_cases, lower = 0)
+  # use assert_number to set upper limit at total_cases
+  checkmate::assert_integerish(
+    cumulative_deaths,
+    upper = max(cumulative_cases), lower = 0
+  )
+
   if (!is.null(delay_density)) {
     # calculating the total number of cases and deaths after correcting for
     # the number of cases with estimated outcomes and using this estimate as the
@@ -91,14 +99,32 @@ cfr_rolling <- function(data,
 
     cumulative_outcomes <- cumsum(data$estimated_outcomes)
 
+    # Get direct estimates of daily p, throw message if some p are < 1e-4
+    # NOTE: choosing message rather than warning, as warnings are nearly
+    # guaranteed in the early stages of an outbreak due to poor data
+    p_mid_values <- cumulative_deaths / round(cumulative_outcomes)
+
+    if (any(is.infinite(p_mid_values) | p_mid_values < 1e-4)) {
+      message(
+        "Some daily ratios of total deaths to total cases with known outcome",
+        " are below 0.01%: some CFR estimates may be unreliable.",
+        call. = FALSE
+      )
+    }
+
     # generate series of CFR estimates with expanding time window
-    severity_estimates <- Map(
-      cumulative_cases, cumulative_deaths, cumulative_outcomes,
-      f = estimate_severity, poisson_threshold = poisson_threshold
+    # Suppress method choice messages to prevent spamming user.
+    severity_estimates <- suppressMessages(
+      Map(
+        cumulative_cases, cumulative_deaths, cumulative_outcomes, p_mid_values,
+        f = function(cases, deaths, outcomes, p_mid) {
+          .estimate_severity(cases, deaths, outcomes, poisson_threshold, p_mid)
+        }
+      )
     )
 
-    # bind list elements together
-    severity_estimates <- do.call(rbind, severity_estimates)
+    # bind list elements together; list to matrix to data.frame
+    severity_estimates <- as.data.frame(do.call(rbind, severity_estimates))
   } else {
     # check for good indices
     indices <- which(
