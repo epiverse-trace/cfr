@@ -74,6 +74,15 @@ test_that("Static CFR estimate, errors and messages", {
     cfr_static(data = df_in_malformed)
   )
 
+  # Input data has decimal cases or deaths
+  df_in_malformed <- ebola1976
+  df_in_malformed$cases <- df_in_malformed$cases + (1 / 3)
+  df_in_malformed$deaths <- df_in_malformed$deaths + (1 / 6)
+
+  expect_error(
+    cfr_static(df_in_malformed)
+  )
+
   # Input dataframe `date` column has wrong class; POSIXct instead of Date
   df_in_malformed <- ebola1976
   df_in_malformed$date <- as.POSIXct(df_in_malformed$date)
@@ -89,5 +98,21 @@ test_that("Static CFR estimate, errors and messages", {
   expect_error(
     cfr_static(data = df_in_malformed),
     regexp = "(Input data must have sequential dates)*(none missing)*duplicated"
+  )
+
+  # Expect message when p_mid is low
+  # NOTE: set seed, do not prefer importing {withr}
+  set.seed(1)
+  data <- data.frame(
+    date = Sys.Date() + seq_len(100),
+    cases = seq(100) * 100,
+    deaths = rbinom(100, 1, 0.1)
+  )
+  expect_warning(
+    cfr_static(
+      data,
+      delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
+    ),
+    regexp = "(Ratio of total deaths)*(known outcome is below 0.01%)"
   )
 })

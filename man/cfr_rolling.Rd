@@ -47,7 +47,7 @@ iteration.
 \details{
 When delay correction is applied by passing a delay distribution
 density function to \code{delay_density}, the internal function
-\code{\link[=estimate_severity]{estimate_severity()}} is used to calculate the rolling severity.
+\code{\link[=.estimate_severity]{.estimate_severity()}} is used to calculate the rolling severity.
 
 Note that in the naive method the severity estimate and confidence intervals
 cannot be calculated for days on which the cumulative number of cases since

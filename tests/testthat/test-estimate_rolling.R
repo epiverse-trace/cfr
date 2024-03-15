@@ -158,13 +158,13 @@ test_that("cfr_rolling handles cumulative zeroes case", {
   data <- covid_data
   data <- data[data$country == "United Kingdom", ]
 
-  # naive estimate works
+  # naive estimate works, expect no condition as data are sufficient here
   expect_no_condition(
     cfr_rolling(data)
   )
 
   # corrected estimate works
-  expect_no_condition(
+  expect_no_warning(
     cfr_rolling(
       data,
       delay_density = function(x) dlnorm(x, meanlog = 2.577, sdlog = 0.440)

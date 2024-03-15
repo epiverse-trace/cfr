@@ -2,16 +2,23 @@
 test_that("CFR functions work with delay_density as lambda", {
   # Checks pass and cfr_static function works
   ddens <- function(x) stats::dgamma(x, 5, 1)
-  expect_no_condition(
+  # NOTE: cfr_static() and cfr_rolling() often throw messages,
+  # but cfr_time_varying() should not throw any condition
+  # Test that there is no condition one level up, i.e., expect no warning
+  # for fn that throws message
+  expect_no_warning(
     cfr_static(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
+  expect_no_warning(
+    cfr_static(ebola1976, delay_density = ddens)
+  )
+  expect_no_warning(
     cfr_rolling(ebola1976, delay_density = ddens)
   )
   expect_no_condition(
     cfr_time_varying(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
+  expect_no_warning(
     estimate_ascertainment(
       ebola1976,
       delay_density = ddens, severity_baseline = 0.7
@@ -24,16 +31,16 @@ test_that("CFR functions work with delay_density as <distcrete>", {
   skip_if_not_installed("distcrete")
   # Checks pass and cfr_static function works with disctcrete
   ddens <- distcrete::distcrete("gamma", 1, shape = 2.4, scale = 3.33)$d
-  expect_no_condition(
+  expect_no_warning(
     cfr_static(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
+  expect_no_warning(
     cfr_rolling(ebola1976, delay_density = ddens)
   )
   expect_no_condition(
     cfr_time_varying(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
+  expect_no_warning(
     estimate_ascertainment(
       ebola1976,
       delay_density = ddens, severity_baseline = 0.7
