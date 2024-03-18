@@ -52,7 +52,20 @@ We want to estimate how disease severity in the form of the case fatality risk (
 * Change in the probability of infection being reported as a case,
 * Transmission dynamics within specific subgroups of differing risk of severe outcomes,
 * Introduction of vaccines or therapeutics reducing the relative risk of death,
-* Emergence of pathogen variants which may alter the mortality risk associated with infection.
+* Emergence of pathogen variants which may alter the mortality risk associated with infection,
+
+* A reduction in healthcare capacity which leads to an increased mortality risk for infections that would otherwise have been treatable.
+
+## At what stage of infection does changing disease severity apply? {-}
+
+In the potential reasons for changing disease severity mentioned here, the change in the risk of severe outcomes falls into two categories:
+
+- Risk determined at the time of becoming a case: this refers to changes in risk due to a change in the infection characteristics, such as due to a less severe variant or due to immunisation. In this case, the expected number of deaths at time $t$, $D_t$ is
+$D_t = \sum_{i=0}^T C_{t-i} p_i f_{t-i}$, where $p_i$ is the probability of the delay from case to outcome (death or recovery) being $i$ time units, $C_{t-i}$ is the number of cases at time $t-i$, and $f_{t-i}$ is the CFR at time $t-i$.
+
+- Risk determined at the time of death: this refers to changes in risk due to changes in healthcare characteristics, such as a healthcare being unable to handle a high volume of cases. Here, the expected number of deaths $D_t$ at time $t$ is $D_t = f_t \sum_{i=0}^T C_{t-i} p_i$.
+
+When there is a change in variants or a change in vaccination coverage, we would expect the CFR method to reflect the (implicit) weighted average for infections by each variant, or for vaccinated and non-vaccinated individuals.
 :::
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
