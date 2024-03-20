@@ -182,8 +182,9 @@ See the <a href="delay_distributions.html">vignette on using delay distributions
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1         0.959        0.842             1</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        0.9742       0.8356        0.9877</span></span></code></pre></div>
 </details><p>The <code><a href="../reference/cfr_static.html">cfr_static()</a></code> function is well suited to small outbreaks where there are relatively few events and the time period under consideration if relatively brief, so the severity is unlikely to have changed over time.</p>
 <p>To understand how severity has changed over time (e.g. following vaccination or pathogen evolution), use the function <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code>.
 This function is however not well suited to small outbreaks because it requires sufficiently many cases over time to estimate how CFR changes.
@@ -207,8 +208,9 @@ We use the onset-to-death distribution from <span class="citation">Barry et al. 
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.7</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span></span>
 <span><span class="co">#&gt;   ascertainment_mean ascertainment_low ascertainment_high</span></span>
-<span><span class="co">#&gt; 1           0.729927               0.7          0.8313539</span></span></code></pre></div>
+<span><span class="co">#&gt; 1          0.7185383         0.7087172          0.8377214</span></span></code></pre></div>
 </details><p>This analysis suggests that between 70% and 83% of cases were reported in this outbreak.</p>
 <p>More details can be found in the <a href="estimate_ascertainment.html">vignette on estimating the proportion of cases that are reported during an outbreak</a>.</p>
 <hr>

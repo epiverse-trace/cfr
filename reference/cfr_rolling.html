@@ -137,7 +137,7 @@ day in the original data.frame.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>When delay correction is applied by passing a delay distribution
 density function to <code>delay_density</code>, the internal function
-<code><a href="estimate_severity.html">estimate_severity()</a></code> is used to calculate the rolling severity.</p>
+<code><a href="dot-estimate_severity.html">.estimate_severity()</a></code> is used to calculate the rolling severity.</p>
 <p>Note that in the naive method the severity estimate and confidence intervals
 cannot be calculated for days on which the cumulative number of cases since
 the start of the time-series, and for days on which the cumulative number of
@@ -163,15 +163,17 @@ deaths reported exceeds the cumulative reported cases, and is returned as
 <span class="r-in"><span>  <span class="va">ebola1976</span>,</span></span>
 <span class="r-in"><span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `cfr_rolling()` is a convenience function to help understand how additional data influences the overall (static) severity. Use `cfr_time_varying()` instead to estimate severity changes over the course of the outbreak.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Some daily ratios of total deaths to total cases with known outcome are below 0.01%: some CFR estimates may be unreliable.FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         date severity_mean severity_low severity_high</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1976-08-25            NA           NA            NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1976-08-26         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1976-08-27         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1976-08-28         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1976-08-29         0.001        0.001         0.999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1976-08-30         0.001        0.001         0.994</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1976-08-26         1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1976-08-27         1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1976-08-28         1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1976-08-29         1e-04        1e-04        0.9990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1976-08-30         1e-04        1e-04        0.9942</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

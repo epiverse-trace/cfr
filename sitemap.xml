@@ -64,6 +64,12 @@
     <loc>https://epiverse-trace.github.io/cfr/reference/delay_density_helpers.html</loc>
   </url>
   <url>
+    <loc>https://epiverse-trace.github.io/cfr/reference/dot-estimate_severity.html</loc>
+  </url>
+  <url>
+    <loc>https://epiverse-trace.github.io/cfr/reference/dot-select_func_likelihood.html</loc>
+  </url>
+  <url>
     <loc>https://epiverse-trace.github.io/cfr/reference/ebola1976.html</loc>
   </url>
   <url>
@@ -71,9 +77,6 @@
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/cfr/reference/estimate_outcomes.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/reference/estimate_severity.html</loc>
   </url>
   <url>
     <loc>https://epiverse-trace.github.io/cfr/reference/index.html</loc>

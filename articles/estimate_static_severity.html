@@ -202,7 +202,7 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <div class="section level3">
 <h3 id="estimating-the-naive-and-corrected-cfr">Estimating the naive and corrected CFR<a class="anchor" aria-label="anchor" href="#estimating-the-naive-and-corrected-cfr"></a>
 </h3>
-<p>The function <code><a href="../reference/cfr_static.html">cfr_static()</a></code> wraps the internal functions <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> and <code><a href="../reference/estimate_severity.html">estimate_severity()</a></code> to provide a static CFR by automatically correcting for reporting delays if a delay density function is provided.</p>
+<p>The function <code><a href="../reference/cfr_static.html">cfr_static()</a></code> wraps the internal functions <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> and <code>estimate_severity()</code> to provide a static CFR by automatically correcting for reporting delays if a delay density function is provided.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculating the naive CFR</span></span>
 <span><span class="fu"><a href="../reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
@@ -217,7 +217,7 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1             1        0.868             1</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        0.9355        0.544        0.9795</span></span></code></pre></div>
 </details>
 </div>
 </div>
@@ -271,7 +271,7 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1         0.046        0.046         0.047</span></span></code></pre></div>
+<span><span class="co">#&gt; 1        0.0465       0.0462        0.0467</span></span></code></pre></div>
 </details><hr>
 </div>
 </div>

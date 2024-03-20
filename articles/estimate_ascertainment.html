@@ -187,8 +187,9 @@ Since the case definition for the U.K. is different from that used here, the asc
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span>,</span>
 <span>  severity_baseline <span class="op">=</span> <span class="fl">0.014</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Total cases = 283420 and p = 0.206: using Normal approximation to binomial likelihood.</span></span>
 <span><span class="co">#&gt;   ascertainment_mean ascertainment_low ascertainment_high</span></span>
-<span><span class="co">#&gt; 1         0.06796117        0.06730769         0.06829268</span></span></code></pre></div>
+<span><span class="co">#&gt; 1         0.09810792        0.02316347          0.2167183</span></span></code></pre></div>
 </details>
 </div>
 </div>
@@ -225,6 +226,21 @@ We exclude four countries which only provide weekly data (with zeros for dates i
 <span>    delay_density <span class="op">=</span> <span class="va">delay_density</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Total cases = 22406 and p = 0.108: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 465166 and p = 0.125: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 26778 and p = 0.0593: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 182148 and p = 0.0553: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 26477 and p = 0.0913: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 148950 and p = 0.0652: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 232664 and p = 0.149: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 120229 and p = 0.286: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 148285 and p = 0.231: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 23571 and p = 0.0585: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 405843 and p = 0.0171: using Poisson approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 30967 and p = 0.0433: using Poisson approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 163103 and p = 0.031: using Poisson approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 254220 and p = 0.234: using Normal approximation to binomial likelihood.</span></span>
+<span><span class="co">#&gt; Total cases = 1785422 and p = 0.0724: using Normal approximation to binomial likelihood.</span></span>
 <span></span>
 <span><span class="co"># unnest the data</span></span>
 <span><span class="va">df_reporting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">df_reporting</span>, cols <span class="op">=</span> <span class="st">"reporting"</span><span class="op">)</span></span>
@@ -234,12 +250,12 @@ We exclude four countries which only provide weekly data (with zeros for dates i
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 5</span></span></span>
 <span><span class="co">#&gt;   country   data     ascertainment_mean ascertainment_low ascertainment_high</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Argentina <span style="color: #949494;">&lt;tibble&gt;</span>              0.130             0.124              0.137</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Brazil    <span style="color: #949494;">&lt;tibble&gt;</span>              0.112             0.111              0.113</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Colombia  <span style="color: #949494;">&lt;tibble&gt;</span>              0.237             0.222              0.25 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> India     <span style="color: #949494;">&lt;tibble&gt;</span>              0.255             0.25               0.259</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Indonesia <span style="color: #949494;">&lt;tibble&gt;</span>              0.154             0.147              0.161</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Iran      <span style="color: #949494;">&lt;tibble&gt;</span>              0.215             0.212              0.219</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Argentina <span style="color: #949494;">&lt;tibble&gt;</span>              0.200            0.034<span style="text-decoration: underline;">3</span>              0.428</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Brazil    <span style="color: #949494;">&lt;tibble&gt;</span>              0.171            0.030<span style="text-decoration: underline;">7</span>              0.367</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Colombia  <span style="color: #949494;">&lt;tibble&gt;</span>              0.371            0.058<span style="text-decoration: underline;">7</span>              0.787</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> India     <span style="color: #949494;">&lt;tibble&gt;</span>              0.399            0.062<span style="text-decoration: underline;">9</span>              0.843</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Indonesia <span style="color: #949494;">&lt;tibble&gt;</span>              0.237            0.039<span style="text-decoration: underline;">2</span>              0.505</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Iran      <span style="color: #949494;">&lt;tibble&gt;</span>              0.337            0.053<span style="text-decoration: underline;">5</span>              0.714</span></span></code></pre></div>
 </details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">df_reporting</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
