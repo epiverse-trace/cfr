@@ -112,7 +112,7 @@ Similarly, the estimated deaths later in the outbreak are similar to or less tha
 
 ### Estimating the naive and corrected CFR
 
-The function `cfr_static()` wraps the internal functions `estimate_outcomes()` and `estimate_severity()` to provide a static CFR by automatically correcting for reporting delays if a delay density function is provided.
+The function `cfr_static()` wraps the internal function `estimate_outcomes()` to provide a static CFR by automatically correcting for reporting delays if a delay density function is provided.
 
 ```{r message = FALSE, warning = FALSE, eval = TRUE}
 # calculating the naive CFR
