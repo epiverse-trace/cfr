@@ -180,18 +180,18 @@ cfr_static(
 
 $$
   u_t = \dfrac{\sum_{i = 0}^t
-        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
+        \sum_{j = 0}^\infty c_{i - j} f_{j}}{\sum_{i = 0} c_i},
 $$
 
 where $f_t$ is the value of the probability mass function at time $t$, and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$ (respectively).
 We then use $u_t$ in the following likelihood function to estimate severity.
 
 $$
-  {\sf L}(\theta | y) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
-  (u_tC - D)\log{(1.0 - \theta)},
+  {\sf L}(\theta | C_{t},D_{t},u_{t}) = \log{\dbinom{u_{t}C_{t}}{D_{t}}} + D_{t} \log{\theta} +
+  (u_{t}C_{t} - D_{t})\log{(1 - \theta)},
 $$
 
-$C$ and $D$ are the cumulative number of cases and deaths (respectively) until time $t$.
+$C_{t}$ and $D_{t}$ are the cumulative number of cases and deaths (respectively) until time $t$.
 
 Lastly $\theta$ (severity) is estimated $\theta$ using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.
 
