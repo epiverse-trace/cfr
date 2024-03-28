@@ -281,15 +281,15 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <p><code><a href="../reference/cfr_static.html">cfr_static()</a></code> follows <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span> to calculate a quantity <span class="math inline">\(u_t\)</span> for each day within the input data which represents the proportion of cases with a known adverse outcome (usually death) on day <span class="math inline">\(t\)</span>.</p>
 <p><span class="math display">\[
   u_t = \dfrac{\sum_{i = 0}^t
-        \sum_{j = 0}^\infty c_i f_{j - i}}{\sum_{i = 0} c_i},
+        \sum_{j = 0}^\infty c_{i - j} f_{j}}{\sum_{i = 0} c_i},
 \]</span></p>
 <p>where <span class="math inline">\(f_t\)</span> is the value of the probability mass function at time <span class="math inline">\(t\)</span>, and <span class="math inline">\(c_t\)</span>, <span class="math inline">\(d_t\)</span> are the number of new cases and new deaths at time <span class="math inline">\(t\)</span> (respectively).
 We then use <span class="math inline">\(u_t\)</span> in the following likelihood function to estimate severity.</p>
 <p><span class="math display">\[
-  {\sf L}(\theta | y) = \log{\dbinom{u_tC}{D}} + D \log{\theta} +
-  (u_tC - D)\log{(1.0 - \theta)},
+  {\sf L}(\theta | C_{t},D_{t},u_{t}) = \log{\dbinom{u_{t}C_{t}}{D_{t}}} + D_{t} \log{\theta} +
+  (u_{t}C_{t} - D_{t})\log{(1 - \theta)},
 \]</span></p>
-<p><span class="math inline">\(C\)</span> and <span class="math inline">\(D\)</span> are the cumulative number of cases and deaths (respectively) until time <span class="math inline">\(t\)</span>.</p>
+<p><span class="math inline">\(C_{t}\)</span> and <span class="math inline">\(D_{t}\)</span> are the cumulative number of cases and deaths (respectively) until time <span class="math inline">\(t\)</span>.</p>
 <p>Lastly <span class="math inline">\(\theta\)</span> (severity) is estimated <span class="math inline">\(\theta\)</span> using simple maximum-likelihood methods, allowing the functions within this package to be quick and easy tools to use.</p>
 <p>The precise severity measure — CFR, IFR, HFR, etc — that <span class="math inline">\(\theta\)</span> represents depends upon the input data given by the user.</p>
 <ul>
