@@ -48,11 +48,11 @@
 #' for each \eqn{t}, where \eqn{\theta} represents the severity measure of
 #' interest.
 #'
-#' The epidemiological delay distribution passed to `epidist` is used to obtain
-#' a probability mass function parameterised by time; i.e. \eqn{f(t)} which
-#' gives the probability a case has a known outcomes (usually, death) at time
-#' \eqn{t}, parameterised with disease-specific parameters before it is supplied
-#' here.
+#' The epidemiological delay distribution passed to `delay_density` is used to
+#' obtain a probability mass function parameterised by time; i.e. \eqn{f(t)}
+#' which gives the probability a case has a known outcomes (usually, death) at
+#' time \eqn{t}, parameterised with disease-specific parameters before it is
+#' supplied here.
 #'
 #' **Note** that the function arguments `burn_in` and `smoothing_window` are not
 #' explicitly used in this calculation. `burn_in` controls how many estimates at
