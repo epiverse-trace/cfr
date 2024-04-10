@@ -1,7 +1,7 @@
-# -----------------------------------------------------------
-# CITATION file created with {cffr} R package, v0.5.0
+# --------------------------------------------
+# CITATION file created with {cffr} R package
 # See also: https://docs.ropensci.org/cffr/
-# -----------------------------------------------------------
+# --------------------------------------------
  
 cff-version: 1.2.0
 message: 'To cite package "cfr" in publications use:'
@@ -10,7 +10,7 @@ license: MIT
 title: 'cfr: Estimate Disease Severity and Case Ascertainment'
 version: 0.1.0.9000
 abstract: Estimate the severity of a disease and ascertainment of cases, as discussed
-  in Nishiura et al. (2009) <doi:10.1371/journal.pone.0006852>.
+  in Nishiura et al. (2009) <https://doi.org/10.1371/journal.pone.0006852>.
 authors:
 - family-names: Gupte
   given-names: Pratik R.
@@ -41,6 +41,7 @@ keywords:
 - outbreak-analysis
 - r
 - r-package
+- sdg-3
 references:
 - type: software
   title: 'R: A Language and Environment for Statistical Computing'
@@ -48,11 +49,10 @@ references:
   url: https://www.R-project.org/
   authors:
   - name: R Core Team
-  location:
-    name: Vienna, Austria
-  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2024'
   version: '>= 3.5.0'
 - type: software
   title: checkmate
@@ -72,11 +72,10 @@ references:
   notes: Imports
   authors:
   - name: R Core Team
-  location:
-    name: Vienna, Austria
-  year: '2024'
   institution:
     name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2024'
 - type: software
   title: bookdown
   abstract: 'bookdown: Authoring Books and Technical Documents with R Markdown'
@@ -215,6 +214,10 @@ references:
   - family-names: Dunnington
     given-names: Dewey
     orcid: https://orcid.org/0000-0002-9415-4582
+  - family-names: Brand
+    given-names: Teun
+    name-particle: van den
+    orcid: https://orcid.org/0000-0002-9335-7468
   year: '2024'
 - type: software
   title: incidence2
@@ -319,7 +322,7 @@ references:
   title: spelling
   abstract: 'spelling: Tools for Spell Checking in R'
   notes: Suggests
-  url: https://docs.ropensci.org/spelling/
+  url: https://ropensci.r-universe.dev/spelling
   repository: https://CRAN.R-project.org/package=spelling
   authors:
   - family-names: Ooms
@@ -358,3 +361,4 @@ references:
   - family-names: Girlich
     given-names: Maximilian
   year: '2024'
+
