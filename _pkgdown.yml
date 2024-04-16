@@ -1,6 +1,7 @@
 url: https://epiverse-trace.github.io/cfr/
 template:
   package: epiversetheme
+  bootstrap: 5
 articles:
 - title: Package vignettes
   navbar: Package vignettes
