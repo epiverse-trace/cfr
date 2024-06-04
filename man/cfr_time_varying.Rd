@@ -82,9 +82,9 @@ interest.
 
 The epidemiological delay distribution passed to \code{delay_density} is used to
 obtain a probability mass function parameterised by time; i.e. \eqn{f(t)}
-which gives the probability a case has a known outcomes (usually, death) at
-time \eqn{t}, parameterised with disease-specific parameters before it is
-supplied here.
+which gives the probability of the binary outcome of a case (survival or
+death) being known by time \eqn{t}. The delay distribution is parameterised
+with disease-specific parameters before it is supplied here.
 
 \strong{Note} that the function arguments \code{burn_in} and \code{smoothing_window} are not
 explicitly used in this calculation. \code{burn_in} controls how many estimates at
