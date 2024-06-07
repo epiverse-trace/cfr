@@ -13,9 +13,11 @@ COVID
 Camacho
 Codecov
 Covid
+DPG
 EVD
 EpiNow
 Epiverse
+GHA
 HFR
 Heesterbeek
 IFR
@@ -30,6 +32,7 @@ PMF
 Piot
 Poisson
 Pratik
+RepoStatus
 SaMD
 Sherratt
 Tidyverse
@@ -53,6 +56,7 @@ gh
 github
 infty
 io
+lifecycle
 linelist
 lockdowns
 md
@@ -64,7 +68,6 @@ pkg
 sim
 st
 svg
-tC
 th
 u
 www
