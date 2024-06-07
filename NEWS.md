@@ -1,5 +1,77 @@
 # cfr (development version)
 
+## Functions
+
+1. `cfr_static()`:
+
+    - Has more informative checks on intermediate values passed to `.estimate_severity()`.
+
+    - Prints a message when CFR value cannot be determined or are unreliable.
+
+2. `cfr_rolling()`:
+
+    - Prints a message explaining that this is a convenience function.
+
+    - Has improved input checking.
+
+    - Uses new `.estimate_severity()` functionality based on outbreak size and initial expectation of CFR.
+
+    - Prints a message when some rolling CFR values cannot be determined or are unreliable.
+
+3. `.estimate_severity()`:
+
+    - Renamed with `.` prefix to indicate internal function.
+
+    - Added parameter `p_mid` for initial severity estimate, which is used to determine the likelihood approximation method.
+
+    - Selects from among Binomial, Poisson, and Normal approximation of the likelihood depending on the outbreak size and `p_mid` using the function `.select_fun_likelihood()`; prints a message with the selected method.
+
+    - Lowest possible severity estimate is reduced to $10^{-4}$.
+
+    - Severity estimates and confidence intervals stored as named vectors rather than a `<data.frame>`.
+
+4. `.select_func_likelihood()`: Internal function added that chooses likelihood approximation function based on outbreak size and `p_mid`.
+
+    - Binomial approximation used for small outbreaks with cumulative cases lower than the Poisson threshold.
+    
+    - Poisson approximation used for outbreaks above the Poisson threshold and with `p_mid` < 0.05.
+
+    - Normal approximation used for outbreaks above the Poisson threshold and with `p_mid` > 0.05.
+
+4. `test_fn_req_args()` is updated to use `Reduce(f = "+")` and `Map()` rather than `sum(mapply())`.
+
+## Documentation
+
+1. Added package level documentation.
+
+2. Updated Readme with lifecycle (stable) and RepoStatus (Active) badges, added DPG badge, and updated the related projects section; corrected figure labelling.
+
+3. Updated `_pkgdown.yaml` with reference sections, and added a software permissions vignette.
+
+4. Updated `WORDLIST`.
+
+5. Updated all function documentation files.
+
+6. Added section in distributions vignette on when it is acceptable to use continuous rather than discrete distributions.
+
+## Tests
+
+1. All snapshots are updated with severity values from new likelihood functions.
+
+2. Added session global state checker script and setup options script.
+
+3. All tests are updated to reflect that functions will sometimes throw informative messages.
+
+## Package
+
+1. Added GitHub Actions workflows for dependency changes, linting, updating the citation file, and updating the license year.
+
+2. Updated other GHA workflows and infrastructure files to match the latest versions on `epiverse-trace/packagetemplate`.
+
+3. Normalised `DESCRIPTION` file.
+
+4. Added `tools/check.env` from `epiverse-trace/packagetemplate` to suppress specific checks on package size, Rd cross references, GNU Make requirement, and non-ASCII strings.
+
 # cfr 0.1.0
 
 Initial CRAN submission of _cfr_, an R package to estimate the severity of a disease and ascertainment of cases while correcting for delays in outcomes of reported cases being known.
