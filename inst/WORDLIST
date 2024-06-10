@@ -51,6 +51,7 @@ epiday
 epiparameter
 epiweek
 etc
+geq
 ggplot
 gh
 github
@@ -60,6 +61,7 @@ lifecycle
 linelist
 lockdowns
 md
+np
 org
 packagename
 parameterise
