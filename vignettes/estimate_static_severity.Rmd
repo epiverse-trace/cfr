@@ -131,6 +131,22 @@ cfr_static(
 )
 ```
 
+::: {.alert .alert-info}
+
+## Severity estimation methods
+
+`cfr_static()` automatically chooses a method of calculating the severity estimate, based on whether delay correction is applied, and further when delay correction is applied, depending on the total number of cases and an initial rough estimate of the severity.
+
+  - **Naive estimate**: When delay correction is not applied, the CFR is the ratio of total deaths to total cases, and the confidence interval is given by a Binomial test using `stats::binom.test()` where total deaths are successes, total cases are trials, and the hypothesised success is 1.0
+
+  - **Delay correction, small outbreaks**: For outbreaks where the total cases are below the user-specified 'Poisson threshold' (`poisson_threshold`, default = 100), the CFR and uncertainty around it is taken from a profile likelihood generated from a Binomial model of deaths (successes) and estimated known outcomes (trials).
+
+  - **Delay correction, large outbreaks with low severity**: For outbreaks with total cases greater than the Poisson threshold (default = 100) and with initial severity estimates < 0.05, the CFR and uncertainty are taken from a Poisson approximation of the Binomial profile likelihood (taking $\lambda$ = $np$ for $n$ estimated outcomes and $p$ as the severity estimate).
+
+  - **Delay correction, large outbreaks with higher severity**: For outbreaks with total cases greater than the Poisson threshold (default = 100) and with initial severity estimates $\geq$ 0.05, the CFR and uncertainty are taken from a Normal approximation of the Binomial profile likelihood.
+
+:::
+
 ## Severity of the COVID-19 pandemic in the U.K.
 
 This example shows static severity estimation using _cfr_ and data from the Covid-19 pandemic in the United Kingdom.

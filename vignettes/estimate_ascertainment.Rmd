@@ -63,6 +63,13 @@ library(forcats)
 library(ggplot2)
 ```
 
+::: {.alert .alert-info}
+
+**Note that** `estimate_static()` is used to generate a severity estimate which is compared against a 'known' severity estimate to calculate the ascertainment ratio.
+See the [vignette on static severity estimation](estimate_static_severity.html) to learn more about how `estimate_static()` choses a method for profile likelihood generation and hence CFR estimation.
+
+:::
+
 ## Ascertainment for the Covid-19 pandemic in the U.K.
 
 This example shows ascertainment ratio estimation using _cfr_ and data from the Covid-19 pandemic in the United Kingdom.
