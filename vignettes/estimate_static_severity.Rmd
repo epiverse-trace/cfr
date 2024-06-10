@@ -82,11 +82,12 @@ See the [vignette on delay distributions](delay_distributions.html) for more on 
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
 
-### Intermediate step: Estimating expected deaths
+### Intermediate step: Estimating cases with known outcomes
 
-The function `estimate_outcomes()` from the _cfr_ package can estimate the number of deaths expected given a time-series of case onset and reported deaths and a delay density function.
+The function `estimate_outcomes()` estimates the number of cases whose outcomes are expected to be known by each day $i$ of an outbreak, given a time-series of case onsets and the distribution of delays between symptom onset and case outcome.
+In the context of CFR estimation, the delay distribution is usually an 'onset-to-death' distribution.
 
-The resulting data frame contains two new columns, "estimated_outcomes", for the number of deaths expected for each day, and "u_t" for the ratio of cumulative number of estimated deaths and the cumulative number of cases reported until each date specified in data.
+The resulting data frame contains two new columns, "estimated_outcomes", for the number of cases whose outcomes are expected to be known on each day, and "u_t" for the ratio of cumulative number of cases estimated to have known outcomes and the cumulative number of cases reported until each date specified in data.
 
 ```{r}
 # calculate known death outcomes
@@ -102,11 +103,14 @@ head(df_estimated_outcomes_ebola)
 tail(df_estimated_outcomes_ebola)
 ```
 
-The estimated deaths are greater than the true deaths at the beginning of the outbreak, as infected individuals who have not yet died are expected to die in the coming days.
-
-Similarly, the estimated deaths later in the outbreak are similar to or less than the reported deaths, as the deaths of individuals who survived for longer are now reported.
+The estimated outcomes are lower than the number of cases at the beginning of an outbreak as the case outcomes are only likely to become known some days later; this also means that `u_t` is likely to be lower than 1.0 early in the outbreak.
+The `u_t` for an outbreak that has ended will be much closer to 1.0, as the outcomes of all reported cases are expected to be known (depending on the quality of outbreak monitoring).
+This depends on the distribution of delays between onset and outcome, and the ratio `u_t` will 'catch up' to 1.0 faster when the onset-to-outcome delay is short.
 
 ::: {.alert .alert-warning}
+**Note that** the period between onset and death may be shorter than the period between onset and full recovery, and should not be considered equivalent.
+For CFR estimation, we are primarily interested in the former as the goal is estimating severity in the form of a fatality risk (or ratio for past outbreaks).
+
 **Note that** `estimate_outcomes()` is exported but is primarily intended for internal use.
 :::
 
