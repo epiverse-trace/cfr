@@ -1,5 +1,9 @@
 # cfr (development version)
 
+This version of _cfr_ includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (#129).
+
+Maintainer is changing to @adamkucharski (#143).
+
 ## Functions
 
 1. `cfr_static()`:
@@ -14,7 +18,7 @@
 
     - Has improved input checking.
 
-    - Uses new `.estimate_severity()` functionality based on outbreak size and initial expectation of CFR.
+    - Uses new `.estimate_severity()` functionality based on outbreak size and initial expectation of CFR (#129).
 
     - Prints a message when some rolling CFR values cannot be determined or are unreliable.
 
@@ -24,7 +28,7 @@
 
     - Added parameter `p_mid` for initial severity estimate, which is used to determine the likelihood approximation method.
 
-    - Selects from among Binomial, Poisson, and Normal approximation of the likelihood depending on the outbreak size and `p_mid` using the function `.select_fun_likelihood()`; prints a message with the selected method.
+    - Selects from among Binomial, Poisson, and Normal approximation of the likelihood depending on the outbreak size and `p_mid` using the function `.select_fun_likelihood()`; prints a message with the selected method (#129).
 
     - Lowest possible severity estimate is reduced to $10^{-4}$.
 
@@ -44,33 +48,39 @@
 
 1. Added package level documentation.
 
-2. Updated Readme with lifecycle (stable) and RepoStatus (Active) badges, added DPG badge, and updated the related projects section; corrected figure labelling.
+2. Updated Readme with lifecycle (stable) and RepoStatus (Active) badges (#113), added DPG badge (#127), and updated the related projects section; corrected figure labelling (#114).
 
-3. Updated `_pkgdown.yaml` with reference sections, and added a software permissions vignette.
+3. Updated `_pkgdown.yaml` with a manual Bootstrap version (#136) reference sections, added a software permissions vignette (#125), and enabled development mode (#143).
 
 4. Updated `WORDLIST`.
 
-5. Updated all function documentation files.
+5. Updated all function documentation files (#134).
 
 6. Added section in distributions vignette on when it is acceptable to use continuous rather than discrete distributions.
 
+7. Corrected explanation of `estimate_outcomes()` in static severity vignette and added explanations of profile likelihood generation methods used in all severity vignettes (#143).
+
+8. Corrected equations in vignettes (#133) and removed `.estimate_severity()` from vignettes (#132).
+
 ## Tests
 
-1. All snapshots are updated with severity values from new likelihood functions.
+1. All snapshots are updated with severity values from new likelihood functions (#129).
 
-2. Added session global state checker script and setup options script.
+2. Added session global state checker script and setup options script (#119).
 
 3. All tests are updated to reflect that functions will sometimes throw informative messages.
 
+4. Tests using _incidence2_ suppress warnings on missing values (added in _incidence2_ v2.3.0) as filling missing values is the subject of the test for `prepare_data.incidence2()` (#143).
+
 ## Package
 
-1. Added GitHub Actions workflows for dependency changes, linting, updating the citation file, and updating the license year.
+1. Added or updated GitHub Actions workflows for dependency changes, linting, updating the citation file, and updating the license year (#119, #137, #142).
 
-2. Updated other GHA workflows and infrastructure files to match the latest versions on `epiverse-trace/packagetemplate`.
+2. Updated other GHA workflows and infrastructure files to match the latest versions on `epiverse-trace/packagetemplate` (#119).
 
 3. Normalised `DESCRIPTION` file.
 
-4. Added `tools/check.env` from `epiverse-trace/packagetemplate` to suppress specific checks on package size, Rd cross references, GNU Make requirement, and non-ASCII strings.
+4. Added `tools/check.env` from `epiverse-trace/packagetemplate` to suppress specific checks on package size, Rd cross references, GNU Make requirement, and non-ASCII strings (#142).
 
 # cfr 0.1.0
 
