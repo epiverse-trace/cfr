@@ -1,6 +1,6 @@
 pandoc: 3.1.11
-pkgdown: 2.0.9.9000
-pkgdown_sha: f3829b7044992fba2780a25491b937134bd7066b
+pkgdown: 2.0.9
+pkgdown_sha: ~
 articles:
   cfr: cfr.html
   data_from_incidence2: data_from_incidence2.html
@@ -9,7 +9,7 @@ articles:
   estimate_static_severity: estimate_static_severity.html
   estimate_time_varying_severity: estimate_time_varying_severity.html
   software-permissions: software-permissions.html
-last_built: 2024-05-29T07:58Z
+last_built: 2024-06-10T11:16Z
 urls:
   reference: https://epiverse-trace.github.io/cfr/reference
   article: https://epiverse-trace.github.io/cfr/articles
