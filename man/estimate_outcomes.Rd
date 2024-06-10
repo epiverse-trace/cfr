@@ -34,7 +34,7 @@ columns:
 \itemize{
 \item \code{"estimated_outcomes"} for the number of cases with an outcome of interest
 (usually, death) estimated to be known on the dates specified in \code{data}, and
-\item \code{"u_t"} for the ratio of cumulative number of estimated known outcomes
+\item \code{u_t} for the ratio of cumulative number of estimated known outcomes
 and the cumulative number of cases reported until each date specified in
 \code{data}.
 }
@@ -46,6 +46,13 @@ delay distribution of symptom onset to outcome.
 When calculating a case fatality risk, the outcomes must be deaths, the delay
 distribution must be an onset-to-death distribution, and the function returns
 estimates of the known death outcomes.
+}
+\details{
+The ratio \code{u_t} represents, for the outbreak, the overall proportion of
+cases whose outcomes are expected to be known by each day $i$. For an ongoing
+outbreak with relatively long delays between symptom onset and case outcome,
+a \code{u_t} value of 1.0 may indicate that the outbreak has ended, as the
+outcomes of all cases are expected to be known.
 }
 \examples{
 # Load Ebola 1976 outbreak data
