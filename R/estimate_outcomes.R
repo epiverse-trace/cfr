@@ -42,9 +42,17 @@
 #'  - `"estimated_outcomes"` for the number of cases with an outcome of interest
 #' (usually, death) estimated to be known on the dates specified in `data`, and
 #'
-#'  - `"u_t"` for the ratio of cumulative number of estimated known outcomes
+#'  - `u_t` for the ratio of cumulative number of estimated known outcomes
 #' and the cumulative number of cases reported until each date specified in
 #' `data`.
+#'
+#' @details
+#'
+#' The ratio `u_t` represents, for the outbreak, the overall proportion of
+#' cases whose outcomes are expected to be known by each day $i$. For an ongoing
+#' outbreak with relatively long delays between symptom onset and case outcome,
+#' a `u_t` value of 1.0 may indicate that the outbreak has ended, as the
+#' outcomes of all cases are expected to be known.
 #'
 #' @export
 #'
@@ -92,10 +100,10 @@ estimate_outcomes <- function(data,
 
   # calculate expected outcomes
   # NOTE: assumes daily data, which is checked in higher level functions
-  estimated_outcomes <- .convolve_cases_pmfs(data$cases, pmf_vals)
+  data$estimated_outcomes <- .convolve_cases_pmfs(data$cases, pmf_vals)
 
-  # calculate severity as ratio
-  data$estimated_outcomes <- estimated_outcomes
+  # calculate u_t as ratio of estimated outcomes to reported cases
+  # on each day
   data$u_t <- cumsum(data$estimated_outcomes) / cumsum(data$cases)
 
   # replace u_t that is NaN with NA (due to zero division)
