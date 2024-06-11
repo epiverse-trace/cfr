@@ -22,7 +22,7 @@
 #' confidence interval of the daily severity estimates, named
 #' "severity_estimate", "severity_low", and "severity_high", with one row for
 #' each day in the original data.frame.
-#' 
+#'
 #' @details
 #' `cfr_rolling()` applies the internal function `.estimate_severity()` to an
 #' expanding time-series of total cases, total estimated outcomes, and total

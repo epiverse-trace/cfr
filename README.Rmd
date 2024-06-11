@@ -64,7 +64,7 @@ This example shows how to use _{{ packagename }}_ to estimate the overall case f
 library(cfr)
 
 # Load the Ebola 1976 data provided with the package
-data("ebola1976")
+data(ebola1976)
 
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
@@ -128,7 +128,7 @@ ggplot(data_cfr) +
     alpha = 0.2, show.legend = FALSE
   ) +
   geom_line(
-    aes(date, severity_mean, colour = method)
+    aes(date, severity_estimate, colour = method)
   ) +
   scale_colour_brewer(
     palette = "Dark2",
