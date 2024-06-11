@@ -1,8 +1,12 @@
 # cfr 0.1.1
 
-This version of _cfr_ includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (#129).
-
 Maintainer is changing to @adamkucharski (#143).
+
+## Major changes
+
+- The output column names `severity_mean` and `ascertainment_mean` have been corrected to `severity_estimate` and `ascertainment_estimate`. This may break any workflows that rely on the previous column names.
+
+- This version of _cfr_ includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (#129).
 
 ## Functions
 
