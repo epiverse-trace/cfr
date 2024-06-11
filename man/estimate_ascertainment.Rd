@@ -46,6 +46,15 @@ and a baseline severity estimate. The resulting ascertainment estimate is
 calculated as the ratio of the baseline severity estimate, which is assumed
 to be the 'true' disease severity, and the delay-adjusted severity estimate.
 }
+\details{
+\code{estimate_ascertainment()} uses \code{\link[=cfr_static]{cfr_static()}} internally to obtain a
+severity estimate that is compared against the user-specified baseline
+severity. The profile likelihood method used to obtain the severity estimate
+is decided by the internal function \code{.estimate_severity()} as used in
+\code{\link[=cfr_static]{cfr_static()}}, when delay correction is applied. See the \code{\link[=cfr_static]{cfr_static()}}
+documentation for an explanation of the methods used depending on outbreak
+size and initial severity guess.
+}
 \examples{
 # get data pre-loaded with the package
 data("covid_data")
