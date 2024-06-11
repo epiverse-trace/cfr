@@ -33,7 +33,7 @@ approximation. Set to 100 by default. Must be > 0.}
 }
 \value{
 A \verb{<data.frame>} with the maximum likelihood estimate and 95\%
-confidence interval of the severity estimates, named "severity_mean",
+confidence interval of the severity estimates, named "severity_estimate",
 "severity_low", and "severity_high".
 }
 \description{

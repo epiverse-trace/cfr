@@ -34,8 +34,8 @@ approximation. Set to 100 by default. Must be > 0.}
 \value{
 A \verb{<data.frame>} with the date, maximum likelihood estimate and 95\%
 confidence interval of the daily severity estimates, named
-"severity_mean", "severity_low", and "severity_high", with one row for each
-day in the original data.frame.
+"severity_estimate", "severity_low", and "severity_high", with one row for
+each day in the original data.frame.
 }
 \description{
 Calculates the CFR at each time point in the case and death time

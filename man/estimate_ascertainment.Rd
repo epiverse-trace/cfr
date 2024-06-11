@@ -36,8 +36,8 @@ density at user-specified values, e.g.
 \value{
 A \verb{<data.frame>} containing the maximum likelihood estimate estimate
 and 95\% confidence interval of the corrected severity, named
-"ascertainment_mean" (for the central estimate), and "ascertainment_low" and
-"ascertainment_high" for the lower and upper interval limits.
+"ascertainment_estimate" (for the central estimate), and "ascertainment_low"
+and "ascertainment_high" for the lower and upper interval limits.
 }
 \description{
 Estimates the proportion of cases or infections that have been
