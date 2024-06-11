@@ -27,7 +27,7 @@ test_that("`Time varying CFR, basic expectations", {
 
   # expected names
   expected_names <- c(
-    "date", "severity_mean", "severity_low", "severity_high"
+    "date", "severity_estimate", "severity_low", "severity_high"
   )
   # expect named columns
   expect_named(
@@ -97,7 +97,7 @@ test_that("Time-varying CFR with smoothing and burn in", {
   )
 
   expect_length(
-    which(is.na(tvcfr_burnin_7$severity_mean)),
+    which(is.na(tvcfr_burnin_7$severity_estimate)),
     burn_in
   )
 
