@@ -169,8 +169,8 @@ df_reporting %>%
   ggplot() +
   geom_pointrange(
     aes(
-      x = fct_reorder(country, ascertainment_mean),
-      y = ascertainment_mean,
+      x = fct_reorder(country, ascertainment_estimate),
+      y = ascertainment_estimate,
       ymin = ascertainment_low,
       ymax = ascertainment_high
     )
