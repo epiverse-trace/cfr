@@ -21,7 +21,7 @@
 #' @keywords internal
 #' @return A `<data.frame>` with one row and three columns for the maximum
 #' likelihood estimate and 95% confidence interval of the corrected severity
-#' estimates, named "severity_mean", "severity_low", and "severity_high".
+#' estimates, named "severity_estimate", "severity_low", and "severity_high".
 #'
 #' @details
 #' ## Special cases
@@ -52,7 +52,7 @@
   if (sum(c(total_cases, total_deaths, total_outcomes) == 0) >= 2) {
     return(
       c(
-        severity_mean = NA_real_,
+        severity_estimate = NA_real_,
         severity_low = NA_real_,
         severity_high = NA_real_
       )
@@ -74,14 +74,16 @@
   lik <- func_likelihood(total_outcomes, total_deaths, pprange)
 
   # maximum likelihood estimate - if this is empty, return NA
-  severity_mean <- pprange[which.max(lik)]
+  severity_estimate <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood
   severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
   # return a vector for easy conversion to data
-  severity_estimate <- c(severity_mean, severity_lims)
-  names(severity_estimate) <- sprintf("severity_%s", c("mean", "low", "high"))
+  severity_estimate <- c(severity_estimate, severity_lims)
+  names(severity_estimate) <- sprintf(
+    "severity_%s", c("estimate", "low", "high")
+  )
 
   # returning vector with corrected estimates
   severity_estimate

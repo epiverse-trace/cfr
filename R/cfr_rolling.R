@@ -20,11 +20,10 @@
 #'
 #' @return A `<data.frame>` with the date, maximum likelihood estimate and 95%
 #' confidence interval of the daily severity estimates, named
-#' "severity_mean", "severity_low", and "severity_high", with one row for each
-#' day in the original data.frame.
-#'
+#' "severity_estimate", "severity_low", and "severity_high", with one row for
+#' each day in the original data.frame.
+#' 
 #' @details
-#'
 #' `cfr_rolling()` applies the internal function `.estimate_severity()` to an
 #' expanding time-series of total cases, total estimated outcomes, and total
 #' deaths. The method used to generate a profile likelihood for each day depends
@@ -157,11 +156,11 @@ cfr_rolling <- function(data,
     # prepare holding matrix
     severity_estimates <- matrix(NA_real_, nrow = nrow(data), ncol = 3)
     colnames(severity_estimates) <- c(
-      "severity_mean", "severity_low", "severity_high"
+      "severity_estimate", "severity_low", "severity_high"
     )
 
     # calculating the uncorrected CFR rolling over all days
-    severity_estimates[indices, "severity_mean"] <- cumulative_deaths /
+    severity_estimates[indices, "severity_estimate"] <- cumulative_deaths /
       cumulative_cases
 
     cfr_lims <- Map(
@@ -184,6 +183,6 @@ cfr_rolling <- function(data,
 
   # return severity estimate with names in correct order
   severity_estimates[, c(
-    "date", "severity_mean", "severity_low", "severity_high"
+    "date", "severity_estimate", "severity_low", "severity_high"
   )]
 }

@@ -34,7 +34,7 @@ Defaults to \code{total_deaths / round(total_outcomes)}.}
 \value{
 A \verb{<data.frame>} with one row and three columns for the maximum
 likelihood estimate and 95\% confidence interval of the corrected severity
-estimates, named "severity_mean", "severity_low", and "severity_high".
+estimates, named "severity_estimate", "severity_low", and "severity_high".
 }
 \description{
 Estimates the maximum likelihood estimate and 95\% confidence

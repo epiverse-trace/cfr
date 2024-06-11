@@ -26,8 +26,8 @@
 #'
 #' @return A `<data.frame>` with the date, maximum likelihood estimate and 95%
 #' confidence interval of the daily severity estimates, named
-#' "severity_mean", "severity_low", and "severity_high", with one row for each
-#' day in the original data.frame.
+#' "severity_estimate", "severity_low", and "severity_high", with one row for
+#' each day in the original data.frame.
 #'
 #' @details
 #' # Details: Adjusting for delays between two time series
@@ -161,7 +161,7 @@ cfr_time_varying <- function(data,
   # assign columns for severity estimate and intervals
   severity_estimates <- matrix(
     data = NA_real_, nrow = nrow(data), ncol = 3,
-    dimnames = list(NULL, sprintf("severity_%s", c("mean", "low", "high")))
+    dimnames = list(NULL, sprintf("severity_%s", c("estimate", "low", "high")))
   )
 
   # calculation of indices to modify
@@ -212,6 +212,6 @@ cfr_time_varying <- function(data,
 
   # return severity estimate with names in correct order
   severity_estimates[, c(
-    "date", "severity_mean", "severity_low", "severity_high"
+    "date", "severity_estimate", "severity_low", "severity_high"
   )]
 }

@@ -101,7 +101,7 @@
 #' \doi{10.1371/journal.pone.0006852}
 #'
 #' @return A `<data.frame>` with the maximum likelihood estimate and 95%
-#' confidence interval of the severity estimates, named "severity_mean",
+#' confidence interval of the severity estimates, named "severity_estimate",
 #' "severity_low", and "severity_high".
 #'
 #' @export
@@ -205,7 +205,7 @@ cfr_static <- function(data,
     severity_estimate <- as.data.frame(as.list(severity_estimate))
   } else {
     # calculating the central estimate
-    severity_mean <- total_deaths / total_cases
+    severity_estimate <- total_deaths / total_cases
 
     # calculating the lower and upper 95% confidence interval using the exact
     # binomial test
@@ -215,7 +215,7 @@ cfr_static <- function(data,
     severity_lims <- severity_conf$conf.int
 
     severity_estimate <- data.frame(
-      severity_mean = severity_mean,
+      severity_estimate = severity_estimate,
       severity_low = severity_lims[[1]],
       severity_high = severity_lims[[2]]
     )

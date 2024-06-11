@@ -15,11 +15,10 @@
 #'
 #' @return A `<data.frame>` containing the maximum likelihood estimate estimate
 #' and 95% confidence interval of the corrected severity, named
-#' "ascertainment_mean" (for the central estimate), and "ascertainment_low" and
-#' "ascertainment_high" for the lower and upper interval limits.
+#' "ascertainment_estimate" (for the central estimate), and "ascertainment_low"
+#' and "ascertainment_high" for the lower and upper interval limits.
 #'
 #' @details
-#'
 #' `estimate_ascertainment()` uses [cfr_static()] internally to obtain a
 #' severity estimate that is compared against the user-specified baseline
 #' severity. The profile likelihood method used to obtain the severity estimate
@@ -96,14 +95,15 @@ estimate_ascertainment <- function(data,
   rownames(df_ascertainment) <- NULL
 
   # re-convert to data.frame from list
-  # here, the estimate called "severity_mean" translates to "ascertainment_me"
+  # here, the estimate called "severity_estimate" translates to
+  # "ascertainment_estimate"
   # and the estimate "severity_high" translates to "ascertainment_lo"
   colnames(df_ascertainment) <- c(
-    "ascertainment_mean", "ascertainment_high", "ascertainment_low"
+    "ascertainment_estimate", "ascertainment_high", "ascertainment_low"
   )
 
   # return data with columns in correct order
   df_ascertainment[, c(
-    "ascertainment_mean", "ascertainment_low", "ascertainment_high"
+    "ascertainment_estimate", "ascertainment_low", "ascertainment_high"
   )]
 }
