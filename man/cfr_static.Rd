@@ -75,6 +75,36 @@ parameterised by time; i.e. \eqn{f(t)} which
 gives the probability that a case has a known outcome (usually death) at time
 \eqn{t}, parameterised with disease-specific parameters before it is supplied
 here.
+\subsection{Profile likelihood methods}{
+
+The naive CFR estimate (without delay correction) is the outcome of a
+Binomial test on deaths and cases using \code{\link[stats:binom.test]{stats::binom.test()}}.
+The confidence intervals around the estimate are also taken from the test.
+
+The delay-corrected CFR estimates are however obtained by generating a
+profile likelihood over the sequence \code{seq(1e-4, 1.0, 1e-4)}. The method used
+depends on the outbreak size and the initial expectation of disease severity.
+This is implemented in the internal function \code{.estimate_severity()}.
+\itemize{
+\item \strong{Delay correction, small outbreaks}: For outbreaks where the total cases
+are below the user-specified 'Poisson threshold' (\code{poisson_threshold},
+default = 100), the CFR and uncertainty around it is taken from a profile
+likelihood generated from a Binomial model of deaths (successes) and
+estimated known outcomes (trials).
+\itemize{
+\item \strong{Delay correction, large outbreaks with low severity}: For outbreaks
+with total cases greater than the Poisson threshold (default = 100) and with
+initial severity estimates < 0.05, the CFR and uncertainty are taken from a
+Poisson approximation of the Binomial profile likelihood (taking
+\eqn{\lambda = np} for \eqn{n} estimated outcomes and \eqn{p} as the severity
+estimate).
+}
+\item \strong{Delay correction, large outbreaks with higher severity}: For outbreaks
+with total cases greater than the Poisson threshold (default = 100) and with
+initial severity estimates \eqn{\geq} 0.05, the CFR and uncertainty are taken
+from a Normal approximation of the Binomial profile likelihood.
+}
+}
 }
 
 \examples{

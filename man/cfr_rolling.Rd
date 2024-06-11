@@ -54,6 +54,14 @@ cannot be calculated for days on which the cumulative number of cases since
 the start of the time-series, and for days on which the cumulative number of
 deaths reported exceeds the cumulative reported cases, and is returned as
 \code{NA}.
+
+\code{cfr_rolling()} applies the internal function \code{.estimate_severity()} to an
+expanding time-series of total cases, total estimated outcomes, and total
+deaths. The method used to generate a profile likelihood for each day depends
+on the outbreak size and initial severity estimate for that day. This is
+essentially the same as running \code{\link[=cfr_static]{cfr_static()}} on each new day. The method
+used for each day is not communicated to the user, in order to prevent
+cluttering the terminal with messages.
 }
 \examples{
 # load package data

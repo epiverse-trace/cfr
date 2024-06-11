@@ -22,6 +22,17 @@
 #' confidence interval of the daily severity estimates, named
 #' "severity_mean", "severity_low", and "severity_high", with one row for each
 #' day in the original data.frame.
+#'
+#' @details
+#'
+#' `cfr_rolling()` applies the internal function `.estimate_severity()` to an
+#' expanding time-series of total cases, total estimated outcomes, and total
+#' deaths. The method used to generate a profile likelihood for each day depends
+#' on the outbreak size and initial severity estimate for that day. This is
+#' essentially the same as running [cfr_static()] on each new day. The method
+#' used for each day is not communicated to the user, in order to prevent
+#' cluttering the terminal with messages.
+#'
 #' @export
 #'
 #' @examples

@@ -17,6 +17,17 @@
 #' and 95% confidence interval of the corrected severity, named
 #' "ascertainment_mean" (for the central estimate), and "ascertainment_low" and
 #' "ascertainment_high" for the lower and upper interval limits.
+#'
+#' @details
+#'
+#' `estimate_ascertainment()` uses [cfr_static()] internally to obtain a
+#' severity estimate that is compared against the user-specified baseline
+#' severity. The profile likelihood method used to obtain the severity estimate
+#' is decided by the internal function `.estimate_severity()` as used in
+#' [cfr_static()], when delay correction is applied. See the [cfr_static()]
+#' documentation for an explanation of the methods used depending on outbreak
+#' size and initial severity guess.
+#'
 #' @export
 #'
 #' @examples
