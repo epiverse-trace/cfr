@@ -1,4 +1,4 @@
-# cfr (development version)
+# cfr 0.1.1
 
 This version of _cfr_ includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (#129).
 
