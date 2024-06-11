@@ -71,12 +71,12 @@ of 3.33.
 library(cfr)
 
 # Load the Ebola 1976 data provided with the package
-data("ebola1976")
+data(ebola1976)
 
 # Calculate the static CFR without correcting for delays
 cfr_static(data = ebola1976)
-#>   severity_mean severity_low severity_high
-#> 1      0.955102    0.9210866     0.9773771
+#>   severity_estimate severity_low severity_high
+#> 1          0.955102    0.9210866     0.9773771
 ```
 
 ``` r
@@ -86,8 +86,8 @@ cfr_static(
   data = ebola1976,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
-#>   severity_mean severity_low severity_high
-#> 1        0.9742       0.8356        0.9877
+#>   severity_estimate severity_low severity_high
+#> 1            0.9742       0.8356        0.9877
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
@@ -111,13 +111,13 @@ rolling_cfr_naive <- cfr_rolling(
 
 # see the first few rows
 head(rolling_cfr_naive)
-#>         date severity_mean severity_low severity_high
-#> 1 1976-08-25             0            0         0.975
-#> 2 1976-08-26             0            0         0.975
-#> 3 1976-08-27             0            0         0.975
-#> 4 1976-08-28             0            0         0.975
-#> 5 1976-08-29             0            0         0.975
-#> 6 1976-08-30             0            0         0.975
+#>         date severity_estimate severity_low severity_high
+#> 1 1976-08-25                 0            0         0.975
+#> 2 1976-08-26                 0            0         0.975
+#> 3 1976-08-27                 0            0         0.975
+#> 4 1976-08-28                 0            0         0.975
+#> 5 1976-08-29                 0            0         0.975
+#> 6 1976-08-30                 0            0         0.975
 ```
 
 ``` r
@@ -129,13 +129,13 @@ rolling_cfr_corrected <- cfr_rolling(
 )
 
 head(rolling_cfr_corrected)
-#>         date severity_mean severity_low severity_high
-#> 1 1976-08-25            NA           NA            NA
-#> 2 1976-08-26         1e-04        1e-04        0.9999
-#> 3 1976-08-27         1e-04        1e-04        0.9999
-#> 4 1976-08-28         1e-04        1e-04        0.9999
-#> 5 1976-08-29         1e-04        1e-04        0.9990
-#> 6 1976-08-30         1e-04        1e-04        0.9942
+#>         date severity_estimate severity_low severity_high
+#> 1 1976-08-25                NA           NA            NA
+#> 2 1976-08-26             1e-04        1e-04        0.9999
+#> 3 1976-08-27             1e-04        1e-04        0.9999
+#> 4 1976-08-28             1e-04        1e-04        0.9999
+#> 5 1976-08-29             1e-04        1e-04        0.9990
+#> 6 1976-08-30             1e-04        1e-04        0.9942
 ```
 
 We plot the rolling CFR to visualise how severity changes over time,
