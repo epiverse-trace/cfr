@@ -39,7 +39,7 @@
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,7 +138,11 @@ We want to estimate the proportion of cases being ascertained given case and dea
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://forcats.tidyverse.org/" class="external-link">forcats</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-</details><div class="section level2">
+</details><div class="alert alert-info">
+<p><strong>Note that</strong> <code>estimate_static()</code> is used to generate a severity estimate which is compared against a ‘known’ severity estimate to calculate the ascertainment ratio.
+See the <a href="estimate_static_severity.html">vignette on static severity estimation</a> to learn more about how <code>estimate_static()</code> chooses a method for profile likelihood generation and hence CFR estimation.</p>
+</div>
+<div class="section level2">
 <h2 id="ascertainment-for-the-covid-19-pandemic-in-the-u-k-">Ascertainment for the Covid-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#ascertainment-for-the-covid-19-pandemic-in-the-u-k-"></a>
 </h2>
 <p>This example shows ascertainment ratio estimation using <em>cfr</em> and data from the Covid-19 pandemic in the United Kingdom.</p>

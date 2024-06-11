@@ -39,7 +39,7 @@
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -258,6 +258,9 @@ Users should apply smoothing if there are reporting artefacts such as lower repo
 <img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-5-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
 Figure 1: Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.
 </p>
+</div>
+<div class="alert alert-info">
+<p><strong>Note that</strong> the severity estimates and confidence intervals in <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> are obtained from a Binomial test on deaths (treated as ‘successes’) and estimated outcomes or cases (depending on whether delay correction is applied; treated as ‘trials’).</p>
 </div>
 </div>
 </div>

@@ -24,7 +24,7 @@ severity measures such as the hospitalisation fatality risk."><meta property="og
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -160,7 +160,33 @@ represents depends upon the input data given by the user.</p>
 parameterised by time; i.e. \(f(t)\) which
 gives the probability that a case has a known outcome (usually death) at time
 \(t\), parameterised with disease-specific parameters before it is supplied
-here.</p>
+here.</p><div class="section">
+<h3 id="profile-likelihood-methods">Profile likelihood methods<a class="anchor" aria-label="anchor" href="#profile-likelihood-methods"></a></h3>
+
+
+<p>The naive CFR estimate (without delay correction) is the outcome of a
+Binomial test on deaths and cases using <code><a href="https://rdrr.io/r/stats/binom.test.html" class="external-link">stats::binom.test()</a></code>.
+The confidence intervals around the estimate are also taken from the test.</p>
+<p>The delay-corrected CFR estimates are however obtained by generating a
+profile likelihood over the sequence <code>seq(1e-4, 1.0, 1e-4)</code>. The method used
+depends on the outbreak size and the initial expectation of disease severity.
+This is implemented in the internal function <code><a href="dot-estimate_severity.html">.estimate_severity()</a></code>.</p><ul><li><p><strong>Delay correction, small outbreaks</strong>: For outbreaks where the total cases
+are below the user-specified 'Poisson threshold' (<code>poisson_threshold</code>,
+default = 100), the CFR and uncertainty around it is taken from a profile
+likelihood generated from a Binomial model of deaths (successes) and
+estimated known outcomes (trials).</p><ul><li><p><strong>Delay correction, large outbreaks with low severity</strong>: For outbreaks
+with total cases greater than the Poisson threshold (default = 100) and with
+initial severity estimates &lt; 0.05, the CFR and uncertainty are taken from a
+Poisson approximation of the Binomial profile likelihood (taking
+\(\lambda = np\) for \(n\) estimated outcomes and \(p\) as the severity
+estimate).</p></li>
+</ul></li>
+<li><p><strong>Delay correction, large outbreaks with higher severity</strong>: For outbreaks
+with total cases greater than the Poisson threshold (default = 100) and with
+initial severity estimates \(\geq\) 0.05, the CFR and uncertainty are taken
+from a Normal approximation of the Binomial profile likelihood.</p></li>
+</ul></div>
+
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

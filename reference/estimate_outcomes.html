@@ -26,7 +26,7 @@ estimates of the known death outcomes."><meta property="og:image" content="https
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,10 +128,18 @@ density at user-specified values, e.g.
 <p>A <code>&lt;data.frame&gt;</code> with the columns in <code>data</code>, and with two additional
 columns:</p><ul><li><p><code>"estimated_outcomes"</code> for the number of cases with an outcome of interest
 (usually, death) estimated to be known on the dates specified in <code>data</code>, and</p></li>
-<li><p><code>"u_t"</code> for the ratio of cumulative number of estimated known outcomes
+<li><p><code>u_t</code> for the ratio of cumulative number of estimated known outcomes
 and the cumulative number of cases reported until each date specified in
 <code>data</code>.</p></li>
 </ul></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The ratio <code>u_t</code> represents, for the outbreak, the overall proportion of
+cases whose outcomes are expected to be known by each day $i$. For an ongoing
+outbreak with relatively long delays between symptom onset and case outcome,
+a <code>u_t</code> value of 1.0 may indicate that the outbreak has ended, as the
+outcomes of all cases are expected to be known.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>

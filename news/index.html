@@ -16,7 +16,7 @@
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,7 +72,64 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="cfr-development-version">cfr (development version)<a class="anchor" aria-label="anchor" href="#cfr-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="cfr-011">cfr 0.1.1<a class="anchor" aria-label="anchor" href="#cfr-011"></a></h2>
+<p>This version of <em>cfr</em> includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p>
+<p>Maintainer is changing to <a href="https://github.com/adamkucharski" class="external-link">@adamkucharski</a> (<a href="https://github.com/epiverse-trace/cfr/issues/143" class="external-link">#143</a>).</p>
+<div class="section level3">
+<h3 id="functions-0-1-1">Functions<a class="anchor" aria-label="anchor" href="#functions-0-1-1"></a></h3>
+<ol style="list-style-type: decimal"><li>
+<p><code><a href="../reference/cfr_static.html">cfr_static()</a></code>:</p>
+<ul><li><p>Has more informative checks on intermediate values passed to <code><a href="../reference/dot-estimate_severity.html">.estimate_severity()</a></code>.</p></li>
+<li><p>Prints a message when CFR value cannot be determined or are unreliable.</p></li>
+</ul></li>
+<li>
+<p><code><a href="../reference/cfr_rolling.html">cfr_rolling()</a></code>:</p>
+<ul><li><p>Prints a message explaining that this is a convenience function.</p></li>
+<li><p>Has improved input checking.</p></li>
+<li><p>Uses new <code><a href="../reference/dot-estimate_severity.html">.estimate_severity()</a></code> functionality based on outbreak size and initial expectation of CFR (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p></li>
+<li><p>Prints a message when some rolling CFR values cannot be determined or are unreliable.</p></li>
+</ul></li>
+<li>
+<p><code><a href="../reference/dot-estimate_severity.html">.estimate_severity()</a></code>:</p>
+<ul><li><p>Renamed with <code>.</code> prefix to indicate internal function.</p></li>
+<li><p>Added parameter <code>p_mid</code> for initial severity estimate, which is used to determine the likelihood approximation method.</p></li>
+<li><p>Selects from among Binomial, Poisson, and Normal approximation of the likelihood depending on the outbreak size and <code>p_mid</code> using the function <code>.select_fun_likelihood()</code>; prints a message with the selected method (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p></li>
+<li><p>Lowest possible severity estimate is reduced to <span class="math inline">10<sup>−4</sup></span>.</p></li>
+<li><p>Severity estimates and confidence intervals stored as named vectors rather than a <code>&lt;data.frame&gt;</code>.</p></li>
+</ul></li>
+<li>
+<p><code><a href="../reference/dot-select_func_likelihood.html">.select_func_likelihood()</a></code>: Internal function added that chooses likelihood approximation function based on outbreak size and <code>p_mid</code>.</p>
+<ul><li><p>Binomial approximation used for small outbreaks with cumulative cases lower than the Poisson threshold.</p></li>
+<li><p>Poisson approximation used for outbreaks above the Poisson threshold and with <code>p_mid</code> &lt; 0.05.</p></li>
+<li><p>Normal approximation used for outbreaks above the Poisson threshold and with <code>p_mid</code> &gt; 0.05.</p></li>
+</ul></li>
+<li><p><code><a href="../reference/delay_density_helpers.html">test_fn_req_args()</a></code> is updated to use <code>Reduce(f = "+")</code> and <code><a href="https://rdrr.io/r/base/funprog.html" class="external-link">Map()</a></code> rather than <code>sum(mapply())</code>.</p></li>
+</ol></div>
+<div class="section level3">
+<h3 id="documentation-0-1-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-1"></a></h3>
+<ol style="list-style-type: decimal"><li><p>Added package level documentation.</p></li>
+<li><p>Updated Readme with lifecycle (stable) and RepoStatus (Active) badges (<a href="https://github.com/epiverse-trace/cfr/issues/113" class="external-link">#113</a>), added DPG badge (<a href="https://github.com/epiverse-trace/cfr/issues/127" class="external-link">#127</a>), and updated the related projects section; corrected figure labelling (<a href="https://github.com/epiverse-trace/cfr/issues/114" class="external-link">#114</a>).</p></li>
+<li><p>Updated <code>_pkgdown.yaml</code> with a manual Bootstrap version (<a href="https://github.com/epiverse-trace/cfr/issues/136" class="external-link">#136</a>) reference sections, added a software permissions vignette (<a href="https://github.com/epiverse-trace/cfr/issues/125" class="external-link">#125</a>), and enabled development mode (<a href="https://github.com/epiverse-trace/cfr/issues/143" class="external-link">#143</a>).</p></li>
+<li><p>Updated <code>WORDLIST</code>.</p></li>
+<li><p>Updated all function documentation files (<a href="https://github.com/epiverse-trace/cfr/issues/134" class="external-link">#134</a>).</p></li>
+<li><p>Added section in distributions vignette on when it is acceptable to use continuous rather than discrete distributions.</p></li>
+<li><p>Corrected explanation of <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> in static severity vignette and added explanations of profile likelihood generation methods used in all severity vignettes (<a href="https://github.com/epiverse-trace/cfr/issues/143" class="external-link">#143</a>).</p></li>
+<li><p>Corrected equations in vignettes (<a href="https://github.com/epiverse-trace/cfr/issues/133" class="external-link">#133</a>) and removed <code><a href="../reference/dot-estimate_severity.html">.estimate_severity()</a></code> from vignettes (<a href="https://github.com/epiverse-trace/cfr/issues/132" class="external-link">#132</a>).</p></li>
+</ol></div>
+<div class="section level3">
+<h3 id="tests-0-1-1">Tests<a class="anchor" aria-label="anchor" href="#tests-0-1-1"></a></h3>
+<ol style="list-style-type: decimal"><li><p>All snapshots are updated with severity values from new likelihood functions (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p></li>
+<li><p>Added session global state checker script and setup options script (<a href="https://github.com/epiverse-trace/cfr/issues/119" class="external-link">#119</a>).</p></li>
+<li><p>All tests are updated to reflect that functions will sometimes throw informative messages.</p></li>
+<li><p>Tests using <em>incidence2</em> suppress warnings on missing values (added in <em>incidence2</em> v2.3.0) as filling missing values is the subject of the test for <code><a href="../reference/prepare_data.html">prepare_data.incidence2()</a></code> (<a href="https://github.com/epiverse-trace/cfr/issues/143" class="external-link">#143</a>).</p></li>
+</ol></div>
+<div class="section level3">
+<h3 id="package-0-1-1">Package<a class="anchor" aria-label="anchor" href="#package-0-1-1"></a></h3>
+<ol style="list-style-type: decimal"><li><p>Added or updated GitHub Actions workflows for dependency changes, linting, updating the citation file, and updating the license year (<a href="https://github.com/epiverse-trace/cfr/issues/119" class="external-link">#119</a>, <a href="https://github.com/epiverse-trace/cfr/issues/137" class="external-link">#137</a>, <a href="https://github.com/epiverse-trace/cfr/issues/142" class="external-link">#142</a>).</p></li>
+<li><p>Updated other GHA workflows and infrastructure files to match the latest versions on <code>epiverse-trace/packagetemplate</code> (<a href="https://github.com/epiverse-trace/cfr/issues/119" class="external-link">#119</a>).</p></li>
+<li><p>Normalised <code>DESCRIPTION</code> file.</p></li>
+<li><p>Added <code>tools/check.env</code> from <code>epiverse-trace/packagetemplate</code> to suppress specific checks on package size, Rd cross references, GNU Make requirement, and non-ASCII strings (<a href="https://github.com/epiverse-trace/cfr/issues/142" class="external-link">#142</a>).</p></li>
+</ol></div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="cfr-010">cfr 0.1.0<a class="anchor" aria-label="anchor" href="#cfr-010"></a></h2><p class="text-muted">CRAN release: 2023-11-21</p>

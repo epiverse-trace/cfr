@@ -39,7 +39,7 @@
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -163,10 +163,11 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 </div>
 </div>
 <div class="section level3">
-<h3 id="intermediate-step-estimating-expected-deaths">Intermediate step: Estimating expected deaths<a class="anchor" aria-label="anchor" href="#intermediate-step-estimating-expected-deaths"></a>
+<h3 id="intermediate-step-estimating-cases-with-known-outcomes">Intermediate step: Estimating cases with known outcomes<a class="anchor" aria-label="anchor" href="#intermediate-step-estimating-cases-with-known-outcomes"></a>
 </h3>
-<p>The function <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> from the <em>cfr</em> package can estimate the number of deaths expected given a time-series of case onset and reported deaths and a delay density function.</p>
-<p>The resulting data frame contains two new columns, “estimated_outcomes”, for the number of deaths expected for each day, and “u_t” for the ratio of cumulative number of estimated deaths and the cumulative number of cases reported until each date specified in data.</p>
+<p>The function <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> estimates the number of cases whose outcomes are expected to be known by each day <span class="math inline">\(i\)</span> of an outbreak, given a time-series of case onsets and the distribution of delays between symptom onset and case outcome.
+In the context of CFR estimation, the delay distribution is usually an ‘onset-to-death’ distribution.</p>
+<p>The resulting data frame contains two new columns, “estimated_outcomes”, for the number of cases whose outcomes are expected to be known on each day, and “u_t” for the ratio of cumulative number of cases estimated to have known outcomes and the cumulative number of cases reported until each date specified in data.</p>
 <details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculate known death outcomes</span></span>
 <span><span class="va">df_estimated_outcomes_ebola</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimate_outcomes.html">estimate_outcomes</a></span><span class="op">(</span></span>
@@ -194,9 +195,12 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <span><span class="co">#&gt; 35 1976-09-28     4     13           8.761617 0.6207698</span></span>
 <span><span class="co">#&gt; 36 1976-09-29     4     12           8.659704 0.6552761</span></span>
 <span><span class="co">#&gt; 37 1976-09-30     3      9           8.371787 0.6904737</span></span></code></pre></div>
-</details><p>The estimated deaths are greater than the true deaths at the beginning of the outbreak, as infected individuals who have not yet died are expected to die in the coming days.</p>
-<p>Similarly, the estimated deaths later in the outbreak are similar to or less than the reported deaths, as the deaths of individuals who survived for longer are now reported.</p>
+</details><p>The estimated outcomes are lower than the number of cases at the beginning of an outbreak as the case outcomes are only likely to become known some days later; this also means that <code>u_t</code> is likely to be lower than 1.0 early in the outbreak.
+The <code>u_t</code> for an outbreak that has ended will be much closer to 1.0, as the outcomes of all reported cases are expected to be known (depending on the quality of outbreak monitoring).
+This depends on the distribution of delays between onset and outcome, and the ratio <code>u_t</code> will ‘catch up’ to 1.0 faster when the onset-to-outcome delay is short.</p>
 <div class="alert alert-warning">
+<p><strong>Note that</strong> the period between onset and death may be shorter than the period between onset and full recovery, and should not be considered equivalent.
+For CFR estimation, we are primarily interested in the former as the goal is estimating severity in the form of a fatality risk (or ratio for past outbreaks).</p>
 <p><strong>Note that</strong> <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> is exported but is primarily intended for internal use.</p>
 </div>
 </div>
@@ -222,6 +226,17 @@ See the <a href="delay_distributions.html">vignette on delay distributions</a> f
 <span><span class="co">#&gt; 1        0.9355        0.544        0.9795</span></span></code></pre></div>
 </details>
 </div>
+</div>
+<div class="section level2 alert alert-info">
+<h2 id="severity-estimation-methods">Severity estimation methods<a class="anchor" aria-label="anchor" href="#severity-estimation-methods"></a>
+</h2>
+<p><code><a href="../reference/cfr_static.html">cfr_static()</a></code> automatically chooses a method of calculating the severity estimate, based on whether delay correction is applied, and further when delay correction is applied, depending on the total number of cases and an initial rough estimate of the severity.</p>
+<ul>
+<li><p><strong>Naive estimate</strong>: When delay correction is not applied, the CFR is the ratio of total deaths to total cases, and the confidence interval is given by a Binomial test using <code><a href="https://rdrr.io/r/stats/binom.test.html" class="external-link">stats::binom.test()</a></code> where total deaths are successes, total cases are trials, and the hypothesised success is 1.0</p></li>
+<li><p><strong>Delay correction, small outbreaks</strong>: For outbreaks where the total cases are below the user-specified ‘Poisson threshold’ (<code>poisson_threshold</code>, default = 100), the CFR and uncertainty around it is taken from a profile likelihood generated from a Binomial model of deaths (successes) and estimated known outcomes (trials).</p></li>
+<li><p><strong>Delay correction, large outbreaks with low severity</strong>: For outbreaks with total cases greater than the Poisson threshold (default = 100) and with initial severity estimates &lt; 0.05, the CFR and uncertainty are taken from a Poisson approximation of the Binomial profile likelihood (taking <span class="math inline">\(\lambda\)</span> = <span class="math inline">\(np\)</span> for <span class="math inline">\(n\)</span> estimated outcomes and <span class="math inline">\(p\)</span> as the severity estimate).</p></li>
+<li><p><strong>Delay correction, large outbreaks with higher severity</strong>: For outbreaks with total cases greater than the Poisson threshold (default = 100) and with initial severity estimates <span class="math inline">\(\geq\)</span> 0.05, the CFR and uncertainty are taken from a Normal approximation of the Binomial profile likelihood.</p></li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="severity-of-the-covid-19-pandemic-in-the-u-k-">Severity of the COVID-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#severity-of-the-covid-19-pandemic-in-the-u-k-"></a>

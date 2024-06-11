@@ -24,7 +24,7 @@ iteration."><meta property="og:image" content="https://epiverse-trace.github.io/
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -142,6 +142,13 @@ cannot be calculated for days on which the cumulative number of cases since
 the start of the time-series, and for days on which the cumulative number of
 deaths reported exceeds the cumulative reported cases, and is returned as
 <code>NA</code>.</p>
+<p><code>cfr_rolling()</code> applies the internal function <code><a href="dot-estimate_severity.html">.estimate_severity()</a></code> to an
+expanding time-series of total cases, total estimated outcomes, and total
+deaths. The method used to generate a profile likelihood for each day depends
+on the outbreak size and initial severity estimate for that day. This is
+essentially the same as running <code><a href="cfr_static.html">cfr_static()</a></code> on each new day. The method
+used for each day is not communicated to the user, in order to prevent
+cluttering the terminal with messages.</p>
     </div>
 
     <div class="section level2">
