@@ -35,7 +35,9 @@ test_that("`cfr_rolling`: Basic expectations", {
   )
 
   # expected names
-  expected_names <- c("date", "severity_mean", "severity_low", "severity_high")
+  expected_names <- c(
+    "date", "severity_estimate", "severity_low", "severity_high"
+  )
   # expect named columns
   expect_named(
     rolling_scfr_naive,
@@ -180,7 +182,7 @@ test_that("cfr_rolling handles cumulative zeroes case", {
   cfr_estimate <- cfr_rolling(data)
 
   expect_identical(
-    which.min(is.na(cfr_estimate$severity_mean)),
+    which.min(is.na(cfr_estimate$severity_estimate)),
     n_nas
   )
 })

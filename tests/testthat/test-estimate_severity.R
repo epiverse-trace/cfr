@@ -28,7 +28,7 @@ test_that("`estimate_severity`: Basic expectations", {
   expect_vector(severity_estimate, numeric())
   expect_named(
     severity_estimate,
-    sprintf("severity_%s", c("mean", "low", "high"))
+    sprintf("severity_%s", c("estimate", "low", "high"))
   )
   # expect within values
   expect_true(
@@ -37,8 +37,10 @@ test_that("`estimate_severity`: Basic expectations", {
   # expect that lo, me, and hi are in roughly ascending order
   expect_true(
     all(
-      severity_estimate["severity_low"] < severity_estimate["severity_mean"] &&
-        severity_estimate["severity_mean"] < severity_estimate["severity_high"]
+      severity_estimate["severity_low"] <
+        severity_estimate["severity_estimate"] &&
+        severity_estimate["severity_estimate"] <
+          severity_estimate["severity_high"]
     )
   )
   # also check for a snapshot
@@ -90,7 +92,7 @@ test_that("Special cases of `.estimate_severity()`", {
   expect_identical(
     .estimate_severity(total_cases, total_deaths, total_outcomes),
     c(
-      severity_mean = NA_real_,
+      severity_estimate = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -101,7 +103,7 @@ test_that("Special cases of `.estimate_severity()`", {
   expect_identical(
     .estimate_severity(total_cases, total_deaths, total_outcomes),
     c(
-      severity_mean = NA_real_,
+      severity_estimate = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -112,7 +114,7 @@ test_that("Special cases of `.estimate_severity()`", {
   expect_identical(
     .estimate_severity(total_cases, total_deaths, total_outcomes),
     c(
-      severity_mean = NA_real_,
+      severity_estimate = NA_real_,
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -129,7 +131,7 @@ test_that("Special cases of `.estimate_severity()`", {
       poisson_threshold = 100
     ),
     c(
-      severity_mean = 1e-4, # lowest possible severity under this method
+      severity_estimate = 1e-4, # lowest possible severity under this method
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -142,7 +144,7 @@ test_that("Special cases of `.estimate_severity()`", {
       poisson_threshold = 100
     ),
     c(
-      severity_mean = 1 - 1e-4, # highest possible severity under this method
+      severity_estimate = 1 - 1e-4, # highest possible severity
       severity_low = NA_real_,
       severity_high = NA_real_
     )
@@ -156,7 +158,7 @@ test_that("Special cases of `.estimate_severity()`", {
     expect_identical(
       .estimate_severity(total_cases, total_deaths, total_outcomes),
       c(
-        severity_mean = 0.99,
+        severity_estimate = 0.99,
         severity_low = NA_real_,
         severity_high = NA_real_
       )
@@ -169,7 +171,7 @@ test_that("Special cases of `.estimate_severity()`", {
 # Expect NAs when multiple values are zero
 test_that("estimate_severity returns NAs when inputs are zeros", {
   test_df <- c(
-    severity_mean = NA_real_,
+    severity_estimate = NA_real_,
     severity_low = NA_real_,
     severity_high = NA_real_
   )

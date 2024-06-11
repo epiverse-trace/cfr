@@ -23,7 +23,7 @@ test_that("Static CFR estimate, basic expectations", {
   expect_s3_class(scfr_corrected, "data.frame")
 
   # expected names
-  expected_names <- c("severity_mean", "severity_low", "severity_high")
+  expected_names <- c("severity_estimate", "severity_low", "severity_high")
   # expect named columns
   expect_named(
     scfr_naive,

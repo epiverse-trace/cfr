@@ -15,7 +15,7 @@ test_that("Basic expectations for static ascertainment", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
+    c("ascertainment_estimate", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -25,8 +25,8 @@ test_that("Basic expectations for static ascertainment", {
   expect_true(
     all(
       ascertainment_estimate$ascertainment_low <=
-        ascertainment_estimate$ascertainment_mean &&
-        ascertainment_estimate$ascertainment_mean <=
+        ascertainment_estimate$ascertainment_estimate &&
+        ascertainment_estimate$ascertainment_estimate <=
           ascertainment_estimate$ascertainment_high
     )
   )
@@ -46,7 +46,7 @@ test_that("Correct for delays for static ascertainment", {
   expect_s3_class(ascertainment_estimate, "data.frame")
   expect_named(
     ascertainment_estimate,
-    c("ascertainment_mean", "ascertainment_low", "ascertainment_high")
+    c("ascertainment_estimate", "ascertainment_low", "ascertainment_high")
   )
   expect_true(
     all(
@@ -56,8 +56,8 @@ test_that("Correct for delays for static ascertainment", {
   expect_true(
     all(
       ascertainment_estimate$ascertainment_low <=
-        ascertainment_estimate$ascertainment_mean &&
-        ascertainment_estimate$ascertainment_mean <=
+        ascertainment_estimate$ascertainment_estimate &&
+        ascertainment_estimate$ascertainment_estimate <=
           ascertainment_estimate$ascertainment_high
     )
   )
@@ -120,7 +120,7 @@ test_that("Ascertainment is statistically correct", {
     estimate_ascertainment(
       data,
       severity_baseline = 0.01
-    )$ascertainment_mean,
+    )$ascertainment_estimate,
     severity_baseline / (daily_deaths / daily_cases)
   )
 })
