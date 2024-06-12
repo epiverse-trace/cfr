@@ -120,7 +120,7 @@ test_that("cfr_rolling does not introduce bias due to index shifting", {
   expect_identical(
     cfr_time_varying(
       data = covid_uk,
-      delay_density = function(x) ifelse(x == 0, 1, 0), # nolint ifelse_linter
+      delay_density = function(x) ifelse(x == 0, 1, 0),
       burn_in = 7L
     ),
     cfr_time_varying(
