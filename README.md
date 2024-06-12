@@ -7,7 +7,7 @@
 
 <a href="https://app.digitalpublicgoods.net/a/11092"><img src="https://digitalpublicgoods.net/registry/dpgicon.svg" alt="Digital Public Good" height="25">
 [![License:
-MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit/)
+MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/license/mit)
 [![R-CMD-check](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/epiverse-trace/cfr/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/epiverse-trace/cfr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/epiverse-trace/cfr?branch=main)
