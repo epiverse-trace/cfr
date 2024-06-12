@@ -213,8 +213,8 @@ For CFR estimation, we are primarily interested in the former as the goal is est
 <span><span class="fu"><a href="../reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">df_ebola_subset</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1     0.7197802    0.6485503     0.7836984</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1         0.7197802    0.6485503     0.7836984</span></span></code></pre></div>
 </details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># calculating the corrected CFR</span></span>
@@ -222,8 +222,8 @@ For CFR estimation, we are primarily interested in the former as the goal is est
 <span>  <span class="va">df_ebola_subset</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.9355        0.544        0.9795</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.9355        0.544        0.9795</span></span></code></pre></div>
 </details>
 </div>
 </div>
@@ -279,8 +279,8 @@ For CFR estimation, we are primarily interested in the former as the goal is est
 <span><span class="fu"><a href="../reference/cfr_static.html">cfr_static</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1    0.03640132   0.03617238     0.0366313</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1        0.03640132   0.03617238     0.0366313</span></span></code></pre></div>
 </details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># calculating the corrected CFR</span></span>
@@ -288,8 +288,8 @@ For CFR estimation, we are primarily interested in the former as the goal is est
 <span>  <span class="va">df_covid_uk</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.0465       0.0462        0.0467</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.0465       0.0462        0.0467</span></span></code></pre></div>
 </details><hr>
 </div>
 </div>

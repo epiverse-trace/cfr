@@ -129,8 +129,8 @@ approximation. Set to 100 by default. Must be &gt; 0.</p></dd>
 
 <p>A <code>&lt;data.frame&gt;</code> with the date, maximum likelihood estimate and 95%
 confidence interval of the daily severity estimates, named
-"severity_mean", "severity_low", and "severity_high", with one row for each
-day in the original data.frame.</p>
+"severity_estimate", "severity_low", and "severity_high", with one row for
+each day in the original data.frame.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -158,8 +158,8 @@ cluttering the terminal with messages.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate severity without correcting for delays</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="cfr_static.html">cfr_static</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      0.955102    0.9210866     0.9773771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.955102    0.9210866     0.9773771</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate severity for each day while correcting for delays</span></span></span>
 <span class="r-in"><span><span class="co"># obtain onset-to-death delay distribution parameters from Barry et al. 2018</span></span></span>
@@ -173,13 +173,13 @@ cluttering the terminal with messages.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Some daily ratios of total deaths to total cases with known outcome are below 0.01%: some CFR estimates may be unreliable.FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">estimate</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         date severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1976-08-25            NA           NA            NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1976-08-26         1e-04        1e-04        0.9999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1976-08-27         1e-04        1e-04        0.9999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1976-08-28         1e-04        1e-04        0.9999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1976-08-29         1e-04        1e-04        0.9990</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1976-08-30         1e-04        1e-04        0.9942</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         date severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 1976-08-25                NA           NA            NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 1976-08-26             1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 1976-08-27             1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 1976-08-28             1e-04        1e-04        0.9999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 1976-08-29             1e-04        1e-04        0.9990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 1976-08-30             1e-04        1e-04        0.9942</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

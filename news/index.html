@@ -73,8 +73,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="cfr-011">cfr 0.1.1<a class="anchor" aria-label="anchor" href="#cfr-011"></a></h2>
-<p>This version of <em>cfr</em> includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p>
 <p>Maintainer is changing to <a href="https://github.com/adamkucharski" class="external-link">@adamkucharski</a> (<a href="https://github.com/epiverse-trace/cfr/issues/143" class="external-link">#143</a>).</p>
+<div class="section level3">
+<h3 id="major-changes-0-1-1">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-1-1"></a></h3>
+<ul><li><p>The output column names <code>severity_mean</code> and <code>ascertainment_mean</code> have been corrected to <code>severity_estimate</code> and <code>ascertainment_estimate</code>. This may break any workflows that rely on the previous column names (<a href="https://github.com/epiverse-trace/cfr/issues/146" class="external-link">#146</a>).</p></li>
+<li><p>This version of <em>cfr</em> includes changes to the severity estimation algorithms used in calculating a static severity measure, and may lead to small changes to some CFR values calculated using v0.1.0 (<a href="https://github.com/epiverse-trace/cfr/issues/129" class="external-link">#129</a>).</p></li>
+</ul></div>
 <div class="section level3">
 <h3 id="functions-0-1-1">Functions<a class="anchor" aria-label="anchor" href="#functions-0-1-1"></a></h3>
 <ol style="list-style-type: decimal"><li>

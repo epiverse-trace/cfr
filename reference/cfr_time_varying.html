@@ -145,8 +145,8 @@ argument is 1.</p></dd>
 
 <p>A <code>&lt;data.frame&gt;</code> with the date, maximum likelihood estimate and 95%
 confidence interval of the daily severity estimates, named
-"severity_mean", "severity_low", and "severity_high", with one row for each
-day in the original data.frame.</p>
+"severity_estimate", "severity_low", and "severity_high", with one row for
+each day in the original data.frame.</p>
     </div>
     <div class="section level2">
     <h2 id="details-adjusting-for-delays-between-two-time-series">Details: Adjusting for delays between two time series<a class="anchor" aria-label="anchor" href="#details-adjusting-for-delays-between-two-time-series"></a></h2>
@@ -195,13 +195,13 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># View</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">cfr_time_varying</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            date severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1089 2022-12-26    0.03484995   0.02946797    0.04090181</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1090 2022-12-27    0.03546291   0.02973354    0.04194157</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1091 2022-12-28    0.02585859   0.02161760    0.03067046</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1092 2022-12-29    0.02149886   0.01813784    0.02529105</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1093 2022-12-30    0.01591638   0.01335220    0.01882303</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1094 2022-12-31    0.01710288   0.01432899    0.02024949</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            date severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1089 2022-12-26        0.03484995   0.02946797    0.04090181</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1090 2022-12-27        0.03546291   0.02973354    0.04194157</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1091 2022-12-28        0.02585859   0.02161760    0.03067046</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1092 2022-12-29        0.02149886   0.01813784    0.02529105</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1093 2022-12-30        0.01591638   0.01335220    0.01882303</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1094 2022-12-31        0.01710288   0.01432899    0.02024949</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate time varying severity while correcting for delays</span></span></span>
 <span class="r-in"><span><span class="co"># obtain onset-to-death delay distribution parameters from Linton et al. 2020</span></span></span>
@@ -213,13 +213,13 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 <span class="r-in"><span>  burn_in <span class="op">=</span> <span class="fl">7L</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">cfr_time_varying</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            date severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1089 2022-12-26    0.02750191   0.02324170    0.03229909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1090 2022-12-27    0.02417420   0.02025046    0.02862110</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1091 2022-12-28    0.02278391   0.01904251    0.02703157</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1092 2022-12-29    0.02443221   0.02061721    0.02873419</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1093 2022-12-30    0.02242303   0.01882017    0.02650187</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1094 2022-12-31    0.02169269   0.01818096    0.02567269</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            date severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1089 2022-12-26        0.02750191   0.02324170    0.03229909</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1090 2022-12-27        0.02417420   0.02025046    0.02862110</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1091 2022-12-28        0.02278391   0.01904251    0.02703157</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1092 2022-12-29        0.02443221   0.02061721    0.02873419</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1093 2022-12-30        0.02242303   0.01882017    0.02650187</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1094 2022-12-31        0.02169269   0.01818096    0.02567269</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

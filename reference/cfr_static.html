@@ -128,7 +128,7 @@ approximation. Set to 100 by default. Must be &gt; 0.</p></dd>
     
 
 <p>A <code>&lt;data.frame&gt;</code> with the maximum likelihood estimate and 95%
-confidence interval of the severity estimates, named "severity_mean",
+confidence interval of the severity estimates, named "severity_estimate",
 "severity_low", and "severity_high".</p>
     </div>
     <div class="section level2">
@@ -203,8 +203,8 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate severity without correcting for delays</span></span></span>
 <span class="r-in"><span><span class="fu">cfr_static</span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1      0.955102    0.9210866     0.9773771</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          0.955102    0.9210866     0.9773771</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># estimate severity for each day while correcting for delays</span></span></span>
 <span class="r-in"><span><span class="co"># obtain onset-to-death delay distribution parameters from Barry et al. 2018</span></span></span>
@@ -214,8 +214,8 @@ Diseases: A Case Study of an Influenza Pandemic. PLOS ONE, 4(8), e6852.
 <span class="r-in"><span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_mean severity_low severity_high</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        0.9742       0.8356        0.9877</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   severity_estimate severity_low severity_high</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1            0.9742       0.8356        0.9877</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

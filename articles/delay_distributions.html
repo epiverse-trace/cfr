@@ -174,8 +174,8 @@ Parameters for the onset-to-death distribution of Ebola virus disease are taken 
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.9742       0.8356        0.9877</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.9742       0.8356        0.9877</span></span></code></pre></div>
 </details>
 </div>
 <div class="section level2">
@@ -199,8 +199,8 @@ See the <a href="https://cran.r-project.org/view=Distributions" class="external-
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/density.html" class="external-link">density</a></span><span class="op">(</span><span class="va">dist_onset_to_death_ebola</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.9742       0.8356        0.9877</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.9742       0.8356        0.9877</span></span></code></pre></div>
 </details>
 </div>
 <div class="section level3">
@@ -221,8 +221,8 @@ Here, we show an example for the discrete Gamma distribution.
 <span>  delay_density <span class="op">=</span> <span class="va">dist_onset_to_death_ebola</span><span class="op">$</span><span class="va">d</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Total cases = 245 and p = 0.959: using Normal approximation to binomial likelihood.</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.9742       0.8356        0.9877</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.9742       0.8356        0.9877</span></span></code></pre></div>
 </details>
 </div>
 </div>

@@ -128,12 +128,12 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load the Ebola 1976 data provided with the package</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"ebola1976"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">ebola1976</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Calculate the static CFR without correcting for delays</span></span>
 <span><span class="fu"><a href="reference/cfr_static.html">cfr_static</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">ebola1976</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1      0.955102    0.9210866     0.9773771</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1          0.955102    0.9210866     0.9773771</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Calculate the static CFR while correcting for delays</span></span>
@@ -141,8 +141,8 @@
 <span>  data <span class="op">=</span> <span class="va">ebola1976</span>,</span>
 <span>  delay_density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html" class="external-link">dgamma</a></span><span class="op">(</span><span class="va">x</span>, shape <span class="op">=</span> <span class="fl">2.40</span>, scale <span class="op">=</span> <span class="fl">3.33</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt;   severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1        0.9742       0.8356        0.9877</span></span></code></pre></div>
+<span><span class="co">#&gt;   severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1            0.9742       0.8356        0.9877</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak">Change in real-time estimates of overall severity during the 1976 Ebola outbreak<a class="anchor" aria-label="anchor" href="#change-in-real-time-estimates-of-overall-severity-during-the-1976-ebola-outbreak"></a>
@@ -156,13 +156,13 @@
 <span></span>
 <span><span class="co"># see the first few rows</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_naive</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1 1976-08-25             0            0         0.975</span></span>
-<span><span class="co">#&gt; 2 1976-08-26             0            0         0.975</span></span>
-<span><span class="co">#&gt; 3 1976-08-27             0            0         0.975</span></span>
-<span><span class="co">#&gt; 4 1976-08-28             0            0         0.975</span></span>
-<span><span class="co">#&gt; 5 1976-08-29             0            0         0.975</span></span>
-<span><span class="co">#&gt; 6 1976-08-30             0            0         0.975</span></span></code></pre></div>
+<span><span class="co">#&gt;         date severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1 1976-08-25                 0            0         0.975</span></span>
+<span><span class="co">#&gt; 2 1976-08-26                 0            0         0.975</span></span>
+<span><span class="co">#&gt; 3 1976-08-27                 0            0         0.975</span></span>
+<span><span class="co">#&gt; 4 1976-08-28                 0            0         0.975</span></span>
+<span><span class="co">#&gt; 5 1976-08-29                 0            0         0.975</span></span>
+<span><span class="co">#&gt; 6 1976-08-30                 0            0         0.975</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Calculate the rolling daily CFR while correcting for delays</span></span>
@@ -172,13 +172,13 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rolling_cfr_corrected</span><span class="op">)</span></span>
-<span><span class="co">#&gt;         date severity_mean severity_low severity_high</span></span>
-<span><span class="co">#&gt; 1 1976-08-25            NA           NA            NA</span></span>
-<span><span class="co">#&gt; 2 1976-08-26         1e-04        1e-04        0.9999</span></span>
-<span><span class="co">#&gt; 3 1976-08-27         1e-04        1e-04        0.9999</span></span>
-<span><span class="co">#&gt; 4 1976-08-28         1e-04        1e-04        0.9999</span></span>
-<span><span class="co">#&gt; 5 1976-08-29         1e-04        1e-04        0.9990</span></span>
-<span><span class="co">#&gt; 6 1976-08-30         1e-04        1e-04        0.9942</span></span></code></pre></div>
+<span><span class="co">#&gt;         date severity_estimate severity_low severity_high</span></span>
+<span><span class="co">#&gt; 1 1976-08-25                NA           NA            NA</span></span>
+<span><span class="co">#&gt; 2 1976-08-26             1e-04        1e-04        0.9999</span></span>
+<span><span class="co">#&gt; 3 1976-08-27             1e-04        1e-04        0.9999</span></span>
+<span><span class="co">#&gt; 4 1976-08-28             1e-04        1e-04        0.9999</span></span>
+<span><span class="co">#&gt; 5 1976-08-29             1e-04        1e-04        0.9990</span></span>
+<span><span class="co">#&gt; 6 1976-08-30             1e-04        1e-04        0.9942</span></span></code></pre></div>
 <p>We plot the rolling CFR to visualise how severity changes over time, using the <a href="https://ggplot2.tidyverse.org/" class="external-link"><em>ggplot2</em> package</a>. The plotting code is hidden here.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># combine the data for plotting</span></span>
