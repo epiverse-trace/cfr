@@ -78,7 +78,7 @@ test_that("Prepare <incidence2> fails if <incidence2> not available", {
 
   # mock .is_pkg_installed() to return FALSE simulating incidence2 not installed
   # this test adapted from
-  # https://community.rstudio.com/t/how-can-i-make-testthat-think-i-dont-have-a-package-installed/33441 # nolint line_length_linter
+  # https://community.rstudio.com/t/how-can-i-make-testthat-think-i-dont-have-a-package-installed/33441
   with_mocked_bindings(
     .is_pkg_installed = function(x) FALSE,
     code = expect_error(
