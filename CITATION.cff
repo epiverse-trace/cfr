@@ -8,7 +8,7 @@ message: 'To cite package "cfr" in publications use:'
 type: software
 license: MIT
 title: 'cfr: Estimate Disease Severity and Case Ascertainment'
-version: 0.1.1
+version: 0.1.1.9000
 abstract: Estimate the severity of a disease and ascertainment of cases, as discussed
   in Nishiura et al. (2009) <https://doi.org/10.1371/journal.pone.0006852>.
 authors:
