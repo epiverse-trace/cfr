@@ -1,3 +1,5 @@
+# cfr (development version)
+
 # cfr 0.1.1
 
 Maintainer is changing to @adamkucharski (#143).
