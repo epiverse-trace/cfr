@@ -39,7 +39,7 @@
 #' - When `total_outcomes == total_deaths` while
 #' `total_cases < poisson_threshold` the confidence intervals cannot be
 #' calculated and are returned as `NA`s while the severity estimate is returned
-#' as `0.999`.
+#' as `1`.
 .estimate_severity <- function(total_cases,
                                total_deaths,
                                total_outcomes,
@@ -68,16 +68,29 @@
   )
 
   # maximum likelihood estimation for corrected severity
+  # using increments of 0.1% severity
   pprange <- seq(from = 1e-4, to = 1.0, by = 1e-4)
-
+  
+  # if more expected outcomes than observed deaths, set outcomes equal to deaths
+  if(total_outcomes>=total_deaths){
+    total_outcomes_checked <- total_outcomes
+    }else{
+      total_outcomes_checked <- total_deaths
+      message(
+        "Total deaths = ", total_deaths,
+        " and expected outcomes = ", round(total_outcomes),
+        " so setting expected outcomes = total deaths. Note: no CI will be output under this assumption."
+      )
+    }
+  
   # get likelihoods using selected function
-  lik <- func_likelihood(total_outcomes, total_deaths, pprange)
+  lik <- func_likelihood(total_outcomes_checked, total_deaths, pprange)
 
   # maximum likelihood estimate - if this is empty, return NA
   severity_estimate <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood
-  severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
+  severity_lims <- range(pprange[lik >= (max(lik,na.rm = T) - 1.92)],na.rm = T)
 
   # return a vector for easy conversion to data
   severity_estimate <- c(severity_estimate, severity_lims)
@@ -111,9 +124,6 @@
 #' - Poisson approximation: when `total_cases >= poisson_threshold` but
 #' when `p_mid` < 0.05;
 #'
-#' - Normal approximation: when `total_cases >= poisson_threshold` and
-#' `p_mid >=` 0.05.
-#'
 #' @return A function with three arguments, `total_outcomes`, `total_deaths`,
 #' and `pp`, which is used to generate the profile likelihood.
 #' Also prints messages to the screen when a Poisson or Normal approximation
@@ -123,7 +133,7 @@
   # NOTE: internal function is not input checked
   # switch likelihood function based on total cases and p_mid
   # Binomial approx
-  if (total_cases < poisson_threshold) {
+  if (total_cases < poisson_threshold  | (p_mid >= 0.05)) {
     func_likelihood <- function(total_outcomes, total_deaths, pp) {
       lchoose(round(total_outcomes), total_deaths) +
         (total_deaths * log(pp)) +
@@ -132,7 +142,7 @@
   }
 
   # Poisson approx
-  if ((total_cases >= poisson_threshold) && p_mid < 0.05) {
+  if ((total_cases >= poisson_threshold) && (p_mid < 0.05)) {
     func_likelihood <- function(total_outcomes, total_deaths, pp) {
       stats::dpois(
         total_deaths, pp * round(total_outcomes),
@@ -142,22 +152,6 @@
     message(
       "Total cases = ", total_cases, " and p = ", signif(p_mid, 3),
       ": using Poisson approximation to binomial likelihood."
-    )
-  }
-
-  # Normal approx
-  if ((total_cases >= poisson_threshold) && p_mid >= 0.05) {
-    func_likelihood <- function(total_outcomes, total_deaths, pp) {
-      stats::dnorm(
-        total_deaths,
-        mean = pp * round(total_outcomes),
-        sd = pp * (1 - pp) * round(total_outcomes),
-        log = TRUE
-      )
-    }
-    message(
-      "Total cases = ", total_cases, " and p = ", signif(p_mid, 3),
-      ": using Normal approximation to binomial likelihood."
     )
   }
 
