@@ -72,7 +72,7 @@
       message(
         "Total deaths = ", total_deaths,
         " and expected outcomes = ", round(total_outcomes),
-        " so setting expected outcomes = total deaths. Note: no CI will be output under this assumption."
+        " so setting expected outcomes = total deaths. Note: CI output will be NA under this assumption."
       )
     }
   
