@@ -30,16 +30,9 @@
 #' the estimate and confidence intervals cannot be calculated and the output
 #' `<data.frame>` contains only `NA`s.
 #'
-#' - When `total_cases == total_deaths` _and_ `total_outcomes <= total_deaths`,
-#' while `total_cases < poisson_threshold`, the confidence intervals cannot be
-#' calculated and are returned as `NA`. The severity is returned as the lowest
-#' possible value for the method used when cases are below the Poisson
-#' threshold, which is 0.001.
-#'
-#' - When `total_outcomes == total_deaths` while
-#' `total_cases < poisson_threshold` the confidence intervals cannot be
-#' calculated and are returned as `NA`s while the severity estimate is returned
-#' as `1`.
+#' - When `total_outcomes <= total_deaths`, the confidence intervals cannot be 
+#' reliably calculated and are returned as `NA`. The severity estimate is returned
+#' as `0.999`.
 .estimate_severity <- function(total_cases,
                                total_deaths,
                                total_outcomes,
@@ -72,7 +65,7 @@
   pprange <- seq(from = 1e-4, to = 1.0, by = 1e-4)
   
   # if more expected outcomes than observed deaths, set outcomes equal to deaths
-  if(total_outcomes>=total_deaths){
+  if(total_outcomes>total_deaths){
     total_outcomes_checked <- total_outcomes
     }else{
       total_outcomes_checked <- total_deaths
@@ -90,7 +83,7 @@
   severity_estimate <- pprange[which.max(lik)]
 
   # 95% confidence interval of likelihood
-  severity_lims <- range(pprange[lik >= (max(lik,na.rm = T) - 1.92)],na.rm = T)
+  severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
 
   # return a vector for easy conversion to data
   severity_estimate <- c(severity_estimate, severity_lims)
