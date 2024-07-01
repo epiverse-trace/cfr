@@ -30,9 +30,8 @@
 #' the estimate and confidence intervals cannot be calculated and the output
 #' `<data.frame>` contains only `NA`s.
 #'
-#' - When `total_outcomes <= total_deaths`, the confidence intervals cannot be 
-#' reliably calculated and are returned as `NA`. The severity estimate is returned
-#' as `0.999`.
+#' - When `total_outcomes <= total_deaths`, the estimate and confidence intervals
+#' cannot be reliably calculated and are returned as `NA`.
 .estimate_severity <- function(total_cases,
                                total_deaths,
                                total_outcomes,
@@ -63,16 +62,16 @@
   # maximum likelihood estimation for corrected severity
   # using increments of 0.1% severity
   pprange <- seq(from = 1e-4, to = 1.0, by = 1e-4)
-  
+
   # if more expected outcomes than observed deaths, set outcomes equal to deaths
-  if(total_outcomes>total_deaths){
-    total_outcomes_checked <- total_outcomes
-    }else{
-      total_outcomes_checked <- total_deaths
+  if (total_outcomes >= total_deaths){
+      total_outcomes_checked <- total_outcomes }else{ 
+      total_outcomes_checked <- NA
       message(
         "Total deaths = ", total_deaths,
         " and expected outcomes = ", round(total_outcomes),
-        " so setting expected outcomes = total deaths. Note: CI output will be NA under this assumption."
+        " so setting expected outcomes = NA. If we were to assume 
+        total deaths = expected outcomes, it would produce an estimate of 1."
       )
     }
   
@@ -80,10 +79,14 @@
   lik <- func_likelihood(total_outcomes_checked, total_deaths, pprange)
 
   # maximum likelihood estimate - if this is empty, return NA
+  # Otherwise return 95% confidence interval of likelihood
   severity_estimate <- pprange[which.max(lik)]
-
-  # 95% confidence interval of likelihood
-  severity_lims <- range(pprange[lik >= (max(lik) - 1.92)])
+  if (length(severity_estimate)==0){
+    severity_estimate <- NA
+    severity_lims <- c(NA,NA) }else{
+    severity_lims <- range(pprange[lik >= 
+                                     (max(lik,na.rm = TRUE) - 1.92)],na.rm = TRUE)
+  }
 
   # return a vector for easy conversion to data
   severity_estimate <- c(severity_estimate, severity_lims)
@@ -126,7 +129,7 @@
   # NOTE: internal function is not input checked
   # switch likelihood function based on total cases and p_mid
   # Binomial approx
-  if (total_cases < poisson_threshold  | (p_mid >= 0.05)) {
+  if (total_cases < poisson_threshold  || (p_mid >= 0.05)) {
     func_likelihood <- function(total_outcomes, total_deaths, pp) {
       lchoose(round(total_outcomes), total_deaths) +
         (total_deaths * log(pp)) +

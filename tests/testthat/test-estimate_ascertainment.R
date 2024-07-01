@@ -95,7 +95,7 @@ test_that("Ascertainment > 1.0 throws a warning", {
     estimate_ascertainment(
       data = ebola1976,
       delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33),
-      severity_baseline = 0.9
+      severity_baseline = 0.99
     ),
     regexp = "Ascertainment ratios > 1.0 detected, setting these values to 1.0"
   )
