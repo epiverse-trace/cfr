@@ -64,10 +64,10 @@
   pprange <- seq(from = 1e-4, to = 1.0, by = 1e-4)
 
   # if more expected outcomes than observed deaths, set outcomes equal to deaths
-  if (total_outcomes >= total_deaths){ 
-      total_outcomes_checked <- total_outcomes
-      }else{ 
-      total_outcomes_checked <- NA
+  if (total_outcomes >= total_deaths) {
+  total_outcomes_checked <- total_outcomes
+  } else {
+  total_outcomes_checked <- NA
       message(
         "Total deaths = ", total_deaths,
         " and expected outcomes = ", round(total_outcomes),
@@ -75,18 +75,18 @@
         total deaths = expected outcomes, it would produce an estimate of 1."
       )
   }
-  
+
   # get likelihoods using selected function
   lik <- func_likelihood(total_outcomes_checked, total_deaths, pprange)
 
   # maximum likelihood estimate - if this is empty, return NA
   # Otherwise return 95% confidence interval of likelihood
   severity_estimate <- pprange[which.max(lik)]
-  if (length(severity_estimate)==0){
+  if (length(severity_estimate) == 0) {
     severity_estimate <- NA
     severity_lims <- c(NA, NA)
-    }else{
-    severity_lims <- range(pprange[lik >= 
+    } else {
+    severity_lims <- range(pprange[lik >=
                                      (max(lik, na.rm = TRUE) - 1.92)],
                            na.rm = TRUE)
   }
