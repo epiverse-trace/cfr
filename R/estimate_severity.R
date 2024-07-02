@@ -30,7 +30,7 @@
 #' the estimate and confidence intervals cannot be calculated and the output
 #' `<data.frame>` contains only `NA`s.
 #'
-#' - When `total_outcomes <= total_deaths`, the estimate and confidence intervals
+#' - When `total_outcomes <= total_deaths`, estimate and confidence intervals
 #' cannot be reliably calculated and are returned as `NA`.
 .estimate_severity <- function(total_cases,
                                total_deaths,
@@ -64,8 +64,9 @@
   pprange <- seq(from = 1e-4, to = 1.0, by = 1e-4)
 
   # if more expected outcomes than observed deaths, set outcomes equal to deaths
-  if (total_outcomes >= total_deaths){
-      total_outcomes_checked <- total_outcomes }else{ 
+  if (total_outcomes >= total_deaths){ 
+      total_outcomes_checked <- total_outcomes
+      }else{ 
       total_outcomes_checked <- NA
       message(
         "Total deaths = ", total_deaths,
@@ -73,7 +74,7 @@
         " so setting expected outcomes = NA. If we were to assume 
         total deaths = expected outcomes, it would produce an estimate of 1."
       )
-    }
+  }
   
   # get likelihoods using selected function
   lik <- func_likelihood(total_outcomes_checked, total_deaths, pprange)
@@ -83,9 +84,11 @@
   severity_estimate <- pprange[which.max(lik)]
   if (length(severity_estimate)==0){
     severity_estimate <- NA
-    severity_lims <- c(NA,NA) }else{
+    severity_lims <- c(NA, NA)
+    }else{
     severity_lims <- range(pprange[lik >= 
-                                     (max(lik,na.rm = TRUE) - 1.92)],na.rm = TRUE)
+                                     (max(lik, na.rm = TRUE) - 1.92)],
+                           na.rm = TRUE)
   }
 
   # return a vector for easy conversion to data
