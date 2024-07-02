@@ -35,8 +35,6 @@ Returns a likelihood function as follows:
 used when there are few cases, such as in a small outbreak;
 \item Poisson approximation: when \code{total_cases >= poisson_threshold} but
 when \code{p_mid} < 0.05;
-\item Normal approximation: when \code{total_cases >= poisson_threshold} and
-\verb{p_mid >=} 0.05.
 }
 }
 \keyword{internal}

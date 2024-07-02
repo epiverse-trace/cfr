@@ -49,14 +49,8 @@ approximated by a Poisson likelihood for large samples.
 \item When any two of \code{total_cases}, \code{total_deaths}, or \code{total_outcomes} are 0,
 the estimate and confidence intervals cannot be calculated and the output
 \verb{<data.frame>} contains only \code{NA}s.
-\item When \code{total_cases == total_deaths} \emph{and} \code{total_outcomes <= total_deaths},
-while \code{total_cases < poisson_threshold}, the confidence intervals cannot be
-calculated and are returned as \code{NA}. The severity is returned as the lowest
-possible value for the method used when cases are below the Poisson
-threshold, which is 0.001.
-\item When \code{total_outcomes == total_deaths} while
-\code{total_cases < poisson_threshold} the confidence intervals cannot be
-calculated and are returned as \code{NA}s while the severity estimate is returned
+\item When \code{total_outcomes <= total_deaths}, the confidence intervals cannot be
+reliably calculated and are returned as \code{NA}. The severity estimate is returned
 as \code{0.999}.
 }
 }

@@ -131,22 +131,9 @@ test_that("Special cases of `.estimate_severity()`", {
       poisson_threshold = 100
     ),
     c(
-      severity_estimate = 1e-4, # lowest possible severity under this method
-      severity_low = NA_real_,
-      severity_high = NA_real_
-    )
-  )
-
-  total_outcomes <- 99
-  expect_identical(
-    .estimate_severity(
-      total_cases, total_deaths, total_outcomes,
-      poisson_threshold = 100
-    ),
-    c(
-      severity_estimate = 1 - 1e-4, # highest possible severity
-      severity_low = NA_real_,
-      severity_high = NA_real_
+      severity_estimate = NA, # set NA because not valid calculation
+      severity_low = NA,
+      severity_high = NA
     )
   )
 

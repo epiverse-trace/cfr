@@ -105,6 +105,14 @@ This release includes:
 9. 100% code coverage,
 10. Workflows to render the vignettes and README as a website.
 
+# cfr 0.1.1
+
+Updated version to fix instability in normal approximation with displayed Ebola example. This release includes:
+
+1. Removal of normal approximation from the `.estimate_severity()` function.
+2. Updated
+
+
 ## Correction
 
 _cfr_ v0.1.0 only includes functionality for static ascertainment calculations. The functionality for time-varying ascertainment is expected to be included in future versions, and an older implementation was removed just prior to release. The news section for _cfr_ v0.1.0 has been updated to reflect this.
