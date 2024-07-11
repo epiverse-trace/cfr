@@ -65,15 +65,15 @@
 
   # if more expected outcomes than observed deaths, set outcomes equal to deaths
   if (total_outcomes >= total_deaths) {
-  total_outcomes_checked <- total_outcomes
+    total_outcomes_checked <- total_outcomes
   } else {
-  total_outcomes_checked <- NA
-      message(
-        "Total deaths = ", total_deaths,
-        " and expected outcomes = ", round(total_outcomes),
-        " so setting expected outcomes = NA. If we were to assume 
+    total_outcomes_checked <- NA
+    message(
+      "Total deaths = ", total_deaths,
+      " and expected outcomes = ", round(total_outcomes),
+      " so setting expected outcomes = NA. If we were to assume
         total deaths = expected outcomes, it would produce an estimate of 1."
-      )
+    )
   }
 
   # get likelihoods using selected function
@@ -85,10 +85,12 @@
   if (length(severity_estimate) == 0) {
     severity_estimate <- NA
     severity_lims <- c(NA, NA)
-    } else {
-    severity_lims <- range(pprange[lik >=
-                                     (max(lik, na.rm = TRUE) - 1.92)],
-                           na.rm = TRUE)
+  } else {
+    severity_lims <- range(
+      pprange[lik >=
+        (max(lik, na.rm = TRUE) - 1.92)],
+      na.rm = TRUE
+    )
   }
 
   # return a vector for easy conversion to data
@@ -132,7 +134,7 @@
   # NOTE: internal function is not input checked
   # switch likelihood function based on total cases and p_mid
   # Binomial approx
-  if (total_cases < poisson_threshold  || (p_mid >= 0.05)) {
+  if (total_cases < poisson_threshold || (p_mid >= 0.05)) {
     func_likelihood <- function(total_outcomes, total_deaths, pp) {
       lchoose(round(total_outcomes), total_deaths) +
         (total_deaths * log(pp)) +

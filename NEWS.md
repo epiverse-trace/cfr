@@ -1,5 +1,12 @@
 # cfr (development version)
 
+# cfr 0.1.2
+
+Updated version to fix instability in normal approximation with displayed Ebola example. This release includes:
+
+1. Removal of normal approximation from the `.estimate_severity()` function, instead using the binomial likelihood unless criteria for a Poisson approximation met.
+2. Updated README example focusing on first 30 days of outbreak, to emphasise effects of not accounting for delays to outcome.
+
 # cfr 0.1.1
 
 Maintainer is changing to @adamkucharski (#143).
@@ -104,14 +111,6 @@ This release includes:
 8. A vignette on working with data from the _incidence2_ package, and a vignette on working with delay distributions,
 9. 100% code coverage,
 10. Workflows to render the vignettes and README as a website.
-
-# cfr 0.1.1
-
-Updated version to fix instability in normal approximation with displayed Ebola example. This release includes:
-
-1. Removal of normal approximation from the `.estimate_severity()` function.
-2. Updated
-
 
 ## Correction
 
