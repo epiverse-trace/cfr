@@ -73,21 +73,21 @@ library(cfr)
 # Load the Ebola 1976 data provided with the package
 data(ebola1976)
 
-# Calculate the static CFR without correcting for delays
-cfr_static(data = ebola1976)
-#>   severity_estimate severity_low severity_high
-#> 1          0.955102    0.9210866     0.9773771
-```
+# Focus on the first 20 days the outbreak
+ebola1976_first_30 <- ebola1976[1:30, ]
 
-``` r
+# Calculate the static CFR without correcting for delays
+cfr_static(data = ebola1976_first_30)
+#>   severity_estimate severity_low severity_high
+#> 1         0.4740741    0.3875497     0.5617606
 
 # Calculate the static CFR while correcting for delays
 cfr_static(
-  data = ebola1976,
+  data = ebola1976_first_30,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 #>   severity_estimate severity_low severity_high
-#> 1            0.9742       0.8356        0.9877
+#> 1            0.9422       0.8701        0.9819
 ```
 
 ### Change in real-time estimates of overall severity during the 1976 Ebola outbreak
@@ -118,9 +118,6 @@ head(rolling_cfr_naive)
 #> 4 1976-08-28                 0            0         0.975
 #> 5 1976-08-29                 0            0         0.975
 #> 6 1976-08-30                 0            0         0.975
-```
-
-``` r
 
 # Calculate the rolling daily CFR while correcting for delays
 rolling_cfr_corrected <- cfr_rolling(

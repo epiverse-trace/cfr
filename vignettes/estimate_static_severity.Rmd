@@ -4,8 +4,6 @@ output:
   bookdown::html_vignette2:
     fig_caption: yes
     code_folding: show
-pkgdown:
-  as_is: true
 bibliography: resources/library.json
 link-citations: true
 vignette: >
@@ -172,7 +170,7 @@ head(df_covid_uk)
 We retrieve the appropriate distribution for Covid-19 from @linton2020; this is a lognormal distribution with $\mu$ = 2.577 and $\sigma$ = 0.440.
 
 ::: {.alert .alert-warning}
-**Note that** @linton2020 fitted a discrete lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and likely under-estimating uncertainty in the CFR.
+**Note that** @linton2020 fitted a discrete lognormal distribution and we use a continuous distribution, and that we are ignoring uncertainty in the distribution parameters and hence likely under-estimating uncertainty in the CFR.
 :::
 
 ### Estimating the naive and corrected CFR

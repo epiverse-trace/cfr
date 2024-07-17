@@ -66,12 +66,15 @@ library(cfr)
 # Load the Ebola 1976 data provided with the package
 data(ebola1976)
 
+# Focus on the first 20 days the outbreak
+ebola1976_first_30 <- ebola1976[1:30, ]
+
 # Calculate the static CFR without correcting for delays
-cfr_static(data = ebola1976)
+cfr_static(data = ebola1976_first_30)
 
 # Calculate the static CFR while correcting for delays
 cfr_static(
-  data = ebola1976,
+  data = ebola1976_first_30,
   delay_density = function(x) dgamma(x, shape = 2.40, scale = 3.33)
 )
 ```
