@@ -1,84 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/cfr.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/data_from_incidence2.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/delay_distributions.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_ascertainment.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_static_severity.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_time_varying_severity.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/articles/software-permissions.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/index.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr-package.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_rolling.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_static.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_time_varying.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/covid_data.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/delay_density_helpers.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/dot-estimate_severity.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/dot-select_func_likelihood.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/ebola1976.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/estimate_ascertainment.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/estimate_outcomes.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://epiverse-trace.github.io/cfr/dev/reference/prepare_data.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/CONTRIBUTING.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/LICENSE-text.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/LICENSE.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/cfr.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/data_from_incidence2.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/delay_distributions.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_ascertainment.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_static_severity.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/estimate_time_varying_severity.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/index.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/articles/software-permissions.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/authors.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/index.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/news/index.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr-package.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_rolling.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_static.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/cfr_time_varying.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/covid_data.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/delay_density_helpers.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/dot-estimate_severity.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/dot-select_func_likelihood.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/ebola1976.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/estimate_ascertainment.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/estimate_outcomes.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/index.html</loc></url>
+<url><loc>https://epiverse-trace.github.io/cfr/dev/reference/prepare_data.html</loc></url>
 </urlset>
+
