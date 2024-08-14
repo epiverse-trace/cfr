@@ -1,6 +1,6 @@
 .check_input_data <- function(data) {
   coll <- checkmate::makeAssertCollection()
-  
+
   checkmate::assert_data_frame(
     data,
     min.rows = 1, min.cols = 3,
@@ -21,8 +21,8 @@
   )
   # check that data$date is a date column
   checkmate::assert_date(
-    data$date, 
-    any.missing = FALSE, 
+    data$date,
+    any.missing = FALSE,
     all.missing = FALSE,
     add = coll
   )
@@ -38,6 +38,6 @@
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
   )
-  
+
   checkmate::reportAssertions(coll)
 }
