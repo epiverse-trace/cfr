@@ -49,9 +49,8 @@ approximated by a Poisson likelihood for large samples.
 \item When any two of \code{total_cases}, \code{total_deaths}, or \code{total_outcomes} are 0,
 the estimate and confidence intervals cannot be calculated and the output
 \verb{<data.frame>} contains only \code{NA}s.
-\item When \code{total_outcomes <= total_deaths}, the confidence intervals cannot be
-reliably calculated and are returned as \code{NA}. The severity estimate is returned
-as \code{0.999}.
+\item When \code{total_outcomes <= total_deaths}, estimate and confidence intervals
+cannot be reliably calculated and are returned as \code{NA}.
 }
 }
 }
