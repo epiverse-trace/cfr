@@ -115,13 +115,13 @@ max_obs <- as.Date("2024-01-20")
 # 1. Deaths: assume mean delay = 5 days, sd = 5 days
 # log_param <- epiparameter::convert_summary_stats_to_params("lnorm",mean=5,sd=5)
 log_param <- c(meanlog=1.262864,sdlog=0.8325546)
-delay_death <- function(x){dlnorm(x,meanlog = log_param$meanlog,sdlog = log_param$sdlog)}
-outcome_death <- round(rlnorm(round(nn*pp),meanlog = log_param$meanlog,sdlog = log_param$sdlog)) 
+delay_death <- function(x){dlnorm(x,meanlog = log_param[["meanlog"]],sdlog = log_param[["sdlog"]])}
+outcome_death <- round(rlnorm(round(nn*pp),meanlog = log_param[["meanlog"]],sdlog = log_param[["sdlog"]])) 
 
 # 2. Recoveries: assume mean delay = 15 days, sd = 5 days
 # log_param <- epiparameter::convert_summary_stats_to_params("lnorm",mean=15,sd=5)
 log_param <- c(meanlog=2.65537,sdlog=0.3245928)
-outcome_recovery <- round(rlnorm(round(nn*(1-pp)),meanlog = log_param$meanlog,sdlog = log_param$sdlog)) 
+outcome_recovery <- round(rlnorm(round(nn*(1-pp)),meanlog = log_param[["meanlog"]],sdlog = log_param[["sdlog"]])) 
 
 # Create vector of outcome dates
 all_outcomes <- case_onsets + c(outcome_death,outcome_recovery)
