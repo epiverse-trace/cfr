@@ -96,7 +96,7 @@ If we are only interested in an overall estimate of CFR, a simpler alternative i
 
 ## Simulated comparison of above methods
 
-To compare these methods, we first simulate some case onset timings and outcomes (i.e. deaths and recoveries)
+To compare these methods, we first simulate 1000 case onset timings and outcomes (i.e. deaths and recoveries)
 
 ```{r}
 # Simulate data
@@ -116,7 +116,6 @@ max_obs <- as.Date("2024-01-20")
 # log_param <- epiparameter::convert_summary_stats_to_params("lnorm",mean=5,sd=5)
 log_param <- c(meanlog=1.262864,sdlog=0.8325546)
 delay_death <- function(x){dlnorm(x,meanlog = log_param$meanlog,sdlog = log_param$sdlog)}
-
 outcome_death <- round(rlnorm(round(nn*pp),meanlog = log_param$meanlog,sdlog = log_param$sdlog)) 
 
 # 2. Recoveries: assume mean delay = 15 days, sd = 5 days
@@ -132,6 +131,57 @@ type_outcome <- c(rep("D",length(outcome_death)),rep("R",length(outcome_recovery
 
 # Create vector of known outcomes as of max_obs
 known_outcomes <- type_outcome; known_outcomes[(all_outcomes>max_obs)] <- ""
+```
+
+```{r fig.cap = "Individual level timings of onsets and outcomes, for individuals with a known outcome as of 20th Jan 2024.", class.source = 'fold-hide'}
+
+# Create a data frame with onset and outcome dates, and outcome type
+data <- data.frame(
+  id = 1:nn,
+  case_onsets = case_onsets,
+  outcome_dates = all_outcomes,
+  outcome_type = type_outcome,
+  known_outcome = known_outcomes
+)
+
+# Filter out unknown outcomes (after the max_obs date)
+data <- data %>% filter(known_outcome != "")
+
+# Arrange data by onset date
+data <- data %>%
+  arrange(case_onsets) %>%
+  mutate(id_ordered = row_number())  # Assign a new 'id_ordered' based on sorted onset dates
+
+# Prepare the data for plotting (reshape long format to have onset and outcome events in the same column)
+plot_data <- data %>%
+  tidyr::pivot_longer(
+    cols = c(case_onsets, outcome_dates),
+    names_to = "event_type",
+    values_to = "date"
+  ) %>%
+  mutate(
+    event_label = ifelse(event_type == "case_onsets", "Onset", "Outcome")
+  )
+
+# Create the plot with lines linking onset and outcome, and add vertical line for max_obs
+ggplot() +
+  # Add lines connecting onset to outcome using the original 'data'
+  geom_segment(data = data, aes(x = case_onsets, xend = outcome_dates, y = id_ordered, yend = id_ordered), 
+               color = ifelse(data$outcome_type == "D", "red", "green"), size = 0.5) +
+  # Plot dots for onset and outcome using the reshaped 'plot_data'
+  geom_point(data = plot_data, aes(x = date, y = id_ordered, color = outcome_type, shape = event_label), size = 2) +  
+  # Add vertical dashed line at max_obs date
+  geom_vline(xintercept = as.numeric(max_obs), linetype = "dashed", color = "black", size = 0.5) +
+  scale_color_manual(values = c("D" = "darkred", "R" = "darkgreen")) +  # Color by death/recovery
+  scale_shape_manual(values = c("Onset" = 16, "Outcome" = 17)) +  # Different shapes for onset and outcome
+  labs(
+    x = "Date",
+    y = "Individual (Ordered by onset date)",
+    color = "Outcome type",
+    shape = "Event type",
+    title = "Onset and outcome dates by individual"
+  ) +
+  theme_minimal()
 ```
 
 First, we calculate CFR by filtering to focus only on cases with known outcomes:
@@ -167,3 +217,6 @@ df <- counts %>%
   
 cfr_static(df,delay_death)
 ```
+Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10% (95% CI: 8.3-12.0%), whereas the filtering method produces a biased estimate of 26.4% (17.6-37.0%).
+
+In an extreme scenario where recoveries are not reported, then we effectively have `outcome_recovery()` with an infinite mean, and the above methods will still apply, with the same bias for the filtering approach.
