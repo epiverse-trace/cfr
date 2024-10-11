@@ -157,15 +157,15 @@ Further, _cfr_ functions tally estimated death counts (calculated by convolving 
 While users can pass functions from _stats_, and can manage distribution parameters using specialised packages and classes, it may be convenient to be able to access parameters reported in the epidemiological literature from a curated library.
 
 The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be such a library of epidemiological delay distributions.
-The dedicated `<epidist>` class is expected to have similar functionality to other distribution classes, allowing easy definition of density functions that can be passed to _cfr_.
+The dedicated `<epiparameter>` class is expected to have similar functionality to other distribution classes, allowing easy definition of density functions that can be passed to _cfr_.
 
 The pseudo-code below shows how this might work.
 
 ```r
 # NOTE: this is pseudo-code
-EPIDIST_OBJECT <- ACCESS_DISTRIBUTION(disease, study)
+EPIPARAMETER_OBJECT <- ACCESS_DISTRIBUTION(disease, study)
 
-cfr_*(data = data, delay_density = function(x) density(<EPIDIST_OBJECT>, x))
+cfr_*(data = data, delay_density = function(x) density(<EPIPARAMETER_OBJECT>, x))
 ```
 
 ## References
