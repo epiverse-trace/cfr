@@ -19,11 +19,11 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   dpi = 300,
-  fig.width = 5, fig.height = 3
+  out.width = "100%"
 )
 ```
 
-The main examples in _cfr_ use incidence data (i.e. counts of cases and deaths by day). However, in some instances individual-level data will be available, which opens up additional analysis options, but also some potential biases.
+The main examples in the _cfr_ package use incidence data (i.e. counts of cases and deaths by day). However, in some instances individual-level data will be available, which opens up additional analysis options, but also some potential biases.
 
 ::: {.alert .alert-primary}
 ## Use case {-}
@@ -92,7 +92,19 @@ And hence this will not simplify to provide an unbiased estimate of $p$.
 
 If the delay from onset-to-death and onset-to-recovery are different, one option is to use [survival analysis methods](https://academic.oup.com/aje/article/162/5/479/82647) to estimate relative hazards (i.e. fatality risk) over time.
 
-If we are only interested in an overall estimate of CFR, a simpler alternative is to first calculate the proportion of cases in the linelist that we would expect to have a known outcome by this point if the outcome were fatal. We can then use this estimated proportion with known fatal outcomes to calculate the CFR. This is the calculation performed by `cfr_static()`, and hence this function can give us a better estimate of CFR when delays to death and recovery are not the same.
+If we are only interested in an overall estimate of CFR, a simpler alternative is to first calculate the number of cases in the linelist that we would expect to have a known outcome by this point if the outcome were fatal:
+$$
+E(\text{deaths by time }t)  
+= p \sum_{t} \sum_j f_{j} I_{t-j} 
+$$
+where $p$ is the CFR.
+
+We can then rearrange the above to calculate the CFR:
+$$
+\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
+p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+$$
+This is the calculation performed by `cfr_static()`, and hence this function can give us a better estimate of CFR when delays to death and recovery are not the same.
 
 ## Simulated comparison of above methods
 
@@ -178,8 +190,7 @@ ggplot() +
     x = "Date",
     y = "Individual (Ordered by onset date)",
     color = "Outcome type",
-    shape = "Event type",
-    title = "Onset and outcome dates by individual"
+    shape = "Event type"
   ) +
   theme_minimal()
 ```
@@ -219,4 +230,46 @@ cfr_static(df,delay_death)
 ```
 Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10% (95% CI: 8.3-12.0%), whereas the filtering method produces a biased estimate of 26.4% (17.6-37.0%).
 
-In an extreme scenario where recoveries are not reported, then we effectively have `outcome_recovery()` with an infinite mean, and the above methods will still apply, with the same bias for the filtering approach.
+## Deaths reported but not recoveries
+
+In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above methods will still apply, with the same bias for the filtering approach. In particular, we would expect:
+$$
+E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\
+\text{as } E(\text{Total recoveries}) \rightarrow 0
+$$
+## Only total deaths reported
+
+In some situations, we may have a timeseries of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
+$$
+\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
+p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+$$
+We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
+```{r}
+# Calculate total deaths and total cases
+total_deaths <- sum(df$deaths)
+total_cases <- sum(df$cases)
+
+# Create data.frame with cases over time only
+df_case <- df
+df_case$deaths <- 0
+
+# Calculate the expected number of known fatal outcomes over time
+e_outcomes <- estimate_outcomes(df_case,delay_death)
+
+# Calculate the CFR
+total_deaths/(total_cases*tail(e_outcomes$u_t,1))
+```
+As before, this produces a point estimate of 10.4%, because it is the same underlying method: the internal function code in `cfr_static()`, which calls `estimate_outcomes()`, also tallies up total death. An arguably more elegant approach is to therefore add total deaths to the case data.frame, and use as an input for `cfr_static()`:
+
+```{r}
+# Create data.frame with cases over time only
+df_cases <- df
+df_cases$deaths <- 0
+
+# Add total deaths to the final row in the 'deaths' column
+df_cases$deaths[nrow(df_case)] <- sum(df$deaths)
+
+# Calculate CFR
+cfr_static(df_cases,delay_death)
+```
