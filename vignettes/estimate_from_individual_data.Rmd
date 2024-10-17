@@ -244,8 +244,8 @@ And hence the calculated CFR to incorrectly converge to 1 as the proportion of r
 
 In some situations, we may have a timeseries of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
 $$
-\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
-p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
+E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
 ```{r}
