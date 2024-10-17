@@ -5,25 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="cfr">
 <title>Estimating how disease severity varies over the course of an outbreak • cfr</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimating how disease severity varies over the course of an outbreak">
-<meta property="og:description" content="cfr">
-<meta property="og:image" content="https://epiverse-trace.github.io/cfr/logo.svg">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-XZ471458FQ"></script><script>
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Estimating how disease severity varies over the course of an outbreak">
+<!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-XZ471458FQ"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -33,66 +21,65 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
-    
 
-    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-dark" data-bs-theme="dark"><div class="container">
+
+    <nav class="navbar navbar-expand-lg fixed-top " aria-label="Site navigation"><div class="container">
     <a href="https://epiverse-trace.github.io/" class="external-link"><img src="https://epiverse-trace.github.io/blueprints/logo_white.svg" id="logo" alt="Epiverse-TRACE"></a>
     <a class="navbar-brand me-2" href="../index.html">cfr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.2</small>
 
-    
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../articles/cfr.html">Get started</a>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../articles/cfr.html">Get started</a></li>
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>Package vignettes</h6>
-    <a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a>
-    <a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a>
-    <a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6>
-    <a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Handling delay distributions</h6>
-    <a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Sotware permissions and regulations</h6>
-    <a class="dropdown-item" href="../articles/software-permissions.html">Software permissions and regulations</a>
-  </div>
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Package vignettes</h6></li>
+    <li><a class="dropdown-item" href="../articles/estimate_static_severity.html">Calculating a static, delay-adjusted estimate of disease severity</a></li>
+    <li><a class="dropdown-item" href="../articles/estimate_time_varying_severity.html">Estimating how disease severity varies over the course of an outbreak</a></li>
+    <li><a class="dropdown-item" href="../articles/estimate_ascertainment.html">Estimating the proportion of cases that are ascertained during an outbreak</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Handling data from other packages</h6></li>
+    <li><a class="dropdown-item" href="../articles/data_from_incidence2.html">Handling data from {incidence2}</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Handling delay distributions</h6></li>
+    <li><a class="dropdown-item" href="../articles/delay_distributions.html">A primer on working with delay distributions</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Sotware permissions and regulations</h6></li>
+    <li><a class="dropdown-item" href="../articles/software-permissions.html">Software permissions and regulations</a></li>
+  </ul>
 </li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
+<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul>
-<form class="form-inline my-2 my-lg-0" role="search">
-        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
-</form>
-
-      <ul class="navbar-nav">
-<li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/epiverse-trace/cfr/" aria-label="github">
-    <span class="fab fa fab fa-github fa-lg"></span>
-     
-  </a>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/epiverse-trace/cfr/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-lightswitch" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="Light switch"><span class="fa fa-sun"></span></button>
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-lightswitch">
+<li><button class="dropdown-item" data-bs-theme-value="light"><span class="fa fa-sun"></span> Light</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="dark"><span class="fa fa-moon"></span> Dark</button></li>
+    <li><button class="dropdown-item" data-bs-theme-value="auto"><span class="fa fa-adjust"></span> Auto</button></li>
+  </ul>
 </li>
       </ul>
 </div>
 
-    
+
   </div>
 </nav><div class="container template-article">
+
+
 
 
 <div class="row">
@@ -100,42 +87,60 @@
       <img src="../logo.svg" class="logo" alt=""><h1>Estimating how disease severity varies over the course of an outbreak</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/epiverse-trace/cfr/blob/HEAD/vignettes/estimate_time_varying_severity.Rmd" class="external-link"><code>vignettes/estimate_time_varying_severity.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/epiverse-trace/cfr/blob/v0.1.2/vignettes/estimate_time_varying_severity.Rmd" class="external-link"><code>vignettes/estimate_time_varying_severity.Rmd</code></a></small>
       <div class="d-none name"><code>estimate_time_varying_severity.Rmd</code></div>
     </div>
 
     
     
-<p>The severity of a disease (commonly understood as the case fatality risk, CFR) might change during the course of an outbreak for multiple biological, epidemiological and behavioural reasons.
-<code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> offers a convenient way to understand changes in disease severity over time using an approach with a finer time resolution that calculates severity over a moving time window, using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>.</p>
+<p>The severity of a disease (commonly understood as the case fatality
+risk, CFR) might change during the course of an outbreak for multiple
+biological, epidemiological and behavioural reasons.
+<code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> offers a convenient way to understand
+changes in disease severity over time using an approach with a finer
+time resolution that calculates severity over a moving time window,
+using methods from <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>.</p>
 <div class="alert alert-warning">
-<p>New to calculating disease severity using <em>cfr</em>? You might want to see the <a href="cfr.html">“Get started” vignette first</a>.</p>
+<p>New to calculating disease severity using <em>cfr</em>? You might
+want to see the <a href="cfr.html">“Get started” vignette first</a>.</p>
 </div>
 <div class="section level2 unnumbered alert alert-primary">
-<h2 id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
+<h2 class="unnumbered" id="use-case">Use case<a class="anchor" aria-label="anchor" href="#use-case"></a>
 </h2>
-<p>There are substantial <strong>changes to the characteristics of an outbreak over time</strong> — such as the introduction of therapeutics or a changing case definition.
-We want to estimate how disease severity in the form of the case fatality risk (CFR) changes over time while correcting for the delay in reporting the outcomes of cases.</p>
+<p>There are substantial <strong>changes to the characteristics of an
+outbreak over time</strong> — such as the introduction of therapeutics
+or a changing case definition. We want to estimate how disease severity
+in the form of the case fatality risk (CFR) changes over time while
+correcting for the delay in reporting the outcomes of cases.</p>
 </div>
 <div class="section level3 unnumbered alert alert-secondary">
-<h3 id="what-we-have">What we have<a class="anchor" aria-label="anchor" href="#what-we-have"></a>
+<h3 class="unnumbered" id="what-we-have">What we have<a class="anchor" aria-label="anchor" href="#what-we-have"></a>
 </h3>
 <ul>
-<li>A time-series of cases and deaths, (cases may be substituted by another indicator of infections over time);</li>
-<li>Data on the distribution of delays, describing the probability an individual will die <span class="math inline">\(t\)</span> days after they were initially infected.</li>
+<li>A time-series of cases and deaths, (cases may be substituted by
+another indicator of infections over time);</li>
+<li>Data on the distribution of delays, describing the probability an
+individual will die
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>
+days after they were initially infected.</li>
 </ul>
 </div>
 <div class="section level2 unnumbered alert alert-info">
-<h2 id="potential-reasons-for-changing-disease-severity">Potential reasons for changing disease severity<a class="anchor" aria-label="anchor" href="#potential-reasons-for-changing-disease-severity"></a>
+<h2 class="unnumbered" id="potential-reasons-for-changing-disease-severity">Potential reasons for changing disease
+severity<a class="anchor" aria-label="anchor" href="#potential-reasons-for-changing-disease-severity"></a>
 </h2>
 <ul>
-<li>Change in the probability of infection being reported as a case,</li>
-<li>Transmission dynamics within specific subgroups of differing risk of severe outcomes,</li>
-<li>Introduction of vaccines or therapeutics reducing the relative risk of death,</li>
-<li>Emergence of pathogen variants which may alter the mortality risk associated with infection.</li>
+<li>Change in the probability of infection being reported as a
+case,</li>
+<li>Transmission dynamics within specific subgroups of differing risk of
+severe outcomes,</li>
+<li>Introduction of vaccines or therapeutics reducing the relative risk
+of death,</li>
+<li>Emergence of pathogen variants which may alter the mortality risk
+associated with infection.</li>
 </ul>
 </div>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/epiverse-trace/cfr" class="external-link">cfr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># packages to wrangle and plot data</span></span>
@@ -144,16 +149,23 @@ We want to estimate how disease severity in the form of the case fatality risk (
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://purrr.tidyverse.org/" class="external-link">purrr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://scales.r-lib.org" class="external-link">scales</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-</details><div class="section level2">
+<div class="section level2">
 <h2 id="changing-severity-of-the-covid-19-pandemic-in-the-u-k-">Changing severity of the Covid-19 pandemic in the U.K.<a class="anchor" aria-label="anchor" href="#changing-severity-of-the-covid-19-pandemic-in-the-u-k-"></a>
 </h2>
-<p>This example shows time-varying severity estimation using <em>cfr</em> and data from the Covid-19 pandemic in the United Kingdom.</p>
+<p>This example shows time-varying severity estimation using
+<em>cfr</em> and data from the Covid-19 pandemic in the United
+Kingdom.</p>
 <div class="section level3">
 <h3 id="preparing-the-raw-data">Preparing the raw data<a class="anchor" aria-label="anchor" href="#preparing-the-raw-data"></a>
 </h3>
-<p>We load example Covid-19 daily case and death data provided with the <em>cfr</em> package as <code>covid_data</code>, and subset for the first year of U.K. data.</p>
-<p>We would expect the estimated CFR to change over this period due to changes in pandemic response policy, such as changes in case definitions, implementation and relaxation of lockdowns, and new variants emerging.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>We load example Covid-19 daily case and death data provided with the
+<em>cfr</em> package as <code>covid_data</code>, and subset for the
+first year of U.K. data.</p>
+<p>We would expect the estimated CFR to change over this period due to
+changes in pandemic response policy, such as changes in case
+definitions, implementation and relaxation of lockdowns, and new
+variants emerging.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># get Covid data loaded with the package</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"covid_data"</span><span class="op">)</span></span>
 <span></span>
@@ -172,27 +184,44 @@ We want to estimate how disease severity in the form of the case fatality risk (
 <span><span class="co">#&gt; 4 2020-01-06 United Kingdom     0      0</span></span>
 <span><span class="co">#&gt; 5 2020-01-07 United Kingdom     0      0</span></span>
 <span><span class="co">#&gt; 6 2020-01-08 United Kingdom     0      0</span></span></code></pre></div>
-</details>
 </div>
 <div class="section level3">
 <h3 id="onset-to-death-distribution-for-covid-19">Onset-to-death distribution for Covid-19<a class="anchor" aria-label="anchor" href="#onset-to-death-distribution-for-covid-19"></a>
 </h3>
-<p>We retrieve the appropriate distribution of the duration between symptom onset and deaths reported in <span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span>; this is a lognormal distribution with <span class="math inline">\(\mu\)</span> = 2.577 and <span class="math inline">\(\sigma\)</span> = 0.440.</p>
+<p>We retrieve the appropriate distribution of the duration between
+symptom onset and deaths reported in <span class="citation">Linton et
+al. (<a href="#ref-linton2020">2020</a>)</span>; this is a lognormal
+distribution with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>
+= 2.577 and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>
+= 0.440.</p>
 <div class="alert alert-warning">
-<p><span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span> fitted a discrete lognormal distribution — but we use a continuous distribution here.
-See the <a href="delay_distributions.html">vignette on delay distributions</a> for more on when using a continuous instead of discrete distribution is acceptable, and on using discrete distributions with <em>cfr</em>.</p>
-<p><strong>Note also</strong> that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated.</p>
+<p><span class="citation">Linton et al. (<a href="#ref-linton2020">2020</a>)</span> fitted a discrete lognormal
+distribution — but we use a continuous distribution here. See the <a href="delay_distributions.html">vignette on delay distributions</a> for
+more on when using a continuous instead of discrete distribution is
+acceptable, and on using discrete distributions with <em>cfr</em>.</p>
+<p><strong>Note also</strong> that we use the central estimates for each
+distribution parameter, and by ignoring uncertainty in these parameters
+the uncertainty in the resulting CFR is likely to be underestimated.</p>
 </div>
 </div>
 <div class="section level3">
 <h3 id="estimating-the-naive-and-corrected-cfr">Estimating the naive and corrected CFR<a class="anchor" aria-label="anchor" href="#estimating-the-naive-and-corrected-cfr"></a>
 </h3>
-<p>We use the <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function within the <em>cfr</em> package to calculate the time-varying CFR for the Covid-19 pandemic in the U.K., and plot the results.</p>
-<p>The <code>burn_in</code> time is used to determine how many days at the start of the outbreak are excluded from the CFR calculation, potentially due to poor data quality at the beginning of an outbreak.
+<p>We use the <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> function within the
+<em>cfr</em> package to calculate the time-varying CFR for the Covid-19
+pandemic in the U.K., and plot the results.</p>
+<p>The <code>burn_in</code> time is used to determine how many days at
+the start of the outbreak are excluded from the CFR calculation,
+potentially due to poor data quality at the beginning of an outbreak.
 The default value is 7, which ignores the first week of data.</p>
-<p>The <code>smoothing_window</code> is used to smooth the case and death data using a rolling median with a window of the corresponding size (in days) using <code><a href="https://rdrr.io/r/stats/runmed.html" class="external-link">stats::runmed()</a></code> internally — this is disabled by default.
-Users should apply smoothing if there are reporting artefacts such as lower reporting on weekends.</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<p>The <code>smoothing_window</code> is used to smooth the case and
+death data using a rolling median with a window of the corresponding
+size (in days) using <code><a href="https://rdrr.io/r/stats/runmed.html" class="external-link">stats::runmed()</a></code> internally — this is
+disabled by default. Users should apply smoothing if there are reporting
+artefacts such as lower reporting on weekends.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># calculating the naive time-varying CFR</span></span>
 <span><span class="va">df_covid_cfr_uk_naive</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cfr_time_varying.html">cfr_time_varying</a></span><span class="op">(</span></span>
 <span>  <span class="va">df_covid_uk</span>,</span>
@@ -213,7 +242,7 @@ Users should apply smoothing if there are reporting artefacts such as lower repo
 <span><span class="va">df_covid_cfr_uk_corrected</span><span class="op">$</span><span class="va">method</span> <span class="op">&lt;-</span> <span class="st">"corrected"</span></span>
 <span></span>
 <span><span class="va">df_covid_cfr_uk</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">df_covid_cfr_uk_naive</span>, <span class="va">df_covid_cfr_uk_corrected</span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">df_covid_cfr_uk</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span></span>
@@ -253,26 +282,40 @@ Users should apply smoothing if there are reporting artefacts such as lower repo
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 93 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
-</details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-5"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-5-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals."><p class="caption">
-Figure 1: Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals.
+<div class="figure">
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-5-1.png" alt="Example plot of the naive time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for delays. The red line shows the CFR estimate while the shaded grey region shows the lower and upper limits of the estimate as 95% confidence intervals." width="1500"><p class="caption">
+Example plot of the naive time-varying CFR. We calculate the
+time-varying CFR for the Covid-19 pandemic in the U.K., uncorrected for
+delays. The red line shows the CFR estimate while the shaded grey region
+shows the lower and upper limits of the estimate as 95% confidence
+intervals.
 </p>
 </div>
 <div class="alert alert-info">
-<p><strong>Note that</strong> the severity estimates and confidence intervals in <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> are obtained from a Binomial test on deaths (treated as ‘successes’) and estimated outcomes or cases (depending on whether delay correction is applied; treated as ‘trials’).</p>
+<p><strong>Note that</strong> the severity estimates and confidence
+intervals in <code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> are obtained from a
+Binomial test on deaths (treated as ‘successes’) and estimated outcomes
+or cases (depending on whether delay correction is applied; treated as
+‘trials’).</p>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="severity-of-covid-19-in-multiple-countries">Severity of Covid-19 in multiple countries<a class="anchor" aria-label="anchor" href="#severity-of-covid-19-in-multiple-countries"></a>
 </h2>
-<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> and other <em>cfr</em> functions can be conveniently applied over nested data to estimate the time-varying severity of Covid-19.</p>
+<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> and other <em>cfr</em> functions can
+be conveniently applied over nested data to estimate the time-varying
+severity of Covid-19.</p>
 <div class="alert alert-secondary">
-<p>We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-link">R for Data Science</a> for a better explanation of some of the code used here, including from the packages in <a href="https://www.tidyverse.org/" class="external-link">the Tidyverse</a>.</p>
+<p>We refer the user to the book <a href="https://r4ds.had.co.nz/" class="external-link">R for
+Data Science</a> for a better explanation of some of the code used here,
+including from the packages in <a href="https://www.tidyverse.org/" class="external-link">the
+Tidyverse</a>.</p>
 </div>
-<p>We use the example Covid-19 cases and deaths data provided with the package as <code>covid_data</code>, while excluding four countries which only provide weekly data (with zeros for dates in between).</p>
-<details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>We use the example Covid-19 cases and deaths data provided with the
+package as <code>covid_data</code>, while excluding four countries which
+only provide weekly data (with zeros for dates in between).</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># countries with weekly reporting</span></span>
 <span><span class="va">weekly_reporting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"France"</span>, <span class="st">"Germany"</span>, <span class="st">"Spain"</span>, <span class="st">"Ukraine"</span><span class="op">)</span></span>
 <span><span class="va">covid_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">covid_data</span>, <span class="op">!</span><span class="va">country</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">weekly_reporting</span><span class="op">)</span></span>
@@ -285,7 +328,7 @@ Figure 1: Example plot of the naive time-varying CFR. We calculate the time-vary
 <span>  <span class="va">covid_data</span>,</span>
 <span>  .by <span class="op">=</span> <span class="va">country</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-</details><details class="chunk-details" open><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define delay density function</span></span>
 <span><span class="va">delay_density</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html" class="external-link">dlnorm</a></span><span class="op">(</span><span class="va">x</span>, meanlog <span class="op">=</span> <span class="fl">2.577</span>, sdlog <span class="op">=</span> <span class="fl">0.440</span><span class="op">)</span></span>
 <span></span>
@@ -304,9 +347,14 @@ Figure 1: Example plot of the naive time-varying CFR. We calculate the time-vary
 <span></span>
 <span><span class="co"># unnest the cfr data; unnest() from {tidyr}</span></span>
 <span><span class="va">df_covid_cfr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/unnest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, cols <span class="op">=</span> <span class="va">data</span><span class="op">)</span></span></code></pre></div>
-</details><p>For simplicity, we use the same delay distribution between onset and death for all countries — users should <strong>note that</strong> this likely introduces biases given inter-country differences in testing or reporting policies.</p>
-<p>Finally we plot the time-varying CFR for a selection of three countries with large outbreaks of Covid-19: Brazil, India, and the United States.</p>
-<details class="chunk-details"><summary class="chunk-summary"><span class="chunk-summary-text">Code</span></summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>For simplicity, we use the same delay distribution between onset and
+death for all countries — users should <strong>note that</strong> this
+likely introduces biases given inter-country differences in testing or
+reporting policies.</p>
+<p>Finally we plot the time-varying CFR for a selection of three
+countries with large outbreaks of Covid-19: Brazil, India, and the
+United States.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">df_covid_cfr</span>, <span class="va">country</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Brazil"</span>, <span class="st">"India"</span>, <span class="st">"United States"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_ribbon.html" class="external-link">geom_ribbon</a></span><span class="op">(</span></span>
@@ -341,10 +389,11 @@ Figure 1: Example plot of the naive time-varying CFR. We calculate the time-vary
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="st">"top"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning: Removed 215 rows containing missing values or values outside the scale range</span></span>
 <span><span class="co">#&gt; (`geom_line()`).</span></span></code></pre></div>
-</details><div class="figure">
-<span style="display:block;" id="fig:unnamed-chunk-8"></span>
-<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-8-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in Brazil, India, and the United States, corrected for delays."><p class="caption">
-Figure 2: Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in Brazil, India, and the United States, corrected for delays.
+<div class="figure">
+<img src="estimate_time_varying_severity_files/figure-html/unnamed-chunk-8-1.png" alt="Example plot of the corrected time-varying CFR. We calculate the time-varying CFR for the Covid-19 pandemic in Brazil, India, and the United States, corrected for delays." width="2400"><p class="caption">
+Example plot of the corrected time-varying CFR. We calculate the
+time-varying CFR for the Covid-19 pandemic in Brazil, India, and the
+United States, corrected for delays.
 </p>
 </div>
 <hr>
@@ -352,34 +401,65 @@ Figure 2: Example plot of the corrected time-varying CFR. We calculate the time-
 <div class="section level2">
 <h2 id="details-adjusting-for-delays-between-two-time-series">Details: Adjusting for delays between two time series<a class="anchor" aria-label="anchor" href="#details-adjusting-for-delays-between-two-time-series"></a>
 </h2>
-<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> estimates the number of cases which have a known outcome over time following <span class="citation">Nishiura et al. (<a href="#ref-nishiura2009">2009</a>)</span>, by calculating a quantity <span class="math inline">\(k_t\)</span> for each day within the input data, which represents the number of cases with a known adverse outcome (usually death), on day <span class="math inline">\(t\)</span>.</p>
-<p><span class="math display">\[
+<p><code><a href="../reference/cfr_time_varying.html">cfr_time_varying()</a></code> estimates the number of cases which
+have a known outcome over time following <span class="citation">Nishiura
+et al. (<a href="#ref-nishiura2009">2009</a>)</span>, by calculating a
+quantity
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>t</mi></msub><annotation encoding="application/x-tex">k_t</annotation></semantics></math>
+for each day within the input data, which represents the number of cases
+with a known adverse outcome (usually death), on day
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>t</mi></msub><mo>=</mo><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>0</mn></mrow><mi>t</mi></munderover><msub><mi>c</mi><mi>t</mi></msub><msub><mi>f</mi><mrow><mi>j</mi><mo>−</mo><mi>t</mi></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
   k_t = \sum_{j = 0}^t c_t f_{j - t}.
-\]</span></p>
-<p>We then assume that the severity measure (usually CFR) is binomially distributed in the following way</p>
-<p><span class="math display">\[
+</annotation></semantics></math></p>
+<p>We then assume that the severity measure (usually CFR) is binomially
+distributed in the following way</p>
+<p><span class="math display">$$
   d_t \sim {\sf Binomial}(k_t, \theta_t).
-\]</span></p>
-<p>We use maximum likelihood estimation to determine the value of <span class="math inline">\(\theta_t\)</span> for each <span class="math inline">\(t\)</span>, where <span class="math inline">\(\theta\)</span> represents the severity measure of interest.</p>
-<p>The precise severity measure — case fatality risk (CFR), infection fatality risk (IFR), hospitalisation fatality risk (HFR), etc. — that <span class="math inline">\(\theta\)</span> represents depends upon the input data given by the user.</p>
+$$</span></p>
+<p>We use maximum likelihood estimation to determine the value of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>θ</mi><mi>t</mi></msub><annotation encoding="application/x-tex">\theta_t</annotation></semantics></math>
+for each
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+represents the severity measure of interest.</p>
+<p>The precise severity measure — case fatality risk (CFR), infection
+fatality risk (IFR), hospitalisation fatality risk (HFR), etc. — that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>θ</mi><annotation encoding="application/x-tex">\theta</annotation></semantics></math>
+represents depends upon the input data given by the user.</p>
 <div class="alert alert-secondary">
-<p><strong>Note</strong> that the function arguments <code>burn_in</code> and <code>smoothing_window</code> are not explicitly used in this calculation. <code>burn_in</code> controls how many estimates at the beginning of the outbreak are replaced with <code>NA</code>s — the calculation above is not applied to the first <code>burn_in</code> data points. The calculation is applied to the smoothed data, if a <code>smoothing_window</code> is specified.</p>
+<p><strong>Note</strong> that the function arguments
+<code>burn_in</code> and <code>smoothing_window</code> are not
+explicitly used in this calculation. <code>burn_in</code> controls how
+many estimates at the beginning of the outbreak are replaced with
+<code>NA</code>s — the calculation above is not applied to the first
+<code>burn_in</code> data points. The calculation is applied to the
+smoothed data, if a <code>smoothing_window</code> is specified.</p>
 </div>
 <hr>
 </div>
 <div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-linton2020" class="csl-entry">
-Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi, Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and Hiroshi Nishiura. 2020. <span>“Incubation Period and Other Epidemiological Characteristics of 2019 Novel Coronavirus Infections with Right Truncation: A Statistical Analysis of Publicly Available Case Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
+Linton, Natalie M., Tetsuro Kobayashi, Yichi Yang, Katsuma Hayashi,
+Andrei R. Akhmetzhanov, Sung-mok Jung, Baoyin Yuan, Ryo Kinoshita, and
+Hiroshi Nishiura. 2020. <span>“Incubation Period and Other
+Epidemiological Characteristics of 2019 Novel Coronavirus Infections
+with Right Truncation: A Statistical Analysis of Publicly Available Case
+Data.”</span> <em>Journal of Clinical Medicine</em> 9 (2): 538. <a href="https://doi.org/10.3390/jcm9020538" class="external-link">https://doi.org/10.3390/jcm9020538</a>.
 </div>
 <div id="ref-nishiura2009" class="csl-entry">
-Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P. Heesterbeek. 2009. <span>“Early Epidemiological Assessment of the Virulence of Emerging Infectious Diseases: A Case Study of an Influenza Pandemic.”</span> <em>PLOS ONE</em> 4 (8): e6852. <a href="https://doi.org/10.1371/journal.pone.0006852" class="external-link">https://doi.org/10.1371/journal.pone.0006852</a>.
+Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P.
+Heesterbeek. 2009. <span>“Early Epidemiological Assessment of the
+Virulence of Emerging Infectious Diseases: A Case Study of an Influenza
+Pandemic.”</span> <em>PLOS ONE</em> 4 (8): e6852. <a href="https://doi.org/10.1371/journal.pone.0006852" class="external-link">https://doi.org/10.1371/journal.pone.0006852</a>.
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -390,15 +470,15 @@ Nishiura, Hiroshi, Don Klinkenberg, Mick Roberts, and Johan A. P. Heesterbeek. 2
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer>
 </div>
 
-  
 
-  
+
+
 
   </body>
 </html>
