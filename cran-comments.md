@@ -3,12 +3,6 @@
 0 errors | 0 warnings | 1 note
 
 * Maintainer: ‘Adam Kucharski <adam.kucharski@lshtm.ac.uk>’
-  
-  New maintainer:
-    Adam Kucharski <adam.kucharski@lshtm.ac.uk>
-
-  Old maintainer(s):
-    Pratik R. Gupte <pratik.gupte@lshtm.ac.uk>
 
 ## revdepcheck results
 

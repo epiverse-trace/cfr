@@ -1,23 +1,25 @@
 # Platform
 
-|field    |value                        |
-|:--------|:----------------------------|
-|version  |R version 4.4.0 (2024-04-24) |
-|os       |macOS Sonoma 14.4.1          |
-|system   |aarch64, darwin20            |
-|ui       |X11                          |
-|language |(EN)                         |
-|collate  |en_US.UTF-8                  |
-|ctype    |en_US.UTF-8                  |
-|tz       |Europe/London                |
-|date     |2024-06-12                   |
-|pandoc   |2.19 @ /usr/local/bin/pandoc |
+|field    |value                                                                                      |
+|:--------|:------------------------------------------------------------------------------------------|
+|version  |R version 4.3.2 (2023-10-31)                                                               |
+|os       |macOS Monterey 12.6.3                                                                      |
+|system   |x86_64, darwin20                                                                           |
+|ui       |RStudio                                                                                    |
+|language |(EN)                                                                                       |
+|collate  |en_US.UTF-8                                                                                |
+|ctype    |en_US.UTF-8                                                                                |
+|tz       |Europe/London                                                                              |
+|date     |2024-09-11                                                                                 |
+|rstudio  |2023.12.1+402 Ocean Storm (desktop)                                                        |
+|pandoc   |3.1.1 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/ (via rmarkdown) |
 
 # Dependencies
 
-|package |old   |new   |Δ  |
-|:-------|:-----|:-----|:--|
-|cfr     |0.1.0 |0.1.1 |*  |
+|package   |old   |new   |Δ  |
+|:---------|:-----|:-----|:--|
+|cfr       |0.1.1 |0.1.2 |*  |
+|checkmate |NA    |2.3.2 |*  |
 
 # Revdeps
 
