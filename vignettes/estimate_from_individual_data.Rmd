@@ -233,10 +233,13 @@ Hence in this particular simulation, the `cfr_static()` method recovers the corr
 ## Deaths reported but not recoveries
 
 In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above methods will still apply, with the same bias for the filtering approach. In particular, we would expect:
+
 $$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\
 \text{as } E(\text{Total recoveries}) \rightarrow 0
 $$
+And hence the calculated CFR to incorrectly converge to 1 as the proportion of recoveries reported declines to 0.
+
 ## Only total deaths reported
 
 In some situations, we may have a timeseries of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
