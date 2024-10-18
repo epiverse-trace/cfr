@@ -1,8 +1,6 @@
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
-
-* Maintainer: ‘Adam Kucharski <adam.kucharski@lshtm.ac.uk>’
+0 errors | 0 warnings | 0 notes
 
 ## revdepcheck results
 
