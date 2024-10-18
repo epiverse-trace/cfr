@@ -63,32 +63,7 @@ cfr_rolling <- function(data,
     " the course of the outbreak."
   )
   # input checking
-  checkmate::assert_data_frame(
-    data,
-    min.rows = 1, min.cols = 3
-  )
-  # check that input `<data.frame>` has columns date, cases, and deaths
-  checkmate::assert_names(
-    colnames(data),
-    must.include = c("date", "cases", "deaths")
-  )
-  # check for any NAs among data
-  checkmate::assert_data_frame(
-    data[, c("date", "cases", "deaths")],
-    types = c("Date", "integerish"),
-    any.missing = FALSE
-  )
-  # check that data$date is a date column
-  checkmate::assert_date(data$date, any.missing = FALSE, all.missing = FALSE)
-  # check for excessive missing date and throw an error
-  # also check delay_density
-  stopifnot(
-    "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1) # use numeric 1, not integer
-    # this solution works when df$date is `Date`
-    # this may need more thought for dates that are integers, POSIXct,
-    # or other units; consider the units package
-  )
+  .check_input_data(data)
   checkmate::assert_count(poisson_threshold, positive = TRUE)
 
   # NOTE: delay_density is checked in estimate_outcomes() if passed and not NULL
@@ -97,8 +72,6 @@ cfr_rolling <- function(data,
   cumulative_cases <- cumsum(data$cases)
   cumulative_deaths <- cumsum(data$deaths)
 
-  # Check cumulative sums for count type
-  checkmate::assert_integerish(cumulative_cases, lower = 0)
   # use assert_number to set upper limit at total_cases
   checkmate::assert_integerish(
     cumulative_deaths,
