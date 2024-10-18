@@ -97,8 +97,7 @@ is specified.
 \examples{
 # get data pre-loaded with the package
 data("covid_data")
-df_covid_uk <- covid_data[covid_data$country == "United Kingdom" &
-covid_data$date <= as.Date("2020-09-01"), ]
+df_covid_uk <- covid_data[covid_data$country == "United Kingdom" & covid_data$date <= as.Date("2020-09-31"), ]
 
 # estimate time varying severity without correcting for delays
 cfr_time_varying <- cfr_time_varying(
