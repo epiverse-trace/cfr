@@ -276,3 +276,19 @@ df_cases$deaths[nrow(df_case)] <- sum(df$deaths)
 # Calculate CFR
 cfr_static(df_cases,delay_death)
 ```
+
+## Only total cases and deaths reported
+
+If only total cases and total deaths are known, it is not possible to adjust for delays to outcome. However, we can bound our estimate of CFR by two extreme scenarios. First, if the outbreak is over, and sufficient time has passed so that all fatal outcomes are now known, i.e.
+$$
+\sum_{t} \sum_j f_{j} I_{t-j} = \sum_{t} I_t
+$$
+then the CFR would be equal to:
+
+$$
+p = \frac{\text{Total deaths}}{\text{Total cases}}
+$$
+In contrast, if the epidemic is rapidly growing and still in its early stages, then even an epidemic with a CFR of 1 may have only generated a very small number of fatal outcomes to date. Hence we have the following bounds on the possible CFR:
+$$
+\frac{\text{Total deaths}}{\text{Total cases}} \leq p \leq 1
+$$
