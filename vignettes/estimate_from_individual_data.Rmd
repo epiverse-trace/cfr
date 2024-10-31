@@ -57,7 +57,7 @@ $$
 \frac{\text{Total deaths}}{\text{Total deaths}+ \text{Total recoveries}}
 $$
 
-One limitation of this method is that it implicity assumes the delay from onset-to-death and onset-to-recovery are the same (see below for the mathematical proof). If these delays are noticeably different, the above calculation will produce a biased estimate of the CFR. For example, if onset-to-recovery is much longer than onset to death, then the denominator above will be an underestimate of the true number of cases that would eventually recover who have similar onset timings to those that would eventually die. Hence this calculation would inflate the CFR estimate. After the mathematical explanation below, the next section will discuss estimation methods based on the expected number of known death outcomes using functionality in _cfr_.
+One limitation of this method is that it implicitly assumes the delay from onset-to-death and onset-to-recovery are the same (see below for the mathematical proof). If these delays are noticeably different, the above calculation will produce a biased estimate of the CFR. For example, if onset-to-recovery is much longer than onset to death, then the denominator above will be an underestimate of the true number of cases that would eventually recover who have similar onset timings to those that would eventually die. Hence this calculation would inflate the CFR estimate. After the mathematical explanation below, the next section will discuss estimation methods based on the expected number of known death outcomes using functionality in _cfr_.
 
 ### Mathematical explanation for bias
 If we have a linelist with known outcomes and onset-death delay follows the same distribution as onset-recovery, and CFR = $p$, then at the current time,
@@ -269,7 +269,7 @@ And hence the calculated CFR to incorrectly converge to 1 as the proportion of r
 
 ## Only total deaths reported
 
-In some situations, we may have a timeseries of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
+In some situations, we may have a time series of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
 $$
 E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
 E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
