@@ -11,6 +11,7 @@ articles:
   - estimate_static_severity
   - estimate_time_varying_severity
   - estimate_ascertainment
+  - estimate_from_individual_data
 - title: Handling data from other packages
   navbar: Handling data from other packages
   contents:
