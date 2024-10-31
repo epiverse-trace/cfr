@@ -43,6 +43,7 @@ Suggests:
     ggplot2,
     incidence2,
     knitr,
+	magrittr,
     purrr,
     rmarkdown,
     scales,
