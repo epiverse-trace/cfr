@@ -86,7 +86,7 @@ However, if delay to death $f_j^D$ is different to delay to recovery $f_j^R$, we
 $$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ]  = \frac{\sum_{t} \sum_j p f_j^D I_{t-j}}{\sum_{t} \sum_j p f_j^D I_{t-j} + \sum_{t} \sum_j (1-p) f_j^R I_{t-j}}
 $$
-And hence this will not simplify to provide an unbiased estimate of $p$. 
+And hence this will not simplify to provide an unbiased estimate of $p$, as if would if $ f_j^D = f_j^R $
 
 ## Estimation based on expected number of known death outcomes
 
