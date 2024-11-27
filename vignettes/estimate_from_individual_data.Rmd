@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The main examples in the _cfr_ package use incidence data (i.e. counts of cases and deaths by day). However, in some instances individual-level data will be available, which opens up additional analysis options, but also some potential biases.
+The main examples showcased in the vignettes of the _cfr_ package use incidence data (i.e. counts of cases and deaths by day). However, in some instances individual-level data (i.e. where each row provides information about a single case) will be available, which opens up additional analysis options, but also some potential biases.
 
 ::: {.alert .alert-primary}
 ## Use case {-}
