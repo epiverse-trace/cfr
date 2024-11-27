@@ -39,7 +39,7 @@ We want to estimate the case fatality risk (CFR) from individual-level linelist 
 :::
 
 ```{r, message = FALSE, warning=FALSE, eval = TRUE}
-# load {cfr} and data packages
+# load {cfr}
 library(cfr)
 
 # packages to wrangle and plot data
