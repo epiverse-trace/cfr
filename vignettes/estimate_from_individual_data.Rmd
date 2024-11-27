@@ -319,3 +319,4 @@ In contrast, if the epidemic is rapidly growing and still in its early stages, t
 $$
 \frac{\text{Total deaths}}{\text{Total cases}} \leq p \leq 1
 $$
+In other words, during a rapidly growing epidemic, we can only say that the CFR lies somewhere between the ratio of total deaths to total cases (as of the last known count) and 1 (the worst-case scenario).
