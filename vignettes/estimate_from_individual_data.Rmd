@@ -108,7 +108,7 @@ This is the calculation performed by `cfr_static()`, and hence this function can
 
 ## Simulated comparison of above methods
 
-To compare these methods, we first simulate 1000 case onset timings and outcomes (i.e. deaths and recoveries)
+To compare these methods, i.e. filtering out cases without known outcomes vs using the `cfr_static` function, we first simulate 1000 case onset timings and outcomes (i.e. deaths and recoveries)
 
 ```{r}
 # Simulate data
