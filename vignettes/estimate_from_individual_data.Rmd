@@ -34,7 +34,7 @@ We want to estimate the case fatality risk (CFR) from individual-level linelist 
 ::: {.alert .alert-secondary}
 ### What we have {-}
 
-* A linelist of case onset timings, as well as outcome (i.e. death, recovery) if it has occurred by this point.
+* A linelist of case onset timings, as well as either individual outcome (i.e. death, recovery) if it has occurred by this point and been recorded, or total deaths.
 * Data on the distribution of delay from onset-to-death, describing the probability an individual will die $t$ days after they were initially infected.
 :::
 
@@ -92,7 +92,7 @@ And hence this will not simplify to provide an unbiased estimate of $p$, as if w
 
 If the delay from onset-to-death and onset-to-recovery are different, one option is to use [survival analysis methods](https://academic.oup.com/aje/article/162/5/479/82647) to estimate relative hazards (i.e. fatality risk) over time.
 
-If we are only interested in an overall estimate of CFR, a simpler alternative is to first calculate the number of cases in the linelist that we would expect to have a known outcome by this point if the outcome were fatal:
+However, if we are only interested in an overall estimate of CFR, a simpler alternative is to first calculate the number of cases in the linelist that we would expect to have a known outcome by this point if the outcome were fatal:
 $$
 E(\text{deaths by time }t)  
 = p \sum_{t} \sum_j f_{j} I_{t-j} 
@@ -259,7 +259,7 @@ Hence in this particular simulation, the `cfr_static()` method recovers the corr
 
 ## Deaths reported but not recoveries
 
-In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above methods will still apply, with the same bias for the filtering approach. In particular, we would expect:
+In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above conclusions will still apply, with the same bias for the filtering approach. In particular, we would expect:
 
 $$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\
