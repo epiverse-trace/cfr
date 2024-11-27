@@ -52,7 +52,7 @@ library(incidence2)
 
 ## Estimation based on cases with known outcomes
 
-If we have individual-level data on case onset timings and outcomes where available, it is common to filter the data to focus on cases only with known outcomes. This means the case fatality risk can then be calculated from this filtered known outcome dataset:
+If we have individual-level data on case onset timings and outcomes, where available, it is common to filter the data to focus on cases only with known outcomes. This means the case fatality risk can then be calculated from this filtered dataset containing only known outcomes:
 $$
 \frac{\text{Total deaths}}{\text{Total deaths}+ \text{Total recoveries}}
 $$
