@@ -298,7 +298,7 @@ df_cases <- df
 df_cases$deaths <- 0
 
 # Add total deaths to the final row in the 'deaths' column
-df_cases$deaths[nrow(df_case)] <- sum(df$deaths)
+df_cases$deaths[nrow(df_cases)] <- sum(df$deaths)
 
 # Calculate CFR
 cfr_static(df_cases, delay_death)
