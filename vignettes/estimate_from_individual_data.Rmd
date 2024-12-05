@@ -86,7 +86,8 @@ However, if delay to death $f_j^D$ is different to delay to recovery $f_j^R$, we
 $$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ]  = \frac{\sum_{t} \sum_j p f_j^D I_{t-j}}{\sum_{t} \sum_j p f_j^D I_{t-j} + \sum_{t} \sum_j (1-p) f_j^R I_{t-j}}
 $$
-And hence this will not simplify to provide an unbiased estimate of $p$, as if would if $ f_j^D = f_j^R $
+
+And hence this will not simplify to provide an unbiased estimate of $p$, as if would if $f_j^D = f_j^R$.
 
 ## Estimation based on expected number of known death outcomes
 
@@ -97,6 +98,7 @@ $$
 E(\text{deaths by time }t)  
 = p \sum_{t} \sum_j f_{j} I_{t-j} 
 $$
+
 where $p$ is the CFR.
 
 We can then rearrange the above to calculate the CFR:
@@ -104,6 +106,7 @@ $$
 \text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
 p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
+
 This is the calculation performed by `cfr_static()`, and hence this function can give us a better estimate of CFR when delays to death and recovery are not the same.
 
 ## Simulated comparison of above methods
@@ -260,11 +263,11 @@ Hence in this particular simulation, the `cfr_static()` method recovers the corr
 ## Deaths reported but not recoveries
 
 In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above conclusions will still apply, with the same bias for the filtering approach. In particular, we would expect:
-
 $$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\
 \text{as } E(\text{Total recoveries}) \rightarrow 0
 $$
+
 And hence the calculated CFR to incorrectly converge to 1 as the proportion of recoveries reported declines to 0.
 
 ## Only total deaths reported
@@ -274,6 +277,7 @@ $$
 E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
 E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
+
 We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
 ```{r}
 # Calculate total deaths and total cases
@@ -310,13 +314,16 @@ If only total cases and total deaths are known, it is not possible to adjust for
 $$
 \sum_{t} \sum_j f_{j} I_{t-j} = \sum_{t} I_t
 $$
+
 then the CFR would be equal to:
 
 $$
 p = \frac{\text{Total deaths}}{\text{Total cases}}
 $$
+
 In contrast, if the epidemic is rapidly growing and still in its early stages, then even an epidemic with a CFR of 1 may have only generated a very small number of fatal outcomes to date. Hence we have the following bounds on the possible CFR:
 $$
 \frac{\text{Total deaths}}{\text{Total cases}} \leq p \leq 1
 $$
+
 In other words, during a rapidly growing epidemic, we can only say that the CFR lies somewhere between the ratio of total deaths to total cases (as of the last known count) and 1 (the worst-case scenario).
