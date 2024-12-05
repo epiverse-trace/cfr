@@ -75,10 +75,9 @@ $$
 where $I_t$ is number of new symptomatic infections on day $t$ and $f_i$ is the probability of outcome $i$ days after symptom onset.
 
 Hence
+
 $$
-E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \\
-=[ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\
-=[p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   = p
+E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \\ = [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\ = [p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   = p
 $$
 
 However, if delay to death $f_j^D$ is different to delay to recovery $f_j^R$, we have:
@@ -95,16 +94,15 @@ If the delay from onset-to-death and onset-to-recovery are different, one option
 
 However, if we are only interested in an overall estimate of CFR, a simpler alternative is to first calculate the number of cases in the linelist that we would expect to have a known outcome by this point if the outcome were fatal:
 $$
-E(\text{deaths by time }t)  
-= p \sum_{t} \sum_j f_{j} I_{t-j} 
+E(\text{deaths by time }t) = p \sum_{t} \sum_j f_{j} I_{t-j} 
 $$
 
 where $p$ is the CFR.
 
 We can then rearrange the above to calculate the CFR:
+
 $$
-\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
-p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\ p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
 This is the calculation performed by `cfr_static()`, and hence this function can give us a better estimate of CFR when delays to death and recovery are not the same.
@@ -258,14 +256,14 @@ df <- counts %>%
 
 cfr_static(df, delay_death)
 ```
-Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10% (95% CI: 8.3-12.0%), whereas the filtering method produces a biased estimate of 26.4% (17.6-37.0%).
+Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10%, whereas the filtering method produces a biased estimate of 26%.
 
 ## Deaths reported but not recoveries
 
 In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above conclusions will still apply, with the same bias for the filtering approach. In particular, we would expect:
+
 $$
-E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\
-\text{as } E(\text{Total recoveries}) \rightarrow 0
+E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \rightarrow 1 \\ \text{as } E(\text{Total recoveries}) \rightarrow 0
 $$
 
 And hence the calculated CFR to incorrectly converge to 1 as the proportion of recoveries reported declines to 0.
@@ -273,9 +271,9 @@ And hence the calculated CFR to incorrectly converge to 1 as the proportion of r
 ## Only total deaths reported
 
 In some situations, we may have a time series of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
+
 $$
-E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
-E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\ E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
 We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
