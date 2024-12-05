@@ -188,10 +188,11 @@ is different to delay to recovery
 we have:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Total deaths</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Total deaths</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="normal">Total recoveries</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">]</mo></mrow><mo>=</mo><mfrac><mrow><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><mi>p</mi><msubsup><mi>f</mi><mi>j</mi><mi>D</mi></msubsup><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub></mrow><mrow><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><mi>p</mi><msubsup><mi>f</mi><mi>j</mi><mi>D</mi></msubsup><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub><mo>+</mo><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="true" form="postfix">)</mo></mrow><msubsup><mi>f</mi><mi>j</mi><mi>R</mi></msubsup><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ]  = \frac{\sum_{t} \sum_j p f_j^D I_{t-j}}{\sum_{t} \sum_j p f_j^D I_{t-j} + \sum_{t} \sum_j (1-p) f_j^R I_{t-j}}
-</annotation></semantics></math> And hence this will not simplify to
-provide an unbiased estimate of
+</annotation></semantics></math></p>
+<p>And hence this will not simplify to provide an unbiased estimate of
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>,
-as if would if $ f_j^D = f_j^R $</p>
+as if would if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>f</mi><mi>j</mi><mi>D</mi></msubsup><mo>=</mo><msubsup><mi>f</mi><mi>j</mi><mi>R</mi></msubsup></mrow><annotation encoding="application/x-tex">f_j^D = f_j^R</annotation></semantics></math>.</p>
 </div>
 </div>
 <div class="section level2">
@@ -208,15 +209,17 @@ the outcome were fatal:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mtext mathvariant="normal">deaths by time </mtext><mspace width="0.333em"></mspace></mrow><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>p</mi><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><msub><mi>f</mi><mi>j</mi></msub><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
 E(\text{deaths by time }t)  
 = p \sum_{t} \sum_j f_{j} I_{t-j} 
-</annotation></semantics></math> where
+</annotation></semantics></math></p>
+<p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
 is the CFR.</p>
 <p>We can then rearrange the above to calculate the CFR: <span class="math display">$$
 \text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
 p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
-$$</span> This is the calculation performed by
-<code><a href="../reference/cfr_static.html">cfr_static()</a></code>, and hence this function can give us a better
-estimate of CFR when delays to death and recovery are not the same.</p>
+$$</span></p>
+<p>This is the calculation performed by <code><a href="../reference/cfr_static.html">cfr_static()</a></code>, and
+hence this function can give us a better estimate of CFR when delays to
+death and recovery are not the same.</p>
 </div>
 <div class="section level2">
 <h2 id="simulated-comparison-of-above-methods">Simulated comparison of above methods<a class="anchor" aria-label="anchor" href="#simulated-comparison-of-above-methods"></a>
@@ -390,13 +393,13 @@ filtering method produces a biased estimate of 26.4% (17.6-37.0%).</p>
 effectively have the values of <code>outcome_recovery</code> generated
 from a distribution with an infinite mean, and the above conclusions
 will still apply, with the same bias for the filtering approach. In
-particular, we would expect:</p>
-<p><span class="math display">$$
+particular, we would expect: <span class="math display">$$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total
 recoveries}) ] \rightarrow 1 \\
 \text{as } E(\text{Total recoveries}) \rightarrow 0
-$$</span> And hence the calculated CFR to incorrectly converge to 1 as
-the proportion of recoveries reported declines to 0.</p>
+$$</span></p>
+<p>And hence the calculated CFR to incorrectly converge to 1 as the
+proportion of recoveries reported declines to 0.</p>
 </div>
 <div class="section level2">
 <h2 id="only-total-deaths-reported">Only total deaths reported<a class="anchor" aria-label="anchor" href="#only-total-deaths-reported"></a>
@@ -406,7 +409,8 @@ deaths. However, we can still use the earlier calculation to derive an
 unbiased CFR: <span class="math display">$$
 E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
 E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
-$$</span> We can do this in <em>cfr</em> using the
+$$</span></p>
+<p>We can do this in <em>cfr</em> using the
 <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> function to calculate the expected
 number of cases with known fatal outcomes in the above denominator:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -452,19 +456,21 @@ by two extreme scenarios. First, if the outbreak is over, and sufficient
 time has passed so that all fatal outcomes are now known, i.e.
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><msub><mi>f</mi><mi>j</mi></msub><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub><mo>=</mo><munder><mo>∑</mo><mi>t</mi></munder><msub><mi>I</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">
 \sum_{t} \sum_j f_{j} I_{t-j} = \sum_{t} I_t
-</annotation></semantics></math> then the CFR would be equal to:</p>
+</annotation></semantics></math></p>
+<p>then the CFR would be equal to:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mfrac><mtext mathvariant="normal">Total deaths</mtext><mtext mathvariant="normal">Total cases</mtext></mfrac></mrow><annotation encoding="application/x-tex">
 p = \frac{\text{Total deaths}}{\text{Total cases}}
-</annotation></semantics></math> In contrast, if the epidemic is rapidly
-growing and still in its early stages, then even an epidemic with a CFR
-of 1 may have only generated a very small number of fatal outcomes to
-date. Hence we have the following bounds on the possible CFR:
+</annotation></semantics></math></p>
+<p>In contrast, if the epidemic is rapidly growing and still in its
+early stages, then even an epidemic with a CFR of 1 may have only
+generated a very small number of fatal outcomes to date. Hence we have
+the following bounds on the possible CFR:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mtext mathvariant="normal">Total deaths</mtext><mtext mathvariant="normal">Total cases</mtext></mfrac><mo>≤</mo><mi>p</mi><mo>≤</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">
 \frac{\text{Total deaths}}{\text{Total cases}} \leq p \leq 1
-</annotation></semantics></math> In other words, during a rapidly
-growing epidemic, we can only say that the CFR lies somewhere between
-the ratio of total deaths to total cases (as of the last known count)
-and 1 (the worst-case scenario).</p>
+</annotation></semantics></math></p>
+<p>In other words, during a rapidly growing epidemic, we can only say
+that the CFR lies somewhere between the ratio of total deaths to total
+cases (as of the last known count) and 1 (the worst-case scenario).</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
