@@ -175,11 +175,10 @@ is the probability of outcome
 days after symptom onset.</p>
 <p>Hence <span class="math display">$$
 E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total
-recoveries}) ] \\
-=[ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j}
-I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\
-=[p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j}
-]   = p
+recoveries}) ] \\ = [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p
+\sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\ = [p
+\sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   =
+p
 $$</span></p>
 <p>However, if delay to death
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>f</mi><mi>j</mi><mi>D</mi></msubsup><annotation encoding="application/x-tex">f_j^D</annotation></semantics></math>
@@ -207,15 +206,14 @@ simpler alternative is to first calculate the number of cases in the
 linelist that we would expect to have a known outcome by this point if
 the outcome were fatal:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mrow><mo stretchy="true" form="prefix">(</mo><mrow><mtext mathvariant="normal">deaths by time </mtext><mspace width="0.333em"></mspace></mrow><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>p</mi><munder><mo>∑</mo><mi>t</mi></munder><munder><mo>∑</mo><mi>j</mi></munder><msub><mi>f</mi><mi>j</mi></msub><msub><mi>I</mi><mrow><mi>t</mi><mo>−</mo><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
-E(\text{deaths by time }t)  
-= p \sum_{t} \sum_j f_{j} I_{t-j} 
+E(\text{deaths by time }t) = p \sum_{t} \sum_j f_{j} I_{t-j} 
 </annotation></semantics></math></p>
 <p>where
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>
 is the CFR.</p>
 <p>We can then rearrange the above to calculate the CFR: <span class="math display">$$
-\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\
-p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\ p =
+\frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$</span></p>
 <p>This is the calculation performed by <code><a href="../reference/cfr_static.html">cfr_static()</a></code>, and
 hence this function can give us a better estimate of CFR when delays to
@@ -393,10 +391,11 @@ filtering method produces a biased estimate of 26.4% (17.6-37.0%).</p>
 effectively have the values of <code>outcome_recovery</code> generated
 from a distribution with an infinite mean, and the above conclusions
 will still apply, with the same bias for the filtering approach. In
-particular, we would expect: <span class="math display">$$
-E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total
-recoveries}) ] \rightarrow 1 \\
-\text{as } E(\text{Total recoveries}) \rightarrow 0
+particular, we would expect:</p>
+<p><span class="math display">$$
+E(\text{Total deaths})/ [ E(\text{Total deaths}) + E(\text{Total
+recoveries}) ] \rightarrow 1 \\ \text{as } E(\text{Total recoveries})
+\rightarrow 0
 $$</span></p>
 <p>And hence the calculated CFR to incorrectly converge to 1 as the
 proportion of recoveries reported declines to 0.</p>
@@ -406,9 +405,10 @@ proportion of recoveries reported declines to 0.</p>
 </h2>
 <p>In some situations, we may have a time series of cases but not
 deaths. However, we can still use the earlier calculation to derive an
-unbiased CFR: <span class="math display">$$
-E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\
-E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+unbiased CFR:</p>
+<p><span class="math display">$$
+E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\ E(p) =
+\frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$</span></p>
 <p>We can do this in <em>cfr</em> using the
 <code><a href="../reference/estimate_outcomes.html">estimate_outcomes()</a></code> function to calculate the expected
