@@ -4,6 +4,8 @@ output:
   bookdown::html_vignette2:
     fig_caption: yes
     code_folding: show
+pkgdown:
+  as_is: true
 bibliography: resources/library.json
 link-citations: true
 vignette: >
@@ -76,7 +78,9 @@ where $I_t$ is number of new symptomatic infections on day $t$ and $f_i$ is the 
 
 Hence
 $$
-E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \\ = [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\ = [p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   = p
+E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \\ 
+= [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\ 
+= [p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   = p
 $$
 
 However, if delay to death $f_j^D$ is different to delay to recovery $f_j^R$, we have:
@@ -271,7 +275,8 @@ And hence the calculated CFR to incorrectly converge to 1 as the proportion of r
 In some situations, we may have a time series of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
 
 $$
-E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\ E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\ 
+E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
 We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
