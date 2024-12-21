@@ -4,8 +4,6 @@ output:
   bookdown::html_vignette2:
     fig_caption: yes
     code_folding: show
-pkgdown:
-  as_is: true
 bibliography: resources/library.json
 link-citations: true
 vignette: >
@@ -78,8 +76,12 @@ where $I_t$ is number of new symptomatic infections on day $t$ and $f_i$ is the 
 
 Hence
 $$
-E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ] \\ 
-= [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}] \\ 
+E(\text{Total deaths})/ [ E(\text{Total deaths})+E(\text{Total recoveries}) ]
+$$
+$$
+= [ \sum_{t} p \sum_j f_{j} I_{t-j} ]/[ \sum_{t} p \sum_j f_{j} I_{t-j}  +  \sum_{t}(1-p) \sum_j f_{j} I_{t-j}]
+$$
+$$
 = [p \sum_{t}  \sum_j f_{j} I_{t-j} ]/[ \sum_{t}  \sum_j f_{j} I_{t-j} ]   = p
 $$
 
@@ -104,7 +106,10 @@ where $p$ is the CFR.
 
 We can then rearrange the above to calculate the CFR:
 $$
-\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j} \\ p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
+\text{Total deaths} = p \sum_{t} \sum_j f_{j} I_{t-j}
+$$
+$$
+p = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
 This is the calculation performed by `cfr_static()`, and hence this function can give us a better estimate of CFR when delays to death and recovery are not the same.
@@ -265,7 +270,10 @@ Hence in this particular simulation, the `cfr_static()` method recovers the corr
 In an extreme scenario where recoveries are not reported, then we effectively have the values of `outcome_recovery` generated from a distribution with an infinite mean, and the above conclusions will still apply, with the same bias for the filtering approach. In particular, we would expect:
 
 $$
-E(\text{Total deaths})/ [ E(\text{Total deaths}) + E(\text{Total recoveries}) ] \rightarrow 1 \\ \text{as } E(\text{Total recoveries}) \rightarrow 0
+E(\text{Total deaths})/ [ E(\text{Total deaths}) + E(\text{Total recoveries}) ] \rightarrow 1
+$$
+$$
+\text{as } E(\text{Total recoveries}) \rightarrow 0
 $$
 
 And hence the calculated CFR to incorrectly converge to 1 as the proportion of recoveries reported declines to 0.
@@ -275,7 +283,9 @@ And hence the calculated CFR to incorrectly converge to 1 as the proportion of r
 In some situations, we may have a time series of cases but not deaths. However, we can still use the earlier calculation to derive an unbiased CFR:
 
 $$
-E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j} \\ 
+E(\text{Total deaths}) = p \sum_{t} \sum_j f_{j} I_{t-j}
+$$
+$$
 E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
