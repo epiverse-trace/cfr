@@ -1,6 +1,6 @@
 Package: cfr
 Title: Estimate Disease Severity and Case Ascertainment
-Version: 0.1.1.9000
+Version: 0.1.3
 Authors@R: c(
     person("Pratik R.", "Gupte", , "pratik.gupte@lshtm.ac.uk", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0001-5294-7819")),
@@ -43,6 +43,7 @@ Suggests:
     ggplot2,
     incidence2,
     knitr,
+	magrittr,
     purrr,
     rmarkdown,
     scales,

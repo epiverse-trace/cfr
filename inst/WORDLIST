@@ -51,12 +51,14 @@ epiday
 epiparameter
 epiweek
 etc
+frac
 geq
 ggplot
 gh
 github
 infty
 io
+leq
 lifecycle
 linelist
 lockdowns
@@ -67,6 +69,7 @@ packagename
 parameterise
 parameterised
 pkg
+rightarrow
 sim
 st
 svg

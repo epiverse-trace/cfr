@@ -1,5 +1,9 @@
 # cfr (development version)
 
+# cfr 0.1.3
+
+Added vignette `estimate_from_individual_data.Rmd` describing relationship between individual-level data and aggregate estimation.
+
 # cfr 0.1.2
 
 Updated version to fix instability in normal approximation with displayed Ebola example. This release includes:

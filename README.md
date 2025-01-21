@@ -213,7 +213,7 @@ forthcoming [*epiparameter*
 package](https://epiverse-trace.github.io/epiparameter/), which is also
 developed by Epiverse-TRACE. *epiparameter* aims to provide a library of
 epidemiological parameters to parameterise delay density functions, as
-well as the convenient `<epidist>` class to store, access, and pass
+well as the convenient `<epiparameter>` class to store, access, and pass
 these parameters for delay correction.
 
 ## References
