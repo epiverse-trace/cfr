@@ -84,7 +84,7 @@ cfr_rolling <- function(data,
   # also check delay_density
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(as.numeric(diff(data$date))), 1) # use numeric 1, not integer
+      identical(unique(as.numeric(diff(data$date))), 1) # use numeric 1
     # this solution works when df$date is `Date`
     # this may need more thought for dates that are integers, POSIXct,
     # or other units; consider the units package
