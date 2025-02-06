@@ -120,7 +120,7 @@ cfr_time_varying <- function(data,
 
   stopifnot(
     "Input data must have sequential dates with none missing or duplicated" =
-      identical(unique(diff(data$date)), 1), # use numeric 1, not integer
+      identical(unique(as.numeric(diff(data$date))), 1), # use numeric 1, not integer
     "`smoothing_window` must be an odd number greater than 0" =
       (smoothing_window %% 2 != 0),
     "`delay_density` must be a function with a single required argument,
