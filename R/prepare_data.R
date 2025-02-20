@@ -138,10 +138,8 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   stopifnot(
     "`cases_variable` and `deaths_variable` should be in
     `count_variable` column of <incidence2> object `data`" =
-      all(
-        c(cases_variable, deaths_variable) %in%
-          unique(data[[count_var_col]])
-      )
+      c(cases_variable, deaths_variable) %in%
+      unique(data[[count_var_col]])
   )
 
   # complete dates for all groups in the data and fill any NAs per user input
@@ -161,10 +159,10 @@ prepare_data.incidence2 <- function(data, cases_variable = "cases",
   index <- index == cases_variable | index == deaths_variable
   data <- data[index, ]
 
-  formula <- stats::reformulate(count_var_col, "...")
+  count_formula <- stats::reformulate(count_var_col, "...")
   # cast wide and fill any NAs per user input
   data <- data.table::dcast(
-    data, formula,
+    data, count_formula,
     value.var = count_col
   )
 
