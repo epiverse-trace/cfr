@@ -1,6 +1,10 @@
-# cfr 0.1.3
+# cfr 0.2.0
+
+## New features
 
 * Added vignette `estimate_from_individual_data.Rmd` describing relationship between individual-level data and aggregate estimation (#170, @adamkucharski).
+
+## Minor improvements and fixes
 
 * Patch `unique(<difftime>)` for R-devel (v4.5.0) which now returns a `<difftime>` object instead of a `numeric`, so the `<difftime>` object is wrapped in `as.numeric()` as suggested by CRAN (#178, @adamkucharksi).
 
