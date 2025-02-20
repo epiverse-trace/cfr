@@ -8,7 +8,7 @@ message: 'To cite package "cfr" in publications use:'
 type: software
 license: MIT
 title: 'cfr: Estimate Disease Severity and Case Ascertainment'
-version: 0.1.3
+version: 0.2.0
 doi: 10.32614/CRAN.package.cfr
 abstract: Estimate the severity of a disease and ascertainment of cases, as discussed
   in Nishiura et al. (2009) <https://doi.org/10.1371/journal.pone.0006852>.
@@ -53,7 +53,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2024'
+  year: '2025'
   version: '>= 3.5.0'
 - type: software
   title: checkmate
@@ -66,7 +66,7 @@ references:
     given-names: Michel
     email: michellang@gmail.com
     orcid: https://orcid.org/0000-0001-9754-0393
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.checkmate
 - type: software
   title: stats
@@ -77,7 +77,7 @@ references:
   institution:
     name: R Foundation for Statistical Computing
     address: Vienna, Austria
-  year: '2024'
+  year: '2025'
 - type: software
   title: bookdown
   abstract: 'bookdown: Authoring Books and Technical Documents with R Markdown'
@@ -89,7 +89,7 @@ references:
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.bookdown
 - type: software
   title: data.table
@@ -119,7 +119,7 @@ references:
   - family-names: Schwendinger
     given-names: Benjamin
     orcid: https://orcid.org/0000-0003-3315-8114
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.data.table
 - type: software
   title: distcrete
@@ -135,7 +135,7 @@ references:
     given-names: Anne
   - family-names: Jombart
     given-names: Thibaut
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.distcrete
 - type: software
   title: distributional
@@ -157,7 +157,7 @@ references:
   - family-names: Hyndman
     given-names: Rob
     orcid: https://orcid.org/0000-0002-2140-5352
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.distributional
 - type: software
   title: dplyr
@@ -182,7 +182,7 @@ references:
     given-names: Davis
     email: davis@posit.co
     orcid: https://orcid.org/0000-0003-4777-038X
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.dplyr
 - type: software
   title: forcats
@@ -194,7 +194,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.forcats
 - type: software
   title: ggplot2
@@ -234,7 +234,7 @@ references:
     given-names: Teun
     name-particle: van den
     orcid: https://orcid.org/0000-0002-9335-7468
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.ggplot2
 - type: software
   title: incidence2
@@ -247,7 +247,7 @@ references:
     given-names: Tim
     email: tim.taylor@hiddenelephants.co.uk
     orcid: https://orcid.org/0000-0002-8587-7113
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.incidence2
 - type: software
   title: knitr
@@ -260,7 +260,7 @@ references:
     given-names: Yihui
     email: xie@yihui.name
     orcid: https://orcid.org/0000-0003-0645-5666
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.knitr
 - type: software
   title: magrittr
@@ -275,7 +275,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@rstudio.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.magrittr
 - type: software
   title: purrr
@@ -286,12 +286,12 @@ references:
   authors:
   - family-names: Wickham
     given-names: Hadley
-    email: hadley@rstudio.com
+    email: hadley@posit.co
     orcid: https://orcid.org/0000-0003-4757-117X
   - family-names: Henry
     given-names: Lionel
-    email: lionel@rstudio.com
-  year: '2024'
+    email: lionel@posit.co
+  year: '2025'
   doi: 10.32614/CRAN.package.purrr
 - type: software
   title: rmarkdown
@@ -335,7 +335,7 @@ references:
     given-names: Richard
     email: rich@posit.co
     orcid: https://orcid.org/0000-0003-3925-190X
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.rmarkdown
 - type: software
   title: scales
@@ -353,7 +353,7 @@ references:
     orcid: https://orcid.org/0000-0002-5147-4711
   - family-names: Seidel
     given-names: Dana
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.scales
 - type: software
   title: spelling
@@ -369,7 +369,7 @@ references:
   - family-names: Hester
     given-names: Jim
     email: james.hester@rstudio.com
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.spelling
 - type: software
   title: testthat
@@ -381,7 +381,7 @@ references:
   - family-names: Wickham
     given-names: Hadley
     email: hadley@posit.co
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.testthat
   version: '>= 3.0.0'
 - type: software
@@ -399,6 +399,6 @@ references:
     email: davis@posit.co
   - family-names: Girlich
     given-names: Maximilian
-  year: '2024'
+  year: '2025'
   doi: 10.32614/CRAN.package.tidyr
 
