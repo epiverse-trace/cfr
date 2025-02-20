@@ -86,7 +86,8 @@ estimate_ascertainment <- function(data,
   # throw a warning for ascertainment ration > 1.0
   if (any(df_ascertainment > 1.0)) {
     warning(
-      "Ascertainment ratios > 1.0 detected, setting these values to 1.0"
+      "Ascertainment ratios > 1.0 detected, setting these values to 1.0",
+      call. = FALSE
     )
   }
   df_ascertainment[df_ascertainment > 1.0] <- 1.0

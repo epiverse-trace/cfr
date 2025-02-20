@@ -125,7 +125,7 @@ pp <- 0.1 # Assumed CFR
 set.seed(10) # Set seed for reproducibility
 
 # Generate random case onset timings in Jan & Feb 2024
-case_onsets <- as.Date("2024-01-01") + sample(1:60, nn, replace = TRUE)
+case_onsets <- as.Date("2024-01-01") + sample.int(60, nn, replace = TRUE)
 
 # Define current date of data availability (i.e. max follow up)
 max_obs <- as.Date("2024-01-20")
@@ -175,7 +175,7 @@ data <- data.frame(
 )
 
 # Filter out unknown outcomes (after the max_obs date)
-data <- data %>% filter(known_outcome != "")
+data <- data %>% filter(nzchar(known_outcome))
 
 # Arrange data by onset date
 data <- data %>%
