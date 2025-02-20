@@ -6,7 +6,7 @@
 
 ## Minor improvements and fixes
 
-* Patch `unique(<difftime>)` for R-devel (v4.5.0) which now returns a `<difftime>` object instead of a `numeric`, so the `<difftime>` object is wrapped in `as.numeric()` as suggested by CRAN (#178, @adamkucharksi).
+* Patch `unique(<difftime>)` for R-devel (v4.5.0) which now returns a `<difftime>` object instead of a `numeric`, so the `<difftime>` object is wrapped in `as.numeric()` as suggested by CRAN (#178, @adamkucharski).
 
 * Update `<epiparameter>` class name in documentation (#166, @joshwlambert).
 
