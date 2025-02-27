@@ -1,0 +1,16 @@
+pandoc: 3.1.11
+pkgdown: 2.1.1
+pkgdown_sha: ~
+articles:
+  cfr: cfr.html
+  data_from_incidence2: data_from_incidence2.html
+  delay_distributions: delay_distributions.html
+  estimate_ascertainment: estimate_ascertainment.html
+  estimate_from_individual_data: estimate_from_individual_data.html
+  estimate_static_severity: estimate_static_severity.html
+  estimate_time_varying_severity: estimate_time_varying_severity.html
+  software-permissions: software-permissions.html
+last_built: 2025-02-27T20:58Z
+urls:
+  reference: https://epiverse-trace.github.io/cfr/reference
+  article: https://epiverse-trace.github.io/cfr/articles
