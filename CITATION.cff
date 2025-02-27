@@ -8,7 +8,7 @@ message: 'To cite package "cfr" in publications use:'
 type: software
 license: MIT
 title: 'cfr: Estimate Disease Severity and Case Ascertainment'
-version: 0.2.0
+version: 0.2.0.9000
 doi: 10.32614/CRAN.package.cfr
 abstract: Estimate the severity of a disease and ascertainment of cases, as discussed
   in Nishiura et al. (2009) <https://doi.org/10.1371/journal.pone.0006852>.
@@ -119,6 +119,10 @@ references:
   - family-names: Schwendinger
     given-names: Benjamin
     orcid: https://orcid.org/0000-0003-3315-8114
+  - family-names: Krylov
+    given-names: Ivan
+    email: ikrylov@disroot.org
+    orcid: https://orcid.org/0000-0002-0172-3812
   year: '2025'
   doi: 10.32614/CRAN.package.data.table
 - type: software
