@@ -204,10 +204,10 @@ $$
 where $f_t$ is the value of the probability mass function at time $t$, and $c_t$, $d_t$ are the number of new cases and new deaths at time $t$ (respectively).
 We then use $u_t$ in the following likelihood function to estimate severity.
 
+$$ 
+{\sf L}(\theta | C_{t},D_{t},u_{t}) = \log \left(\binom{u_{t}C_{t}}{D_{t}}\right) + D_{t} \log \theta + (u_{t}C_{t} - D_{t}) \log (1 - \theta).
 $$
-  {\sf L}(\theta | C_{t},D_{t},u_{t}) = \log{\dbinom{u_{t}C_{t}}{D_{t}}} + D_{t} \log{\theta} +
-  (u_{t}C_{t} - D_{t})\log{(1 - \theta)},
-$$
+
 
 $C_{t}$ and $D_{t}$ are the cumulative number of cases and deaths (respectively) until time $t$.
 
