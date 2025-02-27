@@ -1,6 +1,6 @@
 Package: cfr
 Title: Estimate Disease Severity and Case Ascertainment
-Version: 0.2.0
+Version: 0.2.0.9000
 Authors@R: c(
     person("Pratik R.", "Gupte", , "pratik.gupte@lshtm.ac.uk", role = c("aut", "cph"),
            comment = c(ORCID = "0000-0001-5294-7819")),
