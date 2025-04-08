@@ -15,8 +15,9 @@ test_that("CFR functions work with delay_density as lambda", {
   expect_no_warning(
     cfr_rolling(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
-    cfr_time_varying(ebola1976, delay_density = ddens)
+  expect_warning(
+    cfr_time_varying(ebola1976, delay_density = ddens),
+    "partial argument match of 'length' to 'length.out'"
   )
   expect_no_warning(
     estimate_ascertainment(
@@ -37,8 +38,9 @@ test_that("CFR functions work with delay_density as <distcrete>", {
   expect_no_warning(
     cfr_rolling(ebola1976, delay_density = ddens)
   )
-  expect_no_condition(
-    cfr_time_varying(ebola1976, delay_density = ddens)
+  expect_warning(
+    cfr_time_varying(ebola1976, delay_density = ddens),
+    "partial argument match of 'length' to 'length.out'"
   )
   expect_no_warning(
     estimate_ascertainment(

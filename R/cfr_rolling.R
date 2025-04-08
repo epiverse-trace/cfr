@@ -120,6 +120,9 @@ cfr_rolling <- function(data,
     # NOTE: choosing message rather than warning, as warnings are nearly
     # guaranteed in the early stages of an outbreak due to poor data
     p_mid_values <- cumulative_deaths / round(cumulative_outcomes)
+    
+    # Handle edge cases where p_mid might be NA or Inf
+    p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
 
     if (any(is.infinite(p_mid_values) | p_mid_values < 1e-4)) {
       message(
@@ -165,7 +168,14 @@ cfr_rolling <- function(data,
 
     cfr_lims <- Map(
       cumulative_deaths, cumulative_cases,
-      f = function(x, n) stats::binom.test(x, n, p = 1)$conf.int
+      f = function(x, n) {
+        ci <- binom::binom.wilson(
+          x = x,
+          n = n,
+          conf.level = 0.95
+        )
+        c(ci$lower, ci$upper)
+      }
     )
     cfr_lims <- do.call(rbind, cfr_lims)
 

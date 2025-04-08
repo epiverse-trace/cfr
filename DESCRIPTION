@@ -32,7 +32,8 @@ Depends:
     R (>= 3.5.0)
 Imports:
     checkmate,
-    stats
+    stats,
+    binom
 Suggests: 
     bookdown,
     data.table,

@@ -51,9 +51,6 @@
     )
   }
 
-  # NOTE: previous code used `u_t = total_outcomes / total_cases`
-  # which can be simplified in all operations to simply `total_outcomes`
-
   # select likelihood function
   func_likelihood <- .select_func_likelihood(
     total_cases, poisson_threshold, p_mid
@@ -86,9 +83,11 @@
     severity_estimate <- NA
     severity_lims <- c(NA, NA)
   } else {
+    # Find the 95% confidence interval using likelihood ratio test
+    # The critical value for 95% CI is 3.84/2 (chi-square with 1 df)
+    critical_value <- 1.92
     severity_lims <- range(
-      pprange[lik >=
-        (max(lik, na.rm = TRUE) - 1.92)],
+      pprange[lik >= (max(lik, na.rm = TRUE) - critical_value)],
       na.rm = TRUE
     )
   }

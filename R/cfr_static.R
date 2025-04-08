@@ -207,12 +207,15 @@ cfr_static <- function(data,
     # calculating the central estimate
     severity_estimate <- total_deaths / total_cases
 
-    # calculating the lower and upper 95% confidence interval using the exact
-    # binomial test
-    severity_conf <- stats::binom.test(round(total_deaths), total_cases, p = 1)
+    # calculating the lower and upper 95% confidence interval using Wilson method
+    severity_conf <- binom::binom.wilson(
+      x = round(total_deaths),
+      n = total_cases,
+      conf.level = 0.95
+    )
 
     # extracting the lower and upper intervals respectively
-    severity_lims <- severity_conf$conf.int
+    severity_lims <- c(severity_conf$lower, severity_conf$upper)
 
     severity_estimate <- data.frame(
       severity_estimate = severity_estimate,

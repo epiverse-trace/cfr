@@ -190,16 +190,17 @@ cfr_time_varying <- function(data,
 
   # binomial test at indices
   estimates_tmp <- vapply(indices, FUN = function(i) {
-    severity_estimate <- stats::binom.test(
-      df_temp$deaths[i],
-      df_temp$estimated_outcomes[i]
+    severity_estimate <- binom::binom.wilson(
+      x = df_temp$deaths[i],
+      n = df_temp$estimated_outcomes[i],
+      conf.level = 0.95
     )
 
     # return a vector
     c(
-      severity_estimate$estimate[[1]],
-      severity_estimate$conf.int[[1]],
-      severity_estimate$conf.int[[2]]
+      severity_estimate$mean,
+      severity_estimate$lower,
+      severity_estimate$upper
     )
   }, numeric(3))
 
