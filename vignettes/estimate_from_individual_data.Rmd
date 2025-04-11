@@ -148,7 +148,7 @@ trunc_linelist <- truncate_linelist(
 )
 ```
 
-```{r fig.cap = "Individual level timings of onsets and outcomes, for individuals with a known outcome as of 20th Jan 2024.", class.source = 'fold-hide'}
+```{r fig.cap = paste0("Individual level timings of onsets and outcomes, for individuals with a known outcome as of ",  format(max_obs, format = "%d %B %Y"), "."), class.source = 'fold-hide'}
 # Create plot with lines linking onset and outcome
 ggplot(data = trunc_linelist) +
   geom_segment(
@@ -185,7 +185,8 @@ ggplot(data = trunc_linelist) +
   scale_color_manual(values = c("darkred", "darkgreen")) +
   scale_shape_manual(values = c(16, 17)) +
   labs(colour = "Outcome type", shape = "Outcome type") +
-  theme_minimal()
+  theme_minimal() +
+  theme(legend.position = "bottom")
 ```
 
 First, we calculate CFR by filtering to focus only on cases with known outcomes:
@@ -198,10 +199,13 @@ total_outcomes <- total_deaths +
 
 # Calculate CFR with 95% CI
 cfr_filter <- binom.test(total_deaths, total_outcomes)
-cfr_estimate <- signif(
+cfr_estimate_unadjusted <- signif(
   as.numeric(c(cfr_filter$estimate, cfr_filter$conf.int)), 3
 )
-cfr_estimate
+names(cfr_estimate_unadjusted) <- c(
+  "severity_estimate", "severity_low", "severity_high"
+)
+cfr_estimate_unadjusted
 ```
 
 Next, we calculate CFR based on expected fatal outcomes known to date, using `cfr_static()`
@@ -232,9 +236,10 @@ df <- prepare_data(
   deaths_variable = "date_death"
 )
 
-cfr_static(df, delay_density = onset_to_death)
+cfr_estimate_adjusted <- cfr_static(df, delay_density = onset_to_death)
+cfr_estimate_adjusted
 ```
-Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10% (95% CI: 8.3-12.0%), whereas the filtering method produces a biased estimate of 26.4% (17.6-37.0%).
+Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of `r cfr_estimate_adjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_adjusted[["severity_low"]] * 100` - `r cfr_estimate_adjusted[["severity_high"]] * 100`%), whereas the filtering method produces a biased estimate of `r cfr_estimate_unadjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_unadjusted[["severity_low"]] * 100` - `r cfr_estimate_unadjusted[["severity_high"]] * 100`%).
 
 ## Deaths reported but not recoveries
 
