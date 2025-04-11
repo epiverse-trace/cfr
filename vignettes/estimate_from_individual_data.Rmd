@@ -124,13 +124,19 @@ To compare these methods, i.e. filtering out cases without known outcomes vs usi
 set.seed(1)
 
 # Deaths: assume mean delay = 5 days, sd = 5 days
-onset_to_death <- function(x) dlnorm(x, meanlog = 1.262864, sdlog = 0.8325546)
+onset_to_death <- function(x) {
+  dlnorm(x, meanlog = 1.262864, sdlog = 0.8325546)
+}
 
 # Simulate data
 # Recoveries: assume mean delay = 15 days, sd = 5 days
 linelist <- sim_linelist(
-  onset_to_death = function(x) rlnorm(n = x, meanlog = 1.262864, sdlog = 0.8325546), 
-  onset_to_recovery = function(x) rlnorm(n = x, meanlog = 2.65537, sdlog = 0.3245928),
+  onset_to_death = function(x) {
+    rlnorm(n = x, meanlog = 1.262864, sdlog = 0.8325546)
+  },
+  onset_to_recovery = function(x) {
+    rlnorm(n = x, meanlog = 2.65537, sdlog = 0.3245928)
+  },
   hosp_risk = 0,
   hosp_death_risk = 0,
   non_hosp_death_risk = 0.1, # Assumed CFR (10%)
@@ -153,7 +159,7 @@ trunc_linelist <- truncate_linelist(
 ggplot(data = trunc_linelist) +
   geom_segment(
     mapping = aes(
-      x = date_onset, 
+      x = date_onset,
       xend = date_outcome,
       y = id,
       yend = id,
@@ -162,7 +168,7 @@ ggplot(data = trunc_linelist) +
   ) +
   geom_point(
     mapping = aes(
-      x = date_onset, 
+      x = date_onset,
       y = id,
       colour = outcome
     ),
@@ -170,14 +176,14 @@ ggplot(data = trunc_linelist) +
   ) +
   geom_point(
     mapping = aes(
-      x = date_outcome, 
+      x = date_outcome,
       y = id,
       colour = outcome,
       shape = outcome
     )
   ) +
   geom_vline(
-    mapping = aes(xintercept = max_obs), 
+    mapping = aes(xintercept = max_obs),
     linetype = "dashed"
   ) +
   scale_x_date(name = "Date") +
@@ -194,7 +200,7 @@ First, we calculate CFR by filtering to focus only on cases with known outcomes:
 ```{r}
 # Filter on known outcomes
 total_deaths <- sum(trunc_linelist$outcome == "died", na.rm = TRUE)
-total_outcomes <- total_deaths + 
+total_outcomes <- total_deaths +
   sum(trunc_linelist$outcome == "recovered", na.rm = TRUE)
 
 # Calculate CFR with 95% CI
@@ -223,16 +229,16 @@ trunc_linelist_wide <- trunc_linelist %>%
 
 # Use incidence2 to calculate counts of cases and deaths by day
 counts <- incidence(
-  trunc_linelist_wide, 
-  date_index = c("date_onset", "date_death"), 
+  trunc_linelist_wide,
+  date_index = c("date_onset", "date_death"),
   interval = "daily",
   complete_dates = TRUE
 )
 
 # Pivot incidence object to get data.frame with counts for cases and deaths
 df <- prepare_data(
-  counts, 
-  cases_variable = "date_onset", 
+  counts,
+  cases_variable = "date_onset",
   deaths_variable = "date_death"
 )
 
