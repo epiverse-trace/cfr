@@ -239,7 +239,7 @@ df <- prepare_data(
 cfr_estimate_adjusted <- cfr_static(df, delay_density = onset_to_death)
 cfr_estimate_adjusted
 ```
-Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of `r cfr_estimate_adjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_adjusted[["severity_low"]] * 100` - `r cfr_estimate_adjusted[["severity_high"]] * 100`%), whereas the filtering method produces a biased estimate of `r cfr_estimate_unadjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_unadjusted[["severity_low"]] * 100` - `r cfr_estimate_unadjusted[["severity_high"]] * 100`%).
+Hence in this particular simulation, the `cfr_static()` method recovers an estimates of `r cfr_estimate_adjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_adjusted[["severity_low"]] * 100` - `r cfr_estimate_adjusted[["severity_high"]] * 100`%), close to the correct CFR, whereas the filtering method produces a biased estimate of `r cfr_estimate_unadjusted[["severity_estimate"]] * 100`% (95% CI: `r cfr_estimate_unadjusted[["severity_low"]] * 100` - `r cfr_estimate_unadjusted[["severity_high"]] * 100`%).
 
 ## Deaths reported but not recoveries
 
@@ -280,9 +280,10 @@ df_case$deaths <- 0
 e_outcomes <- estimate_outcomes(df_case, delay_density = onset_to_death)
 
 # Calculate the CFR
-total_deaths / (total_cases * tail(e_outcomes$u_t, 1))
+cfr_estimate <- total_deaths / (total_cases * tail(e_outcomes$u_t, 1))
+cfr_estimate
 ```
-As before, this produces a point estimate of 10.4%, because it is the same underlying method: the internal function code in `cfr_static()`, which calls `estimate_outcomes()`, also tallies up total death. An arguably more elegant approach is to therefore add total deaths to the case data.frame, and use as an input for `cfr_static()`:
+As before, this produces a point estimate of `r signif(cfr_estimate * 100, 4)`%, because it is the same underlying method: the internal function code in `cfr_static()`, which calls `estimate_outcomes()`, also tallies up total death. An arguably more elegant approach is to therefore add total deaths to the case data.frame, and use as an input for `cfr_static()`:
 
 ```{r}
 # Create data.frame with cases over time only
