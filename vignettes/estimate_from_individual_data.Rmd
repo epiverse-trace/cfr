@@ -42,7 +42,8 @@ We want to estimate the case fatality risk (CFR) from individual-level linelist 
 # load {cfr}
 library(cfr)
 
-# packages to wrangle and plot data
+# packages to simulate, wrangle and plot data
+library(simulist)
 library(dplyr)
 library(magrittr)
 library(ggplot2)
@@ -119,149 +120,119 @@ This is the calculation performed by `cfr_static()`, and hence this function can
 To compare these methods, i.e. filtering out cases without known outcomes vs using the `cfr_static` function, we first simulate 1000 case onset timings and outcomes (i.e. deaths and recoveries)
 
 ```{r}
-# Simulate data
-nn <- 1e3 # Number of cases to simulate
-pp <- 0.1 # Assumed CFR
-set.seed(10) # Set seed for reproducibility
+# Set seed for reproducibility
+set.seed(1)
 
-# Generate random case onset timings in Jan & Feb 2024
-case_onsets <- as.Date("2024-01-01") + sample.int(60, nn, replace = TRUE)
+# Deaths: assume mean delay = 5 days, sd = 5 days
+onset_to_death <- function(x) dlnorm(x, meanlog = 1.262864, sdlog = 0.8325546)
+
+# Simulate data
+# Recoveries: assume mean delay = 15 days, sd = 5 days
+linelist <- sim_linelist(
+  onset_to_death = function(x) rlnorm(n = x, meanlog = 1.262864, sdlog = 0.8325546), 
+  onset_to_recovery = function(x) rlnorm(n = x, meanlog = 2.65537, sdlog = 0.3245928),
+  hosp_risk = 0,
+  hosp_death_risk = 0,
+  non_hosp_death_risk = 0.1, # Assumed CFR (10%)
+  outbreak_size = c(1e3, 1e4), # Number of cases to simulate
+  outbreak_start_date = as.Date("2024-01-01")
+)
 
 # Define current date of data availability (i.e. max follow up)
-max_obs <- as.Date("2024-01-20")
+max_obs <- as.Date("2024-04-01")
 
-# Sample delays from onset to outcome
-
-# 1. Deaths: assume mean delay = 5 days, sd = 5 days
-log_param <- c(meanlog = 1.262864, sdlog = 0.8325546)
-delay_death <- function(x) {
-  dlnorm(x,
-    meanlog = log_param[["meanlog"]],
-    sdlog = log_param[["sdlog"]]
-  )
-}
-outcome_death <- round(rlnorm(round(nn * pp),
-  meanlog = log_param[["meanlog"]],
-  sdlog = log_param[["sdlog"]]
-))
-
-# 2. Recoveries: assume mean delay = 15 days, sd = 5 days
-log_param <- c(meanlog = 2.65537, sdlog = 0.3245928)
-outcome_recovery <- round(rlnorm(round(nn * (1 - pp)),
-  meanlog = log_param[["meanlog"]],
-  sdlog = log_param[["sdlog"]]
-))
-
-# Create vector of outcome dates
-all_outcomes <- case_onsets + c(outcome_death, outcome_recovery)
-
-# Create vector of outcome types
-type_outcome <- c(rep("D", length(outcome_death)),
-                  rep("R", length(outcome_recovery)))
-
-# Create vector of known outcomes as of max_obs
-known_outcomes <- type_outcome
-known_outcomes[(all_outcomes > max_obs)] <- ""
+# Truncate line list to known outcomes as of max_obs
+trunc_linelist <- truncate_linelist(
+  linelist = linelist,
+  truncation_day = max_obs
+)
 ```
 
 ```{r fig.cap = "Individual level timings of onsets and outcomes, for individuals with a known outcome as of 20th Jan 2024.", class.source = 'fold-hide'}
-# Create a data frame with onset and outcome dates, and outcome type
-data <- data.frame(
-  id = 1:nn,
-  case_onsets = case_onsets,
-  outcome_dates = all_outcomes,
-  outcome_type = type_outcome,
-  known_outcome = known_outcomes
-)
-
-# Filter out unknown outcomes (after the max_obs date)
-data <- data %>% filter(nzchar(known_outcome))
-
-# Arrange data by onset date
-data <- data %>%
-  arrange(case_onsets) %>%
-  mutate(id_ordered = row_number()) # Assign a new 'id_ordered'
-
-# Prepare data for plotting (onset and outcome events in same column)
-plot_data <- data %>%
-  tidyr::pivot_longer(
-    cols = c(case_onsets, outcome_dates),
-    names_to = "event_type",
-    values_to = "date"
-  ) %>%
-  mutate(
-    event_label = ifelse(event_type == "case_onsets", "Onset", "Outcome")
-  )
-
 # Create plot with lines linking onset and outcome
-ggplot() +
+ggplot(data = trunc_linelist) +
   geom_segment(
-    data = data, aes(x = case_onsets,
-                     xend = outcome_dates,
-                     y = id_ordered,
-                     yend = id_ordered),
-    color = ifelse(data$outcome_type == "D", "red", "green"),
-    size = 0.5
+    mapping = aes(
+      x = date_onset, 
+      xend = date_outcome,
+      y = id,
+      yend = id,
+      colour = outcome
+    )
   ) +
-  geom_point(data = plot_data, aes(x = date,
-                                   y = id_ordered,
-                                   color = outcome_type,
-                                   shape = event_label),
-             size = 2) +
-  geom_vline(xintercept = as.numeric(max_obs),
-             linetype = "dashed",
-             color = "black",
-             size = 0.5) +
-  scale_color_manual(values = c(D = "darkred", R = "darkgreen")) +
-  scale_shape_manual(values = c(Onset = 16, Outcome = 17)) +
-  labs(
-    x = "Date",
-    y = "Individual (Ordered by onset date)",
-    color = "Outcome type",
-    shape = "Event type"
+  geom_point(
+    mapping = aes(
+      x = date_onset, 
+      y = id,
+      colour = outcome
+    ),
+    shape = 1
   ) +
+  geom_point(
+    mapping = aes(
+      x = date_outcome, 
+      y = id,
+      colour = outcome,
+      shape = outcome
+    )
+  ) +
+  geom_vline(
+    mapping = aes(xintercept = max_obs), 
+    linetype = "dashed"
+  ) +
+  scale_x_date(name = "Date") +
+  scale_y_continuous(name = "Individual") +
+  scale_color_manual(values = c("darkred", "darkgreen")) +
+  scale_shape_manual(values = c(16, 17)) +
+  labs(colour = "Outcome type", shape = "Outcome type") +
   theme_minimal()
 ```
 
 First, we calculate CFR by filtering to focus only on cases with known outcomes:
+
 ```{r}
 # Filter on known outcomes
-total_deaths <- sum(known_outcomes == "D")
-total_outcomes <- (total_deaths + sum(known_outcomes == "R"))
+total_deaths <- sum(trunc_linelist$outcome == "died", na.rm = TRUE)
+total_outcomes <- total_deaths + 
+  sum(trunc_linelist$outcome == "recovered", na.rm = TRUE)
 
 # Calculate CFR with 95% CI
 cfr_filter <- binom.test(total_deaths, total_outcomes)
-cfr_estimate <- (signif(as.numeric(c(cfr_filter$estimate,
-                                     cfr_filter$conf.int)), 3))
+cfr_estimate <- signif(
+  as.numeric(c(cfr_filter$estimate, cfr_filter$conf.int)), 3
+)
 cfr_estimate
 ```
 
 Next, we calculate CFR based on expected fatal outcomes known to date, using `cfr_static()`
-```{r}
-# Get times of death for fatal outcomes
-death_times <- (case_onsets)[type_outcome == "D"] + outcome_death
 
-# Create a single data.frame with event types
-events <- data.frame(
-  dates = c(case_onsets, death_times),
-  event = c(rep("cases", length(case_onsets)),
-            rep("deaths", length(death_times)))
-)
+```{r}
+trunc_linelist_wide <- trunc_linelist %>%
+  pivot_wider(
+    names_from = outcome,
+    values_from = date_outcome
+  ) %>%
+  rename(
+    date_death = died,
+    date_recovery = recovered
+  )
 
 # Use incidence2 to calculate counts of cases and deaths by day
-counts <- incidence2::incidence(events,
-                                date_index = "dates",
-                                groups = "event",
-                                complete_dates = TRUE)
+counts <- incidence(
+  trunc_linelist_wide, 
+  date_index = c("date_onset", "date_death"), 
+  interval = "daily",
+  complete_dates = TRUE
+)
 
 # Pivot incidence object to get data.frame with counts for cases and deaths
-df <- counts %>%
-  tidyr::pivot_wider(names_from = event,
-                     values_from = count,
-                     values_fill = 0) %>%
-  dplyr::rename(date = date_index)
+df <- prepare_data(
+  counts, 
+  cases_variable = "date_onset", 
+  deaths_variable = "date_death"
+)
 
-cfr_static(df, delay_death)
+cfr_static(df, delay_density = onset_to_death)
 ```
 Hence in this particular simulation, the `cfr_static()` method recovers the correct CFR of 10% (95% CI: 8.3-12.0%), whereas the filtering method produces a biased estimate of 26.4% (17.6-37.0%).
 
@@ -290,6 +261,7 @@ E(p) = \frac{\text{Total deaths}}{\sum_{t} \sum_j f_{j} I_{t-j} }
 $$
 
 We can do this in _cfr_ using the `estimate_outcomes()` function to calculate the expected number of cases with known fatal outcomes in the above denominator:
+
 ```{r}
 # Calculate total deaths and total cases
 total_deaths <- sum(df$deaths)
@@ -300,7 +272,7 @@ df_case <- df
 df_case$deaths <- 0
 
 # Calculate the expected number of known fatal outcomes over time
-e_outcomes <- estimate_outcomes(df_case, delay_death)
+e_outcomes <- estimate_outcomes(df_case, delay_density = onset_to_death)
 
 # Calculate the CFR
 total_deaths / (total_cases * tail(e_outcomes$u_t, 1))
@@ -316,7 +288,7 @@ df_cases$deaths <- 0
 df_cases$deaths[nrow(df_cases)] <- sum(df$deaths)
 
 # Calculate CFR
-cfr_static(df_cases, delay_death)
+cfr_static(df_cases, delay_density = onset_to_death)
 ```
 
 ## Only total cases and deaths reported
