@@ -199,10 +199,10 @@ First, we calculate CFR by filtering to focus only on cases with known outcomes:
 
 ```{r}
 # Filter on known outcomes
-total_deaths <- sum(trunc_linelist$outcome == "died" & 
+total_deaths <- sum(trunc_linelist$outcome == "died" &
                       trunc_linelist$date_outcome < max_obs, na.rm = TRUE)
 total_outcomes <- total_deaths +
-  sum(trunc_linelist$outcome == "recovered" & 
+  sum(trunc_linelist$outcome == "recovered" &
         trunc_linelist$date_outcome < max_obs, na.rm = TRUE)
 
 # Calculate CFR with 95% CI
