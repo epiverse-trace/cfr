@@ -123,19 +123,19 @@ To compare these methods, i.e. filtering out cases without known outcomes vs usi
 # Set seed for reproducibility
 set.seed(1)
 
-# Deaths: assume mean delay = 5 days, sd = 5 days
+# Deaths: assume mean delay = 10 days, sd = 3 days
 onset_to_death <- function(x) {
-  dlnorm(x, meanlog = 1.262864, sdlog = 0.8325546)
+  dlnorm(x, meanlog = 2.259496, sdlog = 0.2935604)
 }
 
 # Simulate data
-# Recoveries: assume mean delay = 15 days, sd = 5 days
+# Recoveries: assume mean delay = 30 days, sd = 3 days
 linelist <- sim_linelist(
   onset_to_death = function(x) {
-    rlnorm(n = x, meanlog = 1.262864, sdlog = 0.8325546)
+    rlnorm(n = x, meanlog = 2.259496, sdlog = 0.2935604)
   },
   onset_to_recovery = function(x) {
-    rlnorm(n = x, meanlog = 2.65537, sdlog = 0.3245928)
+    rlnorm(n = x, meanlog = 3.211727, sdlog = 0.1195713)
   },
   hosp_risk = 0,
   hosp_death_risk = 0,
@@ -199,9 +199,9 @@ First, we calculate CFR by filtering to focus only on cases with known outcomes:
 
 ```{r}
 # Filter on known outcomes
-total_deaths <- sum(trunc_linelist$outcome == "died", na.rm = TRUE)
+total_deaths <- sum(trunc_linelist$outcome == "died" & trunc_linelist$date_outcome < max_obs, na.rm = TRUE)
 total_outcomes <- total_deaths +
-  sum(trunc_linelist$outcome == "recovered", na.rm = TRUE)
+  sum(trunc_linelist$outcome == "recovered" & trunc_linelist$date_outcome < max_obs, na.rm = TRUE)
 
 # Calculate CFR with 95% CI
 cfr_filter <- binom.test(total_deaths, total_outcomes)
