@@ -120,6 +120,9 @@ cfr_rolling <- function(data,
     # NOTE: choosing message rather than warning, as warnings are nearly
     # guaranteed in the early stages of an outbreak due to poor data
     p_mid_values <- cumulative_deaths / round(cumulative_outcomes)
+    
+    # Handle edge cases where p_mid might be NA or Inf
+    p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
 
     if (any(is.infinite(p_mid_values) | p_mid_values < 1e-4)) {
       message(
@@ -128,9 +131,6 @@ cfr_rolling <- function(data,
         call. = FALSE
       )
     }
-    
-    # Handle edge cases where p_mid might be NA or Inf
-    p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
 
     # generate series of CFR estimates with expanding time window
     # Suppress method choice messages to prevent spamming user.

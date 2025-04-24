@@ -133,17 +133,16 @@
 .select_func_likelihood <- function(total_cases, poisson_threshold, p_mid) {
   # NOTE: internal function is not input checked
   # switch likelihood function based on total cases and p_mid
-  # Binomial approx
-  if (total_cases < poisson_threshold || (p_mid >= 0.05)) {
-    func_likelihood <- function(total_outcomes, total_deaths, pp) {
-      lchoose(round(total_outcomes), total_deaths) +
-        (total_deaths * log(pp)) +
-        (((total_outcomes) - total_deaths) * log(1.0 - pp))
-    }
+  
+  # Default to binomial likelihood
+  func_likelihood <- function(total_outcomes, total_deaths, pp) {
+    lchoose(round(total_outcomes), total_deaths) +
+      (total_deaths * log(pp)) +
+      (((total_outcomes) - total_deaths) * log(1.0 - pp))
   }
 
-  # Poisson approx
-  if ((total_cases >= poisson_threshold) && (p_mid < 0.05)) {
+  # Poisson approx - only switch to Poisson if conditions are met
+  if ((total_cases >= poisson_threshold) && (!is.na(p_mid)) && (p_mid < 0.05)) {
     func_likelihood <- function(total_outcomes, total_deaths, pp) {
       stats::dpois(
         total_deaths, pp * round(total_outcomes),
