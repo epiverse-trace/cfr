@@ -121,6 +121,9 @@ cfr_rolling <- function(data,
     # guaranteed in the early stages of an outbreak due to poor data
     p_mid_values <- cumulative_deaths / round(cumulative_outcomes)
 
+    # Handle edge cases where p_mid might be NA or Inf
+    p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
+
     if (any(is.infinite(p_mid_values) | p_mid_values < 1e-4)) {
       message(
         "Some daily ratios of total deaths to total cases with known outcome",
