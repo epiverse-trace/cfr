@@ -128,6 +128,9 @@ cfr_rolling <- function(data,
         call. = FALSE
       )
     }
+    
+    # Handle edge cases where p_mid might be NA or Inf
+    p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
 
     # generate series of CFR estimates with expanding time window
     # Suppress method choice messages to prevent spamming user.
