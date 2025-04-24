@@ -120,7 +120,7 @@ cfr_rolling <- function(data,
     # NOTE: choosing message rather than warning, as warnings are nearly
     # guaranteed in the early stages of an outbreak due to poor data
     p_mid_values <- cumulative_deaths / round(cumulative_outcomes)
-    
+
     # Handle edge cases where p_mid might be NA or Inf
     p_mid_values[is.na(p_mid_values) | is.infinite(p_mid_values)] <- 0
 

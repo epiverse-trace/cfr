@@ -133,7 +133,7 @@
 .select_func_likelihood <- function(total_cases, poisson_threshold, p_mid) {
   # NOTE: internal function is not input checked
   # switch likelihood function based on total cases and p_mid
-  
+
   # Default to binomial likelihood
   func_likelihood <- function(total_outcomes, total_deaths, pp) {
     lchoose(round(total_outcomes), total_deaths) +
