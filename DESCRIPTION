@@ -47,9 +47,12 @@ Suggests:
     purrr,
     rmarkdown,
     scales,
+    simulist,
     spelling,
     testthat (>= 3.0.0),
     tidyr
+Remotes:
+    epiverse-trace/simulist@main
 VignetteBuilder: 
     knitr
 Config/Needs/website: epiverse-trace/epiversetheme
