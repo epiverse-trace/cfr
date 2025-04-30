@@ -66,7 +66,7 @@ library(cfr)
 # Load the Ebola 1976 data provided with the package
 data(ebola1976)
 
-# Focus on the first 20 days the outbreak
+# Focus on the first 30 days of the outbreak
 ebola1976_first_30 <- ebola1976[1:30, ]
 
 # Calculate the static CFR without correcting for delays
