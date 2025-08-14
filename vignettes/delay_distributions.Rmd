@@ -156,16 +156,36 @@ Further, _cfr_ functions tally estimated death counts (calculated by convolving 
 
 While users can pass functions from _stats_, and can manage distribution parameters using specialised packages and classes, it may be convenient to be able to access parameters reported in the epidemiological literature from a curated library.
 
-The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be such a library of epidemiological delay distributions.
+The [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be such a library of epidemiological delay distributions.
 The dedicated `<epiparameter>` class is expected to have similar functionality to other distribution classes, allowing easy definition of density functions that can be passed to _cfr_.
 
-The pseudo-code below shows how this might work.
+Here is an example of how this works:
 
-```r
-# NOTE: this is pseudo-code
-EPIPARAMETER_OBJECT <- ACCESS_DISTRIBUTION(disease, study)
+```{r}
+ebola_onset_to_death <- epiparameter::epiparameter_db(
+  disease = "Ebola",
+  epi_name = "onset-to-death",
+  single_epiparameter = TRUE
+)
 
-cfr_*(data = data, delay_density = function(x) density(<EPIPARAMETER_OBJECT>, x))
+cfr_static(data = ebola1976, delay_density = function(x) {
+  density(ebola_onset_to_death, at = x)
+ }
+)
+```
+
+This works with other functions that have the `delay_density` argument.
+
+Another way to use `<epiparameter>` objects with _cfr_ is to convert them into a function and pass that to the `cfr_*()` function:
+
+```{r}
+# using the same Ebola onset-to-death delay distribution as the previous example
+ebola_onset_to_death_func <- as.function(
+  ebola_onset_to_death,
+  func_type = "density"
+)
+
+cfr_static(data = ebola1976, delay_density = ebola_onset_to_death_func)
 ```
 
 ## References
