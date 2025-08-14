@@ -82,7 +82,7 @@ The onset-to-death distribution is considered to be Gamma distributed, with a sh
 **Note also** that we use the central estimates for each distribution parameter, and by ignoring uncertainty in these parameters the uncertainty in the resulting CFR is likely to be underestimated. 
 :::
 
-The forthcoming [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.
+The [_epiparameter_ package](https://epiverse-trace.github.io/epiparameter/) aims to be a library of epidemiological delay distributions, which can be accessed easily from within workflows.
 See the [vignette on using delay distributions](delay_distributions.html) for more information on how to use this and other distribution objects supported by R to prepare delay density functions.
 
 ## Estimate disease severity
