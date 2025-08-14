@@ -208,8 +208,7 @@ By contributing to this project, you agree to abide by its terms.
   process, but this requires additional computational effort. A
   comparison of these methods is planned for a future release.
 
-*cfr* is in future expected to benefit from the functionality of the
-forthcoming [*epiparameter*
+*cfr* benefits from the functionality of the [*epiparameter*
 package](https://epiverse-trace.github.io/epiparameter/), which is also
 developed by Epiverse-TRACE. *epiparameter* aims to provide a library of
 epidemiological parameters to parameterise delay density functions, as
