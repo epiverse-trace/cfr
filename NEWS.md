@@ -1,5 +1,7 @@
 # cfr (development version)
 
+* Added examples using _epiparameter_ to the `delay_distributions.Rmd` vignette. _epiparameter_ is added as a suggested dependency (#191, @joshwlambert).
+
 # cfr 0.2.0
 
 ## New features

@@ -39,6 +39,7 @@ Suggests:
     distcrete,
     distributional,
     dplyr,
+    epiparameter,
     forcats,
     ggplot2,
     incidence2,
